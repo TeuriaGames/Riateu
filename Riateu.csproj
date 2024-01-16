@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../MoonWorks/MoonWorks.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TeuJson" Version="2.2.1" />
+    <PackageReference Include="TeuJson.Generator" Version="2.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+		<EmbeddedResource Include="Core\Misc\Refresh\PositionColorTexture.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.PositionColorTexture.wgsl.refresh</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+</Project>
