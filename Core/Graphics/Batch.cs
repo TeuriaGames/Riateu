@@ -172,8 +172,8 @@ public class Batch : System.IDisposable
         textures[textureCount].Texture = texture;
         textures[textureCount].Sampler = sampler;
 
-        float width = texture.Width;
-        float height = texture.Height;
+        float width = sTexture.Source.W;
+        float height = sTexture.Source.H;
         
         var topLeft = new Vector2(position.X, position.Y);
         var topRight = new Vector2(position.X + width, position.Y);

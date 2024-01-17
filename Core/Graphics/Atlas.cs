@@ -15,41 +15,49 @@ public class Atlas
         Json,
         Bin
     }
-    private Dictionary<string, SpriteTexture> textures = new();
+    private Dictionary<string, int> lookup = new();
+    private SpriteTexture[] textures;
 
-    public IReadOnlyDictionary<string, SpriteTexture> Textures => textures;
+    public IReadOnlyDictionary<string, int> Lookup => lookup;
+    public SpriteTexture[] Textures => textures;
 
     public SpriteTexture this[string name] => Get(name);
 
     private Atlas() {}
 
-    public static Atlas LoadFromFile(string path, Texture texture, FileType fileType = FileType.Json) 
+    public static Atlas LoadFromFile(string path, Texture texture, FileType fileType = FileType.Json, bool ninePatchEnabled = false) 
     {
         using var fs = File.OpenRead(path);
-        return LoadFromStream(fs, texture, fileType);
+        return LoadFromStream(fs, texture, fileType, ninePatchEnabled);
     }
 
-    public static Atlas LoadFromStream(Stream fs, Texture texture, FileType fileType = FileType.Json) 
+    public static Atlas LoadFromStream(Stream fs, Texture texture, FileType fileType = FileType.Json, bool ninePatchEnabled = false) 
     {
         var atlas = new Atlas();
+        atlas.NinePatchEnabled = ninePatchEnabled;
         switch (fileType) 
         {
         default:
             var val = JsonTextReader.FromStream(fs);
             var frames = val["frames"].AsJsonObject;
+            var count = frames.Count;
+            atlas.textures = new SpriteTexture[count];
+            int textureID = -1;
             foreach (var kv in frames.Pairs) 
             {
+                textureID++;
                 var key = kv.Key;
                 var value = kv.Value;
                 int x = value["x"];
                 int y = value["y"];
                 int w = value["width"];
                 int h = value["height"];
+                atlas.lookup[key] = textureID;
 
-                if (value.Contains("nine_patch")) 
+                if (!value.Contains("nine_patch")) 
                 {
                     var spriteTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
-                    atlas.textures[key] = spriteTexture;
+                    atlas.textures[textureID] = spriteTexture;
                     continue;
                 }
 
@@ -61,24 +69,27 @@ public class Atlas
                 // TODO add nine patch
 
                 var ninePatchTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
-                atlas.textures[key] = ninePatchTexture;
+                atlas.textures[textureID] = ninePatchTexture;
             }
             return atlas;
         case FileType.Bin:
             var reader = new BinaryReader(fs);
             reader.ReadString();
             var length = reader.ReadUInt32();
-            for (uint i = 0; i < length; i++) 
+            atlas.textures = new SpriteTexture[length];
+            for (int i = 0; i < length; i++) 
             {
                 var name = reader.ReadString();
                 var x = (int)reader.ReadUInt32();
                 var y = (int)reader.ReadUInt32();
                 var w = (int)reader.ReadUInt32();
                 var h = (int)reader.ReadUInt32();
+
+                atlas.lookup[name] = i;
                 if (!atlas.NinePatchEnabled) 
                 {
                     var spriteTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
-                    atlas.textures[name] = spriteTexture;
+                    atlas.textures[i] = spriteTexture;
                     continue;
                 }
                 var hasNinePatch = reader.ReadBoolean();
@@ -97,7 +108,7 @@ public class Atlas
                     ninePatchTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
                 }
 
-                atlas.textures[name] = ninePatchTexture;
+                atlas.textures[i] = ninePatchTexture;
             }
             return atlas;
         }
@@ -106,16 +117,16 @@ public class Atlas
 
     public SpriteTexture Get(string name) 
     {
-        return textures[name];
+        return textures[lookup[name]];
     }
 
     public ref SpriteTexture GetRef(string name) 
     {
-        ref var texture = ref CollectionsMarshal.GetValueRefOrNullRef(textures, name);
-        if (Unsafe.IsNullRef(in texture)) 
+        ref var textureID = ref CollectionsMarshal.GetValueRefOrNullRef(lookup, name);
+        if (Unsafe.IsNullRef(in textureID)) 
         {
             throw new System.Exception($"'{name}' is not found!");
         }
-        return ref texture;
+        return ref textures[textureID];
     }
 }

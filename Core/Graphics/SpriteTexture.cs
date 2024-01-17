@@ -25,13 +25,13 @@ public struct SpriteTexture
     {
         Source = source;
 
-        var tlX = source.X / (float)texture.Width;
-        var tlY = source.Y / (float)texture.Height;
+        var sx = source.X / (float)texture.Width;
+        var sy = source.Y / (float)texture.Height;
         
-        var rX = (source.X + source.W) / (float)texture.Width;
-        var bX = (source.Y + source.H) / (float)texture.Height;
+        var sw = source.W / (float)texture.Width;
+        var sh = source.H / (float)texture.Height;
 
-        UV = new UV(new Vector2(tlX, tlY), new Vector2(rX, bX));
+        UV = new UV(new Vector2(sx, sy), new Vector2(sw, sh));
     }
 }
 
