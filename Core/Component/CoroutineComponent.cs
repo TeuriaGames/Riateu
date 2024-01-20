@@ -5,7 +5,7 @@ using Riateu.Misc;
 
 namespace Riateu.Components;
 
-public class CoroutineComponent : Component
+public class Coroutine : Component
 {
     private CoroutineContext scheduler = new();
 

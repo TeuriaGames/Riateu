@@ -1,9 +1,10 @@
+using System;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
-public struct SpriteTexture 
+public struct SpriteTexture : IEquatable<SpriteTexture>
 {
     public UV UV;
 
@@ -32,6 +33,14 @@ public struct SpriteTexture
         var sh = source.H / (float)texture.Height;
 
         UV = new UV(new Vector2(sx, sy), new Vector2(sw, sh));
+    }
+
+    public bool Equals(SpriteTexture other)
+    {
+        return other.Source.X == Source.X &&
+            other.Source.Y == Source.Y &&
+            other.Source.W == Source.W &&
+            other.Source.H == Source.H;
     }
 }
 

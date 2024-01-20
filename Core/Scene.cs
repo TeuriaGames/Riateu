@@ -1,11 +1,16 @@
 using System;
+using System.Collections.Generic;
+using MoonWorks;
 using MoonWorks.Graphics;
+using Riateu.Components;
 using Riateu.Graphics;
 
 namespace Riateu;
 
 public abstract class Scene 
 {
+    private World physicsWorld = new();
+
     public GameApp GameInstance;
     public Action<Entity> OnEntityCreated;
     public Action<Entity> OnEntityDeleted;
@@ -31,15 +36,32 @@ public abstract class Scene
         EntityList.Add(entity);
     }
 
+    public void AddPhysics(PhysicsComponent component) 
+    {
+        physicsWorld.Insert(component);
+        Logger.LogInfo("Added");
+    }
 
     public void Remove(Entity entity) 
     {
         EntityList.Remove(entity);
     }
 
+    public void RemovePhysics(PhysicsComponent component) 
+    {
+        physicsWorld.Remove(component);
+    }
+
     internal void InternalUpdate(double delta) 
     {
         EntityList.UpdateSystem();
+        foreach (var comp in physicsWorld.Components) 
+        {
+            foreach (var other in physicsWorld.Retrieve(comp)) 
+            {
+                comp.Check(other);
+            }
+        }
         Update(delta);
         EntityList.Update(delta);
     }

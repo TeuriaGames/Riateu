@@ -8,11 +8,13 @@ namespace Riateu;
 
 public static class GameContext
 {
+    public static GraphicsDevice GraphicsDevice;
     public static GraphicsPipeline DefaultPipeline;
     public static Sampler GlobalSampler;
 
     public static void Init(GraphicsDevice device, Window mainWindow) 
     {
+        GraphicsDevice = device;
         var buffer = Resources.PositionColorTexture;
         using var ms = new MemoryStream(buffer);
         ShaderModule textureShader = new ShaderModule(device, ms);

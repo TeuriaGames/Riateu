@@ -23,6 +23,16 @@ public abstract class GameApp : Game
     private Scene scene;
 
     private Batch batch;
+    public Batch Batch => batch;
+
+    protected GameApp(string title, uint width, uint height, ScreenMode screenMode = ScreenMode.Windowed)
+        : this(
+            new WindowCreateInfo(title, width, height, screenMode, PresentMode.FIFO),
+            new FrameLimiterSettings(FrameLimiterMode.Capped, 60)
+        ) 
+    {
+
+    }
 
     protected GameApp(WindowCreateInfo windowCreateInfo, FrameLimiterSettings frameLimiterSettings, int targetTimestep = 60, bool debugMode = false) : base(windowCreateInfo, frameLimiterSettings, targetTimestep, debugMode)
     {
@@ -34,8 +44,8 @@ public abstract class GameApp : Game
         batch = new Batch(GraphicsDevice, Width, Height);
     }
 
-    public abstract void Initialize();
     public virtual void LoadContent() {}
+    public abstract void Initialize();
 
 
     protected override void Draw(double alpha)

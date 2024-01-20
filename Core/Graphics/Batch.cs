@@ -137,14 +137,14 @@ public class Batch : System.IDisposable
 
     public void Add(
         Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform,
-        FlipMode flipMode = FlipMode.None, float layerDepth = 0) 
+        FlipMode flipMode = FlipMode.None, float layerDepth = 1) 
     {
         Add(new SpriteTexture(texture), texture, sampler, position, transform, flipMode, layerDepth);
     }
 
     public void Add(
         SpriteTexture sTexture, Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform,
-        FlipMode flipMode = FlipMode.None, float layerDepth = 0) 
+        FlipMode flipMode = FlipMode.None, float layerDepth = 1) 
     {
         if (texture.IsDisposed) 
         {
