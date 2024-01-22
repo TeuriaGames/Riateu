@@ -47,7 +47,7 @@ public class Tilemap : Component
                     continue;
                 
                 spriteBatch.Add(sTexture.Value, tilemapTexture, GameContext.GlobalSampler, 
-                    new Vector2(x * GridSize, y * GridSize), Entity.Transform.WorldMatrix, layerDepth: -0.5f);
+                    new Vector2(x * GridSize, y * GridSize), Entity.Transform.WorldMatrix, layerDepth: 1f);
             }
         }
 
