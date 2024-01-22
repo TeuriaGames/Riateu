@@ -9,94 +9,133 @@ namespace Riateu;
 // FIXME I don't want this all, but this is the only way to get the unique positions
 
 
-public class Text 
+public class StaticText 
 {
     public Texture Texture;
-    public Matrix4x4 Matrix;
-    public Vector2 Position;
-    public string TextString;
-    public int PixelSize;
+    private int pixelSize;
+    private string text;
+    private Rectangle bounds;
+    public Rectangle Bounds => bounds;
 
-    public Text(TextCanvas canvas, string text, int pixel, Vector2 position) 
+    public StaticText(GraphicsDevice device, Font font, string text, int pixel) 
     {
-        this.TextString = text;
-        this.PixelSize = pixel;
-        Position = position;
+        CommandBuffer buffer = device.AcquireCommandBuffer();
+        this.text = text;
+        pixelSize = pixel;
+
+        var f = font.TextBounds(text, pixel, HorizontalAlignment.Left, 
+            VerticalAlignment.Baseline, out WellspringCS.Wellspring.Rectangle rect);
+        bounds = new Rectangle((int)rect.X, (int)rect.Y, (int)rect.W, (int)rect.H);
+
+        uint width = (uint)rect.W;
+        uint height = (uint)rect.H;
 
         Texture = Texture.CreateTexture2D(
-            canvas.Scene.GameInstance.GraphicsDevice, canvas.Width, canvas.Height, 
+            device, width, height, 
             TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
-    }
+        
+        var matrix = Matrix4x4.CreateTranslation(0, height, 1) 
+            * Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
+        
+        var textBatch = new TextBatch(device);
+        textBatch.Start(font);
+        textBatch.Add(text, pixel, Color.White);
+        textBatch.UploadBufferData(buffer);
 
-    public void Render(CommandBuffer buffer, TextBatch batch) 
-    {
-        batch.Add(TextString, PixelSize, Color.White);
-        batch.UploadBufferData(buffer);
         buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, Color.Transparent));
         buffer.BindGraphicsPipeline(GameContext.MSDFPipeline);
-        
-        batch.Render(buffer, Matrix);
-
+        textBatch.Render(buffer, matrix);
         buffer.EndRenderPass();
+        device.Submit(buffer);
+        device.Wait();
+
+        textBatch.Dispose();
+    }
+
+    public void Draw(Batch batch, Vector2 position) 
+    {
+        batch.Add(Texture, GameContext.GlobalSampler, position, Matrix3x2.Identity);
     }
 }
 
-public class TextCanvas : Canvas
+public class DynamicText 
 {
+    public Texture Texture;
+    private int pixelSize;
+    private string text;
+    private bool dirty;
     private TextBatch textBatch;
-    private Text[] textPositions;
-    private int textCount;
+    private GraphicsDevice device;
     private Font font;
-    public Matrix4x4 TransformMatrix;
+    private Rectangle bounds;
+    public Rectangle Bounds => bounds;
 
-    public TextCanvas(Scene scene, GraphicsDevice device, int width, int height, Font font) : base(scene, device, width, height)
+    public string Text 
     {
-        textPositions = new Text[16];
-        textBatch = new TextBatch(device);
-        this.font = font;
-        TransformMatrix = Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
-    }
-
-    public void Add(Text text) 
-    {
-        if (textCount == textPositions.Length) 
+        get => text;
+        set 
         {
-            Array.Resize(ref textPositions, textPositions.Length * 4);
+            if (text != value) 
+            {
+                text = value;
+                dirty = true;
+            }
         }
-        text.Position.Y = text.Position.Y + text.PixelSize + 8;
-        text.Matrix = Matrix4x4.CreateTranslation(text.Position.X, text.Position.Y, 1)
-            * TransformMatrix;
-        textPositions[textCount] = text;
-        textCount++;
-    }
-
-    public override void Draw(CommandBuffer buffer, Batch batch)
-    {
-        textBatch.Start(font);
-        for (int i = 0; i < textCount; i++) 
-        {
-            var text = textPositions[i];
-            text.Render(buffer, textBatch);
-        }
-
-        for (int i = 0; i < textCount; i++) 
-        {
-            var text = textPositions[i];
-            batch.Add(text.Texture, GameContext.GlobalSampler, Vector2.Zero, Matrix3x2.Identity);
-        }
-        batch.FlushVertex(buffer);
-
-        buffer.BeginRenderPass(new ColorAttachmentInfo(CanvasTexture, Color.Transparent));
-        buffer.BindGraphicsPipeline(GameContext.DefaultPipeline);
-
-        batch.Draw(buffer);
-        buffer.EndRenderPass();
     }
     
-}
+    public DynamicText(GraphicsDevice device, Font font, string text, int pixel) 
+    {
+        this.device = device;
+        this.font = font;
+        textBatch = new TextBatch(device);
+        this.text = text;
+        pixelSize = pixel;
+        Resubmit();
+    }
 
-internal struct InstancedText(Vector2[] positions, Matrix4x4 transformMatrix)
-{
-    public Vector2[] Positions = positions;
-    public Matrix4x4 TransformMatrix = transformMatrix;
+    private void Resubmit() 
+    {
+        CommandBuffer buffer = device.AcquireCommandBuffer();
+
+        var f = font.TextBounds(text, pixelSize, HorizontalAlignment.Left, 
+            VerticalAlignment.Baseline, out WellspringCS.Wellspring.Rectangle rect);
+        bounds = new Rectangle((int)rect.X, (int)rect.Y, (int)rect.W, (int)rect.H);
+
+        uint width = (uint)rect.W;
+        uint height = (uint)rect.H;
+
+        if (Texture != null) 
+        {
+            Texture.Dispose();
+            Texture = null;
+        }
+
+        Texture = Texture.CreateTexture2D(
+            device, width, height, 
+            TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
+        
+        var matrix = Matrix4x4.CreateTranslation(0, height, 1) 
+            * Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
+        
+        textBatch.Start(font);
+        textBatch.Add(text, pixelSize, Color.White);
+        textBatch.UploadBufferData(buffer);
+
+        buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, Color.Transparent));
+        buffer.BindGraphicsPipeline(GameContext.MSDFPipeline);
+        textBatch.Render(buffer, matrix);
+        buffer.EndRenderPass();
+        device.Submit(buffer);
+        device.Wait();
+    }
+
+    public void Draw(Batch batch, Vector2 position) 
+    {
+        if (dirty) 
+        {
+            Resubmit();
+            dirty = false;
+        }
+        batch.Add(Texture, GameContext.GlobalSampler, position, Matrix3x2.Identity);
+    }
 }

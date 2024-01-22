@@ -16,10 +16,7 @@ public class Canvas
     public Scene Scene { get; set; }
 
     public Canvas(Scene scene, GraphicsDevice device, int width, int height) :
-        this(scene, device, (uint)width, (uint)height)
-    {
-
-    }
+        this(scene, device, (uint)width, (uint)height) {}
 
     public Canvas(Scene scene, GraphicsDevice device, uint width, uint height) 
     {
