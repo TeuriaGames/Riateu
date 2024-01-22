@@ -8,11 +8,11 @@ namespace Riateu.Graphics;
 
 public class Batch : System.IDisposable
 {
-    private static readonly float[] CornerOffsetX = { 0.0f, 0.0f, 1.0f, 1.0f };
-    private static readonly float[] CornerOffsetY = { 0.0f, 1.0f, 0.0f, 1.0f };  
+    private static readonly float[] CornerOffsetX = [ 0.0f, 0.0f, 1.0f, 1.0f ];
+    private static readonly float[] CornerOffsetY = [ 0.0f, 1.0f, 0.0f, 1.0f ];  
     private const int MaxTextures = 8192;
     private GraphicsDevice device;
-    private PositionColorTextureVertex[] vertices;
+    private PositionTextureColorVertex[] vertices;
     private uint[] indices;
     private TextureSamplerBinding[] textures;
     private TextureSamplerBinding[] fragmentSampler;
@@ -20,35 +20,31 @@ public class Batch : System.IDisposable
 
     private Buffer vertexBuffer;
     private Buffer indexBuffer;
-    private Stack<TransformVertexUniform> Matrices;
+    private Stack<Matrix4x4> Matrices;
 
-    public TransformVertexUniform Matrix;
+    public Matrix4x4 Matrix;
 
     public Batch(GraphicsDevice device, int width, int height) 
     {
         Matrices = new();
         this.device = device;
         textures = new TextureSamplerBinding[MaxTextures];
-        vertices = new PositionColorTextureVertex[MaxTextures * 4];
+        vertices = new PositionTextureColorVertex[MaxTextures * 4];
         indices = GenerateIndexArray(MaxTextures * 6);
 
         fragmentSampler = new TextureSamplerBinding[1];
-        vertexBuffer = Buffer.Create<PositionColorTextureVertex>(device, BufferUsageFlags.Vertex, (uint)vertices.Length);
+        vertexBuffer = Buffer.Create<PositionTextureColorVertex>(device, BufferUsageFlags.Vertex, (uint)vertices.Length);
         indexBuffer = Buffer.Create<uint>(device, BufferUsageFlags.Index, (uint)indices.Length);
 
-        TransformVertexUniform uniform;
         var model = Matrix4x4.CreateScale(1) *
             Matrix4x4.CreateRotationZ(0) *
             Matrix4x4.CreateTranslation(0, 0, 0);
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
-        uniform = new TransformVertexUniform(
-            model * view * projection
-        );
-        Matrix = uniform;
+        Matrix = model * view * projection;
     }
 
-    public static uint[] GenerateIndexArray(uint maxIndices)
+    private static uint[] GenerateIndexArray(uint maxIndices)
     {
         var result = new uint[maxIndices];
         for (uint i = 0, j = 0; i < maxIndices; i += 6, j += 4)
@@ -66,9 +62,8 @@ public class Batch : System.IDisposable
 
     public void PushMatrix(in Matrix4x4 matrix) 
     {
-        var transformUniform = new TransformVertexUniform(matrix);
-        Matrices.Push(transformUniform);
-        Matrix = transformUniform;
+        Matrices.Push(matrix);
+        Matrix = matrix;
     }
 
     public void PushMatrix(in Camera camera) 
@@ -86,7 +81,7 @@ public class Batch : System.IDisposable
         Matrix = Matrices.Pop();
     }
 
-    public void PushVertex(in CommandBuffer cmdBuf) 
+    public void FlushVertex(in CommandBuffer cmdBuf) 
     {
         if (textureCount == 0) 
         {
@@ -97,12 +92,12 @@ public class Batch : System.IDisposable
         cmdBuf.SetBufferData(vertexBuffer, vertices, 0, 0, textureCount * 4);
     }
 
-    public void Draw(in CommandBuffer cmdBuf) 
+    public void Draw(CommandBuffer cmdBuf) 
     {
         Draw(cmdBuf, Matrix);
     }
 
-    public void Draw(in CommandBuffer cmdBuf, TransformVertexUniform viewProjection) 
+    public void Draw(CommandBuffer cmdBuf, Matrix4x4 viewProjection) 
     {
         if (textureCount == 0) 
         {
@@ -160,7 +155,7 @@ public class Batch : System.IDisposable
             indices = GenerateIndexArray((uint)(textures.Length * 6));
 
             vertexBuffer.Dispose();
-            vertexBuffer = Buffer.Create<PositionColorTextureVertex>(
+            vertexBuffer = Buffer.Create<PositionTextureColorVertex>(
                 device, BufferUsageFlags.Vertex, (uint)vertices.Length);
 
             indexBuffer.Dispose();
@@ -231,20 +226,15 @@ public struct PositionColorVertex(Vector3 position, Color color) : IVertexType
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct PositionColorTextureVertex(Vector3 position, Color color, Vector2 texCoord) : IVertexType
+public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Color color) : IVertexType
 {
     public Vector3 Position = position;
-    public Color Color = color;
     public Vector2 TexCoord = texCoord;
+    public Color Color = color;
 
     public static VertexElementFormat[] Formats { get; } = [
         VertexElementFormat.Vector3,
+        VertexElementFormat.Vector2,
         VertexElementFormat.Color,
-        VertexElementFormat.Vector2
     ];
-}
-
-public struct TransformVertexUniform(Matrix4x4 viewProjection) 
-{
-    public Matrix4x4 ViewProjection = viewProjection;
 }

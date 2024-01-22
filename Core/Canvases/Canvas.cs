@@ -30,7 +30,7 @@ public class Canvas
     }
 
     public virtual void BeforeDraw(ref CommandBuffer buffer, Batch batch) {}
-    public virtual void Draw(ref CommandBuffer buffer, Batch batch) 
+    public virtual void Draw(CommandBuffer buffer, Batch batch) 
     {
     }
     public virtual void AfterDraw(ref CommandBuffer buffer, Batch batch) {}
@@ -49,13 +49,13 @@ public class DefaultCanvas : Canvas
         scissorRect = new Rect(0, 0, width, height);
     }
 
-    public override void Draw(ref CommandBuffer buffer, Batch batch)
+    public override void Draw(CommandBuffer buffer, Batch batch)
     {
         foreach (var entity in Scene.EntityList) 
         {
             entity.Draw(batch);
         }    
-        batch.PushVertex(buffer);
+        batch.FlushVertex(buffer);
 
         buffer.BeginRenderPass(new ColorAttachmentInfo(CanvasTexture, Color.Transparent));
         buffer.BindGraphicsPipeline(GameContext.DefaultPipeline);

@@ -15,8 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-		<EmbeddedResource Include="Core\Misc\Refresh\PositionColorTexture.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.PositionColorTexture.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Refresh\PositionTextureColor.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.PositionTextureColor.wgsl.refresh</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Refresh\Texture.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.Texture.wgsl.refresh</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
 </Project>

@@ -2,18 +2,31 @@ using System.IO;
 
 namespace Riateu.Misc;
 
-internal static class Resources 
+public static class Resources 
 {
-    private static byte[] positionColorTexture;
-    public static byte[] PositionColorTexture 
+    private static byte[] positionTextureColor;
+    public static byte[] PositionTextureColor 
     {
         get 
         {
-            if (positionColorTexture == null) 
+            if (positionTextureColor == null) 
             {
-                positionColorTexture = GetShader("PositionColorTexture.wgsl");
+                positionTextureColor = GetShader("PositionTextureColor.wgsl");
             }
-            return positionColorTexture;
+            return positionTextureColor;
+        }
+    }
+
+    private static byte[] texture;
+    public static byte[] Texture 
+    {
+        get 
+        {
+            if (texture == null) 
+            {
+                texture = GetShader("Texture.wgsl");
+            }
+            return texture;
         }
     }
 

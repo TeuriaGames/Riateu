@@ -7,7 +7,7 @@ public class PhysicsComponent : Component
 {
     private Shape shape;
     private Action<Entity, PhysicsComponent> onCollided;
-    public PhysicsComponent(Shape shape, Action<Entity, PhysicsComponent> onCollided) 
+    public PhysicsComponent(Shape shape, Action<Entity, PhysicsComponent> onCollided = null) 
     {
         this.shape = shape;
         this.onCollided = onCollided;
@@ -15,9 +15,11 @@ public class PhysicsComponent : Component
 
     public bool Check(PhysicsComponent other) 
     {
+        if (onCollided == null)
+            return false;
         if (other.shape.Collide(Entity.Position, shape)) 
         {
-            onCollided?.Invoke(other.Entity, other);
+            onCollided(other.Entity, other);
             return true;
         }
 

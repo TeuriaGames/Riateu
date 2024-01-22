@@ -46,7 +46,6 @@ public class AnimatedSprite : GraphicsComponent
         var animSprite = new AnimatedSprite(atlasTexture);
         var json = JsonTextReader.FromStream(stream);
         var texture = json["texture"];
-        var totalFrames = json["totalFrames"];
         var cycles = json["cycles"];
 
         var frames = new Dictionary<string, SpriteTexture[]>();

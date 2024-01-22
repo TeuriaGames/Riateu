@@ -25,7 +25,7 @@ public abstract class GameApp : Game
     private Batch batch;
     public Batch Batch => batch;
 
-    protected GameApp(string title, uint width, uint height, ScreenMode screenMode = ScreenMode.Windowed)
+    protected GameApp(string title, uint width, uint height, ScreenMode screenMode = ScreenMode.Windowed, bool debugMode = false)
         : this(
             new WindowCreateInfo(title, width, height, screenMode, PresentMode.FIFO),
             new FrameLimiterSettings(FrameLimiterMode.Capped, 60)
@@ -34,7 +34,8 @@ public abstract class GameApp : Game
 
     }
 
-    protected GameApp(WindowCreateInfo windowCreateInfo, FrameLimiterSettings frameLimiterSettings, int targetTimestep = 60, bool debugMode = false) : base(windowCreateInfo, frameLimiterSettings, targetTimestep, debugMode)
+    protected GameApp(WindowCreateInfo windowCreateInfo, FrameLimiterSettings frameLimiterSettings, int targetTimestep = 60, bool debugMode = false) 
+        : base(windowCreateInfo, frameLimiterSettings, targetTimestep, debugMode)
     {
         Width = (int)windowCreateInfo.WindowWidth;
         Height = (int)windowCreateInfo.WindowHeight;
@@ -56,7 +57,7 @@ public abstract class GameApp : Game
         scene.InternalBeforeDraw(ref cmdBuf, batch);
         if (backbuffer != null) 
         {
-            scene.InternalDraw(ref cmdBuf, backbuffer, batch);
+            scene.InternalDraw(cmdBuf, backbuffer, batch);
         }
         scene.InternalAfterDraw(ref cmdBuf, batch);
 

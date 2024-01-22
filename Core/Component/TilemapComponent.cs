@@ -51,7 +51,7 @@ public class Tilemap : Component
             }
         }
 
-        spriteBatch.PushVertex(buffer);
+        spriteBatch.FlushVertex(buffer);
     }
 
     public override void Draw(Batch spriteBatch)

@@ -39,7 +39,6 @@ public abstract class Scene
     public void AddPhysics(PhysicsComponent component) 
     {
         physicsWorld.Insert(component);
-        Logger.LogInfo("Added");
     }
 
     public void Remove(Entity entity) 
@@ -72,10 +71,10 @@ public abstract class Scene
         BeforeDraw(ref buffer, batch);
     }
 
-    internal void InternalDraw(ref CommandBuffer buffer, Texture backbuffer, Batch batch) 
+    internal void InternalDraw(CommandBuffer buffer, Texture backbuffer, Batch batch) 
     {
-        SceneCanvas.Draw(ref buffer, batch);
-        Draw(ref buffer, backbuffer, batch);
+        SceneCanvas.Draw(buffer, batch);
+        Draw(buffer, backbuffer, batch);
     }
 
     internal void InternalAfterDraw(ref CommandBuffer buffer, Batch batch) 
@@ -87,7 +86,7 @@ public abstract class Scene
     public abstract void Begin();
     public virtual void Update(double delta) {}
     public virtual void BeforeDraw(ref CommandBuffer buffer, Batch batch) {}
-    public virtual void Draw(ref CommandBuffer buffer, Texture backbuffer, Batch batch) {}
+    public virtual void Draw(CommandBuffer buffer, Texture backbuffer, Batch batch) {}
     public virtual void AfterDraw(ref CommandBuffer buffer, Batch batch) {}
     public abstract void End();
 }
