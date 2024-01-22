@@ -78,6 +78,18 @@ public class AnimatedSprite : GraphicsComponent
         return animSprite;
     }
 
+    public static AnimatedSprite Create(Texture atlasTexture) 
+    {
+        var animSprite = new AnimatedSprite(atlasTexture);
+        animSprite.frames = new Dictionary<string, SpriteTexture[]>();
+        return animSprite;
+    }
+
+    public void Add(string name, SpriteTexture[] textures) 
+    {
+        frames[name] = textures;
+    }
+
     public void Play(string frame) 
     {
         if (frame == currentAnimationName)
