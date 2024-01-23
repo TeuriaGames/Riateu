@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
+namespace Riateu.ImGuiRend;
+
 public static unsafe class Clipboard
 {
 	private static IntPtr clipboard;

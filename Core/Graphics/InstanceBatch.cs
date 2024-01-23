@@ -120,9 +120,7 @@ public class InstanceBatch : System.IDisposable
         cmdBuf.DrawInstancedPrimitives(0u, 0u, 2u, instanceCount, vertexOffset, 0u);
     }
 
-    public void Add(
-        SpriteTexture sTexture, Sampler sampler, Vector2 position, Matrix3x2 transform,
-        FlipMode flipMode = FlipMode.None, float layerDepth = 1) 
+    public void Add(SpriteTexture sTexture, Sampler sampler, Vector2 position, Matrix3x2 transform, float layerDepth = 1) 
     {
         if (instanceCount == instances.Length) 
         {
@@ -134,9 +132,6 @@ public class InstanceBatch : System.IDisposable
                 device, BufferUsageFlags.Vertex, (uint)instances.Length
             );
         }
-
-        float width = sTexture.Source.W;
-        float height = sTexture.Source.H;
         
         instances[instanceCount] = new InstancedVertex(
             new Vector3(Vector2.Transform(position, transform), layerDepth),
@@ -144,16 +139,6 @@ public class InstanceBatch : System.IDisposable
             sTexture.UV,
             Color.White
         );
-
-        var flipByte = (byte)(flipMode & (FlipMode.Horizontal | FlipMode.Vertical));
-        instances[instanceCount].UV0.X = CornerOffsetX[0 ^ flipByte] * sTexture.UV.Dimensions.X + sTexture.UV.Position.X;
-        instances[instanceCount].UV0.Y = CornerOffsetY[0 ^ flipByte] * sTexture.UV.Dimensions.Y + sTexture.UV.Position.Y;
-        instances[instanceCount].UV1.X = CornerOffsetX[1 ^ flipByte] * sTexture.UV.Dimensions.X + sTexture.UV.Position.X;
-        instances[instanceCount].UV1.Y = CornerOffsetY[1 ^ flipByte] * sTexture.UV.Dimensions.Y + sTexture.UV.Position.Y;
-        instances[instanceCount].UV2.X = CornerOffsetX[2 ^ flipByte] * sTexture.UV.Dimensions.X + sTexture.UV.Position.X;
-        instances[instanceCount].UV2.Y = CornerOffsetY[2 ^ flipByte] * sTexture.UV.Dimensions.Y + sTexture.UV.Position.Y;
-        instances[instanceCount].UV3.X = CornerOffsetX[3 ^ flipByte] * sTexture.UV.Dimensions.X + sTexture.UV.Position.X;
-        instances[instanceCount].UV3.Y = CornerOffsetY[3 ^ flipByte] * sTexture.UV.Dimensions.Y + sTexture.UV.Position.Y;
         instanceCount++;
     }
 

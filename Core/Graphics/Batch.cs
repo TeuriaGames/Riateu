@@ -7,7 +7,6 @@ namespace Riateu.Graphics;
 
 public class Batch : System.IDisposable
 {
-
     private const int MaxTextures = 8192;
     private GraphicsDevice device;
     private PositionTextureColorVertex[] vertices;
