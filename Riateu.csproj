@@ -21,5 +21,11 @@
 		<EmbeddedResource Include="Core\Misc\Refresh\Texture.wgsl.refresh">
 			<LogicalName>Riateu.Misc.Refresh.Texture.wgsl.refresh</LogicalName>
 		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Refresh\ImGuiShader.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.ImGuiShader.wgsl.refresh</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Refresh\TilemapShader.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.TilemapShader.wgsl.refresh</LogicalName>
+		</EmbeddedResource>
 	</ItemGroup>
 </Project>

@@ -1,7 +1,9 @@
 using System.IO;
+using System.Runtime.InteropServices;
 using MoonWorks;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
+using Riateu.Components;
 using Riateu.Graphics;
 using Riateu.Misc;
 
@@ -12,6 +14,7 @@ public static class GameContext
     public static GraphicsDevice GraphicsDevice;
     public static GraphicsPipeline DefaultPipeline;
     public static GraphicsPipeline MSDFPipeline;
+    public static GraphicsPipeline TilemapPipeline;
     public static Sampler GlobalSampler;
 
     public static void Init(GraphicsDevice device, Window mainWindow) 
@@ -59,5 +62,74 @@ public static class GameContext
         };
 
         MSDFPipeline = new GraphicsPipeline(device, msdfPipelineCreateInfo);
+
+
+        var vertexBufferDescription = new VertexBindingAndAttributes(
+            new VertexBinding 
+            {
+                Binding = 0,
+                InputRate = VertexInputRate.Vertex,
+                Stride = (uint)Marshal.SizeOf<PositionColorVertex>()
+            },
+            CreateVertexAttribute<PositionColorVertex>(0)
+        );
+
+        var instancedBufferDescription = new VertexBindingAndAttributes(
+            new VertexBinding 
+            {
+                Binding = 1,
+                InputRate = VertexInputRate.Instance,
+                Stride = (uint)Marshal.SizeOf<InstancedTileData>()
+            },
+            CreateVertexAttribute<InstancedTileData>(1, 2)
+        );
+
+        var tileMapBytes = Resources.TilemapShader;
+        using var ms3 = new MemoryStream(tileMapBytes);
+        ShaderModule tilemapPSC = new ShaderModule(device, ms3);
+
+        GraphicsPipelineCreateInfo tilemapPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
+        {
+            AttachmentInfo = new GraphicsPipelineAttachmentInfo(
+                new ColorAttachmentDescription(mainWindow.SwapchainFormat, 
+                ColorAttachmentBlendState.AlphaBlend)
+            ),
+            DepthStencilState = DepthStencilState.Disable,
+            MultisampleState = MultisampleState.None,
+            PrimitiveType = PrimitiveType.TriangleList,
+            RasterizerState = RasterizerState.CW_CullNone,
+            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(tilemapPSC, "vs_main", 0),
+            FragmentShaderInfo = GraphicsShaderInfo.Create(tilemapPSC, "fs_main", 1),
+            VertexInputState = new VertexInputState([
+                vertexBufferDescription,
+                instancedBufferDescription
+            ])
+        };
+
+        TilemapPipeline = new GraphicsPipeline(device, tilemapPipelineCreateInfo);
+    }
+
+    public static VertexAttribute[] CreateVertexAttribute<T>(
+        uint bindingIndex, uint startingLocation = 0, uint offsetStart = 0) 
+        where T : unmanaged, IVertexType
+    {
+        VertexAttribute[] attributes = new VertexAttribute[T.Formats.Length];
+        uint offset = offsetStart;
+
+        for (uint i = 0; i < T.Formats.Length; i += 1)
+        {
+            var format = T.Formats[i];
+
+            attributes[i] = new VertexAttribute
+            {
+                Binding = bindingIndex,
+                Location = i + startingLocation,
+                Format = format,
+                Offset = offset
+            };
+
+            offset += Conversions.VertexElementFormatSize(format);
+        }
+        return attributes;
     }
 }
