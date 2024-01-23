@@ -7,8 +7,7 @@ namespace Riateu.Graphics;
 
 public class Batch : System.IDisposable
 {
-    private static readonly float[] CornerOffsetX = [ 0.0f, 0.0f, 1.0f, 1.0f ];
-    private static readonly float[] CornerOffsetY = [ 0.0f, 1.0f, 0.0f, 1.0f ];  
+
     private const int MaxTextures = 8192;
     private GraphicsDevice device;
     private PositionTextureColorVertex[] vertices;
@@ -131,14 +130,14 @@ public class Batch : System.IDisposable
 
     public void Add(
         Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform,
-        FlipMode flipMode = FlipMode.None, float layerDepth = 1) 
+        float layerDepth = 1) 
     {
-        Add(new SpriteTexture(texture), texture, sampler, position, transform, flipMode, layerDepth);
+        Add(new SpriteTexture(texture), texture, sampler, position, transform, layerDepth);
     }
 
     public void Add(
         SpriteTexture sTexture, Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform,
-        FlipMode flipMode = FlipMode.None, float layerDepth = 1) 
+        float layerDepth = 1) 
     {
         if (texture.IsDisposed) 
         {
@@ -191,15 +190,6 @@ public class Batch : System.IDisposable
         vertices[vertexOffset + 2].TexCoord = sTexture.UV.TopRight;
         vertices[vertexOffset + 3].TexCoord = sTexture.UV.BottomRight;
 
-        var flipByte = (byte)(flipMode & (FlipMode.Horizontal | FlipMode.Vertical));
-        vertices[vertexOffset].TexCoord.X = CornerOffsetX[0 ^ flipByte] * sTexture.UV.Dimensions.X + sTexture.UV.Position.X;
-        vertices[vertexOffset].TexCoord.Y = CornerOffsetY[0 ^ flipByte] * sTexture.UV.Dimensions.Y + sTexture.UV.Position.Y;
-        vertices[vertexOffset + 1].TexCoord.X = CornerOffsetX[1 ^ flipByte] * sTexture.UV.Dimensions.X + sTexture.UV.Position.X;
-        vertices[vertexOffset + 1].TexCoord.Y = CornerOffsetY[1 ^ flipByte] * sTexture.UV.Dimensions.Y + sTexture.UV.Position.Y;
-        vertices[vertexOffset + 2].TexCoord.X = CornerOffsetX[2 ^ flipByte] * sTexture.UV.Dimensions.X + sTexture.UV.Position.X;
-        vertices[vertexOffset + 2].TexCoord.Y = CornerOffsetY[2 ^ flipByte] * sTexture.UV.Dimensions.Y + sTexture.UV.Position.Y;
-        vertices[vertexOffset + 3].TexCoord.X = CornerOffsetX[3 ^ flipByte] * sTexture.UV.Dimensions.X + sTexture.UV.Position.X;
-        vertices[vertexOffset + 3].TexCoord.Y = CornerOffsetY[3 ^ flipByte] * sTexture.UV.Dimensions.Y + sTexture.UV.Position.Y;
         textureCount++;
     }
 

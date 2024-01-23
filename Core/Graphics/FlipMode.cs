@@ -6,7 +6,7 @@ namespace Riateu.Graphics;
 public enum FlipMode : byte
 {
     None,
-    Vertical,
+    Horizontal,
 
-    Horizontal 
+    Vertical
 }

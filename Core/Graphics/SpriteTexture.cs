@@ -42,17 +42,33 @@ public struct SpriteTexture : IEquatable<SpriteTexture>
             other.Source.W == Source.W &&
             other.Source.H == Source.H;
     }
+
+    public void FlipUV(FlipMode flipMode) 
+    {
+        ReadOnlySpan<float> CornerOffsetX = [ 0.0f, 0.0f, 1.0f, 1.0f ];
+        ReadOnlySpan<float> CornerOffsetY = [ 0.0f, 1.0f, 0.0f, 1.0f ];
+        var flipByte = (byte)(flipMode & (FlipMode.Horizontal | FlipMode.Vertical));
+
+        UV.TopLeft.X = CornerOffsetX[0 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
+        UV.TopLeft.Y = CornerOffsetY[0 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;
+        UV.BottomLeft.X = CornerOffsetX[1 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
+        UV.BottomLeft.Y = CornerOffsetY[1 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;
+        UV.TopRight.X = CornerOffsetX[2 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
+        UV.TopRight.Y = CornerOffsetY[2 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;
+        UV.BottomRight.X = CornerOffsetX[3 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
+        UV.BottomRight.Y = CornerOffsetY[3 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;
+    }
 }
 
 public struct UV
 {
-	public Vector2 Position { get; }
-	public Vector2 Dimensions { get; }
+	public Vector2 Position;
+	public Vector2 Dimensions;
 
-	public Vector2 TopLeft { get; }
-	public Vector2 TopRight { get; }
-	public Vector2 BottomLeft { get; }
-	public Vector2 BottomRight { get; }
+	public Vector2 TopLeft;
+	public Vector2 TopRight;
+	public Vector2 BottomLeft;
+	public Vector2 BottomRight;
 
 	public UV(Vector2 position, Vector2 dimensions)
 	{

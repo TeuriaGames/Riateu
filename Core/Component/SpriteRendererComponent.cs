@@ -6,7 +6,28 @@ namespace Riateu.Components;
 
 public class SpriteRenderer : GraphicsComponent
 {
-    public bool Flip;
+    public bool FlipX
+    {
+        get => (flip & FlipMode.Horizontal) == FlipMode.Horizontal;
+        set 
+        {
+            flip |= value ? FlipMode.Horizontal : ~FlipMode.Horizontal;
+            SpriteTexture.FlipUV(flip);
+        }
+    }
+
+    public bool FlipY
+    {
+        get => (flip & FlipMode.Vertical) == FlipMode.Vertical;
+        set 
+        {
+            flip |= value ? FlipMode.Vertical : ~FlipMode.Vertical;
+            SpriteTexture.FlipUV(flip);
+        }
+    }
+
+    private FlipMode flip;
+
     public SpriteRenderer(Texture baseTexture, SpriteTexture texture) : base(texture, baseTexture)
     {
     }
@@ -15,7 +36,7 @@ public class SpriteRenderer : GraphicsComponent
     {
         batch.Add(
             SpriteTexture, BaseTexture, GameContext.GlobalSampler, Vector2.Zero, 
-            Entity.Transform.WorldMatrix, Flip ? FlipMode.Horizontal : FlipMode.None);
+            Entity.Transform.WorldMatrix);
     }
 
     public override void Update(double delta)
