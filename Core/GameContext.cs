@@ -14,7 +14,7 @@ public static class GameContext
     public static GraphicsDevice GraphicsDevice;
     public static GraphicsPipeline DefaultPipeline;
     public static GraphicsPipeline MSDFPipeline;
-    public static GraphicsPipeline TilemapPipeline;
+    public static GraphicsPipeline InstancedPipeline;
     public static Sampler GlobalSampler;
 
     public static void Init(GraphicsDevice device, Window mainWindow) 
@@ -69,9 +69,9 @@ public static class GameContext
             {
                 Binding = 0,
                 InputRate = VertexInputRate.Vertex,
-                Stride = (uint)Marshal.SizeOf<PositionColorVertex>()
+                Stride = (uint)Marshal.SizeOf<PositionVertex>()
             },
-            CreateVertexAttribute<PositionColorVertex>(0)
+            CreateVertexAttribute<PositionVertex>(0)
         );
 
         var instancedBufferDescription = new VertexBindingAndAttributes(
@@ -79,16 +79,16 @@ public static class GameContext
             {
                 Binding = 1,
                 InputRate = VertexInputRate.Instance,
-                Stride = (uint)Marshal.SizeOf<InstancedTileData>()
+                Stride = (uint)Marshal.SizeOf<InstancedVertex>()
             },
-            CreateVertexAttribute<InstancedTileData>(1, 2)
+            CreateVertexAttribute<InstancedVertex>(1, 1)
         );
 
-        var tileMapBytes = Resources.TilemapShader;
+        var tileMapBytes = Resources.InstancedShader;
         using var ms3 = new MemoryStream(tileMapBytes);
         ShaderModule tilemapPSC = new ShaderModule(device, ms3);
 
-        GraphicsPipelineCreateInfo tilemapPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
+        GraphicsPipelineCreateInfo instancedPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
                 new ColorAttachmentDescription(mainWindow.SwapchainFormat, 
@@ -106,7 +106,7 @@ public static class GameContext
             ])
         };
 
-        TilemapPipeline = new GraphicsPipeline(device, tilemapPipelineCreateInfo);
+        InstancedPipeline = new GraphicsPipeline(device, instancedPipelineCreateInfo);
     }
 
     public static VertexAttribute[] CreateVertexAttribute<T>(

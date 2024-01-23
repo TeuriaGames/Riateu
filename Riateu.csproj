@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="TeuJson" Version="2.2.1" />
     <PackageReference Include="TeuJson.Generator" Version="2.2.1" />
+    <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,8 +25,8 @@
 		<EmbeddedResource Include="Core\Misc\Refresh\ImGuiShader.wgsl.refresh">
 			<LogicalName>Riateu.Misc.Refresh.ImGuiShader.wgsl.refresh</LogicalName>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Refresh\TilemapShader.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.TilemapShader.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Refresh\InstancedShader.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.InstancedShader.wgsl.refresh</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
 </Project>

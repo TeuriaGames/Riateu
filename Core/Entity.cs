@@ -109,13 +109,13 @@ public class Entity : IEnumerable<Component>
         }
     }
 
-    public virtual void Draw(Batch spriteBatch) 
+    public virtual void Draw(CommandBuffer buffer, Batch spriteBatch) 
     {
         if (!Visible) return;
         for (int i = 0; i < componentList.Count; i++) 
         {
             if (!componentList[i].Active) continue;
-            componentList[i].Draw(spriteBatch);
+            componentList[i].Draw(buffer, spriteBatch);
         }
     }
 

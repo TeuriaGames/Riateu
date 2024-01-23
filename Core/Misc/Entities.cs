@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MoonWorks.Graphics;
 using Riateu.Graphics;
 
 namespace Riateu;
@@ -137,12 +138,12 @@ public sealed class Entities : IEnumerable<Entity>
         }
     }
 
-    public void Draw(Batch spriteBatch) 
+    public void Draw(CommandBuffer buffer, Batch spriteBatch) 
     {
         for (int i = 0; i < entities.Count; i++)
         {
             var entity = entities[i];
-            if (entity.Visible) { entity.Draw(spriteBatch); }
+            if (entity.Visible) { entity.Draw(buffer, spriteBatch); }
         }
     }
 

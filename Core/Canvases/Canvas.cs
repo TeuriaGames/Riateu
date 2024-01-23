@@ -41,16 +41,18 @@ public class Canvas
 public class DefaultCanvas : Canvas
 {
     private Rect scissorRect;
+    private InstanceBatch instanceBatch;
     public DefaultCanvas(Scene scene, GraphicsDevice device, int width, int height) : base(scene, device, width, height)
     {
         scissorRect = new Rect(0, 0, width, height);
+        instanceBatch = new InstanceBatch(device, 1024, 640);
     }
 
     public override void Draw(CommandBuffer buffer, Batch batch)
     {
         foreach (var entity in Scene.EntityList) 
         {
-            entity.Draw(batch);
+            entity.Draw(buffer, batch);
         }    
         batch.FlushVertex(buffer);
 

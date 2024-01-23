@@ -5,16 +5,16 @@ namespace Riateu.Misc;
 
 public static class Resources 
 {
-    private static byte[] tilemapShader;
-    public static byte[] TilemapShader
+    private static byte[] instancedShader;
+    public static byte[] InstancedShader
     {
         get 
         {
-            if (tilemapShader == null) 
+            if (instancedShader == null) 
             {
-                tilemapShader = GetShaderByte("TilemapShader.wgsl");
+                instancedShader = GetShaderByte("InstancedShader.wgsl");
             }
-            return tilemapShader;
+            return instancedShader;
         }
     }
 

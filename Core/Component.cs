@@ -1,4 +1,5 @@
 using System;
+using MoonWorks.Graphics;
 using Riateu.Graphics;
 
 namespace Riateu;
@@ -38,7 +39,7 @@ public class Component
     }
     
     public virtual void Update(double delta) {}
-    public virtual void Draw(Batch spriteBatch) {}
+    public virtual void Draw(CommandBuffer buffer, Batch spriteBatch) {}
     public virtual void Removed() 
     {
         Entity = null;

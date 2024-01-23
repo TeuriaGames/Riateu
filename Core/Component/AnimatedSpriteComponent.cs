@@ -140,7 +140,7 @@ public class AnimatedSprite : GraphicsComponent
         SpriteTexture = texture;
     }
 
-    public override void Draw(Batch spriteBatch)
+    public override void Draw(CommandBuffer buffer, Batch spriteBatch)
     {
         spriteBatch.Add(SpriteTexture, BaseTexture, GameContext.GlobalSampler, 
             Vector2.Zero, 

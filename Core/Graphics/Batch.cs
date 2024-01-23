@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using MoonWorks;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
@@ -81,7 +80,7 @@ public class Batch : System.IDisposable
         Matrix = Matrices.Pop();
     }
 
-    public void FlushVertex(in CommandBuffer cmdBuf) 
+    public void FlushVertex(CommandBuffer cmdBuf) 
     {
         if (textureCount == 0) 
         {
@@ -209,32 +208,4 @@ public class Batch : System.IDisposable
         vertexBuffer.Dispose();
         indexBuffer.Dispose();
     }
-}
-
-
-[StructLayout(LayoutKind.Sequential)]
-public struct PositionColorVertex(Vector3 position, Color color) : IVertexType
-{
-    public Vector3 Position = position;
-    public Color Color = color;
-
-    public static VertexElementFormat[] Formats { get; } = new VertexElementFormat[2] 
-    {
-        VertexElementFormat.Vector3,
-        VertexElementFormat.Color
-    };
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Color color) : IVertexType
-{
-    public Vector3 Position = position;
-    public Vector2 TexCoord = texCoord;
-    public Color Color = color;
-
-    public static VertexElementFormat[] Formats { get; } = [
-        VertexElementFormat.Vector3,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Color,
-    ];
 }

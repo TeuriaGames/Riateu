@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
 using Riateu.Graphics;
@@ -53,10 +52,9 @@ public class Tilemap : Component
         spriteBatch.FlushVertex(buffer);
     }
 
-    public override void Draw(Batch spriteBatch)
+    public override void Draw(CommandBuffer buffer, Batch spriteBatch)
     {
         var device = GameContext.GraphicsDevice;
-        CommandBuffer buffer = device.AcquireCommandBuffer();
 
         if (mode == TilemapMode.Separate) 
         {
@@ -67,8 +65,6 @@ public class Tilemap : Component
                 buffer.BindGraphicsPipeline(GameContext.DefaultPipeline);
                 spriteBatch.Draw(buffer);
                 buffer.EndRenderPass();
-                device.Submit(buffer);
-                device.Wait();
                 dirty = false;
             }
             spriteBatch.Add(frameBuffer, GameContext.GlobalSampler, 
@@ -89,7 +85,7 @@ public class InstancedTilemap : Component
     private Buffer vertexBuffer;
     private Buffer indexBuffer;
     private Buffer instancedBuffer;
-    private InstancedTileData[] tiledData;
+    private InstancedVertex[] tiledData;
     private Matrix4x4 Matrix;
     public int GridSize;
 
@@ -107,7 +103,7 @@ public class InstancedTilemap : Component
 
         Matrix = model * view * projection;
 
-        tiledData = new InstancedTileData[rows * columns];
+        tiledData = new InstancedVertex[rows * columns];
         this.tiles = tiles;
         this.tilemapTexture = texture;
         GridSize = gridSize;
@@ -116,7 +112,7 @@ public class InstancedTilemap : Component
             TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
         this.mode = mode;
 
-        vertexBuffer = Buffer.Create<PositionColorVertex>(
+        vertexBuffer = Buffer.Create<PositionVertex>(
             device, BufferUsageFlags.Vertex, 4
         );
 
@@ -124,16 +120,16 @@ public class InstancedTilemap : Component
             device, BufferUsageFlags.Index, 6
         );
 
-        instancedBuffer = Buffer.Create<InstancedTileData>(
+        instancedBuffer = Buffer.Create<InstancedVertex>(
             device, BufferUsageFlags.Vertex, (uint)(rows * columns)
         );
         CommandBuffer buffer = device.AcquireCommandBuffer();
 
-        buffer.SetBufferData<PositionColorVertex>(vertexBuffer, [
-            new (new Vector3(0, 0, 0), Color.White),
-            new (new Vector3(0, 1, 0), Color.White),
-            new (new Vector3(1, 0, 0), Color.White),
-            new (new Vector3(1, 1, 0), Color.White),
+        buffer.SetBufferData<PositionVertex>(vertexBuffer, [
+            new (new Vector3(0, 0, 0)),
+            new (new Vector3(0, 1, 0)),
+            new (new Vector3(1, 0, 0)),
+            new (new Vector3(1, 1, 0)),
         ]);
 
         buffer.SetBufferData<ushort>(indexBuffer, [
@@ -158,61 +154,38 @@ public class InstancedTilemap : Component
                     continue;
                 var tex = sTexture.Value;
 
-                tiledData[instances] = new InstancedTileData(
+                tiledData[instances] = new InstancedVertex(
                     new Vector3(x * GridSize, y * GridSize, 1),
-                    GridSize,
-                    tex.UV);
+                    new Vector2(GridSize),
+                    tex.UV,
+                    Color.White);
                 instances++;
             }
         }
 
         if (instances > 0)
-            buffer.SetBufferData<InstancedTileData>(instancedBuffer, tiledData, 0, 0, instances);
+            buffer.SetBufferData<InstancedVertex>(instancedBuffer, tiledData, 0, 0, instances);
         return instances;
     }
 
-    public override void Draw(Batch spriteBatch)
+    public override void Draw(CommandBuffer buffer, Batch spriteBatch)
     {
         var device = GameContext.GraphicsDevice;
-        CommandBuffer buffer = device.AcquireCommandBuffer();
 
         if (dirty) 
         {
             var instances = AddToBatch(buffer);
             buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, Color.Transparent));
-            buffer.BindGraphicsPipeline(GameContext.TilemapPipeline);
+            buffer.BindGraphicsPipeline(GameContext.InstancedPipeline);
             buffer.BindVertexBuffers(vertexBuffer, instancedBuffer);
             buffer.BindIndexBuffer(indexBuffer, IndexElementSize.Sixteen);
             buffer.BindFragmentSamplers(new TextureSamplerBinding(tilemapTexture, GameContext.GlobalSampler));
             buffer.DrawInstancedPrimitives(0, 0, 2, instances, 
                 buffer.PushVertexShaderUniforms(Matrix), 0);
             buffer.EndRenderPass();
-            device.Submit(buffer);
-            // dirty = false;
+            dirty = false;
         }
         spriteBatch.Add(frameBuffer, GameContext.GlobalSampler, 
             Vector2.Zero, Matrix3x2.Identity);
     }
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct InstancedTileData(Vector3 position, float scale, UV uv) : IVertexType
-{
-    public Vector3 Position = position;
-    public Vector2 UV0 = uv.TopLeft;
-    public Vector2 UV1 = uv.BottomLeft;
-    public Vector2 UV2 = uv.TopRight;
-    public Vector2 UV3 = uv.BottomRight;
-    public Vector2 Scale = new Vector2(scale);
-
-    public static VertexElementFormat[] Formats => [
-        VertexElementFormat.Vector3,
-
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
-
-        VertexElementFormat.Vector2,
-    ];
 }

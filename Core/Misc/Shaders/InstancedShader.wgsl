@@ -1,15 +1,15 @@
 struct VertexInput {
     @location(0) position: vec3<f32>,
-    @location(1) color: vec4<f32>,
 }
 
 struct InstanceInput {
-    @location(2) pos: vec3<f32>,
-    @location(3) uv0: vec2<f32>,
-    @location(4) uv1: vec2<f32>,
-    @location(5) uv2: vec2<f32>,
-    @location(6) uv3: vec2<f32>,
-    @location(7) scale: vec2<f32>
+    @location(1) pos: vec3<f32>,
+    @location(2) uv0: vec2<f32>,
+    @location(3) uv1: vec2<f32>,
+    @location(4) uv2: vec2<f32>,
+    @location(5) uv3: vec2<f32>,
+    @location(6) scale: vec2<f32>,
+    @location(7) color: vec4<f32>
 };
 
 struct VertexOutput {
@@ -31,7 +31,7 @@ fn vs_main(
     var uvs = array<vec2<f32>, 4>(in.uv0, in.uv1, in.uv2, in.uv3);
     let matrix = create_translation(in.pos)
         * create_scale(vec3<f32>(in.scale.xy, 1.));
-    output.color = vert.color;
+    output.color = in.color;
     output.tex_coord = uvs[vert_index % 4u];
     output.position = matrix_uniform * matrix * vec4<f32>(vert.position, 1.0);
     return output;
