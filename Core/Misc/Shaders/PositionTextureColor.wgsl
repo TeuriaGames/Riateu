@@ -10,7 +10,6 @@ struct VertexOutput {
     @location(1) tex_coord: vec2<f32>
 };
 
-
 @binding(0) @group(2) var<uniform> matrix_uniform: mat4x4<f32>;
 
 @vertex
