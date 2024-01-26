@@ -1,63 +1,37 @@
 using System;
+using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
+using Riateu.Graphics;
 
 namespace Riateu.Physics;
 
 public abstract class Shape 
 {
+    public Shape(Entity entity)  
+    {
+        Entity = entity;
+    }
+    public Entity Entity;
+    public abstract Shape Clone();
+    
+
     public abstract bool Collide(Vector2 position, Rectangle rect);
     public abstract bool Collide(Vector2 position, Vector2 point);
     public abstract bool Collide(Vector2 position, Point point);
     public abstract bool Collide(Vector2 position, AABB aabb);
+    public abstract bool Collide(Vector2 position, CollisionGrid grid);
 
     public bool Collide(Vector2 position, Shape shape) 
     {
         return shape switch 
         {
             AABB aabb => Collide(position, aabb),
+            CollisionGrid grid => Collide(position, grid),
             _ => throw new NotImplementedException()
         };
     }
-}
 
-public class AABB : Shape
-{
-    public Rectangle BoundingBox;
-    public Entity Entity;
-    
-
-    public AABB(Entity entity, Rectangle rectangle) 
+    public virtual void DebugDraw(CommandBuffer buffer, InstanceBatch batch) 
     {
-        BoundingBox = rectangle;
-        Entity = entity;
-    }
-
-    public AABB(Entity entity, int x, int y, int width, int height) 
-        : this(entity, new Rectangle(x, y, width, height)) {}
-
-    public override bool Collide(Vector2 position, Rectangle rect) 
-    {
-        return GetAbsoluteBounds().Intersects(rect);
-    }
-
-    public override bool Collide(Vector2 position, Vector2 point) => 
-        Collide(position, new Point((int)point.X, (int)point.Y));
-
-    public override bool Collide(Vector2 position, Point point) {
-        return GetAbsoluteBounds().Contains(point);
-    } 
-
-    public override bool Collide(Vector2 position, AABB aabb) {
-        return GetAbsoluteBounds().Intersects(aabb.GetAbsoluteBounds());
-    } 
-
-    private Rectangle GetAbsoluteBounds() 
-    {
-        return new Rectangle(
-            (int)Entity.Position.X + BoundingBox.X,
-            (int)Entity.Position.Y + BoundingBox.Y,
-            BoundingBox.Width,
-            BoundingBox.Height
-        );
     }
 }

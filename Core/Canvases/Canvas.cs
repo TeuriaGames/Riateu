@@ -1,9 +1,11 @@
+using System;
+using MoonWorks;
 using MoonWorks.Graphics;
 using Riateu.Graphics;
 
 namespace Riateu;
 
-public class Canvas 
+public class Canvas : IDisposable
 {
     public uint Width => width;
     public uint Height => height;
@@ -12,6 +14,7 @@ public class Canvas
     private uint height;
 
     public Texture CanvasTexture;
+    public bool IsDisposed { get; private set; }
 
     public Scene Scene { get; set; }
 
@@ -36,24 +39,51 @@ public class Canvas
     {
         return new DefaultCanvas(scene, device, scene.GameInstance.Width, scene.GameInstance.Height);
     }
+
+    public virtual void End() 
+    {
+        Dispose();
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!IsDisposed)
+        {
+            if (disposing)
+            {
+                CanvasTexture.Dispose();
+            }
+
+            IsDisposed = true;
+        }
+    }
+
+    ~Canvas()
+    {
+#if DEBUG
+        Logger.LogWarn($"The type {this.GetType()} has not been disposed properly.");
+#endif
+        Dispose(disposing: false);
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }
 
 public class DefaultCanvas : Canvas
 {
     private Rect scissorRect;
-    private InstanceBatch instanceBatch;
     public DefaultCanvas(Scene scene, GraphicsDevice device, int width, int height) : base(scene, device, width, height)
     {
         scissorRect = new Rect(0, 0, width, height);
-        instanceBatch = new InstanceBatch(device, 1024, 640);
     }
 
     public override void Draw(CommandBuffer buffer, Batch batch)
     {
-        foreach (var entity in Scene.EntityList) 
-        {
-            entity.Draw(buffer, batch);
-        }    
+        Scene.EntityList.Draw(buffer, batch);
         batch.FlushVertex(buffer);
 
         buffer.BeginRenderPass(new ColorAttachmentInfo(CanvasTexture, Color.Transparent));

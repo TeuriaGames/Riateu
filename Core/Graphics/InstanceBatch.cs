@@ -22,6 +22,7 @@ public class InstanceBatch : System.IDisposable
     private Stack<Matrix4x4> Matrices;
 
     public Matrix4x4 Matrix;
+    public bool IsDisposed { get; private set; }
 
     public InstanceBatch(GraphicsDevice device, int width, int height) 
     {
@@ -142,9 +143,32 @@ public class InstanceBatch : System.IDisposable
         instanceCount++;
     }
 
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!IsDisposed)
+        {
+            if (disposing)
+            {
+                instancedBuffer.Dispose();
+                vertexBuffer.Dispose();
+                indexBuffer.Dispose();
+            }
+
+            IsDisposed = true;
+        }
+    }
+
+    ~InstanceBatch()
+    {
+#if DEBUG
+        Logger.LogWarn($"The type {this.GetType()} has not been disposed properly.");
+#endif
+        Dispose(disposing: false);
+    }
+
     public void Dispose()
     {
-        vertexBuffer.Dispose();
-        indexBuffer.Dispose();
+        Dispose(disposing: true);
+        System.GC.SuppressFinalize(this);
     }
 }

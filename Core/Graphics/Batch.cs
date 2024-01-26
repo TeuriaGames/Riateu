@@ -20,6 +20,7 @@ public class Batch : System.IDisposable
     private Stack<Matrix4x4> Matrices;
 
     public Matrix4x4 Matrix;
+    public bool IsDisposed { get; private set; }
 
     public Batch(GraphicsDevice device, int width, int height) 
     {
@@ -192,9 +193,36 @@ public class Batch : System.IDisposable
         textureCount++;
     }
 
+    public void AddCanvas(Canvas canvas, Sampler sampler) 
+    {
+        Add(canvas.CanvasTexture, sampler, Vector2.Zero, Matrix3x2.Identity);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!IsDisposed)
+        {
+            if (disposing)
+            {
+                vertexBuffer.Dispose();
+                indexBuffer.Dispose();
+            }
+
+            IsDisposed = true;
+        }
+    }
+
+    ~Batch()
+    {
+#if DEBUG
+        Logger.LogWarn($"The type {this.GetType()} has not been disposed properly.");
+#endif
+        Dispose(disposing: false);
+    }
+
     public void Dispose()
     {
-        vertexBuffer.Dispose();
-        indexBuffer.Dispose();
+        Dispose(disposing: true);
+        System.GC.SuppressFinalize(this);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using MoonWorks.Graphics;
+using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
@@ -31,13 +32,18 @@ public class Spritesheet
             for (int x = 0; x < SpriteTexture.Width / tileWidth; x++) 
             {
                 tiles[x, y] = new SpriteTexture(baseTexture, new Rect(
-                    x * tileWidth,
-                    y * tileHeight,
+                    texture.Source.X + (x * tileWidth),
+                    texture.Source.Y + (y * tileHeight),
                     tileWidth,
                     tileHeight
                 ));
             }
         }
+    }
+
+    public SpriteTexture GetTexture(Point position) 
+    {
+        return GetTexture(position.X, position.Y);
     }
 
     public SpriteTexture GetTexture(int x, int y) 

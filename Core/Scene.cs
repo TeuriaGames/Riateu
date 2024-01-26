@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using MoonWorks;
 using MoonWorks.Graphics;
+using MoonWorks.Math.Float;
 using Riateu.Components;
 using Riateu.Graphics;
 
@@ -9,7 +8,7 @@ namespace Riateu;
 
 public abstract class Scene 
 {
-    private World physicsWorld = new();
+    public World PhysicsWorld = new();
 
     public GameApp GameInstance;
     public Action<Entity> OnEntityCreated;
@@ -18,7 +17,16 @@ public abstract class Scene
 
     public Entities EntityList;
 
-    public Canvas SceneCanvas;
+    public Canvas SceneCanvas 
+    {
+        get => sceneCanvas;
+        set 
+        {
+            sceneCanvas?.Dispose();
+            sceneCanvas = value;
+        }
+    }
+    private Canvas sceneCanvas;
 
     public Scene(GameApp game) :this(game, null)
     {
@@ -28,7 +36,7 @@ public abstract class Scene
     {
         GameInstance = game;
         EntityList = new Entities(this);
-        SceneCanvas = canvas ?? Canvas.CreateDefault(this, game.GraphicsDevice);
+        sceneCanvas = canvas ?? Canvas.CreateDefault(this, game.GraphicsDevice);
     }
 
     public void Add(Entity entity) 
@@ -38,7 +46,7 @@ public abstract class Scene
 
     public void AddPhysics(PhysicsComponent component) 
     {
-        physicsWorld.Insert(component);
+        PhysicsWorld.Insert(component);
     }
 
     public void Remove(Entity entity) 
@@ -48,38 +56,36 @@ public abstract class Scene
 
     public void RemovePhysics(PhysicsComponent component) 
     {
-        physicsWorld.Remove(component);
+        PhysicsWorld.Remove(component);
+    }
+
+    public void ApplyCurrentCanvasToBatch(Batch batch, Sampler sampler) 
+    {
+        batch.Add(sceneCanvas.CanvasTexture, sampler, Vector2.Zero, Matrix3x2.Identity);
     }
 
     internal void InternalUpdate(double delta) 
     {
         EntityList.UpdateSystem();
-        foreach (var comp in physicsWorld.Components) 
-        {
-            foreach (var other in physicsWorld.Retrieve(comp)) 
-            {
-                comp.Check(other);
-            }
-        }
         Update(delta);
         EntityList.Update(delta);
     }
 
     internal void InternalBeforeDraw(ref CommandBuffer buffer, Batch batch) 
     {
-        SceneCanvas.BeforeDraw(ref buffer, batch);
+        sceneCanvas.BeforeDraw(ref buffer, batch);
         BeforeDraw(ref buffer, batch);
     }
 
     internal void InternalDraw(CommandBuffer buffer, Texture backbuffer, Batch batch) 
     {
-        SceneCanvas.Draw(buffer, batch);
+        sceneCanvas.Draw(buffer, batch);
         Draw(buffer, backbuffer, batch);
     }
 
     internal void InternalAfterDraw(ref CommandBuffer buffer, Batch batch) 
     {
-        SceneCanvas.AfterDraw(ref buffer, batch);
+        sceneCanvas.AfterDraw(ref buffer, batch);
         AfterDraw(ref buffer, batch);
     }
 

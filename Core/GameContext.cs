@@ -86,7 +86,7 @@ public static class GameContext
 
         var tileMapBytes = Resources.InstancedShader;
         using var ms3 = new MemoryStream(tileMapBytes);
-        ShaderModule tilemapPSC = new ShaderModule(device, ms3);
+        ShaderModule instancedPSC = new ShaderModule(device, ms3);
 
         GraphicsPipelineCreateInfo instancedPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
         {
@@ -98,8 +98,8 @@ public static class GameContext
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
             RasterizerState = RasterizerState.CW_CullNone,
-            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(tilemapPSC, "vs_main", 0),
-            FragmentShaderInfo = GraphicsShaderInfo.Create(tilemapPSC, "fs_main", 1),
+            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(instancedPSC, "vs_main", 0),
+            FragmentShaderInfo = GraphicsShaderInfo.Create(instancedPSC, "fs_main", 1),
             VertexInputState = new VertexInputState([
                 vertexBufferDescription,
                 instancedBufferDescription

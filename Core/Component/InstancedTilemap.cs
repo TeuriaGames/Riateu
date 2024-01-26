@@ -1,86 +1,16 @@
+using MoonWorks;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
 using Riateu.Graphics;
 
 namespace Riateu.Components;
 
-public enum TilemapMode 
-{
-    Separate,
-    Direct
-}
 
-public class Tilemap : Component 
+public class InstancedTilemap : Component, System.IDisposable
 {
     private Array2D<SpriteTexture?> tiles;
     private Texture tilemapTexture;
     private Texture frameBuffer;
-    private bool dirty = true;
-    private TilemapMode mode;
-    public int GridSize;
-
-
-    public Tilemap(Texture texture, Array2D<SpriteTexture?> tiles, int gridSize, 
-        TilemapMode mode = TilemapMode.Separate) 
-    {
-        int rows = tiles.Rows;
-        int columns = tiles.Columns;
-        this.tiles = tiles;
-        this.tilemapTexture = texture;
-        GridSize = gridSize;
-        frameBuffer = Texture.CreateTexture2D(GameContext.GraphicsDevice,
-            1024, 640,
-            TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
-        this.mode = mode;
-    }
-    
-    private void AddToBatch(Batch spriteBatch, ref CommandBuffer buffer) 
-    {
-        for (int x = 0; x < tiles.Rows; x++) 
-        {
-            for (int y = 0; y < tiles.Columns; y++) 
-            {
-                var sTexture = tiles[x, y];
-                if (sTexture is null)
-                    continue;
-                
-                spriteBatch.Add(sTexture.Value, tilemapTexture, GameContext.GlobalSampler, 
-                    new Vector2(x * GridSize, y * GridSize), Entity.Transform.WorldMatrix, layerDepth: 1f);
-            }
-        }
-
-        spriteBatch.FlushVertex(buffer);
-    }
-
-    public override void Draw(CommandBuffer buffer, Batch spriteBatch)
-    {
-        var device = GameContext.GraphicsDevice;
-
-        if (mode == TilemapMode.Separate) 
-        {
-            if (dirty) 
-            {
-                AddToBatch(spriteBatch, ref buffer);
-                buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, Color.Transparent));
-                buffer.BindGraphicsPipeline(GameContext.DefaultPipeline);
-                spriteBatch.Draw(buffer);
-                buffer.EndRenderPass();
-                dirty = false;
-            }
-            spriteBatch.Add(frameBuffer, GameContext.GlobalSampler, 
-                Vector2.Zero, Matrix3x2.Identity);
-            return;
-        }
-        AddToBatch(spriteBatch, ref buffer);
-    }
-}
-
-public class InstancedTilemap : Component 
-{
-    private Array2D<SpriteTexture?> tiles;
-    private Texture tilemapTexture;
-    private Texture frameBuffer;
-    private bool dirty = true;
     private TilemapMode mode;
     private Buffer vertexBuffer;
     private Buffer indexBuffer;
@@ -88,10 +18,10 @@ public class InstancedTilemap : Component
     private InstancedVertex[] tiledData;
     private Matrix4x4 Matrix;
     public int GridSize;
-
+    public bool IsDisposed { get; private set; }
 
     public InstancedTilemap(GraphicsDevice device, Texture texture, Array2D<SpriteTexture?> tiles, int gridSize, 
-        TilemapMode mode = TilemapMode.Separate) 
+        TilemapMode mode = TilemapMode.Baked) 
     {
         int rows = tiles.Rows;
         int columns = tiles.Columns;
@@ -136,6 +66,7 @@ public class InstancedTilemap : Component
             0, 1, 2, 2, 1, 3
         ]);
 
+        RenderTiles(buffer, Vector2.Zero);
 
         device.Submit(buffer);
     }
@@ -168,24 +99,58 @@ public class InstancedTilemap : Component
         return instances;
     }
 
+    private void RenderTiles(CommandBuffer buffer, Vector2 camera) 
+    {
+        var instances = AddToBatch(buffer);
+        buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, Color.Transparent));
+        buffer.BindGraphicsPipeline(GameContext.InstancedPipeline);
+        buffer.BindVertexBuffers(vertexBuffer, instancedBuffer);
+        buffer.BindIndexBuffer(indexBuffer, IndexElementSize.Sixteen);
+        buffer.BindFragmentSamplers(new TextureSamplerBinding(tilemapTexture, GameContext.GlobalSampler));
+        buffer.DrawInstancedPrimitives(0, 0, 2, instances, 
+            buffer.PushVertexShaderUniforms(Matrix), 0);
+        buffer.EndRenderPass();
+    }
+
     public override void Draw(CommandBuffer buffer, Batch spriteBatch)
     {
         var device = GameContext.GraphicsDevice;
 
-        if (dirty) 
+        if (mode == TilemapMode.Cull) 
         {
-            var instances = AddToBatch(buffer);
-            buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, Color.Transparent));
-            buffer.BindGraphicsPipeline(GameContext.InstancedPipeline);
-            buffer.BindVertexBuffers(vertexBuffer, instancedBuffer);
-            buffer.BindIndexBuffer(indexBuffer, IndexElementSize.Sixteen);
-            buffer.BindFragmentSamplers(new TextureSamplerBinding(tilemapTexture, GameContext.GlobalSampler));
-            buffer.DrawInstancedPrimitives(0, 0, 2, instances, 
-                buffer.PushVertexShaderUniforms(Matrix), 0);
-            buffer.EndRenderPass();
-            dirty = false;
+            RenderTiles(buffer, Vector2.Zero);
         }
         spriteBatch.Add(frameBuffer, GameContext.GlobalSampler, 
             Vector2.Zero, Matrix3x2.Identity);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!IsDisposed)
+        {
+            if (disposing)
+            {
+                vertexBuffer.Dispose();
+                indexBuffer.Dispose();
+                instancedBuffer.Dispose();
+                frameBuffer.Dispose();
+            }
+
+            IsDisposed = true;
+        }
+    }
+
+    ~InstancedTilemap()
+    {
+#if DEBUG
+        Logger.LogWarn($"The type {this.GetType()} has not been disposed properly.");
+#endif
+        Dispose(disposing: false);
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        System.GC.SuppressFinalize(this);
     }
 }
