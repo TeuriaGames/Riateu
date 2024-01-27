@@ -45,7 +45,7 @@ public class Tileset
         {
             var jsonRule = jsonRulesets[i];
             if (jsonRule.Mask == null) { continue; }
-            var ruleset = new Ruleset(jsonRule.Name, jsonRule.Tiles.Length);
+            var ruleset = new Ruleset(jsonRule.Name, jsonRule.Tiles.GetLength(0));
 
             for (int j = 0; j < jsonRule.Tiles.GetLength(0); j++) 
             {
