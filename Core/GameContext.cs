@@ -63,26 +63,8 @@ public static class GameContext
 
         MSDFPipeline = new GraphicsPipeline(device, msdfPipelineCreateInfo);
 
-
-        var vertexBufferDescription = new VertexBindingAndAttributes(
-            new VertexBinding 
-            {
-                Binding = 0,
-                InputRate = VertexInputRate.Vertex,
-                Stride = (uint)Marshal.SizeOf<PositionVertex>()
-            },
-            CreateVertexAttribute<PositionVertex>(0)
-        );
-
-        var instancedBufferDescription = new VertexBindingAndAttributes(
-            new VertexBinding 
-            {
-                Binding = 1,
-                InputRate = VertexInputRate.Instance,
-                Stride = (uint)Marshal.SizeOf<InstancedVertex>()
-            },
-            CreateVertexAttribute<InstancedVertex>(1, 1)
-        );
+        var vertexBufferDescription = VertexBindingAndAttributes.Create<PositionVertex>(0);
+        var instancedBufferDescription = VertexBindingAndAttributes.Create<InstancedVertex>(1, 1, VertexInputRate.Instance);
 
         var tileMapBytes = Resources.InstancedShader;
         using var ms3 = new MemoryStream(tileMapBytes);
@@ -107,29 +89,5 @@ public static class GameContext
         };
 
         InstancedPipeline = new GraphicsPipeline(device, instancedPipelineCreateInfo);
-    }
-
-    public static VertexAttribute[] CreateVertexAttribute<T>(
-        uint bindingIndex, uint startingLocation = 0, uint offsetStart = 0) 
-        where T : unmanaged, IVertexType
-    {
-        VertexAttribute[] attributes = new VertexAttribute[T.Formats.Length];
-        uint offset = offsetStart;
-
-        for (uint i = 0; i < T.Formats.Length; i += 1)
-        {
-            var format = T.Formats[i];
-
-            attributes[i] = new VertexAttribute
-            {
-                Binding = bindingIndex,
-                Location = i + startingLocation,
-                Format = format,
-                Offset = offset
-            };
-
-            offset += Conversions.VertexElementFormatSize(format);
-        }
-        return attributes;
     }
 }

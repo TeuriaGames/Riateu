@@ -10,8 +10,8 @@ namespace Riateu.Components;
 
 public class AnimatedSprite : GraphicsComponent
 {
-    private Dictionary<string, SpriteTexture[]> frames;
-    private string currentAnimationName;
+    private Dictionary<string, Animation> frames;
+    private string currentAnimationName = string.Empty;
     private int currentFrame;
     private double fps = 10;
     private double timer;
@@ -31,6 +31,8 @@ public class AnimatedSprite : GraphicsComponent
     }
 
     public bool IsPlaying => playing;
+
+    public string Animation => currentAnimationName;
     
     
     private AnimatedSprite(Texture texture) : base(texture) {}
@@ -48,14 +50,16 @@ public class AnimatedSprite : GraphicsComponent
         var texture = json["texture"];
         var cycles = json["cycles"];
 
-        var frames = new Dictionary<string, SpriteTexture[]>();
+        var frames = new Dictionary<string, Animation>();
 
         foreach (var cycle in cycles.Pairs) 
         {
+            var animation = new Animation();
             var key = cycle.Key;
             var value = cycle.Value;
 
             var jsonFrames = value["frames"];
+            bool loop = value.Contains("loop") && value["loop"];
             var count = jsonFrames.Count;
 
             var spriteTextures = new SpriteTexture[count];
@@ -64,14 +68,17 @@ public class AnimatedSprite : GraphicsComponent
                 spriteTextures[i] = atlas[texture + "/" + jsonFrames[i].AsInt32];
             }
 
-            frames[key] = spriteTextures;
+            animation.Frames = spriteTextures;
+            animation.Loop = loop;
+
+            frames[key] = animation;
         }
 
         animSprite.frames = frames;
         return animSprite;
     }
 
-    public static AnimatedSprite Create(Texture atlasTexture, Dictionary<string, SpriteTexture[]> frames) 
+    public static AnimatedSprite Create(Texture atlasTexture, Dictionary<string, Animation> frames) 
     {
         var animSprite = new AnimatedSprite(atlasTexture);
         animSprite.frames = frames;
@@ -81,11 +88,11 @@ public class AnimatedSprite : GraphicsComponent
     public static AnimatedSprite Create(Texture atlasTexture) 
     {
         var animSprite = new AnimatedSprite(atlasTexture);
-        animSprite.frames = new Dictionary<string, SpriteTexture[]>();
+        animSprite.frames = new Dictionary<string, Animation>();
         return animSprite;
     }
 
-    public void Add(string name, SpriteTexture[] textures) 
+    public void Add(string name, Animation textures) 
     {
         frames[name] = textures;
     }
@@ -94,7 +101,7 @@ public class AnimatedSprite : GraphicsComponent
     {
         if (frame == currentAnimationName)
             return;
-        Set(ref frames[frame][0]);
+        Set(ref frames[frame].Frames[0]);
         currentAnimationName = frame;
         playing = true;
     }
@@ -111,21 +118,22 @@ public class AnimatedSprite : GraphicsComponent
             return;
 
         var currentFrames = frames[currentAnimationName];
+        isLoop = currentFrames.Loop;
         var intTimer = Math.Sign(timer);
         timer += delta * fps;
         currentFrame += intTimer;
         timer -= intTimer;
 
-        if (currentFrame < currentFrames.Length)
+        if (currentFrame < currentFrames.Frames.Length)
         {
-            Set(ref currentFrames[currentFrame]);
+            Set(ref currentFrames.Frames[currentFrame]);
             return;
         }
         timer = 0;
         if (isLoop)
         {
             currentFrame = 0;
-            Set(ref currentFrames[0]);
+            Set(ref currentFrames.Frames[0]);
             return;
         }
 
@@ -140,10 +148,16 @@ public class AnimatedSprite : GraphicsComponent
         SpriteTexture = texture;
     }
 
-    public override void Draw(CommandBuffer buffer, Batch spriteBatch)
+    public override void Draw(CommandBuffer buffer, IBatch spriteBatch)
     {
         spriteBatch.Add(SpriteTexture, BaseTexture, GameContext.GlobalSampler, 
             Vector2.Zero, 
             Entity.Transform.WorldMatrix);
     }
+}
+
+public struct Animation 
+{
+    public SpriteTexture[] Frames;
+    public bool Loop;
 }

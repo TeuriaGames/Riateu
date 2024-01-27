@@ -32,7 +32,7 @@ public class SpriteRenderer : GraphicsComponent
     {
     }
 
-    public override void Draw(CommandBuffer buffer, Batch batch) 
+    public override void Draw(CommandBuffer buffer, IBatch batch) 
     {
         batch.Add(
             SpriteTexture, BaseTexture, GameContext.GlobalSampler, Vector2.Zero, 

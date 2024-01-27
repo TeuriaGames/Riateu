@@ -44,7 +44,7 @@ public class Tilemap : Component
         this.mode = mode;
     }
     
-    private void AddToBatch(Batch spriteBatch, ref CommandBuffer buffer) 
+    private void AddToBatch(IBatch spriteBatch, ref CommandBuffer buffer) 
     {
         for (int x = 0; x < tiles.Rows; x++) 
         {
@@ -62,7 +62,7 @@ public class Tilemap : Component
         spriteBatch.FlushVertex(buffer);
     }
 
-    public override void Draw(CommandBuffer buffer, Batch spriteBatch)
+    public override void Draw(CommandBuffer buffer, IBatch spriteBatch)
     {
         var device = GameContext.GraphicsDevice;
 

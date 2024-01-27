@@ -138,7 +138,7 @@ public sealed class Entities : IEnumerable<Entity>
         }
     }
 
-    public void Draw(CommandBuffer buffer, Batch spriteBatch) 
+    public void Draw(CommandBuffer buffer, IBatch spriteBatch) 
     {
         for (int i = 0; i < entities.Count; i++)
         {

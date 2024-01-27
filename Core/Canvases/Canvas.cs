@@ -29,11 +29,11 @@ public class Canvas : IDisposable
         this.Scene = scene;
     }
 
-    public virtual void BeforeDraw(ref CommandBuffer buffer, Batch batch) {}
-    public virtual void Draw(CommandBuffer buffer, Batch batch) 
+    public virtual void BeforeDraw(ref CommandBuffer buffer, IBatch batch) {}
+    public virtual void Draw(CommandBuffer buffer, IBatch batch) 
     {
     }
-    public virtual void AfterDraw(ref CommandBuffer buffer, Batch batch) {}
+    public virtual void AfterDraw(ref CommandBuffer buffer, IBatch batch) {}
 
     public static Canvas CreateDefault(Scene scene, GraphicsDevice device) 
     {
@@ -81,10 +81,11 @@ public class DefaultCanvas : Canvas
         scissorRect = new Rect(0, 0, width, height);
     }
 
-    public override void Draw(CommandBuffer buffer, Batch batch)
+    public override void Draw(CommandBuffer buffer, IBatch batch)
     {
+        batch.Start();
         Scene.EntityList.Draw(buffer, batch);
-        batch.FlushVertex(buffer);
+        batch.End(buffer);
 
         buffer.BeginRenderPass(new ColorAttachmentInfo(CanvasTexture, Color.Transparent));
         buffer.BindGraphicsPipeline(GameContext.DefaultPipeline);

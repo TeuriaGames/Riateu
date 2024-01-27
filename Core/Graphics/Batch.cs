@@ -5,15 +5,24 @@ using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
-public class Batch : System.IDisposable
+public struct SubBatch 
+{
+    public TextureSamplerBinding Binding;
+    public uint Offset;
+    public uint Count;
+}
+
+public class Batch : System.IDisposable, IBatch
 {
     private const int MaxTextures = 8192;
+    private const int MaxSubBatchCount = 8;
     private GraphicsDevice device;
     private PositionTextureColorVertex[] vertices;
     private uint[] indices;
-    private TextureSamplerBinding[] textures;
-    private TextureSamplerBinding[] fragmentSampler;
-    private uint textureCount;
+    private SubBatch[] batches = new SubBatch[MaxSubBatchCount];
+    private uint batchIndex;
+    private uint vertexIndex;
+    private uint currentMaxTexture = MaxTextures;
 
     private Buffer vertexBuffer;
     private Buffer indexBuffer;
@@ -26,11 +35,9 @@ public class Batch : System.IDisposable
     {
         Matrices = new();
         this.device = device;
-        textures = new TextureSamplerBinding[MaxTextures];
         vertices = new PositionTextureColorVertex[MaxTextures * 4];
         indices = GenerateIndexArray(MaxTextures * 6);
 
-        fragmentSampler = new TextureSamplerBinding[1];
         vertexBuffer = Buffer.Create<PositionTextureColorVertex>(device, BufferUsageFlags.Vertex, (uint)vertices.Length);
         indexBuffer = Buffer.Create<uint>(device, BufferUsageFlags.Index, (uint)indices.Length);
 
@@ -81,13 +88,14 @@ public class Batch : System.IDisposable
 
     public void FlushVertex(CommandBuffer cmdBuf) 
     {
-        if (textureCount == 0) 
+        if (vertexIndex == 0) 
         {
             return;
         }
 
-        cmdBuf.SetBufferData(indexBuffer, indices, 0, 0, textureCount * 6);
-        cmdBuf.SetBufferData(vertexBuffer, vertices, 0, 0, textureCount * 4);
+        cmdBuf.SetBufferData(indexBuffer, indices, 0, 0, vertexIndex * 6);
+        cmdBuf.SetBufferData(vertexBuffer, vertices, 0, 0, vertexIndex * 4);
+        batches[batchIndex].Count = vertexIndex;
     }
 
     public void Draw(CommandBuffer cmdBuf) 
@@ -97,35 +105,24 @@ public class Batch : System.IDisposable
 
     public void Draw(CommandBuffer cmdBuf, Matrix4x4 viewProjection) 
     {
-        if (textureCount == 0) 
+        if (vertexIndex == 0) 
         {
             return;
         }
         var vertexOffset = cmdBuf.PushVertexShaderUniforms(viewProjection);
-
         cmdBuf.BindVertexBuffers(vertexBuffer);
         cmdBuf.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
-        fragmentSampler[0] = textures[0];
 
-        var offset = 0u;
-        for (uint i = 1; i < textureCount; i++) 
+        for (uint i = 0; i < batchIndex + 1; i++) 
         {
-            var texture = textures[i];
-            if (texture.Sampler.Handle == fragmentSampler[0].Sampler.Handle && 
-                texture.Texture.Handle == fragmentSampler[0].Texture.Handle) 
-            {
-                continue;
-            }
-            cmdBuf.BindFragmentSamplers(fragmentSampler);
-            cmdBuf.DrawIndexedPrimitives(offset * 4u, 0u, (i - offset) * 2u, vertexOffset, 0u);
-            fragmentSampler[0] = texture;
-            offset = i;
+            var batch = batches[i];
+
+            cmdBuf.BindFragmentSamplers(batch.Binding);
+            cmdBuf.DrawIndexedPrimitives(batch.Offset * 4u, 0u, (batch.Count - batch.Offset) * 2u, vertexOffset, 0u);   
         }
 
-        cmdBuf.BindFragmentSamplers(fragmentSampler);
-        cmdBuf.DrawIndexedPrimitives(offset * 4u, 0u, (textureCount - offset) * 2u, vertexOffset, 0u);
-
-        textureCount = 0;
+        batchIndex = 0;
+        vertexIndex = 0;
     }
 
     public void Add(
@@ -144,13 +141,33 @@ public class Batch : System.IDisposable
             throw new System.ObjectDisposedException(nameof(texture));
         }
 
-        if (textureCount == textures.Length) 
+        if (vertexIndex > 0 && 
+            (texture.Handle != batches[batchIndex].Binding.Texture.Handle || 
+            sampler.Handle != batches[batchIndex].Binding.Sampler.Handle)) 
         {
-            int maxTextures = (int)(textureCount + 2048);
-            System.Array.Resize(ref textures, maxTextures);
-            System.Array.Resize(ref vertices, vertices.Length + textures.Length * 4);
+            batches[batchIndex].Count = vertexIndex;
+            batchIndex++;
 
-            indices = GenerateIndexArray((uint)(textures.Length * 6));
+            if (batchIndex == batches.Length) 
+            {
+                System.Array.Resize(ref batches, batches.Length + MaxSubBatchCount);
+            }
+
+            batches[batchIndex].Offset = vertexIndex;
+            batches[batchIndex].Binding = new TextureSamplerBinding(texture, sampler);
+        }
+
+        if (vertexIndex == 0) 
+        {
+            batches[batchIndex].Binding = new TextureSamplerBinding(texture, sampler);
+        }
+
+        if (vertexIndex == currentMaxTexture) 
+        {
+            int maxTextures = (int)(currentMaxTexture += 2048);
+            System.Array.Resize(ref vertices, vertices.Length + maxTextures * 4);
+
+            indices = GenerateIndexArray((uint)(maxTextures * 6));
 
             vertexBuffer.Dispose();
             vertexBuffer = Buffer.Create<PositionTextureColorVertex>(
@@ -162,9 +179,6 @@ public class Batch : System.IDisposable
             );
         }
 
-        textures[textureCount].Texture = texture;
-        textures[textureCount].Sampler = sampler;
-
         float width = sTexture.Source.W;
         float height = sTexture.Source.H;
         
@@ -173,7 +187,7 @@ public class Batch : System.IDisposable
         var bottomLeft = new Vector2(position.X, position.Y + height);
         var bottomRight = new Vector2(position.X + width, position.Y + height);
 
-        var vertexOffset = textureCount * 4;
+        var vertexOffset = vertexIndex * 4;
 
         vertices[vertexOffset].Position = new Vector3(Vector2.Transform(topLeft, transform), layerDepth);
         vertices[vertexOffset + 1].Position = new Vector3(Vector2.Transform(bottomLeft, transform), layerDepth);
@@ -190,7 +204,7 @@ public class Batch : System.IDisposable
         vertices[vertexOffset + 2].TexCoord = sTexture.UV.TopRight;
         vertices[vertexOffset + 3].TexCoord = sTexture.UV.BottomRight;
 
-        textureCount++;
+        vertexIndex++;
     }
 
     public void AddCanvas(Canvas canvas, Sampler sampler) 
@@ -224,5 +238,15 @@ public class Batch : System.IDisposable
     {
         Dispose(disposing: true);
         System.GC.SuppressFinalize(this);
+    }
+
+    public void Start()
+    {
+        batchIndex = 0;
+    }
+
+    public void End(CommandBuffer cmdBuf)
+    {
+        FlushVertex(cmdBuf);
     }
 }

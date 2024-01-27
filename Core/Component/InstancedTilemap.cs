@@ -71,7 +71,7 @@ public class InstancedTilemap : Component, System.IDisposable
         device.Submit(buffer);
     }
     
-    private uint AddToBatch(CommandBuffer buffer) 
+    private unsafe uint AddToBatch(CommandBuffer buffer) 
     {
         Vector2 pos = Vector2.Zero;
         uint instances = 0;
@@ -84,12 +84,19 @@ public class InstancedTilemap : Component, System.IDisposable
                 if (sTexture is null)
                     continue;
                 var tex = sTexture.Value;
-
-                tiledData[instances] = new InstancedVertex(
-                    new Vector3(x * GridSize, y * GridSize, 1),
-                    new Vector2(GridSize),
-                    tex.UV,
-                    Color.White);
+                fixed (InstancedVertex *ptr = &tiledData[instances]) 
+                {
+                    ptr->Position.X = x * GridSize;
+                    ptr->Position.Y = y * GridSize;
+                    ptr->Position.Z = 1;
+                    ptr->UV0 = tex.UV.TopLeft;
+                    ptr->UV1 = tex.UV.BottomLeft;
+                    ptr->UV2 = tex.UV.TopRight;
+                    ptr->UV3 = tex.UV.BottomRight;
+                    ptr->Scale.X = GridSize;
+                    ptr->Scale.Y = GridSize;
+                    ptr->Color = Color.White;
+                }
                 instances++;
             }
         }
@@ -112,7 +119,7 @@ public class InstancedTilemap : Component, System.IDisposable
         buffer.EndRenderPass();
     }
 
-    public override void Draw(CommandBuffer buffer, Batch spriteBatch)
+    public override void Draw(CommandBuffer buffer, IBatch spriteBatch)
     {
         var device = GameContext.GraphicsDevice;
 

@@ -39,7 +39,7 @@ public class Component
     }
     
     public virtual void Update(double delta) {}
-    public virtual void Draw(CommandBuffer buffer, Batch spriteBatch) {}
+    public virtual void Draw(CommandBuffer buffer, IBatch spriteBatch) {}
     public virtual void Removed() 
     {
         Entity = null;

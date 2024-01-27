@@ -59,7 +59,7 @@ public abstract class Scene
         PhysicsWorld.Remove(component);
     }
 
-    public void ApplyCurrentCanvasToBatch(Batch batch, Sampler sampler) 
+    public void ApplyCurrentCanvasToBatch(IBatch batch, Sampler sampler) 
     {
         batch.Add(sceneCanvas.CanvasTexture, sampler, Vector2.Zero, Matrix3x2.Identity);
     }
@@ -71,19 +71,19 @@ public abstract class Scene
         EntityList.Update(delta);
     }
 
-    internal void InternalBeforeDraw(ref CommandBuffer buffer, Batch batch) 
+    internal void InternalBeforeDraw(ref CommandBuffer buffer, IBatch batch) 
     {
         sceneCanvas.BeforeDraw(ref buffer, batch);
         BeforeDraw(ref buffer, batch);
     }
 
-    internal void InternalDraw(CommandBuffer buffer, Texture backbuffer, Batch batch) 
+    internal void InternalDraw(CommandBuffer buffer, Texture backbuffer, IBatch batch) 
     {
         sceneCanvas.Draw(buffer, batch);
         Draw(buffer, backbuffer, batch);
     }
 
-    internal void InternalAfterDraw(ref CommandBuffer buffer, Batch batch) 
+    internal void InternalAfterDraw(ref CommandBuffer buffer, IBatch batch) 
     {
         sceneCanvas.AfterDraw(ref buffer, batch);
         AfterDraw(ref buffer, batch);
@@ -91,8 +91,8 @@ public abstract class Scene
 
     public abstract void Begin();
     public virtual void Update(double delta) {}
-    public virtual void BeforeDraw(ref CommandBuffer buffer, Batch batch) {}
-    public virtual void Draw(CommandBuffer buffer, Texture backbuffer, Batch batch) {}
-    public virtual void AfterDraw(ref CommandBuffer buffer, Batch batch) {}
+    public virtual void BeforeDraw(ref CommandBuffer buffer, IBatch batch) {}
+    public virtual void Draw(CommandBuffer buffer, Texture backbuffer, IBatch batch) {}
+    public virtual void AfterDraw(ref CommandBuffer buffer, IBatch batch) {}
     public abstract void End();
 }
