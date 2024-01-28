@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using MoonWorks.Math.Float;
 using Riateu.Physics;
 
@@ -7,6 +6,7 @@ namespace Riateu.Components;
 
 public class PhysicsComponent : Component 
 {
+    public bool Collidable = true;
     private Shape shape;
     private Action<Entity, PhysicsComponent> onCollided;
 
@@ -20,7 +20,6 @@ public class PhysicsComponent : Component
     }
 
     private int tags = -1;
-    private bool hasSceneTags;
 
 
     public PhysicsComponent(Shape shape, Action<Entity, PhysicsComponent> onCollided = null) 
@@ -31,7 +30,7 @@ public class PhysicsComponent : Component
 
     public bool Check(PhysicsComponent other, Vector2 offset) 
     {
-        if (other == this)
+        if (other == this || !other.Collidable)
             return false;
         if (shape.Collide(offset, other.shape)) 
         {
@@ -43,7 +42,7 @@ public class PhysicsComponent : Component
 
     public bool Check(PhysicsComponent other, Vector2 offset, Action<Entity, PhysicsComponent> onCollided) 
     {
-        if (onCollided == null || other == this)
+        if (onCollided == null || other == this || !other.Collidable)
             return false;
         if (shape.Collide(offset, other.shape)) 
         {
@@ -63,6 +62,21 @@ public class PhysicsComponent : Component
                 return true;
             }
         }
+        return false;
+    }
+
+    public bool CheckAll<T>(Vector2 offset, Tag tags, out T entity)
+    where T : Entity
+    {
+        foreach (var other in Scene.GetPhysicsFromBit(tags)) 
+        {
+            if (other.Entity is T && Check(other, offset)) 
+            {
+                entity = (T)other.Entity;
+                return true;
+            }
+        }
+        entity = null;
         return false;
     }
 
