@@ -78,15 +78,16 @@ public class Entity : IEnumerable<Component>
     public Color Modulate = Color.White;
     public float ZIndex;
     public int Depth;
-    public int Tags;
+
     public bool Visible = true;
+
 
     public virtual void EnterScene(Scene scene) 
     {
         Active = true;
+        Scene = scene;
         foreach (var comp in componentList) 
             comp.EntityEntered(scene);
-        Scene = scene;
         NodeID = InternalIDCount++;
     }
     public virtual void ExitScene(Scene scene) 

@@ -174,28 +174,6 @@ public sealed class Entities : IEnumerable<Entity>
         return list;
     }
 
-    public List<Entity> GetEntities(int tags) 
-    {
-        var list = new List<Entity>();
-        for (int i = 0; i < entities.Count; i++) 
-        {
-            var entity = entities[i];
-            if ((entity.Tags & tags) != 0) 
-            {
-                list.Add(entity);
-            }
-        }
-
-        foreach (var entity in adding) 
-        {
-            if ((entity.Tags & tags) != 0) 
-            {
-                list.Add(entity);
-            }
-        }
-        return list;
-    }
-
     public List<Entity> GetEntities(string name) 
     {
         var list = new List<Entity>(); 
@@ -253,27 +231,6 @@ public sealed class Entities : IEnumerable<Entity>
             if (entity.Name == name)
             {
                 return entity as T;
-            }
-        }
-        return null;
-    }
-
-    public Entity GetEntity(int tags) 
-    {
-        for (int i = 0; i < entities.Count; i++) 
-        {
-            var entity = entities[i];
-            if ((entity.Tags & tags) != 0) 
-            {
-                return entity;
-            }
-        }
-
-        foreach (var entity in adding) 
-        {
-            if ((entity.Tags & tags) != 0) 
-            {
-                return entity;
             }
         }
         return null;

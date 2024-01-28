@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
 using Riateu.Components;
@@ -9,6 +10,8 @@ namespace Riateu;
 public abstract class Scene 
 {
     public World PhysicsWorld = new();
+
+    public List<PhysicsComponent>[] SceneTags;
 
     public GameApp GameInstance;
     public Action<Entity> OnEntityCreated;
@@ -37,6 +40,11 @@ public abstract class Scene
         GameInstance = game;
         EntityList = new Entities(this);
         sceneCanvas = canvas ?? Canvas.CreateDefault(this, game.GraphicsDevice);
+        SceneTags = new List<PhysicsComponent>[Tag.TotalTags];
+        for (int i = 0; i < SceneTags.Length; i++) 
+        {
+            SceneTags[i] = new List<PhysicsComponent>();
+        }
     }
 
     public void Add(Entity entity) 
@@ -46,7 +54,29 @@ public abstract class Scene
 
     public void AddPhysics(PhysicsComponent component) 
     {
-        PhysicsWorld.Insert(component);
+        PhysicsWorld.Components.Add(component);
+    }
+
+    public void RemovePhysics(PhysicsComponent component) 
+    {
+        PhysicsWorld.Components.Remove(component);
+    }
+
+    public void AddBit(PhysicsComponent component) 
+    {
+        if (component.Tags == -1) return;
+        for (int i = 0; i < Tag.TotalTags; i++) 
+        {
+            if ((component.Tags & (1 << i)) != 0) 
+            {
+                SceneTags[i].Add(component);
+            }
+        }
+    }
+
+    public List<PhysicsComponent> GetPhysicsFromBit(Tag tag) 
+    {
+        return SceneTags[tag.ID];
     }
 
     public void Remove(Entity entity) 
@@ -54,9 +84,16 @@ public abstract class Scene
         EntityList.Remove(entity);
     }
 
-    public void RemovePhysics(PhysicsComponent component) 
+    public void RemoveBit(PhysicsComponent component) 
     {
-        PhysicsWorld.Remove(component);
+        if (component.Tags == -1) return;
+        for (int i = 0; i < Tag.TotalTags; i++) 
+        {
+            if ((component.Tags & (1 << i)) != 0) 
+            {
+                SceneTags[i].Remove(component);
+            }
+        }
     }
 
     public void ApplyCurrentCanvasToBatch(IBatch batch, Sampler sampler) 
