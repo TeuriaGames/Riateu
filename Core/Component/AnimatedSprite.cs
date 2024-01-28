@@ -101,9 +101,12 @@ public class AnimatedSprite : GraphicsComponent
     {
         if (frame == currentAnimationName)
             return;
+
         Set(ref frames[frame].Frames[0]);
         currentAnimationName = frame;
         playing = true;
+        currentFrame = 0;
+        timer = 0;
     }
 
     public void Stop() 
@@ -143,8 +146,6 @@ public class AnimatedSprite : GraphicsComponent
 
     private void Set(ref SpriteTexture texture) 
     {
-        if (SpriteTexture.Equals(texture))
-            return;
         SpriteTexture = texture;
     }
 
