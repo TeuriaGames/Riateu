@@ -41,12 +41,9 @@ public class Batch : System.IDisposable, IBatch
         vertexBuffer = Buffer.Create<PositionTextureColorVertex>(device, BufferUsageFlags.Vertex, (uint)vertices.Length);
         indexBuffer = Buffer.Create<uint>(device, BufferUsageFlags.Index, (uint)indices.Length);
 
-        var model = Matrix4x4.CreateScale(1) *
-            Matrix4x4.CreateRotationZ(0) *
-            Matrix4x4.CreateTranslation(0, 0, 0);
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
-        Matrix = model * view * projection;
+        Matrix = view * projection;
     }
 
     private static uint[] GenerateIndexArray(uint maxIndices)

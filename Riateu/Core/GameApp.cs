@@ -5,13 +5,27 @@ using Riateu.Graphics;
 
 namespace Riateu;
 
+/// <summary>
+/// The main class entry point for your game. It handles the content, initialization, 
+/// update loop, and drawing.
+/// </summary>
 public abstract class GameApp : Game
 {
+    /// <summary>
+    /// A window width of the application.
+    /// </summary>
     public int Width { get; private set; }
+    /// <summary>
+    /// A window height of the application.
+    /// </summary>
     public int Height { get; private set; }
 
     private Scene nextScene;
 
+    /// <summary>
+    /// A current scene that is running. Note that if you change this, the scene won't 
+    /// actually changed yet until next frame started.
+    /// </summary>
     public Scene Scene 
     { 
         get => scene;
@@ -23,6 +37,10 @@ public abstract class GameApp : Game
     private Scene scene;
 
     private Batch batch;
+    /// <summary>
+    /// The default batch for the game. If you want a custom batch to render, 
+    /// create a canvas instead. 
+    /// </summary>
     public Batch Batch => batch;
 
     protected GameApp(string title, uint width, uint height, ScreenMode screenMode = ScreenMode.Windowed, bool debugMode = false)
@@ -45,10 +63,21 @@ public abstract class GameApp : Game
         batch = new Batch(GraphicsDevice, Width, Height);
     }
 
+    /// <summary>
+    /// A method for loading content. You can freely acquire and submit the 
+    /// <see cref="MoonWorks.Graphics.CommandBuffer" here./>
+    /// </summary>
     public virtual void LoadContent() {}
+
+    /// <summary>
+    /// A method to also initialize your other resources, and to set your scene.
+    /// </summary>
     public abstract void Initialize();
 
-
+    /// <summary>
+    /// A method that handles the draw loop. Do your draw calls here.
+    /// </summary>
+    /// <param name="alpha">A delta time for the draw loop</param>
     protected override void Draw(double alpha)
     {
         CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
@@ -64,7 +93,10 @@ public abstract class GameApp : Game
         GraphicsDevice.Submit(cmdBuf);
     }
 
-
+    /// <summary>
+    /// A method that handles the update loop.
+    /// </summary>
+    /// <param name="delta">A delta time for the update loop</param>
     protected override void Update(TimeSpan delta)
     {
         Time.Update(delta);

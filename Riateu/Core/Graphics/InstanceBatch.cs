@@ -39,12 +39,9 @@ public class InstanceBatch : System.IDisposable, IBatch
         vertexBuffer = Buffer.Create<PositionVertex>(device, BufferUsageFlags.Vertex, 4);
         indexBuffer = Buffer.Create<uint>(device, BufferUsageFlags.Index, 6);
 
-        var model = Matrix4x4.CreateScale(1) *
-            Matrix4x4.CreateRotationZ(0) *
-            Matrix4x4.CreateTranslation(0, 0, 0);
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
-        Matrix = model * view * projection;
+        Matrix = view * projection;
 
         CommandBuffer buffer = device.AcquireCommandBuffer();
 

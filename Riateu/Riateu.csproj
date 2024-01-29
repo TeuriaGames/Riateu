@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../MoonWorks/MoonWorks.csproj"/>
+    <ProjectReference Include="../../MoonWorks/MoonWorks.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
