@@ -53,6 +53,20 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    public bool Check<T>(PhysicsComponent other, Vector2 offset, Action<T, PhysicsComponent> onCollided) 
+    where T : Entity
+    {
+        if (onCollided == null || other == this || !other.Collidable)
+            return false;
+        if (shape.Collide(offset, other.shape)) 
+        {
+            onCollided(other.Entity as T, other);
+            return true;
+        }
+
+        return false;
+    }
+
     public bool CheckAll(Vector2 offset)
     {
         foreach (var other in Scene.PhysicsWorld.Components) 
@@ -113,6 +127,78 @@ public class PhysicsComponent : Component
         foreach (var other in Scene.GetPhysicsFromBit(tags)) 
         {
             if (Check(other, offset)) 
+            {
+                component = other;
+                entity = other.Entity;
+                return true;
+            }
+        }
+        component = null;
+        entity = null;
+        return false;
+    }
+
+
+    public bool OutsideCheckAll(Vector2 at)
+    {
+        foreach (var other in Scene.PhysicsWorld.Components) 
+        {
+            if (!Check(other, Vector2.Zero) && Check(other, at)) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool OutsideCheckAll<T>(Vector2 at, Tag tags, out T entity)
+    where T : Entity
+    {
+        foreach (var other in Scene.GetPhysicsFromBit(tags)) 
+        {
+            if (other.Entity is T && (!Check(other, Vector2.Zero) && Check(other, at))) 
+            {
+                entity = (T)other.Entity;
+                return true;
+            }
+        }
+        entity = null;
+        return false;
+    }
+
+    public bool OutsideCheckAll(Vector2 at, out Entity entity, out PhysicsComponent component)
+    {
+        foreach (var other in Scene.PhysicsWorld.Components) 
+        {
+            if (!Check(other, Vector2.Zero) && Check(other, at)) 
+            {
+                component = other;
+                entity = other.Entity;
+                return true;
+            }
+        }
+        component = null;
+        entity = null;
+        return false;
+    }
+
+    public bool OutsideCheckAll(Vector2 at, Tag tags)
+    {
+        foreach (var other in Scene.GetPhysicsFromBit(tags)) 
+        {
+            if (!Check(other, Vector2.Zero) && Check(other, at)) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool OutsideCheckAll(Vector2 at, Tag tags, out Entity entity, out PhysicsComponent component)
+    {
+        foreach (var other in Scene.GetPhysicsFromBit(tags)) 
+        {
+            if (!Check(other, Vector2.Zero) && Check(other, at)) 
             {
                 component = other;
                 entity = other.Entity;
