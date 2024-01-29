@@ -67,7 +67,7 @@ public class Batch : System.IDisposable, IBatch
 
     public void PushMatrix(in Matrix4x4 matrix) 
     {
-        Matrices.Push(matrix);
+        Matrices.Push(Matrix);
         Matrix = matrix;
     }
 
