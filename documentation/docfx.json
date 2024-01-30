@@ -2,7 +2,7 @@
   "metadata": [
     {
       "src": [{
-          "src": "../Riateu/Riateu",
+          "src": "../Riateu",
           "files": [
             "Riateu.csproj"
           ]
