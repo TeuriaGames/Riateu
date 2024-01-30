@@ -6,13 +6,18 @@ using Riateu.Components;
 
 namespace Riateu.Graphics;
 
-public struct SubInstanceBatch 
+internal struct SubInstanceBatch 
 {
     public Buffer InstancedBuffer;
     public uint InstanceCount;
     public TextureSamplerBinding Binding;
 }
 
+/// <summary>
+/// A batch system used to create many instances in one draw calls in a same vertex and index buffer 
+/// while it can. This also utilizes a texture swapping which would add additional sub instance 
+/// batches to be able to draw multiple textures.
+/// </summary>
 public class InstanceBatch : System.IDisposable, IBatch
 {
     private const int MaxInstances = 8192;
@@ -27,9 +32,21 @@ public class InstanceBatch : System.IDisposable, IBatch
     private Stack<Matrix4x4> Matrices;
     private SubInstanceBatch[] batches = new SubInstanceBatch[MaxSubBatchCount];
 
+    /// <summary>
+    /// A current matrix projection to be used for rendering.
+    /// </summary>
     public Matrix4x4 Matrix;
+    /// <summary>
+    /// A check if the <see cref="Riateu.Graphics.InstanceBatch"/> is already been disposed.
+    /// </summary>
     public bool IsDisposed { get; private set; }
 
+    /// <summary>
+    /// An initialization for the batch system.
+    /// </summary>
+    /// <param name="device">An application graphics device</param>
+    /// <param name="width">A width of a orthographic matrix</param>
+    /// <param name="height">A height of a orthographic matrix</param>
     public InstanceBatch(GraphicsDevice device, int width, int height) 
     {
         Matrices = new();
@@ -59,17 +76,32 @@ public class InstanceBatch : System.IDisposable, IBatch
         device.Submit(buffer);
     }
 
+    /// <inheritdoc/>
+    public void Start()
+    {
+        batchIndex = 0;
+    }
+
+    /// <inheritdoc/>
+    public void End(CommandBuffer buffer)
+    {
+        FlushVertex(buffer);
+    }
+
+    /// <inheritdoc/>
     public void PushMatrix(in Matrix4x4 matrix) 
     {
         Matrices.Push(Matrix);
         Matrix = matrix;
     }
 
+    /// <inheritdoc/>
     public void PushMatrix(in Camera camera) 
     {
         PushMatrix(camera.Transform);
     }
 
+    /// <inheritdoc/>
     public void PopMatrix() 
     {
         if (Matrices.Count == 0) 
@@ -80,6 +112,12 @@ public class InstanceBatch : System.IDisposable, IBatch
         Matrix = Matrices.Pop();
     }
 
+    /// <summary>
+    /// Send the instances buffer to the GPU.
+    /// </summary>
+    /// <param name="cmdBuf">
+    /// A <see cref="MoonWorks.Graphics.CommandBuffer"/> for sending the vertex buffer to the GPU
+    /// </param>
     public void FlushVertex(CommandBuffer cmdBuf) 
     {
         if (instanceCount == 0) 
@@ -102,11 +140,26 @@ public class InstanceBatch : System.IDisposable, IBatch
         instanceCount = 0;
     }
 
+    /// <summary>
+    /// Draw the vertex and all instances into the screen.
+    /// </summary>
+    /// <param name="cmdBuf">
+    /// A <see cref="MoonWorks.Graphics.CommandBuffer"/> to create a render pass and bind
+    /// all of the buffers and uniforms.
+    /// </param>
     public void Draw(CommandBuffer cmdBuf) 
     {
         Draw(cmdBuf, Matrix);
     }
 
+    /// <summary>
+    /// Draw the vertex and all instances into the screen with a custom view projection.
+    /// </summary>
+    /// <param name="cmdBuf">
+    /// A <see cref="MoonWorks.Graphics.CommandBuffer"/> to create a render pass and bind
+    /// all of the buffers and uniforms.
+    /// </param>
+    /// <param name="viewProjection">A 4x4 matrix to project on screen</param>
     public void Draw(CommandBuffer cmdBuf, Matrix4x4 viewProjection) 
     {
         var vertexOffset = cmdBuf.PushVertexShaderUniforms(viewProjection);
@@ -125,6 +178,14 @@ public class InstanceBatch : System.IDisposable, IBatch
         batchIndex = 0;
     }
 
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     public void Add(
         Texture baseTexture, 
         Sampler sampler, 
@@ -135,6 +196,15 @@ public class InstanceBatch : System.IDisposable, IBatch
         Add(new SpriteTexture(baseTexture), baseTexture, sampler, position, transform, layerDepth);
     }
 
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="sTexture">A spriteTexture to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     public void Add(
         SpriteTexture sTexture, 
         Texture baseTexture, 
@@ -180,6 +250,10 @@ public class InstanceBatch : System.IDisposable, IBatch
         instanceCount++;
     }
 
+    /// <summary>
+    /// Dispose all of the <see cref="Riateu.Graphics.InstanceBatch"/> resources.
+    /// </summary>
+    /// <param name="disposing">Dispose all of the native resource</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!IsDisposed)
@@ -198,6 +272,7 @@ public class InstanceBatch : System.IDisposable, IBatch
         }
     }
 
+    /// 
     ~InstanceBatch()
     {
 #if DEBUG
@@ -206,19 +281,13 @@ public class InstanceBatch : System.IDisposable, IBatch
         Dispose(disposing: false);
     }
 
+    /// <summary>
+    /// Dispose all of the <see cref="Riateu.Graphics.InstanceBatch"/> resources.
+    /// </summary>
     public void Dispose()
     {
         Dispose(disposing: true);
         System.GC.SuppressFinalize(this);
     }
 
-    public void Start()
-    {
-        batchIndex = 0;
-    }
-
-    public void End(CommandBuffer buffer)
-    {
-        FlushVertex(buffer);
-    }
 }

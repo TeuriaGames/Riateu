@@ -5,13 +5,18 @@ using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
-public struct SubBatch 
+internal struct SubBatch 
 {
     public TextureSamplerBinding Binding;
     public uint Offset;
     public uint Count;
 }
 
+/// <summary>
+/// A batch system used to batch all of the vertices in one draw calls while it can. 
+/// This also utilizes a texture swapping which would add additional sub batches to be 
+/// able to draw multiple textures.
+/// </summary>
 public class Batch : System.IDisposable, IBatch
 {
     private const int MaxTextures = 8192;
@@ -28,9 +33,21 @@ public class Batch : System.IDisposable, IBatch
     private Buffer indexBuffer;
     private Stack<Matrix4x4> Matrices;
 
+    /// <summary>
+    /// A current matrix projection to be used for rendering.
+    /// </summary>
     public Matrix4x4 Matrix;
+    /// <summary>
+    /// A check if the <see cref="Riateu.Graphics.Batch"/> is already been disposed.
+    /// </summary>
     public bool IsDisposed { get; private set; }
 
+    /// <summary>
+    /// An initialization for the batch system.
+    /// </summary>
+    /// <param name="device">An application graphics device</param>
+    /// <param name="width">A width of a orthographic matrix</param>
+    /// <param name="height">A height of a orthographic matrix</param>
     public Batch(GraphicsDevice device, int width, int height) 
     {
         Matrices = new();
@@ -62,17 +79,31 @@ public class Batch : System.IDisposable, IBatch
         return result;
     }
 
+    /// <inheritdoc/>
+    public void Start()
+    {
+        batchIndex = 0;
+    }
+    /// <inheritdoc/>
+    public void End(CommandBuffer cmdBuf)
+    {
+        FlushVertex(cmdBuf);
+    }
+
+    /// <inheritdoc/>
     public void PushMatrix(in Matrix4x4 matrix) 
     {
         Matrices.Push(Matrix);
         Matrix = matrix;
     }
 
+    /// <inheritdoc/>
     public void PushMatrix(in Camera camera) 
     {
         PushMatrix(camera.Transform);
     }
 
+    /// <inheritdoc/>
     public void PopMatrix() 
     {
         if (Matrices.Count == 0) 
@@ -83,6 +114,7 @@ public class Batch : System.IDisposable, IBatch
         Matrix = Matrices.Pop();
     }
 
+    /// <inheritdoc/>
     public void FlushVertex(CommandBuffer cmdBuf) 
     {
         if (vertexIndex == 0) 
@@ -95,11 +127,13 @@ public class Batch : System.IDisposable, IBatch
         batches[batchIndex].Count = vertexIndex;
     }
 
+    /// <inheritdoc/>
     public void Draw(CommandBuffer cmdBuf) 
     {
         Draw(cmdBuf, Matrix);
     }
 
+    /// <inheritdoc/>
     public void Draw(CommandBuffer cmdBuf, Matrix4x4 viewProjection) 
     {
         if (vertexIndex == 0) 
@@ -122,6 +156,7 @@ public class Batch : System.IDisposable, IBatch
         vertexIndex = 0;
     }
 
+    /// <inheritdoc/>
     public void Add(
         Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform,
         float layerDepth = 1) 
@@ -129,6 +164,7 @@ public class Batch : System.IDisposable, IBatch
         Add(new SpriteTexture(texture), texture, sampler, position, transform, layerDepth);
     }
 
+    /// <inheritdoc/>
     public void Add(
         SpriteTexture sTexture, Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform,
         float layerDepth = 1) 
@@ -204,11 +240,20 @@ public class Batch : System.IDisposable, IBatch
         vertexIndex++;
     }
 
+    /// <summary>
+    /// Add a canvas texture to the vertex buffer
+    /// </summary>
+    /// <param name="canvas">A <see cref="Riateu.Canvas"/> to submit with</param>
+    /// <param name="sampler">A sampler for acanvas</param>
     public void AddCanvas(Canvas canvas, Sampler sampler) 
     {
         Add(canvas.CanvasTexture, sampler, Vector2.Zero, Matrix3x2.Identity);
     }
 
+    /// <summary>
+    /// Dispose all of the <see cref="Riateu.Graphics.Batch"/> resources.
+    /// </summary>
+    /// <param name="disposing">Dispose all of the native resource</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!IsDisposed)
@@ -223,6 +268,7 @@ public class Batch : System.IDisposable, IBatch
         }
     }
 
+    /// 
     ~Batch()
     {
 #if DEBUG
@@ -231,19 +277,12 @@ public class Batch : System.IDisposable, IBatch
         Dispose(disposing: false);
     }
 
+    /// <summary>
+    /// Dispose all of the <see cref="Riateu.Graphics.Batch"/> resources.
+    /// </summary>
     public void Dispose()
     {
         Dispose(disposing: true);
         System.GC.SuppressFinalize(this);
-    }
-
-    public void Start()
-    {
-        batchIndex = 0;
-    }
-
-    public void End(CommandBuffer cmdBuf)
-    {
-        FlushVertex(cmdBuf);
     }
 }

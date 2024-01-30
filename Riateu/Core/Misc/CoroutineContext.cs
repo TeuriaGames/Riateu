@@ -7,7 +7,7 @@ using AsyncKey = System.Collections.Generic.KeyValuePair<System.Threading.SendOr
 
 namespace Riateu.Misc;
 
-public class CoroutineContext : SynchronizationContext
+internal class CoroutineContext : SynchronizationContext
 {
     private IList<AsyncKey> continuations = new List<AsyncKey>();
     public bool IsRunning => continuations.Count > 0;

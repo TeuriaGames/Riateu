@@ -2,6 +2,11 @@ using System;
 
 namespace Riateu;
 
+/// <summary>
+/// A class that use to define two-dimensional array.
+/// This collections uses a one-dimensional array but projecting it in 2D spaces.
+/// </summary>
+/// <typeparam name="T">A type inside of this two dimensional collection</typeparam>
 public sealed class Array2D<T> 
 {
     private T[] array;
@@ -117,6 +122,13 @@ public sealed class Array2D<T>
     }
 }
 
+/// <summary>
+/// A struct that use to define two-dimensional array.
+/// Unlike the <see cref="Riateu.Array2D{T}"/> this is a ref struct and can only be used
+/// in a function scope.
+/// This collections uses a one-dimensional array but projecting it in 2D spaces.
+/// </summary>
+/// <typeparam name="T">A type inside of this two dimensional collection</typeparam>
 public ref struct StackArray2D<T> 
 {
     private Span<T> array;

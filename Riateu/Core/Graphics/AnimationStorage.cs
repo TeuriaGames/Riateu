@@ -1,26 +1,44 @@
 using System.Collections.Generic;
 using System.IO;
 using Riateu.Components;
-using Riateu.Graphics;
 using TeuJson;
 
-namespace Riateu;
+namespace Riateu.Graphics;
 
-public class Animations 
+/// <summary>
+/// A class that stores all of the frames animation from an <see cref="Riateu.Graphics.Atlas"/>.
+/// </summary>
+public class AnimationStorage 
 {
     private Dictionary<string, Dictionary<string, Animation>> animations = new();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public Dictionary<string, Animation> this[string name] => Load(name);
 
-    public static Animations Create(string path, Atlas atlas) 
+    /// <summary>
+    /// Create a storage from a json path that contains all of the animation frames inside.
+    /// </summary>
+    /// <param name="path">A path to animation storage json</param>
+    /// <param name="atlas">An <see cref="Riateu.Graphics.Atlas"/> to use</param>
+    /// <returns>A storage for all animation</returns>
+    public static AnimationStorage Create(string path, Atlas atlas) 
     {
         using var fs = File.OpenRead(path);
         return Create(fs, atlas);
     }
 
-    public static Animations Create(Stream stream, Atlas atlas) 
+    /// <summary>
+    /// Create a storage from a json path that contains all of the animation frames inside.
+    /// </summary>
+    /// <param name="stream">A stream containing the json contents</param>
+    /// <param name="atlas">An <see cref="Riateu.Graphics.Atlas"/> to use</param>
+    /// <returns>A storage for all animation</returns>
+    public static AnimationStorage Create(Stream stream, Atlas atlas) 
     {
-        var animations = new Animations();
+        var animations = new AnimationStorage();
         var jsonBank = JsonTextReader.FromStream(stream);
         var dict = new Dictionary<string, Dictionary<string, Animation>>();
 
@@ -59,6 +77,11 @@ public class Animations
         return animations;
     }
 
+    /// <summary>
+    /// Load an animation frame by name from a storage.
+    /// </summary>
+    /// <param name="anim">A name or id of the animation</param>
+    /// <returns>An animation frame</returns>
     public Dictionary<string, Animation> Load(string anim) 
     {
         return animations[anim];
