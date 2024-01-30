@@ -81,6 +81,7 @@ public class Tilemap : Component
         }
     }
 
+    /// <inheritdoc/>
     public override void Draw(CommandBuffer buffer, IBatch spriteBatch)
     {
         var device = GameContext.GraphicsDevice;
