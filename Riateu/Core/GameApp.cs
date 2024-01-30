@@ -43,6 +43,14 @@ public abstract class GameApp : Game
     /// </summary>
     public Batch Batch => batch;
 
+    /// <summary>
+    /// A constructor use for initializng the application. 
+    /// </summary>
+    /// <param name="title">A title of the window</param>
+    /// <param name="width">A width of the window</param>
+    /// <param name="height">A height of the window</param>
+    /// <param name="screenMode">The screen mode for the window</param>
+    /// <param name="debugMode">Enable or disable debug mode, use for debugging graphics</param>
     protected GameApp(string title, uint width, uint height, ScreenMode screenMode = ScreenMode.Windowed, bool debugMode = false)
         : this(
             new WindowCreateInfo(title, width, height, screenMode, PresentMode.FIFO),
@@ -52,6 +60,13 @@ public abstract class GameApp : Game
 
     }
 
+    /// <summary>
+    /// A constructor use for initializng the application. 
+    /// </summary>
+    /// <param name="windowCreateInfo">An info for creating window</param>
+    /// <param name="frameLimiterSettings">A settings to cap the frame</param>
+    /// <param name="targetTimestep">The maximum fps timestep</param>
+    /// <param name="debugMode">Enable or disable debug mode, use for debugging graphics</param>
     protected GameApp(WindowCreateInfo windowCreateInfo, FrameLimiterSettings frameLimiterSettings, int targetTimestep = 60, bool debugMode = false) 
         : base(windowCreateInfo, frameLimiterSettings, targetTimestep, debugMode)
     {
@@ -65,7 +80,7 @@ public abstract class GameApp : Game
 
     /// <summary>
     /// A method for loading content. You can freely acquire and submit the 
-    /// <see cref="MoonWorks.Graphics.CommandBuffer" here./>
+    /// <see cref="MoonWorks.Graphics.CommandBuffer" /> here.
     /// </summary>
     public virtual void LoadContent() {}
 

@@ -8,15 +8,34 @@ using Riateu.Misc;
 
 namespace Riateu;
 
+/// <summary>
+/// A class that contains all of the default pipelines and features that are needed for
+/// other renderers like texts or standard rendering stuffs.
+/// </summary>
 public static class GameContext
 {
+    /// <summary>
+    /// The application graphics device.
+    /// </summary>
     public static GraphicsDevice GraphicsDevice;
+    /// <summary>
+    /// The default rendering pipeline use for basic rendering.
+    /// </summary>
     public static GraphicsPipeline DefaultPipeline;
+    /// <summary>
+    /// A rendering pipeline designed specifically for text rendered in msdf format. 
+    /// </summary>
     public static GraphicsPipeline MSDFPipeline;
+    /// <summary>
+    /// An instanced rendering pipeline use as an fast alternative for default pipeline.
+    /// </summary>
     public static GraphicsPipeline InstancedPipeline;
+    /// <summary>
+    /// An everything sampler that uses point clamp for sampling. 
+    /// </summary>
     public static Sampler GlobalSampler;
 
-    public static void Init(GraphicsDevice device, Window mainWindow) 
+    internal static void Init(GraphicsDevice device, Window mainWindow) 
     {
         GraphicsDevice = device;
         GlobalSampler = new Sampler(device, SamplerCreateInfo.PointClamp);
