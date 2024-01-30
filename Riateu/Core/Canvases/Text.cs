@@ -19,10 +19,22 @@ public abstract class Text : IDisposable
     public Texture Texture { get; protected set; }
     private bool IsDisposed { get; set; }
 
+    /// <summary>
+    /// A bounds of the rendered text.
+    /// </summary>
     public Rectangle Bounds { get; protected set; }
 
+    /// <summary>
+    /// A method that should be called in the draw loop.
+    /// </summary>
+    /// <param name="batch">A batch system</param>
+    /// <param name="position">A position of the text</param>
     public abstract void Draw(IBatch batch, Vector2 position);
 
+    /// <summary>
+    /// Dispose resources.
+    /// </summary>
+    /// <param name="disposing">Dispose the unmanaged resources</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!IsDisposed)
@@ -36,6 +48,7 @@ public abstract class Text : IDisposable
         }
     }
 
+    ///
     ~Text()
     {
 #if DEBUG
@@ -44,6 +57,9 @@ public abstract class Text : IDisposable
         Dispose(disposing: false);
     }
 
+    /// <summary>
+    /// Dispose all resources.
+    /// </summary>
     public void Dispose()
     {
         Dispose(disposing: true);

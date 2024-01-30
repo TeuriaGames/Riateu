@@ -124,12 +124,7 @@ public class InstanceBatch : System.IDisposable, IBatch
             return;
         }
         batches[batchIndex].InstanceCount = instanceCount;
-        if (batches[batchIndex].InstancedBuffer != null) 
-        {
-            batches[batchIndex].InstancedBuffer.Dispose();
-            batches[batchIndex].InstancedBuffer = Buffer.Create<InstancedVertex>(device, BufferUsageFlags.Vertex, (uint)instances.Length);
-        }
-        else 
+        if (batches[batchIndex].InstancedBuffer == null) 
         {
             batches[batchIndex].InstancedBuffer = Buffer.Create<InstancedVertex>(device, BufferUsageFlags.Vertex, (uint)instances.Length);
         }

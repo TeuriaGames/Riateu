@@ -7,17 +7,21 @@ using WellspringCS;
 
 namespace Riateu;
 
+/// <summary>
+/// An extension for RiateuEngine.
+/// </summary>
 public static class RiateuExtensions 
 {
     [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "StringBytesLength")]
-    public static extern ref int Font_StringBytesLength(Font font);
+    internal static extern ref int Font_StringBytesLength(Font font);
 
     [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "StringBytes")]
-    public static unsafe extern ref byte* Font_StringBytes(Font font);
+    internal static unsafe extern ref byte* Font_StringBytes(Font font);
 
     [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "<Handle>k__BackingField")]
-    public static unsafe extern ref IntPtr Font_Handle(Font font);
+    internal static extern ref IntPtr Font_Handle(Font font);
 
+    /// <inheritdoc cref="MoonWorks.Graphics.Font.Font.TextBounds(string, int, HorizontalAlignment, VerticalAlignment, out Wellspring.Rectangle)"/>
     public static unsafe bool TextBounds(
         this Font font,
         ReadOnlySpan<char> text,
