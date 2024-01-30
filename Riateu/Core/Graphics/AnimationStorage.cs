@@ -10,13 +10,13 @@ namespace Riateu.Graphics;
 /// </summary>
 public class AnimationStorage 
 {
-    private Dictionary<string, Dictionary<string, Animation>> animations = new();
+    private Dictionary<string, Dictionary<string, AnimatedSprite.Animation>> animations = new();
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    public Dictionary<string, Animation> this[string name] => Load(name);
+    public Dictionary<string, AnimatedSprite.Animation> this[string name] => Load(name);
 
     /// <summary>
     /// Create a storage from a json path that contains all of the animation frames inside.
@@ -40,19 +40,19 @@ public class AnimationStorage
     {
         var animations = new AnimationStorage();
         var jsonBank = JsonTextReader.FromStream(stream);
-        var dict = new Dictionary<string, Dictionary<string, Animation>>();
+        var dict = new Dictionary<string, Dictionary<string, AnimatedSprite.Animation>>();
 
         foreach (var (k, v) in jsonBank.Pairs) 
         {
             var spriteName = k;
             var json = jsonBank[k];
-            var frames = new Dictionary<string, Animation>();
+            var frames = new Dictionary<string, AnimatedSprite.Animation>();
 
             var cycles = json["cycles"];
 
             foreach (var cycle in cycles.Pairs) 
             {
-                var animation = new Animation();
+                var animation = new AnimatedSprite.Animation();
                 var key = cycle.Key;
                 var value = cycle.Value;
 
@@ -82,7 +82,7 @@ public class AnimationStorage
     /// </summary>
     /// <param name="anim">A name or id of the animation</param>
     /// <returns>An animation frame</returns>
-    public Dictionary<string, Animation> Load(string anim) 
+    public Dictionary<string, AnimatedSprite.Animation> Load(string anim) 
     {
         return animations[anim];
     }

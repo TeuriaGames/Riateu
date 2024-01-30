@@ -4,12 +4,24 @@ using Riateu.Graphics;
 
 namespace Riateu.Components;
 
+/// <summary>
+/// An enum containg the rendering mode for the tilemap. 
+/// </summary>
 public enum TilemapMode 
 {
+    /// <summary>
+    /// Baked the texture of the tilemap.
+    /// </summary>
     Baked,
+    /// <summary>
+    /// Cull the vertices of the tilemap to reduces draw calls.
+    /// </summary>
     Cull
 }
 
+/// <summary>
+/// A class that contains a collection of tiles to build a map.
+/// </summary>
 public class Tilemap : Component 
 {
     private Array2D<SpriteTexture?> tiles;
@@ -18,9 +30,18 @@ public class Tilemap : Component
     private bool dirty = true;
     private TilemapMode mode;
     private Matrix4x4 Matrix;
+    /// <summary>
+    /// A size of a grid in tiles.
+    /// </summary>
     public int GridSize;
 
-
+    /// <summary>
+    /// An initialization of a tilemap.
+    /// </summary>
+    /// <param name="texture">A texture used for tilemap</param>
+    /// <param name="tiles">A tiles containing the map of the tiles</param>
+    /// <param name="gridSize">A size of a grid in tiles</param>
+    /// <param name="mode">A rendering mode for the tilemap</param>
     public Tilemap(Texture texture, Array2D<SpriteTexture?> tiles, int gridSize, 
         TilemapMode mode = TilemapMode.Baked) 
     {
@@ -44,7 +65,7 @@ public class Tilemap : Component
         this.mode = mode;
     }
     
-    private void AddToBatch(IBatch spriteBatch, ref CommandBuffer buffer) 
+    private void AddToBatch(IBatch spriteBatch, CommandBuffer buffer) 
     {
         for (int x = 0; x < tiles.Rows; x++) 
         {
@@ -58,8 +79,6 @@ public class Tilemap : Component
                     new Vector2(x * GridSize, y * GridSize), Entity.Transform.WorldMatrix, layerDepth: 1f);
             }
         }
-
-        spriteBatch.FlushVertex(buffer);
     }
 
     public override void Draw(CommandBuffer buffer, IBatch spriteBatch)
@@ -70,7 +89,7 @@ public class Tilemap : Component
         {
             if (dirty) 
             {
-                AddToBatch(spriteBatch, ref buffer);
+                AddToBatch(spriteBatch, buffer);
                 buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, Color.Transparent));
                 buffer.BindGraphicsPipeline(GameContext.DefaultPipeline);
                 spriteBatch.Draw(buffer, Matrix);
@@ -81,6 +100,6 @@ public class Tilemap : Component
                 Vector2.Zero, Matrix3x2.Identity);
             return;
         }
-        AddToBatch(spriteBatch, ref buffer);
+        AddToBatch(spriteBatch, buffer);
     }
 }

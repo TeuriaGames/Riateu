@@ -32,7 +32,7 @@ public class AnimatedSprite : GraphicsComponent
 
     public bool IsPlaying => playing;
 
-    public string Animation => currentAnimationName;
+    public string CurrentAnimation => currentAnimationName;
     
     
     private AnimatedSprite(Texture texture) : base(texture) {}
@@ -155,10 +155,10 @@ public class AnimatedSprite : GraphicsComponent
             Vector2.Zero, 
             Entity.Transform.WorldMatrix);
     }
-}
 
-public struct Animation 
-{
-    public SpriteTexture[] Frames;
-    public bool Loop;
+    public struct Animation 
+    {
+        public SpriteTexture[] Frames;
+        public bool Loop;
+    }
 }
