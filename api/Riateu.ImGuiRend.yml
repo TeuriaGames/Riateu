@@ -1,0 +1,40 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.ImGuiRend
+  commentId: N:Riateu.ImGuiRend
+  id: Riateu.ImGuiRend
+  children:
+  - Riateu.ImGuiRend.Clipboard
+  - Riateu.ImGuiRend.ImGuiRenderer
+  - Riateu.ImGuiRend.Position2DTextureColorVertex
+  langs:
+  - csharp
+  - vb
+  name: Riateu.ImGuiRend
+  nameWithType: Riateu.ImGuiRend
+  fullName: Riateu.ImGuiRend
+  type: Namespace
+  assemblies:
+  - Riateu
+references:
+- uid: Riateu.ImGuiRend.Clipboard
+  commentId: T:Riateu.ImGuiRend.Clipboard
+  isExternal: true
+  href: Riateu.ImGuiRend.Clipboard.html
+  name: Clipboard
+  nameWithType: Clipboard
+  fullName: Riateu.ImGuiRend.Clipboard
+- uid: Riateu.ImGuiRend.ImGuiRenderer
+  commentId: T:Riateu.ImGuiRend.ImGuiRenderer
+  isExternal: true
+  href: Riateu.ImGuiRend.ImGuiRenderer.html
+  name: ImGuiRenderer
+  nameWithType: ImGuiRenderer
+  fullName: Riateu.ImGuiRend.ImGuiRenderer
+- uid: Riateu.ImGuiRend.Position2DTextureColorVertex
+  commentId: T:Riateu.ImGuiRend.Position2DTextureColorVertex
+  isExternal: true
+  href: Riateu.ImGuiRend.Position2DTextureColorVertex.html
+  name: Position2DTextureColorVertex
+  nameWithType: Position2DTextureColorVertex
+  fullName: Riateu.ImGuiRend.Position2DTextureColorVertex

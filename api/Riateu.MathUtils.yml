@@ -1,0 +1,1566 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.MathUtils
+  commentId: T:Riateu.MathUtils
+  id: MathUtils
+  parent: Riateu
+  children:
+  - Riateu.MathUtils.Angle(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  - Riateu.MathUtils.Approach(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  - Riateu.MathUtils.Ceil(MoonWorks.Math.Float.Vector2)
+  - Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  - Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2,System.Single,System.Single,System.Single,System.Single)
+  - Riateu.MathUtils.Clamp(System.Int32,System.Int32,System.Int32)
+  - Riateu.MathUtils.Clamp(System.Single,System.Single,System.Single)
+  - Riateu.MathUtils.ClosestPointOnLine(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  - Riateu.MathUtils.DegToVec(System.Single,System.Single)
+  - Riateu.MathUtils.Degrees
+  - Riateu.MathUtils.EndRandScope
+  - Riateu.MathUtils.Epsilon
+  - Riateu.MathUtils.Floor(MoonWorks.Math.Float.Vector2)
+  - Riateu.MathUtils.GetSector(System.Single,System.Single,System.Single,System.Single,MoonWorks.Math.Float.Vector2)
+  - Riateu.MathUtils.Lerp(System.Int32,System.Int32,System.Single)
+  - Riateu.MathUtils.LerpPrecise(System.Single,System.Single,System.Single)
+  - Riateu.MathUtils.MoveTowards(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  - Riateu.MathUtils.MoveTowards(System.Int32,System.Int32,System.Int32)
+  - Riateu.MathUtils.MoveTowards(System.Single,System.Single,System.Single)
+  - Riateu.MathUtils.Radians
+  - Riateu.MathUtils.Randomizer
+  - Riateu.MathUtils.Range(System.Random,System.Int32,System.Int32)
+  - Riateu.MathUtils.Range(System.Random,System.Single,System.Single)
+  - Riateu.MathUtils.Rotated(MoonWorks.Math.Float.Vector2,System.Single)
+  - Riateu.MathUtils.SectorBottom
+  - Riateu.MathUtils.SectorCenter
+  - Riateu.MathUtils.SectorLeft
+  - Riateu.MathUtils.SectorRight
+  - Riateu.MathUtils.SectorTop
+  - Riateu.MathUtils.Slerp(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  - Riateu.MathUtils.Snapped(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  - Riateu.MathUtils.Snapped(System.Single,System.Single)
+  - Riateu.MathUtils.StartRandScope(System.Int32)
+  - Riateu.MathUtils.ToInt(MoonWorks.Math.Float.Vector2)
+  - Riateu.MathUtils.Transform(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2)
+  - Riateu.MathUtils.Wrap(System.Int32,System.Int32,System.Int32)
+  - Riateu.MathUtils.Wrap(System.Single,System.Single,System.Single)
+  langs:
+  - csharp
+  - vb
+  name: MathUtils
+  nameWithType: MathUtils
+  fullName: Riateu.MathUtils
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static class MathUtils
+    content.vb: Public Module MathUtils
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Riateu.MathUtils.Radians
+  commentId: F:Riateu.MathUtils.Radians
+  id: Radians
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Radians
+  nameWithType: MathUtils.Radians
+  fullName: Riateu.MathUtils.Radians
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public const float Radians = 0.017453292
+    return:
+      type: System.Single
+    content.vb: Public Const Radians As Single = 0.017453292
+- uid: Riateu.MathUtils.Degrees
+  commentId: F:Riateu.MathUtils.Degrees
+  id: Degrees
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Degrees
+  nameWithType: MathUtils.Degrees
+  fullName: Riateu.MathUtils.Degrees
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public const float Degrees = 57.295776
+    return:
+      type: System.Single
+    content.vb: Public Const Degrees As Single = 57.295776
+- uid: Riateu.MathUtils.Epsilon
+  commentId: F:Riateu.MathUtils.Epsilon
+  id: Epsilon
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Epsilon
+  nameWithType: MathUtils.Epsilon
+  fullName: Riateu.MathUtils.Epsilon
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public const float Epsilon = 1E-05
+    return:
+      type: System.Single
+    content.vb: Public Const Epsilon As Single = 1E-05
+- uid: Riateu.MathUtils.Randomizer
+  commentId: F:Riateu.MathUtils.Randomizer
+  id: Randomizer
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Randomizer
+  nameWithType: MathUtils.Randomizer
+  fullName: Riateu.MathUtils.Randomizer
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Random Randomizer
+    return:
+      type: System.Random
+    content.vb: Public Shared Randomizer As Random
+- uid: Riateu.MathUtils.SectorCenter
+  commentId: F:Riateu.MathUtils.SectorCenter
+  id: SectorCenter
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: SectorCenter
+  nameWithType: MathUtils.SectorCenter
+  fullName: Riateu.MathUtils.SectorCenter
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public const int SectorCenter = 0
+    return:
+      type: System.Int32
+    content.vb: Public Const SectorCenter As Integer = 0
+- uid: Riateu.MathUtils.SectorLeft
+  commentId: F:Riateu.MathUtils.SectorLeft
+  id: SectorLeft
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: SectorLeft
+  nameWithType: MathUtils.SectorLeft
+  fullName: Riateu.MathUtils.SectorLeft
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public const int SectorLeft = 1
+    return:
+      type: System.Int32
+    content.vb: Public Const SectorLeft As Integer = 1
+- uid: Riateu.MathUtils.SectorRight
+  commentId: F:Riateu.MathUtils.SectorRight
+  id: SectorRight
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: SectorRight
+  nameWithType: MathUtils.SectorRight
+  fullName: Riateu.MathUtils.SectorRight
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public const int SectorRight = 2
+    return:
+      type: System.Int32
+    content.vb: Public Const SectorRight As Integer = 2
+- uid: Riateu.MathUtils.SectorBottom
+  commentId: F:Riateu.MathUtils.SectorBottom
+  id: SectorBottom
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: SectorBottom
+  nameWithType: MathUtils.SectorBottom
+  fullName: Riateu.MathUtils.SectorBottom
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public const int SectorBottom = 3
+    return:
+      type: System.Int32
+    content.vb: Public Const SectorBottom As Integer = 3
+- uid: Riateu.MathUtils.SectorTop
+  commentId: F:Riateu.MathUtils.SectorTop
+  id: SectorTop
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: SectorTop
+  nameWithType: MathUtils.SectorTop
+  fullName: Riateu.MathUtils.SectorTop
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public const int SectorTop = 4
+    return:
+      type: System.Int32
+    content.vb: Public Const SectorTop As Integer = 4
+- uid: Riateu.MathUtils.Lerp(System.Int32,System.Int32,System.Single)
+  commentId: M:Riateu.MathUtils.Lerp(System.Int32,System.Int32,System.Single)
+  id: Lerp(System.Int32,System.Int32,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Lerp(int, int, float)
+  nameWithType: MathUtils.Lerp(int, int, float)
+  fullName: Riateu.MathUtils.Lerp(int, int, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static int Lerp(int a, int b, float t)
+    parameters:
+    - id: a
+      type: System.Int32
+    - id: b
+      type: System.Int32
+    - id: t
+      type: System.Single
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function Lerp(a As Integer, b As Integer, t As Single) As Integer
+  overload: Riateu.MathUtils.Lerp*
+  nameWithType.vb: MathUtils.Lerp(Integer, Integer, Single)
+  fullName.vb: Riateu.MathUtils.Lerp(Integer, Integer, Single)
+  name.vb: Lerp(Integer, Integer, Single)
+- uid: Riateu.MathUtils.MoveTowards(System.Single,System.Single,System.Single)
+  commentId: M:Riateu.MathUtils.MoveTowards(System.Single,System.Single,System.Single)
+  id: MoveTowards(System.Single,System.Single,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: MoveTowards(float, float, float)
+  nameWithType: MathUtils.MoveTowards(float, float, float)
+  fullName: Riateu.MathUtils.MoveTowards(float, float, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static float MoveTowards(float current, float target, float maxDelta)
+    parameters:
+    - id: current
+      type: System.Single
+    - id: target
+      type: System.Single
+    - id: maxDelta
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function MoveTowards(current As Single, target As Single, maxDelta As Single) As Single
+  overload: Riateu.MathUtils.MoveTowards*
+  nameWithType.vb: MathUtils.MoveTowards(Single, Single, Single)
+  fullName.vb: Riateu.MathUtils.MoveTowards(Single, Single, Single)
+  name.vb: MoveTowards(Single, Single, Single)
+- uid: Riateu.MathUtils.Clamp(System.Single,System.Single,System.Single)
+  commentId: M:Riateu.MathUtils.Clamp(System.Single,System.Single,System.Single)
+  id: Clamp(System.Single,System.Single,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Clamp(float, float, float)
+  nameWithType: MathUtils.Clamp(float, float, float)
+  fullName: Riateu.MathUtils.Clamp(float, float, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static float Clamp(float value, float min, float max)
+    parameters:
+    - id: value
+      type: System.Single
+    - id: min
+      type: System.Single
+    - id: max
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Clamp(value As Single, min As Single, max As Single) As Single
+  overload: Riateu.MathUtils.Clamp*
+  nameWithType.vb: MathUtils.Clamp(Single, Single, Single)
+  fullName.vb: Riateu.MathUtils.Clamp(Single, Single, Single)
+  name.vb: Clamp(Single, Single, Single)
+- uid: Riateu.MathUtils.Wrap(System.Single,System.Single,System.Single)
+  commentId: M:Riateu.MathUtils.Wrap(System.Single,System.Single,System.Single)
+  id: Wrap(System.Single,System.Single,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Wrap(float, float, float)
+  nameWithType: MathUtils.Wrap(float, float, float)
+  fullName: Riateu.MathUtils.Wrap(float, float, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static float Wrap(float value, float min, float max)
+    parameters:
+    - id: value
+      type: System.Single
+    - id: min
+      type: System.Single
+    - id: max
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Wrap(value As Single, min As Single, max As Single) As Single
+  overload: Riateu.MathUtils.Wrap*
+  nameWithType.vb: MathUtils.Wrap(Single, Single, Single)
+  fullName.vb: Riateu.MathUtils.Wrap(Single, Single, Single)
+  name.vb: Wrap(Single, Single, Single)
+- uid: Riateu.MathUtils.Snapped(System.Single,System.Single)
+  commentId: M:Riateu.MathUtils.Snapped(System.Single,System.Single)
+  id: Snapped(System.Single,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Snapped(float, float)
+  nameWithType: MathUtils.Snapped(float, float)
+  fullName: Riateu.MathUtils.Snapped(float, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static float Snapped(float px, float step)
+    parameters:
+    - id: px
+      type: System.Single
+    - id: step
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Snapped(px As Single, [step] As Single) As Single
+  overload: Riateu.MathUtils.Snapped*
+  nameWithType.vb: MathUtils.Snapped(Single, Single)
+  fullName.vb: Riateu.MathUtils.Snapped(Single, Single)
+  name.vb: Snapped(Single, Single)
+- uid: Riateu.MathUtils.MoveTowards(System.Int32,System.Int32,System.Int32)
+  commentId: M:Riateu.MathUtils.MoveTowards(System.Int32,System.Int32,System.Int32)
+  id: MoveTowards(System.Int32,System.Int32,System.Int32)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: MoveTowards(int, int, int)
+  nameWithType: MathUtils.MoveTowards(int, int, int)
+  fullName: Riateu.MathUtils.MoveTowards(int, int, int)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static int MoveTowards(int current, int target, int maxDelta)
+    parameters:
+    - id: current
+      type: System.Int32
+    - id: target
+      type: System.Int32
+    - id: maxDelta
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function MoveTowards(current As Integer, target As Integer, maxDelta As Integer) As Integer
+  overload: Riateu.MathUtils.MoveTowards*
+  nameWithType.vb: MathUtils.MoveTowards(Integer, Integer, Integer)
+  fullName.vb: Riateu.MathUtils.MoveTowards(Integer, Integer, Integer)
+  name.vb: MoveTowards(Integer, Integer, Integer)
+- uid: Riateu.MathUtils.Wrap(System.Int32,System.Int32,System.Int32)
+  commentId: M:Riateu.MathUtils.Wrap(System.Int32,System.Int32,System.Int32)
+  id: Wrap(System.Int32,System.Int32,System.Int32)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Wrap(int, int, int)
+  nameWithType: MathUtils.Wrap(int, int, int)
+  fullName: Riateu.MathUtils.Wrap(int, int, int)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static int Wrap(int value, int min, int max)
+    parameters:
+    - id: value
+      type: System.Int32
+    - id: min
+      type: System.Int32
+    - id: max
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function Wrap(value As Integer, min As Integer, max As Integer) As Integer
+  overload: Riateu.MathUtils.Wrap*
+  nameWithType.vb: MathUtils.Wrap(Integer, Integer, Integer)
+  fullName.vb: Riateu.MathUtils.Wrap(Integer, Integer, Integer)
+  name.vb: Wrap(Integer, Integer, Integer)
+- uid: Riateu.MathUtils.Clamp(System.Int32,System.Int32,System.Int32)
+  commentId: M:Riateu.MathUtils.Clamp(System.Int32,System.Int32,System.Int32)
+  id: Clamp(System.Int32,System.Int32,System.Int32)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Clamp(int, int, int)
+  nameWithType: MathUtils.Clamp(int, int, int)
+  fullName: Riateu.MathUtils.Clamp(int, int, int)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static int Clamp(int value, int min, int max)
+    parameters:
+    - id: value
+      type: System.Int32
+    - id: min
+      type: System.Int32
+    - id: max
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function Clamp(value As Integer, min As Integer, max As Integer) As Integer
+  overload: Riateu.MathUtils.Clamp*
+  nameWithType.vb: MathUtils.Clamp(Integer, Integer, Integer)
+  fullName.vb: Riateu.MathUtils.Clamp(Integer, Integer, Integer)
+  name.vb: Clamp(Integer, Integer, Integer)
+- uid: Riateu.MathUtils.Angle(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.MathUtils.Angle(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  id: Angle(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Angle(Vector2, Vector2)
+  nameWithType: MathUtils.Angle(Vector2, Vector2)
+  fullName: Riateu.MathUtils.Angle(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static float Angle(Vector2 from, Vector2 to)
+    parameters:
+    - id: from
+      type: MoonWorks.Math.Float.Vector2
+    - id: to
+      type: MoonWorks.Math.Float.Vector2
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Angle(from As Vector2, [to] As Vector2) As Single
+  overload: Riateu.MathUtils.Angle*
+- uid: Riateu.MathUtils.MoveTowards(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  commentId: M:Riateu.MathUtils.MoveTowards(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  id: MoveTowards(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: MoveTowards(Vector2, Vector2, float)
+  nameWithType: MathUtils.MoveTowards(Vector2, Vector2, float)
+  fullName: Riateu.MathUtils.MoveTowards(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 MoveTowards(Vector2 current, Vector2 target, float maxDelta)
+    parameters:
+    - id: current
+      type: MoonWorks.Math.Float.Vector2
+    - id: target
+      type: MoonWorks.Math.Float.Vector2
+    - id: maxDelta
+      type: System.Single
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function MoveTowards(current As Vector2, target As Vector2, maxDelta As Single) As Vector2
+  overload: Riateu.MathUtils.MoveTowards*
+  nameWithType.vb: MathUtils.MoveTowards(Vector2, Vector2, Single)
+  fullName.vb: Riateu.MathUtils.MoveTowards(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2, Single)
+  name.vb: MoveTowards(Vector2, Vector2, Single)
+- uid: Riateu.MathUtils.Slerp(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  commentId: M:Riateu.MathUtils.Slerp(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  id: Slerp(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Slerp(Vector2, Vector2, float)
+  nameWithType: MathUtils.Slerp(Vector2, Vector2, float)
+  fullName: Riateu.MathUtils.Slerp(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Slerp(Vector2 current, Vector2 target, float maxDelta)
+    parameters:
+    - id: current
+      type: MoonWorks.Math.Float.Vector2
+    - id: target
+      type: MoonWorks.Math.Float.Vector2
+    - id: maxDelta
+      type: System.Single
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Slerp(current As Vector2, target As Vector2, maxDelta As Single) As Vector2
+  overload: Riateu.MathUtils.Slerp*
+  nameWithType.vb: MathUtils.Slerp(Vector2, Vector2, Single)
+  fullName.vb: Riateu.MathUtils.Slerp(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2, Single)
+  name.vb: Slerp(Vector2, Vector2, Single)
+- uid: Riateu.MathUtils.LerpPrecise(System.Single,System.Single,System.Single)
+  commentId: M:Riateu.MathUtils.LerpPrecise(System.Single,System.Single,System.Single)
+  id: LerpPrecise(System.Single,System.Single,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: LerpPrecise(float, float, float)
+  nameWithType: MathUtils.LerpPrecise(float, float, float)
+  fullName: Riateu.MathUtils.LerpPrecise(float, float, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static float LerpPrecise(float value1, float value2, float amount)
+    parameters:
+    - id: value1
+      type: System.Single
+    - id: value2
+      type: System.Single
+    - id: amount
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function LerpPrecise(value1 As Single, value2 As Single, amount As Single) As Single
+  overload: Riateu.MathUtils.LerpPrecise*
+  nameWithType.vb: MathUtils.LerpPrecise(Single, Single, Single)
+  fullName.vb: Riateu.MathUtils.LerpPrecise(Single, Single, Single)
+  name.vb: LerpPrecise(Single, Single, Single)
+- uid: Riateu.MathUtils.Rotated(MoonWorks.Math.Float.Vector2,System.Single)
+  commentId: M:Riateu.MathUtils.Rotated(MoonWorks.Math.Float.Vector2,System.Single)
+  id: Rotated(MoonWorks.Math.Float.Vector2,System.Single)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Rotated(Vector2, float)
+  nameWithType: MathUtils.Rotated(Vector2, float)
+  fullName: Riateu.MathUtils.Rotated(MoonWorks.Math.Float.Vector2, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Rotated(this Vector2 value, float angle)
+    parameters:
+    - id: value
+      type: MoonWorks.Math.Float.Vector2
+    - id: angle
+      type: System.Single
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Rotated(value As Vector2, angle As Single) As Vector2
+  overload: Riateu.MathUtils.Rotated*
+  nameWithType.vb: MathUtils.Rotated(Vector2, Single)
+  fullName.vb: Riateu.MathUtils.Rotated(MoonWorks.Math.Float.Vector2, Single)
+  name.vb: Rotated(Vector2, Single)
+- uid: Riateu.MathUtils.Ceil(MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.MathUtils.Ceil(MoonWorks.Math.Float.Vector2)
+  id: Ceil(MoonWorks.Math.Float.Vector2)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Ceil(Vector2)
+  nameWithType: MathUtils.Ceil(Vector2)
+  fullName: Riateu.MathUtils.Ceil(MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Ceil(this Vector2 value)
+    parameters:
+    - id: value
+      type: MoonWorks.Math.Float.Vector2
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Ceil(value As Vector2) As Vector2
+  overload: Riateu.MathUtils.Ceil*
+- uid: Riateu.MathUtils.DegToVec(System.Single,System.Single)
+  commentId: M:Riateu.MathUtils.DegToVec(System.Single,System.Single)
+  id: DegToVec(System.Single,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: DegToVec(float, float)
+  nameWithType: MathUtils.DegToVec(float, float)
+  fullName: Riateu.MathUtils.DegToVec(float, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 DegToVec(float radians, float length)
+    parameters:
+    - id: radians
+      type: System.Single
+    - id: length
+      type: System.Single
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function DegToVec(radians As Single, length As Single) As Vector2
+  overload: Riateu.MathUtils.DegToVec*
+  nameWithType.vb: MathUtils.DegToVec(Single, Single)
+  fullName.vb: Riateu.MathUtils.DegToVec(Single, Single)
+  name.vb: DegToVec(Single, Single)
+- uid: Riateu.MathUtils.Transform(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2)
+  commentId: M:Riateu.MathUtils.Transform(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2)
+  id: Transform(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Transform(Vector2, Matrix3x2)
+  nameWithType: MathUtils.Transform(Vector2, Matrix3x2)
+  fullName: Riateu.MathUtils.Transform(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Transform(Vector2 position, Matrix3x2 matrix)
+    parameters:
+    - id: position
+      type: MoonWorks.Math.Float.Vector2
+    - id: matrix
+      type: MoonWorks.Math.Float.Matrix3x2
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Transform(position As Vector2, matrix As Matrix3x2) As Vector2
+  overload: Riateu.MathUtils.Transform*
+- uid: Riateu.MathUtils.Approach(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  commentId: M:Riateu.MathUtils.Approach(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  id: Approach(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,System.Single)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Approach(Vector2, Vector2, float)
+  nameWithType: MathUtils.Approach(Vector2, Vector2, float)
+  fullName: Riateu.MathUtils.Approach(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Approach(Vector2 val, Vector2 target, float maxMove)
+    parameters:
+    - id: val
+      type: MoonWorks.Math.Float.Vector2
+    - id: target
+      type: MoonWorks.Math.Float.Vector2
+    - id: maxMove
+      type: System.Single
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Approach(val As Vector2, target As Vector2, maxMove As Single) As Vector2
+  overload: Riateu.MathUtils.Approach*
+  nameWithType.vb: MathUtils.Approach(Vector2, Vector2, Single)
+  fullName.vb: Riateu.MathUtils.Approach(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2, Single)
+  name.vb: Approach(Vector2, Vector2, Single)
+- uid: Riateu.MathUtils.ClosestPointOnLine(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.MathUtils.ClosestPointOnLine(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  id: ClosestPointOnLine(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: ClosestPointOnLine(Vector2, Vector2, Vector2)
+  nameWithType: MathUtils.ClosestPointOnLine(Vector2, Vector2, Vector2)
+  fullName: Riateu.MathUtils.ClosestPointOnLine(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 ClosestPointOnLine(Vector2 lineA, Vector2 lineB, Vector2 closestTo)
+    parameters:
+    - id: lineA
+      type: MoonWorks.Math.Float.Vector2
+    - id: lineB
+      type: MoonWorks.Math.Float.Vector2
+    - id: closestTo
+      type: MoonWorks.Math.Float.Vector2
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function ClosestPointOnLine(lineA As Vector2, lineB As Vector2, closestTo As Vector2) As Vector2
+  overload: Riateu.MathUtils.ClosestPointOnLine*
+- uid: Riateu.MathUtils.ToInt(MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.MathUtils.ToInt(MoonWorks.Math.Float.Vector2)
+  id: ToInt(MoonWorks.Math.Float.Vector2)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: ToInt(Vector2)
+  nameWithType: MathUtils.ToInt(Vector2)
+  fullName: Riateu.MathUtils.ToInt(MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 ToInt(this Vector2 vec)
+    parameters:
+    - id: vec
+      type: MoonWorks.Math.Float.Vector2
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function ToInt(vec As Vector2) As Vector2
+  overload: Riateu.MathUtils.ToInt*
+- uid: Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  id: Clamp(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Clamp(Vector2, Vector2, Vector2)
+  nameWithType: MathUtils.Clamp(Vector2, Vector2, Vector2)
+  fullName: Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Clamp(this Vector2 value, Vector2 min, Vector2 max)
+    parameters:
+    - id: value
+      type: MoonWorks.Math.Float.Vector2
+    - id: min
+      type: MoonWorks.Math.Float.Vector2
+    - id: max
+      type: MoonWorks.Math.Float.Vector2
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Clamp(value As Vector2, min As Vector2, max As Vector2) As Vector2
+  overload: Riateu.MathUtils.Clamp*
+- uid: Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2,System.Single,System.Single,System.Single,System.Single)
+  commentId: M:Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2,System.Single,System.Single,System.Single,System.Single)
+  id: Clamp(MoonWorks.Math.Float.Vector2,System.Single,System.Single,System.Single,System.Single)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Clamp(Vector2, float, float, float, float)
+  nameWithType: MathUtils.Clamp(Vector2, float, float, float, float)
+  fullName: Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2, float, float, float, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Clamp(this Vector2 value, float minX, float maxX, float minY, float maxY)
+    parameters:
+    - id: value
+      type: MoonWorks.Math.Float.Vector2
+    - id: minX
+      type: System.Single
+    - id: maxX
+      type: System.Single
+    - id: minY
+      type: System.Single
+    - id: maxY
+      type: System.Single
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Clamp(value As Vector2, minX As Single, maxX As Single, minY As Single, maxY As Single) As Vector2
+  overload: Riateu.MathUtils.Clamp*
+  nameWithType.vb: MathUtils.Clamp(Vector2, Single, Single, Single, Single)
+  fullName.vb: Riateu.MathUtils.Clamp(MoonWorks.Math.Float.Vector2, Single, Single, Single, Single)
+  name.vb: Clamp(Vector2, Single, Single, Single, Single)
+- uid: Riateu.MathUtils.Floor(MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.MathUtils.Floor(MoonWorks.Math.Float.Vector2)
+  id: Floor(MoonWorks.Math.Float.Vector2)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Floor(Vector2)
+  nameWithType: MathUtils.Floor(Vector2)
+  fullName: Riateu.MathUtils.Floor(MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Floor(this Vector2 vec)
+    parameters:
+    - id: vec
+      type: MoonWorks.Math.Float.Vector2
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Floor(vec As Vector2) As Vector2
+  overload: Riateu.MathUtils.Floor*
+- uid: Riateu.MathUtils.Snapped(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.MathUtils.Snapped(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  id: Snapped(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Snapped(Vector2, Vector2)
+  nameWithType: MathUtils.Snapped(Vector2, Vector2)
+  fullName: Riateu.MathUtils.Snapped(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Vector2 Snapped(this Vector2 vec, Vector2 step)
+    parameters:
+    - id: vec
+      type: MoonWorks.Math.Float.Vector2
+    - id: step
+      type: MoonWorks.Math.Float.Vector2
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Shared Function Snapped(vec As Vector2, [step] As Vector2) As Vector2
+  overload: Riateu.MathUtils.Snapped*
+- uid: Riateu.MathUtils.GetSector(System.Single,System.Single,System.Single,System.Single,MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.MathUtils.GetSector(System.Single,System.Single,System.Single,System.Single,MoonWorks.Math.Float.Vector2)
+  id: GetSector(System.Single,System.Single,System.Single,System.Single,MoonWorks.Math.Float.Vector2)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: GetSector(float, float, float, float, Vector2)
+  nameWithType: MathUtils.GetSector(float, float, float, float, Vector2)
+  fullName: Riateu.MathUtils.GetSector(float, float, float, float, MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static int GetSector(float rX, float rY, float rW, float rH, Vector2 line)
+    parameters:
+    - id: rX
+      type: System.Single
+    - id: rY
+      type: System.Single
+    - id: rW
+      type: System.Single
+    - id: rH
+      type: System.Single
+    - id: line
+      type: MoonWorks.Math.Float.Vector2
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function GetSector(rX As Single, rY As Single, rW As Single, rH As Single, line As Vector2) As Integer
+  overload: Riateu.MathUtils.GetSector*
+  nameWithType.vb: MathUtils.GetSector(Single, Single, Single, Single, Vector2)
+  fullName.vb: Riateu.MathUtils.GetSector(Single, Single, Single, Single, MoonWorks.Math.Float.Vector2)
+  name.vb: GetSector(Single, Single, Single, Single, Vector2)
+- uid: Riateu.MathUtils.Range(System.Random,System.Int32,System.Int32)
+  commentId: M:Riateu.MathUtils.Range(System.Random,System.Int32,System.Int32)
+  id: Range(System.Random,System.Int32,System.Int32)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Range(Random, int, int)
+  nameWithType: MathUtils.Range(Random, int, int)
+  fullName: Riateu.MathUtils.Range(System.Random, int, int)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static int Range(this Random random, int min, int max)
+    parameters:
+    - id: random
+      type: System.Random
+    - id: min
+      type: System.Int32
+    - id: max
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function Range(random As Random, min As Integer, max As Integer) As Integer
+  overload: Riateu.MathUtils.Range*
+  nameWithType.vb: MathUtils.Range(Random, Integer, Integer)
+  fullName.vb: Riateu.MathUtils.Range(System.Random, Integer, Integer)
+  name.vb: Range(Random, Integer, Integer)
+- uid: Riateu.MathUtils.Range(System.Random,System.Single,System.Single)
+  commentId: M:Riateu.MathUtils.Range(System.Random,System.Single,System.Single)
+  id: Range(System.Random,System.Single,System.Single)
+  isExtensionMethod: true
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: Range(Random, float, float)
+  nameWithType: MathUtils.Range(Random, float, float)
+  fullName: Riateu.MathUtils.Range(System.Random, float, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static float Range(this Random random, float min, float max)
+    parameters:
+    - id: random
+      type: System.Random
+    - id: min
+      type: System.Single
+    - id: max
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Range(random As Random, min As Single, max As Single) As Single
+  overload: Riateu.MathUtils.Range*
+  nameWithType.vb: MathUtils.Range(Random, Single, Single)
+  fullName.vb: Riateu.MathUtils.Range(System.Random, Single, Single)
+  name.vb: Range(Random, Single, Single)
+- uid: Riateu.MathUtils.StartRandScope(System.Int32)
+  commentId: M:Riateu.MathUtils.StartRandScope(System.Int32)
+  id: StartRandScope(System.Int32)
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: StartRandScope(int)
+  nameWithType: MathUtils.StartRandScope(int)
+  fullName: Riateu.MathUtils.StartRandScope(int)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static void StartRandScope(int seed)
+    parameters:
+    - id: seed
+      type: System.Int32
+    content.vb: Public Shared Sub StartRandScope(seed As Integer)
+  overload: Riateu.MathUtils.StartRandScope*
+  nameWithType.vb: MathUtils.StartRandScope(Integer)
+  fullName.vb: Riateu.MathUtils.StartRandScope(Integer)
+  name.vb: StartRandScope(Integer)
+- uid: Riateu.MathUtils.EndRandScope
+  commentId: M:Riateu.MathUtils.EndRandScope
+  id: EndRandScope
+  parent: Riateu.MathUtils
+  langs:
+  - csharp
+  - vb
+  name: EndRandScope()
+  nameWithType: MathUtils.EndRandScope()
+  fullName: Riateu.MathUtils.EndRandScope()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Math/MathUtils.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static void EndRandScope()
+    content.vb: Public Shared Sub EndRandScope()
+  overload: Riateu.MathUtils.EndRandScope*
+references:
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: System.Random
+  commentId: T:System.Random
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.random
+  name: Random
+  nameWithType: Random
+  fullName: System.Random
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Riateu.MathUtils.Lerp*
+  commentId: Overload:Riateu.MathUtils.Lerp
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Lerp_System_Int32_System_Int32_System_Single_
+  name: Lerp
+  nameWithType: MathUtils.Lerp
+  fullName: Riateu.MathUtils.Lerp
+- uid: Riateu.MathUtils.MoveTowards*
+  commentId: Overload:Riateu.MathUtils.MoveTowards
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_MoveTowards_System_Single_System_Single_System_Single_
+  name: MoveTowards
+  nameWithType: MathUtils.MoveTowards
+  fullName: Riateu.MathUtils.MoveTowards
+- uid: Riateu.MathUtils.Clamp*
+  commentId: Overload:Riateu.MathUtils.Clamp
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Clamp_System_Single_System_Single_System_Single_
+  name: Clamp
+  nameWithType: MathUtils.Clamp
+  fullName: Riateu.MathUtils.Clamp
+- uid: Riateu.MathUtils.Wrap*
+  commentId: Overload:Riateu.MathUtils.Wrap
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Wrap_System_Single_System_Single_System_Single_
+  name: Wrap
+  nameWithType: MathUtils.Wrap
+  fullName: Riateu.MathUtils.Wrap
+- uid: Riateu.MathUtils.Snapped*
+  commentId: Overload:Riateu.MathUtils.Snapped
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Snapped_System_Single_System_Single_
+  name: Snapped
+  nameWithType: MathUtils.Snapped
+  fullName: Riateu.MathUtils.Snapped
+- uid: Riateu.MathUtils.Angle*
+  commentId: Overload:Riateu.MathUtils.Angle
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Angle_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Vector2_
+  name: Angle
+  nameWithType: MathUtils.Angle
+  fullName: Riateu.MathUtils.Angle
+- uid: MoonWorks.Math.Float.Vector2
+  commentId: T:MoonWorks.Math.Float.Vector2
+  parent: MoonWorks.Math.Float
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  name: Vector2
+  nameWithType: Vector2
+  fullName: MoonWorks.Math.Float.Vector2
+- uid: MoonWorks.Math.Float
+  commentId: N:MoonWorks.Math.Float
+  isExternal: true
+  name: MoonWorks.Math.Float
+  nameWithType: MoonWorks.Math.Float
+  fullName: MoonWorks.Math.Float
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+- uid: Riateu.MathUtils.Slerp*
+  commentId: Overload:Riateu.MathUtils.Slerp
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Slerp_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Vector2_System_Single_
+  name: Slerp
+  nameWithType: MathUtils.Slerp
+  fullName: Riateu.MathUtils.Slerp
+- uid: Riateu.MathUtils.LerpPrecise*
+  commentId: Overload:Riateu.MathUtils.LerpPrecise
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_LerpPrecise_System_Single_System_Single_System_Single_
+  name: LerpPrecise
+  nameWithType: MathUtils.LerpPrecise
+  fullName: Riateu.MathUtils.LerpPrecise
+- uid: Riateu.MathUtils.Rotated*
+  commentId: Overload:Riateu.MathUtils.Rotated
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Rotated_MoonWorks_Math_Float_Vector2_System_Single_
+  name: Rotated
+  nameWithType: MathUtils.Rotated
+  fullName: Riateu.MathUtils.Rotated
+- uid: Riateu.MathUtils.Ceil*
+  commentId: Overload:Riateu.MathUtils.Ceil
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Ceil_MoonWorks_Math_Float_Vector2_
+  name: Ceil
+  nameWithType: MathUtils.Ceil
+  fullName: Riateu.MathUtils.Ceil
+- uid: Riateu.MathUtils.DegToVec*
+  commentId: Overload:Riateu.MathUtils.DegToVec
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_DegToVec_System_Single_System_Single_
+  name: DegToVec
+  nameWithType: MathUtils.DegToVec
+  fullName: Riateu.MathUtils.DegToVec
+- uid: Riateu.MathUtils.Transform*
+  commentId: Overload:Riateu.MathUtils.Transform
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Transform_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Matrix3x2_
+  name: Transform
+  nameWithType: MathUtils.Transform
+  fullName: Riateu.MathUtils.Transform
+- uid: MoonWorks.Math.Float.Matrix3x2
+  commentId: T:MoonWorks.Math.Float.Matrix3x2
+  parent: MoonWorks.Math.Float
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix3x2.cs
+  name: Matrix3x2
+  nameWithType: Matrix3x2
+  fullName: MoonWorks.Math.Float.Matrix3x2
+- uid: Riateu.MathUtils.Approach*
+  commentId: Overload:Riateu.MathUtils.Approach
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Approach_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Vector2_System_Single_
+  name: Approach
+  nameWithType: MathUtils.Approach
+  fullName: Riateu.MathUtils.Approach
+- uid: Riateu.MathUtils.ClosestPointOnLine*
+  commentId: Overload:Riateu.MathUtils.ClosestPointOnLine
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_ClosestPointOnLine_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Vector2_
+  name: ClosestPointOnLine
+  nameWithType: MathUtils.ClosestPointOnLine
+  fullName: Riateu.MathUtils.ClosestPointOnLine
+- uid: Riateu.MathUtils.ToInt*
+  commentId: Overload:Riateu.MathUtils.ToInt
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_ToInt_MoonWorks_Math_Float_Vector2_
+  name: ToInt
+  nameWithType: MathUtils.ToInt
+  fullName: Riateu.MathUtils.ToInt
+- uid: Riateu.MathUtils.Floor*
+  commentId: Overload:Riateu.MathUtils.Floor
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Floor_MoonWorks_Math_Float_Vector2_
+  name: Floor
+  nameWithType: MathUtils.Floor
+  fullName: Riateu.MathUtils.Floor
+- uid: Riateu.MathUtils.GetSector*
+  commentId: Overload:Riateu.MathUtils.GetSector
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_GetSector_System_Single_System_Single_System_Single_System_Single_MoonWorks_Math_Float_Vector2_
+  name: GetSector
+  nameWithType: MathUtils.GetSector
+  fullName: Riateu.MathUtils.GetSector
+- uid: Riateu.MathUtils.Range*
+  commentId: Overload:Riateu.MathUtils.Range
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_Range_System_Random_System_Int32_System_Int32_
+  name: Range
+  nameWithType: MathUtils.Range
+  fullName: Riateu.MathUtils.Range
+- uid: Riateu.MathUtils.StartRandScope*
+  commentId: Overload:Riateu.MathUtils.StartRandScope
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_StartRandScope_System_Int32_
+  name: StartRandScope
+  nameWithType: MathUtils.StartRandScope
+  fullName: Riateu.MathUtils.StartRandScope
+- uid: Riateu.MathUtils.EndRandScope*
+  commentId: Overload:Riateu.MathUtils.EndRandScope
+  isExternal: true
+  href: Riateu.MathUtils.html#Riateu_MathUtils_EndRandScope
+  name: EndRandScope
+  nameWithType: MathUtils.EndRandScope
+  fullName: Riateu.MathUtils.EndRandScope

@@ -1,0 +1,1195 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.WeakList`1
+  commentId: T:Riateu.WeakList`1
+  id: WeakList`1
+  parent: Riateu
+  children:
+  - Riateu.WeakList`1.#ctor
+  - Riateu.WeakList`1.#ctor(System.Int32)
+  - Riateu.WeakList`1.Add(`0)
+  - Riateu.WeakList`1.AddRange(System.Collections.Generic.IEnumerable{`0})
+  - Riateu.WeakList`1.Clear
+  - Riateu.WeakList`1.Contains(`0)
+  - Riateu.WeakList`1.Count
+  - Riateu.WeakList`1.EnsureCapacity(System.Int32)
+  - Riateu.WeakList`1.IndexOf(`0)
+  - Riateu.WeakList`1.Item(System.Int32)
+  - Riateu.WeakList`1.Remove(`0)
+  - Riateu.WeakList`1.RemoveAt(System.Int32)
+  - Riateu.WeakList`1.Sort(System.Collections.Generic.IComparer{`0})
+  - Riateu.WeakList`1.Sort(System.Collections.IComparer)
+  - Riateu.WeakList`1.Sort(System.Comparison{`0})
+  - Riateu.WeakList`1.ToArray
+  - Riateu.WeakList`1.ToList
+  langs:
+  - csharp
+  - vb
+  name: WeakList<T>
+  nameWithType: WeakList<T>
+  fullName: Riateu.WeakList<T>
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public class WeakList<T>
+    typeParameters:
+    - id: T
+    content.vb: Public Class WeakList(Of T)
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  nameWithType.vb: WeakList(Of T)
+  fullName.vb: Riateu.WeakList(Of T)
+  name.vb: WeakList(Of T)
+- uid: Riateu.WeakList`1.Count
+  commentId: F:Riateu.WeakList`1.Count
+  id: Count
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: WeakList<T>.Count
+  fullName: Riateu.WeakList<T>.Count
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public int Count
+    return:
+      type: System.Int32
+    content.vb: Public Count As Integer
+  nameWithType.vb: WeakList(Of T).Count
+  fullName.vb: Riateu.WeakList(Of T).Count
+- uid: Riateu.WeakList`1.#ctor(System.Int32)
+  commentId: M:Riateu.WeakList`1.#ctor(System.Int32)
+  id: '#ctor(System.Int32)'
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: WeakList(int)
+  nameWithType: WeakList<T>.WeakList(int)
+  fullName: Riateu.WeakList<T>.WeakList(int)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public WeakList(int size)
+    parameters:
+    - id: size
+      type: System.Int32
+    content.vb: Public Sub New(size As Integer)
+  overload: Riateu.WeakList`1.#ctor*
+  nameWithType.vb: WeakList(Of T).New(Integer)
+  fullName.vb: Riateu.WeakList(Of T).New(Integer)
+  name.vb: New(Integer)
+- uid: Riateu.WeakList`1.#ctor
+  commentId: M:Riateu.WeakList`1.#ctor
+  id: '#ctor'
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: WeakList()
+  nameWithType: WeakList<T>.WeakList()
+  fullName: Riateu.WeakList<T>.WeakList()
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public WeakList()
+    content.vb: Public Sub New()
+  overload: Riateu.WeakList`1.#ctor*
+  nameWithType.vb: WeakList(Of T).New()
+  fullName.vb: Riateu.WeakList(Of T).New()
+  name.vb: New()
+- uid: Riateu.WeakList`1.Add(`0)
+  commentId: M:Riateu.WeakList`1.Add(`0)
+  id: Add(`0)
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: Add(T)
+  nameWithType: WeakList<T>.Add(T)
+  fullName: Riateu.WeakList<T>.Add(T)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Add(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+    content.vb: Public Sub Add(item As T)
+  overload: Riateu.WeakList`1.Add*
+  nameWithType.vb: WeakList(Of T).Add(T)
+  fullName.vb: Riateu.WeakList(Of T).Add(T)
+- uid: Riateu.WeakList`1.Remove(`0)
+  commentId: M:Riateu.WeakList`1.Remove(`0)
+  id: Remove(`0)
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: Remove(T)
+  nameWithType: WeakList<T>.Remove(T)
+  fullName: Riateu.WeakList<T>.Remove(T)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Remove(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+    content.vb: Public Sub Remove(item As T)
+  overload: Riateu.WeakList`1.Remove*
+  nameWithType.vb: WeakList(Of T).Remove(T)
+  fullName.vb: Riateu.WeakList(Of T).Remove(T)
+- uid: Riateu.WeakList`1.RemoveAt(System.Int32)
+  commentId: M:Riateu.WeakList`1.RemoveAt(System.Int32)
+  id: RemoveAt(System.Int32)
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: RemoveAt(int)
+  nameWithType: WeakList<T>.RemoveAt(int)
+  fullName: Riateu.WeakList<T>.RemoveAt(int)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void RemoveAt(int index)
+    parameters:
+    - id: index
+      type: System.Int32
+    content.vb: Public Sub RemoveAt(index As Integer)
+  overload: Riateu.WeakList`1.RemoveAt*
+  nameWithType.vb: WeakList(Of T).RemoveAt(Integer)
+  fullName.vb: Riateu.WeakList(Of T).RemoveAt(Integer)
+  name.vb: RemoveAt(Integer)
+- uid: Riateu.WeakList`1.Contains(`0)
+  commentId: M:Riateu.WeakList`1.Contains(`0)
+  id: Contains(`0)
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: Contains(T)
+  nameWithType: WeakList<T>.Contains(T)
+  fullName: Riateu.WeakList<T>.Contains(T)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public bool Contains(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+    return:
+      type: System.Boolean
+    content.vb: Public Function Contains(item As T) As Boolean
+  overload: Riateu.WeakList`1.Contains*
+  nameWithType.vb: WeakList(Of T).Contains(T)
+  fullName.vb: Riateu.WeakList(Of T).Contains(T)
+- uid: Riateu.WeakList`1.IndexOf(`0)
+  commentId: M:Riateu.WeakList`1.IndexOf(`0)
+  id: IndexOf(`0)
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: IndexOf(T)
+  nameWithType: WeakList<T>.IndexOf(T)
+  fullName: Riateu.WeakList<T>.IndexOf(T)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public int IndexOf(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+    return:
+      type: System.Int32
+    content.vb: Public Function IndexOf(item As T) As Integer
+  overload: Riateu.WeakList`1.IndexOf*
+  nameWithType.vb: WeakList(Of T).IndexOf(T)
+  fullName.vb: Riateu.WeakList(Of T).IndexOf(T)
+- uid: Riateu.WeakList`1.EnsureCapacity(System.Int32)
+  commentId: M:Riateu.WeakList`1.EnsureCapacity(System.Int32)
+  id: EnsureCapacity(System.Int32)
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: EnsureCapacity(int)
+  nameWithType: WeakList<T>.EnsureCapacity(int)
+  fullName: Riateu.WeakList<T>.EnsureCapacity(int)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void EnsureCapacity(int addition = 1)
+    parameters:
+    - id: addition
+      type: System.Int32
+    content.vb: Public Sub EnsureCapacity(addition As Integer = 1)
+  overload: Riateu.WeakList`1.EnsureCapacity*
+  nameWithType.vb: WeakList(Of T).EnsureCapacity(Integer)
+  fullName.vb: Riateu.WeakList(Of T).EnsureCapacity(Integer)
+  name.vb: EnsureCapacity(Integer)
+- uid: Riateu.WeakList`1.AddRange(System.Collections.Generic.IEnumerable{`0})
+  commentId: M:Riateu.WeakList`1.AddRange(System.Collections.Generic.IEnumerable{`0})
+  id: AddRange(System.Collections.Generic.IEnumerable{`0})
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: AddRange(IEnumerable<T>)
+  nameWithType: WeakList<T>.AddRange(IEnumerable<T>)
+  fullName: Riateu.WeakList<T>.AddRange(System.Collections.Generic.IEnumerable<T>)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void AddRange(IEnumerable<T> array)
+    parameters:
+    - id: array
+      type: System.Collections.Generic.IEnumerable{{T}}
+    content.vb: Public Sub AddRange(array As IEnumerable(Of T))
+  overload: Riateu.WeakList`1.AddRange*
+  nameWithType.vb: WeakList(Of T).AddRange(IEnumerable(Of T))
+  fullName.vb: Riateu.WeakList(Of T).AddRange(System.Collections.Generic.IEnumerable(Of T))
+  name.vb: AddRange(IEnumerable(Of T))
+- uid: Riateu.WeakList`1.Sort(System.Collections.IComparer)
+  commentId: M:Riateu.WeakList`1.Sort(System.Collections.IComparer)
+  id: Sort(System.Collections.IComparer)
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: Sort(IComparer)
+  nameWithType: WeakList<T>.Sort(IComparer)
+  fullName: Riateu.WeakList<T>.Sort(System.Collections.IComparer)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Sort(IComparer comparer)
+    parameters:
+    - id: comparer
+      type: System.Collections.IComparer
+    content.vb: Public Sub Sort(comparer As IComparer)
+  overload: Riateu.WeakList`1.Sort*
+  nameWithType.vb: WeakList(Of T).Sort(IComparer)
+  fullName.vb: Riateu.WeakList(Of T).Sort(System.Collections.IComparer)
+- uid: Riateu.WeakList`1.Sort(System.Collections.Generic.IComparer{`0})
+  commentId: M:Riateu.WeakList`1.Sort(System.Collections.Generic.IComparer{`0})
+  id: Sort(System.Collections.Generic.IComparer{`0})
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: Sort(IComparer<T>)
+  nameWithType: WeakList<T>.Sort(IComparer<T>)
+  fullName: Riateu.WeakList<T>.Sort(System.Collections.Generic.IComparer<T>)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Sort(IComparer<T> comparer)
+    parameters:
+    - id: comparer
+      type: System.Collections.Generic.IComparer{{T}}
+    content.vb: Public Sub Sort(comparer As IComparer(Of T))
+  overload: Riateu.WeakList`1.Sort*
+  nameWithType.vb: WeakList(Of T).Sort(IComparer(Of T))
+  fullName.vb: Riateu.WeakList(Of T).Sort(System.Collections.Generic.IComparer(Of T))
+  name.vb: Sort(IComparer(Of T))
+- uid: Riateu.WeakList`1.Sort(System.Comparison{`0})
+  commentId: M:Riateu.WeakList`1.Sort(System.Comparison{`0})
+  id: Sort(System.Comparison{`0})
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: Sort(Comparison<T>)
+  nameWithType: WeakList<T>.Sort(Comparison<T>)
+  fullName: Riateu.WeakList<T>.Sort(System.Comparison<T>)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Sort(Comparison<T> comparison)
+    parameters:
+    - id: comparison
+      type: System.Comparison{{T}}
+    content.vb: Public Sub Sort(comparison As Comparison(Of T))
+  overload: Riateu.WeakList`1.Sort*
+  nameWithType.vb: WeakList(Of T).Sort(Comparison(Of T))
+  fullName.vb: Riateu.WeakList(Of T).Sort(System.Comparison(Of T))
+  name.vb: Sort(Comparison(Of T))
+- uid: Riateu.WeakList`1.Clear
+  commentId: M:Riateu.WeakList`1.Clear
+  id: Clear
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: WeakList<T>.Clear()
+  fullName: Riateu.WeakList<T>.Clear()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: Riateu.WeakList`1.Clear*
+  nameWithType.vb: WeakList(Of T).Clear()
+  fullName.vb: Riateu.WeakList(Of T).Clear()
+- uid: Riateu.WeakList`1.ToArray
+  commentId: M:Riateu.WeakList`1.ToArray
+  id: ToArray
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: ToArray()
+  nameWithType: WeakList<T>.ToArray()
+  fullName: Riateu.WeakList<T>.ToArray()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public T[] ToArray()
+    return:
+      type: '{T}[]'
+    content.vb: Public Function ToArray() As T()
+  overload: Riateu.WeakList`1.ToArray*
+  nameWithType.vb: WeakList(Of T).ToArray()
+  fullName.vb: Riateu.WeakList(Of T).ToArray()
+- uid: Riateu.WeakList`1.ToList
+  commentId: M:Riateu.WeakList`1.ToList
+  id: ToList
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: ToList()
+  nameWithType: WeakList<T>.ToList()
+  fullName: Riateu.WeakList<T>.ToList()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public List<T> ToList()
+    return:
+      type: System.Collections.Generic.List{{T}}
+    content.vb: Public Function ToList() As List(Of T)
+  overload: Riateu.WeakList`1.ToList*
+  nameWithType.vb: WeakList(Of T).ToList()
+  fullName.vb: Riateu.WeakList(Of T).ToList()
+- uid: Riateu.WeakList`1.Item(System.Int32)
+  commentId: P:Riateu.WeakList`1.Item(System.Int32)
+  id: Item(System.Int32)
+  parent: Riateu.WeakList`1
+  langs:
+  - csharp
+  - vb
+  name: this[int]
+  nameWithType: WeakList<T>.this[int]
+  fullName: Riateu.WeakList<T>.this[int]
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/WeakList.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public T this[int idx] { get; set; }
+    parameters:
+    - id: idx
+      type: System.Int32
+    return:
+      type: '{T}'
+    content.vb: Public Default Property this[](idx As Integer) As T
+  overload: Riateu.WeakList`1.Item*
+  nameWithType.vb: WeakList(Of T).this[](Integer)
+  fullName.vb: Riateu.WeakList(Of T).this[](Integer)
+  name.vb: this[](Integer)
+references:
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Riateu.WeakList`1.#ctor*
+  commentId: Overload:Riateu.WeakList`1.#ctor
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1__ctor_System_Int32_
+  name: WeakList
+  nameWithType: WeakList<T>.WeakList
+  fullName: Riateu.WeakList<T>.WeakList
+  nameWithType.vb: WeakList(Of T).New
+  fullName.vb: Riateu.WeakList(Of T).New
+  name.vb: New
+- uid: Riateu.WeakList`1.Add*
+  commentId: Overload:Riateu.WeakList`1.Add
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_Add__0_
+  name: Add
+  nameWithType: WeakList<T>.Add
+  fullName: Riateu.WeakList<T>.Add
+  nameWithType.vb: WeakList(Of T).Add
+  fullName.vb: Riateu.WeakList(Of T).Add
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Riateu.WeakList`1.Remove*
+  commentId: Overload:Riateu.WeakList`1.Remove
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_Remove__0_
+  name: Remove
+  nameWithType: WeakList<T>.Remove
+  fullName: Riateu.WeakList<T>.Remove
+  nameWithType.vb: WeakList(Of T).Remove
+  fullName.vb: Riateu.WeakList(Of T).Remove
+- uid: Riateu.WeakList`1.RemoveAt*
+  commentId: Overload:Riateu.WeakList`1.RemoveAt
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_RemoveAt_System_Int32_
+  name: RemoveAt
+  nameWithType: WeakList<T>.RemoveAt
+  fullName: Riateu.WeakList<T>.RemoveAt
+  nameWithType.vb: WeakList(Of T).RemoveAt
+  fullName.vb: Riateu.WeakList(Of T).RemoveAt
+- uid: Riateu.WeakList`1.Contains*
+  commentId: Overload:Riateu.WeakList`1.Contains
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_Contains__0_
+  name: Contains
+  nameWithType: WeakList<T>.Contains
+  fullName: Riateu.WeakList<T>.Contains
+  nameWithType.vb: WeakList(Of T).Contains
+  fullName.vb: Riateu.WeakList(Of T).Contains
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Riateu.WeakList`1.IndexOf*
+  commentId: Overload:Riateu.WeakList`1.IndexOf
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_IndexOf__0_
+  name: IndexOf
+  nameWithType: WeakList<T>.IndexOf
+  fullName: Riateu.WeakList<T>.IndexOf
+  nameWithType.vb: WeakList(Of T).IndexOf
+  fullName.vb: Riateu.WeakList(Of T).IndexOf
+- uid: Riateu.WeakList`1.EnsureCapacity*
+  commentId: Overload:Riateu.WeakList`1.EnsureCapacity
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_EnsureCapacity_System_Int32_
+  name: EnsureCapacity
+  nameWithType: WeakList<T>.EnsureCapacity
+  fullName: Riateu.WeakList<T>.EnsureCapacity
+  nameWithType.vb: WeakList(Of T).EnsureCapacity
+  fullName.vb: Riateu.WeakList(Of T).EnsureCapacity
+- uid: Riateu.WeakList`1.AddRange*
+  commentId: Overload:Riateu.WeakList`1.AddRange
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_AddRange_System_Collections_Generic_IEnumerable__0__
+  name: AddRange
+  nameWithType: WeakList<T>.AddRange
+  fullName: Riateu.WeakList<T>.AddRange
+  nameWithType.vb: WeakList(Of T).AddRange
+  fullName.vb: Riateu.WeakList(Of T).AddRange
+- uid: System.Collections.Generic.IEnumerable{{T}}
+  commentId: T:System.Collections.Generic.IEnumerable{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Riateu.WeakList`1.Sort*
+  commentId: Overload:Riateu.WeakList`1.Sort
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_Sort_System_Collections_IComparer_
+  name: Sort
+  nameWithType: WeakList<T>.Sort
+  fullName: Riateu.WeakList<T>.Sort
+  nameWithType.vb: WeakList(Of T).Sort
+  fullName.vb: Riateu.WeakList(Of T).Sort
+- uid: System.Collections.IComparer
+  commentId: T:System.Collections.IComparer
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.icomparer
+  name: IComparer
+  nameWithType: IComparer
+  fullName: System.Collections.IComparer
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: System.Collections.Generic.IComparer{{T}}
+  commentId: T:System.Collections.Generic.IComparer{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IComparer`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1
+  name: IComparer<T>
+  nameWithType: IComparer<T>
+  fullName: System.Collections.Generic.IComparer<T>
+  nameWithType.vb: IComparer(Of T)
+  fullName.vb: System.Collections.Generic.IComparer(Of T)
+  name.vb: IComparer(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IComparer`1
+    name: IComparer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IComparer`1
+    name: IComparer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IComparer`1
+  commentId: T:System.Collections.Generic.IComparer`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1
+  name: IComparer<T>
+  nameWithType: IComparer<T>
+  fullName: System.Collections.Generic.IComparer<T>
+  nameWithType.vb: IComparer(Of T)
+  fullName.vb: System.Collections.Generic.IComparer(Of T)
+  name.vb: IComparer(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IComparer`1
+    name: IComparer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IComparer`1
+    name: IComparer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Comparison{{T}}
+  commentId: T:System.Comparison{`0}
+  parent: System
+  definition: System.Comparison`1
+  href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  name: Comparison<T>
+  nameWithType: Comparison<T>
+  fullName: System.Comparison<T>
+  nameWithType.vb: Comparison(Of T)
+  fullName.vb: System.Comparison(Of T)
+  name.vb: Comparison(Of T)
+  spec.csharp:
+  - uid: System.Comparison`1
+    name: Comparison
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Comparison`1
+    name: Comparison
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Comparison`1
+  commentId: T:System.Comparison`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  name: Comparison<T>
+  nameWithType: Comparison<T>
+  fullName: System.Comparison<T>
+  nameWithType.vb: Comparison(Of T)
+  fullName.vb: System.Comparison(Of T)
+  name.vb: Comparison(Of T)
+  spec.csharp:
+  - uid: System.Comparison`1
+    name: Comparison
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Comparison`1
+    name: Comparison
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.WeakList`1.Clear*
+  commentId: Overload:Riateu.WeakList`1.Clear
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_Clear
+  name: Clear
+  nameWithType: WeakList<T>.Clear
+  fullName: Riateu.WeakList<T>.Clear
+  nameWithType.vb: WeakList(Of T).Clear
+  fullName.vb: Riateu.WeakList(Of T).Clear
+- uid: Riateu.WeakList`1.ToArray*
+  commentId: Overload:Riateu.WeakList`1.ToArray
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_ToArray
+  name: ToArray
+  nameWithType: WeakList<T>.ToArray
+  fullName: Riateu.WeakList<T>.ToArray
+  nameWithType.vb: WeakList(Of T).ToArray
+  fullName.vb: Riateu.WeakList(Of T).ToArray
+- uid: '{T}[]'
+  isExternal: true
+  name: T[]
+  nameWithType: T[]
+  fullName: T[]
+  nameWithType.vb: T()
+  fullName.vb: T()
+  name.vb: T()
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: )
+- uid: Riateu.WeakList`1.ToList*
+  commentId: Overload:Riateu.WeakList`1.ToList
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_ToList
+  name: ToList
+  nameWithType: WeakList<T>.ToList
+  fullName: Riateu.WeakList<T>.ToList
+  nameWithType.vb: WeakList(Of T).ToList
+  fullName.vb: Riateu.WeakList(Of T).ToList
+- uid: System.Collections.Generic.List{{T}}
+  commentId: T:System.Collections.Generic.List{``0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.WeakList`1.Item*
+  commentId: Overload:Riateu.WeakList`1.Item
+  isExternal: true
+  href: Riateu.WeakList-1.html#Riateu_WeakList_1_Item_System_Int32_
+  name: this
+  nameWithType: WeakList<T>.this
+  fullName: Riateu.WeakList<T>.this
+  nameWithType.vb: WeakList(Of T).this[]
+  fullName.vb: Riateu.WeakList(Of T).this[]
+  name.vb: this[]

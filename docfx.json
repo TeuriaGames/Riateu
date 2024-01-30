@@ -1,0 +1,44 @@
+{
+  "metadata": [
+    {
+      "src": [{
+          "src": "../Riateu/Riateu",
+          "files": [
+            "**/bin/Release/net8.0/Riateu.dll"
+          ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "riateu",
+      "_appTitle": "riateu",
+      "_enableSearch": true,
+      "pdf": true
+    }
+  }
+}

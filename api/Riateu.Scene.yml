@@ -1,0 +1,1372 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Scene
+  commentId: T:Riateu.Scene
+  id: Scene
+  parent: Riateu
+  children:
+  - Riateu.Scene.#ctor(Riateu.GameApp)
+  - Riateu.Scene.#ctor(Riateu.GameApp,Riateu.Canvas)
+  - Riateu.Scene.Add(Riateu.Entity)
+  - Riateu.Scene.AddBit(Riateu.Components.PhysicsComponent)
+  - Riateu.Scene.AddPhysics(Riateu.Components.PhysicsComponent)
+  - Riateu.Scene.AfterDraw(MoonWorks.Graphics.CommandBuffer@,Riateu.Graphics.IBatch)
+  - Riateu.Scene.ApplyCurrentCanvasToBatch(Riateu.Graphics.IBatch,MoonWorks.Graphics.Sampler)
+  - Riateu.Scene.BeforeDraw(MoonWorks.Graphics.CommandBuffer@,Riateu.Graphics.IBatch)
+  - Riateu.Scene.Begin
+  - Riateu.Scene.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Graphics.Texture,Riateu.Graphics.IBatch)
+  - Riateu.Scene.End
+  - Riateu.Scene.EntityList
+  - Riateu.Scene.GameInstance
+  - Riateu.Scene.GetPhysicsFromBit(Riateu.Tag)
+  - Riateu.Scene.OnEntityCreated
+  - Riateu.Scene.OnEntityDeleted
+  - Riateu.Scene.Paused
+  - Riateu.Scene.PhysicsWorld
+  - Riateu.Scene.Remove(Riateu.Entity)
+  - Riateu.Scene.RemoveBit(Riateu.Components.PhysicsComponent)
+  - Riateu.Scene.RemovePhysics(Riateu.Components.PhysicsComponent)
+  - Riateu.Scene.SceneCanvas
+  - Riateu.Scene.SceneTags
+  - Riateu.Scene.Update(System.Double)
+  langs:
+  - csharp
+  - vb
+  name: Scene
+  nameWithType: Scene
+  fullName: Riateu.Scene
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public abstract class Scene
+    content.vb: Public MustInherit Class Scene
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Riateu.Scene.PhysicsWorld
+  commentId: F:Riateu.Scene.PhysicsWorld
+  id: PhysicsWorld
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: PhysicsWorld
+  nameWithType: Scene.PhysicsWorld
+  fullName: Riateu.Scene.PhysicsWorld
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public World PhysicsWorld
+    return:
+      type: Riateu.World
+    content.vb: Public PhysicsWorld As World
+- uid: Riateu.Scene.SceneTags
+  commentId: F:Riateu.Scene.SceneTags
+  id: SceneTags
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: SceneTags
+  nameWithType: Scene.SceneTags
+  fullName: Riateu.Scene.SceneTags
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public List<PhysicsComponent>[] SceneTags
+    return:
+      type: System.Collections.Generic.List{Riateu.Components.PhysicsComponent}[]
+    content.vb: Public SceneTags As List(Of PhysicsComponent)()
+- uid: Riateu.Scene.GameInstance
+  commentId: F:Riateu.Scene.GameInstance
+  id: GameInstance
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: GameInstance
+  nameWithType: Scene.GameInstance
+  fullName: Riateu.Scene.GameInstance
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public GameApp GameInstance
+    return:
+      type: Riateu.GameApp
+    content.vb: Public GameInstance As GameApp
+- uid: Riateu.Scene.OnEntityCreated
+  commentId: F:Riateu.Scene.OnEntityCreated
+  id: OnEntityCreated
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: OnEntityCreated
+  nameWithType: Scene.OnEntityCreated
+  fullName: Riateu.Scene.OnEntityCreated
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Action<Entity> OnEntityCreated
+    return:
+      type: System.Action{Riateu.Entity}
+    content.vb: Public OnEntityCreated As Action(Of Entity)
+- uid: Riateu.Scene.OnEntityDeleted
+  commentId: F:Riateu.Scene.OnEntityDeleted
+  id: OnEntityDeleted
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: OnEntityDeleted
+  nameWithType: Scene.OnEntityDeleted
+  fullName: Riateu.Scene.OnEntityDeleted
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Action<Entity> OnEntityDeleted
+    return:
+      type: System.Action{Riateu.Entity}
+    content.vb: Public OnEntityDeleted As Action(Of Entity)
+- uid: Riateu.Scene.EntityList
+  commentId: F:Riateu.Scene.EntityList
+  id: EntityList
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: EntityList
+  nameWithType: Scene.EntityList
+  fullName: Riateu.Scene.EntityList
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Entities EntityList
+    return:
+      type: Riateu.Entities
+    content.vb: Public EntityList As Entities
+- uid: Riateu.Scene.#ctor(Riateu.GameApp)
+  commentId: M:Riateu.Scene.#ctor(Riateu.GameApp)
+  id: '#ctor(Riateu.GameApp)'
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: Scene(GameApp)
+  nameWithType: Scene.Scene(GameApp)
+  fullName: Riateu.Scene.Scene(Riateu.GameApp)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Scene(GameApp game)
+    parameters:
+    - id: game
+      type: Riateu.GameApp
+    content.vb: Public Sub New(game As GameApp)
+  overload: Riateu.Scene.#ctor*
+  nameWithType.vb: Scene.New(GameApp)
+  fullName.vb: Riateu.Scene.New(Riateu.GameApp)
+  name.vb: New(GameApp)
+- uid: Riateu.Scene.#ctor(Riateu.GameApp,Riateu.Canvas)
+  commentId: M:Riateu.Scene.#ctor(Riateu.GameApp,Riateu.Canvas)
+  id: '#ctor(Riateu.GameApp,Riateu.Canvas)'
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: Scene(GameApp, Canvas)
+  nameWithType: Scene.Scene(GameApp, Canvas)
+  fullName: Riateu.Scene.Scene(Riateu.GameApp, Riateu.Canvas)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Scene(GameApp game, Canvas canvas)
+    parameters:
+    - id: game
+      type: Riateu.GameApp
+    - id: canvas
+      type: Riateu.Canvas
+    content.vb: Public Sub New(game As GameApp, canvas As Canvas)
+  overload: Riateu.Scene.#ctor*
+  nameWithType.vb: Scene.New(GameApp, Canvas)
+  fullName.vb: Riateu.Scene.New(Riateu.GameApp, Riateu.Canvas)
+  name.vb: New(GameApp, Canvas)
+- uid: Riateu.Scene.Add(Riateu.Entity)
+  commentId: M:Riateu.Scene.Add(Riateu.Entity)
+  id: Add(Riateu.Entity)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: Add(Entity)
+  nameWithType: Scene.Add(Entity)
+  fullName: Riateu.Scene.Add(Riateu.Entity)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Add(Entity entity)
+    parameters:
+    - id: entity
+      type: Riateu.Entity
+    content.vb: Public Sub Add(entity As Entity)
+  overload: Riateu.Scene.Add*
+- uid: Riateu.Scene.AddPhysics(Riateu.Components.PhysicsComponent)
+  commentId: M:Riateu.Scene.AddPhysics(Riateu.Components.PhysicsComponent)
+  id: AddPhysics(Riateu.Components.PhysicsComponent)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: AddPhysics(PhysicsComponent)
+  nameWithType: Scene.AddPhysics(PhysicsComponent)
+  fullName: Riateu.Scene.AddPhysics(Riateu.Components.PhysicsComponent)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void AddPhysics(PhysicsComponent component)
+    parameters:
+    - id: component
+      type: Riateu.Components.PhysicsComponent
+    content.vb: Public Sub AddPhysics(component As PhysicsComponent)
+  overload: Riateu.Scene.AddPhysics*
+- uid: Riateu.Scene.RemovePhysics(Riateu.Components.PhysicsComponent)
+  commentId: M:Riateu.Scene.RemovePhysics(Riateu.Components.PhysicsComponent)
+  id: RemovePhysics(Riateu.Components.PhysicsComponent)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: RemovePhysics(PhysicsComponent)
+  nameWithType: Scene.RemovePhysics(PhysicsComponent)
+  fullName: Riateu.Scene.RemovePhysics(Riateu.Components.PhysicsComponent)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void RemovePhysics(PhysicsComponent component)
+    parameters:
+    - id: component
+      type: Riateu.Components.PhysicsComponent
+    content.vb: Public Sub RemovePhysics(component As PhysicsComponent)
+  overload: Riateu.Scene.RemovePhysics*
+- uid: Riateu.Scene.AddBit(Riateu.Components.PhysicsComponent)
+  commentId: M:Riateu.Scene.AddBit(Riateu.Components.PhysicsComponent)
+  id: AddBit(Riateu.Components.PhysicsComponent)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: AddBit(PhysicsComponent)
+  nameWithType: Scene.AddBit(PhysicsComponent)
+  fullName: Riateu.Scene.AddBit(Riateu.Components.PhysicsComponent)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void AddBit(PhysicsComponent component)
+    parameters:
+    - id: component
+      type: Riateu.Components.PhysicsComponent
+    content.vb: Public Sub AddBit(component As PhysicsComponent)
+  overload: Riateu.Scene.AddBit*
+- uid: Riateu.Scene.GetPhysicsFromBit(Riateu.Tag)
+  commentId: M:Riateu.Scene.GetPhysicsFromBit(Riateu.Tag)
+  id: GetPhysicsFromBit(Riateu.Tag)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: GetPhysicsFromBit(Tag)
+  nameWithType: Scene.GetPhysicsFromBit(Tag)
+  fullName: Riateu.Scene.GetPhysicsFromBit(Riateu.Tag)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public List<PhysicsComponent> GetPhysicsFromBit(Tag tag)
+    parameters:
+    - id: tag
+      type: Riateu.Tag
+    return:
+      type: System.Collections.Generic.List{Riateu.Components.PhysicsComponent}
+    content.vb: Public Function GetPhysicsFromBit(tag As Tag) As List(Of PhysicsComponent)
+  overload: Riateu.Scene.GetPhysicsFromBit*
+- uid: Riateu.Scene.Remove(Riateu.Entity)
+  commentId: M:Riateu.Scene.Remove(Riateu.Entity)
+  id: Remove(Riateu.Entity)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: Remove(Entity)
+  nameWithType: Scene.Remove(Entity)
+  fullName: Riateu.Scene.Remove(Riateu.Entity)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Remove(Entity entity)
+    parameters:
+    - id: entity
+      type: Riateu.Entity
+    content.vb: Public Sub Remove(entity As Entity)
+  overload: Riateu.Scene.Remove*
+- uid: Riateu.Scene.RemoveBit(Riateu.Components.PhysicsComponent)
+  commentId: M:Riateu.Scene.RemoveBit(Riateu.Components.PhysicsComponent)
+  id: RemoveBit(Riateu.Components.PhysicsComponent)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: RemoveBit(PhysicsComponent)
+  nameWithType: Scene.RemoveBit(PhysicsComponent)
+  fullName: Riateu.Scene.RemoveBit(Riateu.Components.PhysicsComponent)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void RemoveBit(PhysicsComponent component)
+    parameters:
+    - id: component
+      type: Riateu.Components.PhysicsComponent
+    content.vb: Public Sub RemoveBit(component As PhysicsComponent)
+  overload: Riateu.Scene.RemoveBit*
+- uid: Riateu.Scene.ApplyCurrentCanvasToBatch(Riateu.Graphics.IBatch,MoonWorks.Graphics.Sampler)
+  commentId: M:Riateu.Scene.ApplyCurrentCanvasToBatch(Riateu.Graphics.IBatch,MoonWorks.Graphics.Sampler)
+  id: ApplyCurrentCanvasToBatch(Riateu.Graphics.IBatch,MoonWorks.Graphics.Sampler)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: ApplyCurrentCanvasToBatch(IBatch, Sampler)
+  nameWithType: Scene.ApplyCurrentCanvasToBatch(IBatch, Sampler)
+  fullName: Riateu.Scene.ApplyCurrentCanvasToBatch(Riateu.Graphics.IBatch, MoonWorks.Graphics.Sampler)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void ApplyCurrentCanvasToBatch(IBatch batch, Sampler sampler)
+    parameters:
+    - id: batch
+      type: Riateu.Graphics.IBatch
+    - id: sampler
+      type: MoonWorks.Graphics.Sampler
+    content.vb: Public Sub ApplyCurrentCanvasToBatch(batch As IBatch, sampler As Sampler)
+  overload: Riateu.Scene.ApplyCurrentCanvasToBatch*
+- uid: Riateu.Scene.Begin
+  commentId: M:Riateu.Scene.Begin
+  id: Begin
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: Begin()
+  nameWithType: Scene.Begin()
+  fullName: Riateu.Scene.Begin()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public abstract void Begin()
+    content.vb: Public MustOverride Sub Begin()
+  overload: Riateu.Scene.Begin*
+- uid: Riateu.Scene.Update(System.Double)
+  commentId: M:Riateu.Scene.Update(System.Double)
+  id: Update(System.Double)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: Update(double)
+  nameWithType: Scene.Update(double)
+  fullName: Riateu.Scene.Update(double)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public virtual void Update(double delta)
+    parameters:
+    - id: delta
+      type: System.Double
+    content.vb: Public Overridable Sub Update(delta As Double)
+  overload: Riateu.Scene.Update*
+  nameWithType.vb: Scene.Update(Double)
+  fullName.vb: Riateu.Scene.Update(Double)
+  name.vb: Update(Double)
+- uid: Riateu.Scene.BeforeDraw(MoonWorks.Graphics.CommandBuffer@,Riateu.Graphics.IBatch)
+  commentId: M:Riateu.Scene.BeforeDraw(MoonWorks.Graphics.CommandBuffer@,Riateu.Graphics.IBatch)
+  id: BeforeDraw(MoonWorks.Graphics.CommandBuffer@,Riateu.Graphics.IBatch)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: BeforeDraw(ref CommandBuffer, IBatch)
+  nameWithType: Scene.BeforeDraw(ref CommandBuffer, IBatch)
+  fullName: Riateu.Scene.BeforeDraw(ref MoonWorks.Graphics.CommandBuffer, Riateu.Graphics.IBatch)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public virtual void BeforeDraw(ref CommandBuffer buffer, IBatch batch)
+    parameters:
+    - id: buffer
+      type: MoonWorks.Graphics.CommandBuffer
+    - id: batch
+      type: Riateu.Graphics.IBatch
+    content.vb: Public Overridable Sub BeforeDraw(buffer As CommandBuffer, batch As IBatch)
+  overload: Riateu.Scene.BeforeDraw*
+  nameWithType.vb: Scene.BeforeDraw(CommandBuffer, IBatch)
+  fullName.vb: Riateu.Scene.BeforeDraw(MoonWorks.Graphics.CommandBuffer, Riateu.Graphics.IBatch)
+  name.vb: BeforeDraw(CommandBuffer, IBatch)
+- uid: Riateu.Scene.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Graphics.Texture,Riateu.Graphics.IBatch)
+  commentId: M:Riateu.Scene.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Graphics.Texture,Riateu.Graphics.IBatch)
+  id: Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Graphics.Texture,Riateu.Graphics.IBatch)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: Draw(CommandBuffer, Texture, IBatch)
+  nameWithType: Scene.Draw(CommandBuffer, Texture, IBatch)
+  fullName: Riateu.Scene.Draw(MoonWorks.Graphics.CommandBuffer, MoonWorks.Graphics.Texture, Riateu.Graphics.IBatch)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public virtual void Draw(CommandBuffer buffer, Texture backbuffer, IBatch batch)
+    parameters:
+    - id: buffer
+      type: MoonWorks.Graphics.CommandBuffer
+    - id: backbuffer
+      type: MoonWorks.Graphics.Texture
+    - id: batch
+      type: Riateu.Graphics.IBatch
+    content.vb: Public Overridable Sub Draw(buffer As CommandBuffer, backbuffer As Texture, batch As IBatch)
+  overload: Riateu.Scene.Draw*
+- uid: Riateu.Scene.AfterDraw(MoonWorks.Graphics.CommandBuffer@,Riateu.Graphics.IBatch)
+  commentId: M:Riateu.Scene.AfterDraw(MoonWorks.Graphics.CommandBuffer@,Riateu.Graphics.IBatch)
+  id: AfterDraw(MoonWorks.Graphics.CommandBuffer@,Riateu.Graphics.IBatch)
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: AfterDraw(ref CommandBuffer, IBatch)
+  nameWithType: Scene.AfterDraw(ref CommandBuffer, IBatch)
+  fullName: Riateu.Scene.AfterDraw(ref MoonWorks.Graphics.CommandBuffer, Riateu.Graphics.IBatch)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public virtual void AfterDraw(ref CommandBuffer buffer, IBatch batch)
+    parameters:
+    - id: buffer
+      type: MoonWorks.Graphics.CommandBuffer
+    - id: batch
+      type: Riateu.Graphics.IBatch
+    content.vb: Public Overridable Sub AfterDraw(buffer As CommandBuffer, batch As IBatch)
+  overload: Riateu.Scene.AfterDraw*
+  nameWithType.vb: Scene.AfterDraw(CommandBuffer, IBatch)
+  fullName.vb: Riateu.Scene.AfterDraw(MoonWorks.Graphics.CommandBuffer, Riateu.Graphics.IBatch)
+  name.vb: AfterDraw(CommandBuffer, IBatch)
+- uid: Riateu.Scene.End
+  commentId: M:Riateu.Scene.End
+  id: End
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: End()
+  nameWithType: Scene.End()
+  fullName: Riateu.Scene.End()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public abstract void End()
+    content.vb: Public MustOverride Sub [End]()
+  overload: Riateu.Scene.End*
+- uid: Riateu.Scene.Paused
+  commentId: P:Riateu.Scene.Paused
+  id: Paused
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: Paused
+  nameWithType: Scene.Paused
+  fullName: Riateu.Scene.Paused
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public bool Paused { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property Paused As Boolean
+  overload: Riateu.Scene.Paused*
+- uid: Riateu.Scene.SceneCanvas
+  commentId: P:Riateu.Scene.SceneCanvas
+  id: SceneCanvas
+  parent: Riateu.Scene
+  langs:
+  - csharp
+  - vb
+  name: SceneCanvas
+  nameWithType: Scene.SceneCanvas
+  fullName: Riateu.Scene.SceneCanvas
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Scene.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Canvas SceneCanvas { get; set; }
+    parameters: []
+    return:
+      type: Riateu.Canvas
+    content.vb: Public Property SceneCanvas As Canvas
+  overload: Riateu.Scene.SceneCanvas*
+references:
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Riateu.World
+  commentId: T:Riateu.World
+  parent: Riateu
+  isExternal: true
+  href: Riateu.World.html
+  name: World
+  nameWithType: World
+  fullName: Riateu.World
+- uid: System.Collections.Generic.List{Riateu.Components.PhysicsComponent}[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<PhysicsComponent>[]
+  nameWithType: List<PhysicsComponent>[]
+  fullName: System.Collections.Generic.List<Riateu.Components.PhysicsComponent>[]
+  nameWithType.vb: List(Of PhysicsComponent)()
+  fullName.vb: System.Collections.Generic.List(Of Riateu.Components.PhysicsComponent)()
+  name.vb: List(Of PhysicsComponent)()
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Riateu.Components.PhysicsComponent
+    name: PhysicsComponent
+    isExternal: true
+    href: Riateu.Components.PhysicsComponent.html
+  - name: '>'
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Riateu.Components.PhysicsComponent
+    name: PhysicsComponent
+    isExternal: true
+    href: Riateu.Components.PhysicsComponent.html
+  - name: )
+  - name: (
+  - name: )
+- uid: Riateu.GameApp
+  commentId: T:Riateu.GameApp
+  parent: Riateu
+  isExternal: true
+  href: Riateu.GameApp.html
+  name: GameApp
+  nameWithType: GameApp
+  fullName: Riateu.GameApp
+- uid: System.Action{Riateu.Entity}
+  commentId: T:System.Action{Riateu.Entity}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<Entity>
+  nameWithType: Action<Entity>
+  fullName: System.Action<Riateu.Entity>
+  nameWithType.vb: Action(Of Entity)
+  fullName.vb: System.Action(Of Riateu.Entity)
+  name.vb: Action(Of Entity)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.Entities
+  commentId: T:Riateu.Entities
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Entities.html
+  name: Entities
+  nameWithType: Entities
+  fullName: Riateu.Entities
+- uid: Riateu.Scene.#ctor*
+  commentId: Overload:Riateu.Scene.#ctor
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene__ctor_Riateu_GameApp_
+  name: Scene
+  nameWithType: Scene.Scene
+  fullName: Riateu.Scene.Scene
+  nameWithType.vb: Scene.New
+  fullName.vb: Riateu.Scene.New
+  name.vb: New
+- uid: Riateu.Canvas
+  commentId: T:Riateu.Canvas
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Canvas.html
+  name: Canvas
+  nameWithType: Canvas
+  fullName: Riateu.Canvas
+- uid: Riateu.Scene.Add*
+  commentId: Overload:Riateu.Scene.Add
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_Add_Riateu_Entity_
+  name: Add
+  nameWithType: Scene.Add
+  fullName: Riateu.Scene.Add
+- uid: Riateu.Entity
+  commentId: T:Riateu.Entity
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Entity.html
+  name: Entity
+  nameWithType: Entity
+  fullName: Riateu.Entity
+- uid: Riateu.Scene.AddPhysics*
+  commentId: Overload:Riateu.Scene.AddPhysics
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_AddPhysics_Riateu_Components_PhysicsComponent_
+  name: AddPhysics
+  nameWithType: Scene.AddPhysics
+  fullName: Riateu.Scene.AddPhysics
+- uid: Riateu.Components.PhysicsComponent
+  commentId: T:Riateu.Components.PhysicsComponent
+  parent: Riateu.Components
+  isExternal: true
+  href: Riateu.Components.PhysicsComponent.html
+  name: PhysicsComponent
+  nameWithType: PhysicsComponent
+  fullName: Riateu.Components.PhysicsComponent
+- uid: Riateu.Components
+  commentId: N:Riateu.Components
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Components
+  nameWithType: Riateu.Components
+  fullName: Riateu.Components
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Components
+    name: Components
+    isExternal: true
+    href: Riateu.Components.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Components
+    name: Components
+    isExternal: true
+    href: Riateu.Components.html
+- uid: Riateu.Scene.RemovePhysics*
+  commentId: Overload:Riateu.Scene.RemovePhysics
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_RemovePhysics_Riateu_Components_PhysicsComponent_
+  name: RemovePhysics
+  nameWithType: Scene.RemovePhysics
+  fullName: Riateu.Scene.RemovePhysics
+- uid: Riateu.Scene.AddBit*
+  commentId: Overload:Riateu.Scene.AddBit
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_AddBit_Riateu_Components_PhysicsComponent_
+  name: AddBit
+  nameWithType: Scene.AddBit
+  fullName: Riateu.Scene.AddBit
+- uid: Riateu.Scene.GetPhysicsFromBit*
+  commentId: Overload:Riateu.Scene.GetPhysicsFromBit
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_GetPhysicsFromBit_Riateu_Tag_
+  name: GetPhysicsFromBit
+  nameWithType: Scene.GetPhysicsFromBit
+  fullName: Riateu.Scene.GetPhysicsFromBit
+- uid: Riateu.Tag
+  commentId: T:Riateu.Tag
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Tag.html
+  name: Tag
+  nameWithType: Tag
+  fullName: Riateu.Tag
+- uid: System.Collections.Generic.List{Riateu.Components.PhysicsComponent}
+  commentId: T:System.Collections.Generic.List{Riateu.Components.PhysicsComponent}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<PhysicsComponent>
+  nameWithType: List<PhysicsComponent>
+  fullName: System.Collections.Generic.List<Riateu.Components.PhysicsComponent>
+  nameWithType.vb: List(Of PhysicsComponent)
+  fullName.vb: System.Collections.Generic.List(Of Riateu.Components.PhysicsComponent)
+  name.vb: List(Of PhysicsComponent)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Riateu.Components.PhysicsComponent
+    name: PhysicsComponent
+    isExternal: true
+    href: Riateu.Components.PhysicsComponent.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Riateu.Components.PhysicsComponent
+    name: PhysicsComponent
+    isExternal: true
+    href: Riateu.Components.PhysicsComponent.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Riateu.Scene.Remove*
+  commentId: Overload:Riateu.Scene.Remove
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_Remove_Riateu_Entity_
+  name: Remove
+  nameWithType: Scene.Remove
+  fullName: Riateu.Scene.Remove
+- uid: Riateu.Scene.RemoveBit*
+  commentId: Overload:Riateu.Scene.RemoveBit
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_RemoveBit_Riateu_Components_PhysicsComponent_
+  name: RemoveBit
+  nameWithType: Scene.RemoveBit
+  fullName: Riateu.Scene.RemoveBit
+- uid: Riateu.Scene.ApplyCurrentCanvasToBatch*
+  commentId: Overload:Riateu.Scene.ApplyCurrentCanvasToBatch
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_ApplyCurrentCanvasToBatch_Riateu_Graphics_IBatch_MoonWorks_Graphics_Sampler_
+  name: ApplyCurrentCanvasToBatch
+  nameWithType: Scene.ApplyCurrentCanvasToBatch
+  fullName: Riateu.Scene.ApplyCurrentCanvasToBatch
+- uid: Riateu.Graphics.IBatch
+  commentId: T:Riateu.Graphics.IBatch
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html
+  name: IBatch
+  nameWithType: IBatch
+  fullName: Riateu.Graphics.IBatch
+- uid: MoonWorks.Graphics.Sampler
+  commentId: T:MoonWorks.Graphics.Sampler
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Sampler.cs
+  name: Sampler
+  nameWithType: Sampler
+  fullName: MoonWorks.Graphics.Sampler
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+- uid: MoonWorks.Graphics
+  commentId: N:MoonWorks.Graphics
+  isExternal: true
+  name: MoonWorks.Graphics
+  nameWithType: MoonWorks.Graphics
+  fullName: MoonWorks.Graphics
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+- uid: Riateu.Scene.Begin*
+  commentId: Overload:Riateu.Scene.Begin
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_Begin
+  name: Begin
+  nameWithType: Scene.Begin
+  fullName: Riateu.Scene.Begin
+- uid: Riateu.Scene.Update*
+  commentId: Overload:Riateu.Scene.Update
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_Update_System_Double_
+  name: Update
+  nameWithType: Scene.Update
+  fullName: Riateu.Scene.Update
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: Riateu.Scene.BeforeDraw*
+  commentId: Overload:Riateu.Scene.BeforeDraw
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_BeforeDraw_MoonWorks_Graphics_CommandBuffer__Riateu_Graphics_IBatch_
+  name: BeforeDraw
+  nameWithType: Scene.BeforeDraw
+  fullName: Riateu.Scene.BeforeDraw
+- uid: MoonWorks.Graphics.CommandBuffer
+  commentId: T:MoonWorks.Graphics.CommandBuffer
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  name: CommandBuffer
+  nameWithType: CommandBuffer
+  fullName: MoonWorks.Graphics.CommandBuffer
+- uid: Riateu.Scene.Draw*
+  commentId: Overload:Riateu.Scene.Draw
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_Draw_MoonWorks_Graphics_CommandBuffer_MoonWorks_Graphics_Texture_Riateu_Graphics_IBatch_
+  name: Draw
+  nameWithType: Scene.Draw
+  fullName: Riateu.Scene.Draw
+- uid: MoonWorks.Graphics.Texture
+  commentId: T:MoonWorks.Graphics.Texture
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Texture.cs
+  name: Texture
+  nameWithType: Texture
+  fullName: MoonWorks.Graphics.Texture
+- uid: Riateu.Scene.AfterDraw*
+  commentId: Overload:Riateu.Scene.AfterDraw
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_AfterDraw_MoonWorks_Graphics_CommandBuffer__Riateu_Graphics_IBatch_
+  name: AfterDraw
+  nameWithType: Scene.AfterDraw
+  fullName: Riateu.Scene.AfterDraw
+- uid: Riateu.Scene.End*
+  commentId: Overload:Riateu.Scene.End
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_End
+  name: End
+  nameWithType: Scene.End
+  fullName: Riateu.Scene.End
+- uid: Riateu.Scene.Paused*
+  commentId: Overload:Riateu.Scene.Paused
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_Paused
+  name: Paused
+  nameWithType: Scene.Paused
+  fullName: Riateu.Scene.Paused
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Riateu.Scene.SceneCanvas*
+  commentId: Overload:Riateu.Scene.SceneCanvas
+  isExternal: true
+  href: Riateu.Scene.html#Riateu_Scene_SceneCanvas
+  name: SceneCanvas
+  nameWithType: Scene.SceneCanvas
+  fullName: Riateu.Scene.SceneCanvas

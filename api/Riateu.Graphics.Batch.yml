@@ -1,0 +1,1421 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Graphics.Batch
+  commentId: T:Riateu.Graphics.Batch
+  id: Batch
+  parent: Riateu.Graphics
+  children:
+  - Riateu.Graphics.Batch.#ctor(MoonWorks.Graphics.GraphicsDevice,System.Int32,System.Int32)
+  - Riateu.Graphics.Batch.Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  - Riateu.Graphics.Batch.Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  - Riateu.Graphics.Batch.AddCanvas(Riateu.Canvas,MoonWorks.Graphics.Sampler)
+  - Riateu.Graphics.Batch.Dispose
+  - Riateu.Graphics.Batch.Dispose(System.Boolean)
+  - Riateu.Graphics.Batch.Draw(MoonWorks.Graphics.CommandBuffer)
+  - Riateu.Graphics.Batch.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+  - Riateu.Graphics.Batch.End(MoonWorks.Graphics.CommandBuffer)
+  - Riateu.Graphics.Batch.Finalize
+  - Riateu.Graphics.Batch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+  - Riateu.Graphics.Batch.IsDisposed
+  - Riateu.Graphics.Batch.Matrix
+  - Riateu.Graphics.Batch.PopMatrix
+  - Riateu.Graphics.Batch.PushMatrix(MoonWorks.Math.Float.Matrix4x4@)
+  - Riateu.Graphics.Batch.PushMatrix(Riateu.Camera@)
+  - Riateu.Graphics.Batch.Start
+  langs:
+  - csharp
+  - vb
+  name: Batch
+  nameWithType: Batch
+  fullName: Riateu.Graphics.Batch
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: 'public class Batch : IDisposable, IBatch'
+    content.vb: Public Class Batch Implements IDisposable, IBatch
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  - Riateu.Graphics.IBatch
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Riateu.Graphics.Batch.Matrix
+  commentId: F:Riateu.Graphics.Batch.Matrix
+  id: Matrix
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Matrix
+  nameWithType: Batch.Matrix
+  fullName: Riateu.Graphics.Batch.Matrix
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Matrix4x4 Matrix
+    return:
+      type: MoonWorks.Math.Float.Matrix4x4
+    content.vb: Public Matrix As Matrix4x4
+- uid: Riateu.Graphics.Batch.#ctor(MoonWorks.Graphics.GraphicsDevice,System.Int32,System.Int32)
+  commentId: M:Riateu.Graphics.Batch.#ctor(MoonWorks.Graphics.GraphicsDevice,System.Int32,System.Int32)
+  id: '#ctor(MoonWorks.Graphics.GraphicsDevice,System.Int32,System.Int32)'
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Batch(GraphicsDevice, int, int)
+  nameWithType: Batch.Batch(GraphicsDevice, int, int)
+  fullName: Riateu.Graphics.Batch.Batch(MoonWorks.Graphics.GraphicsDevice, int, int)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Batch(GraphicsDevice device, int width, int height)
+    parameters:
+    - id: device
+      type: MoonWorks.Graphics.GraphicsDevice
+    - id: width
+      type: System.Int32
+    - id: height
+      type: System.Int32
+    content.vb: Public Sub New(device As GraphicsDevice, width As Integer, height As Integer)
+  overload: Riateu.Graphics.Batch.#ctor*
+  nameWithType.vb: Batch.New(GraphicsDevice, Integer, Integer)
+  fullName.vb: Riateu.Graphics.Batch.New(MoonWorks.Graphics.GraphicsDevice, Integer, Integer)
+  name.vb: New(GraphicsDevice, Integer, Integer)
+- uid: Riateu.Graphics.Batch.PushMatrix(MoonWorks.Math.Float.Matrix4x4@)
+  commentId: M:Riateu.Graphics.Batch.PushMatrix(MoonWorks.Math.Float.Matrix4x4@)
+  id: PushMatrix(MoonWorks.Math.Float.Matrix4x4@)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: PushMatrix(in Matrix4x4)
+  nameWithType: Batch.PushMatrix(in Matrix4x4)
+  fullName: Riateu.Graphics.Batch.PushMatrix(in MoonWorks.Math.Float.Matrix4x4)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public void PushMatrix(in Matrix4x4 matrix)
+    parameters:
+    - id: matrix
+      type: MoonWorks.Math.Float.Matrix4x4
+    content.vb: Public Sub PushMatrix(matrix As Matrix4x4)
+  overload: Riateu.Graphics.Batch.PushMatrix*
+  nameWithType.vb: Batch.PushMatrix(Matrix4x4)
+  fullName.vb: Riateu.Graphics.Batch.PushMatrix(MoonWorks.Math.Float.Matrix4x4)
+  name.vb: PushMatrix(Matrix4x4)
+- uid: Riateu.Graphics.Batch.PushMatrix(Riateu.Camera@)
+  commentId: M:Riateu.Graphics.Batch.PushMatrix(Riateu.Camera@)
+  id: PushMatrix(Riateu.Camera@)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: PushMatrix(in Camera)
+  nameWithType: Batch.PushMatrix(in Camera)
+  fullName: Riateu.Graphics.Batch.PushMatrix(in Riateu.Camera)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public void PushMatrix(in Camera camera)
+    parameters:
+    - id: camera
+      type: Riateu.Camera
+    content.vb: Public Sub PushMatrix(camera As Camera)
+  overload: Riateu.Graphics.Batch.PushMatrix*
+  nameWithType.vb: Batch.PushMatrix(Camera)
+  fullName.vb: Riateu.Graphics.Batch.PushMatrix(Riateu.Camera)
+  name.vb: PushMatrix(Camera)
+- uid: Riateu.Graphics.Batch.PopMatrix
+  commentId: M:Riateu.Graphics.Batch.PopMatrix
+  id: PopMatrix
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: PopMatrix()
+  nameWithType: Batch.PopMatrix()
+  fullName: Riateu.Graphics.Batch.PopMatrix()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void PopMatrix()
+    content.vb: Public Sub PopMatrix()
+  overload: Riateu.Graphics.Batch.PopMatrix*
+  implements:
+  - Riateu.Graphics.IBatch.PopMatrix
+- uid: Riateu.Graphics.Batch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+  commentId: M:Riateu.Graphics.Batch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+  id: FlushVertex(MoonWorks.Graphics.CommandBuffer)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: FlushVertex(CommandBuffer)
+  nameWithType: Batch.FlushVertex(CommandBuffer)
+  fullName: Riateu.Graphics.Batch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void FlushVertex(CommandBuffer cmdBuf)
+    parameters:
+    - id: cmdBuf
+      type: MoonWorks.Graphics.CommandBuffer
+    content.vb: Public Sub FlushVertex(cmdBuf As CommandBuffer)
+  overload: Riateu.Graphics.Batch.FlushVertex*
+  implements:
+  - Riateu.Graphics.IBatch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+- uid: Riateu.Graphics.Batch.Draw(MoonWorks.Graphics.CommandBuffer)
+  commentId: M:Riateu.Graphics.Batch.Draw(MoonWorks.Graphics.CommandBuffer)
+  id: Draw(MoonWorks.Graphics.CommandBuffer)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Draw(CommandBuffer)
+  nameWithType: Batch.Draw(CommandBuffer)
+  fullName: Riateu.Graphics.Batch.Draw(MoonWorks.Graphics.CommandBuffer)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void Draw(CommandBuffer cmdBuf)
+    parameters:
+    - id: cmdBuf
+      type: MoonWorks.Graphics.CommandBuffer
+    content.vb: Public Sub Draw(cmdBuf As CommandBuffer)
+  overload: Riateu.Graphics.Batch.Draw*
+  implements:
+  - Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer)
+- uid: Riateu.Graphics.Batch.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+  commentId: M:Riateu.Graphics.Batch.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+  id: Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Draw(CommandBuffer, Matrix4x4)
+  nameWithType: Batch.Draw(CommandBuffer, Matrix4x4)
+  fullName: Riateu.Graphics.Batch.Draw(MoonWorks.Graphics.CommandBuffer, MoonWorks.Math.Float.Matrix4x4)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void Draw(CommandBuffer cmdBuf, Matrix4x4 viewProjection)
+    parameters:
+    - id: cmdBuf
+      type: MoonWorks.Graphics.CommandBuffer
+    - id: viewProjection
+      type: MoonWorks.Math.Float.Matrix4x4
+    content.vb: Public Sub Draw(cmdBuf As CommandBuffer, viewProjection As Matrix4x4)
+  overload: Riateu.Graphics.Batch.Draw*
+  implements:
+  - Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+- uid: Riateu.Graphics.Batch.Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  commentId: M:Riateu.Graphics.Batch.Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  id: Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Add(Texture, Sampler, Vector2, Matrix3x2, float)
+  nameWithType: Batch.Add(Texture, Sampler, Vector2, Matrix3x2, float)
+  fullName: Riateu.Graphics.Batch.Add(MoonWorks.Graphics.Texture, MoonWorks.Graphics.Sampler, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void Add(Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform, float layerDepth = 1)
+    parameters:
+    - id: texture
+      type: MoonWorks.Graphics.Texture
+    - id: sampler
+      type: MoonWorks.Graphics.Sampler
+    - id: position
+      type: MoonWorks.Math.Float.Vector2
+    - id: transform
+      type: MoonWorks.Math.Float.Matrix3x2
+    - id: layerDepth
+      type: System.Single
+    content.vb: Public Sub Add(texture As Texture, sampler As Sampler, position As Vector2, transform As Matrix3x2, layerDepth As Single = 1)
+  overload: Riateu.Graphics.Batch.Add*
+  implements:
+  - Riateu.Graphics.IBatch.Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  nameWithType.vb: Batch.Add(Texture, Sampler, Vector2, Matrix3x2, Single)
+  fullName.vb: Riateu.Graphics.Batch.Add(MoonWorks.Graphics.Texture, MoonWorks.Graphics.Sampler, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2, Single)
+  name.vb: Add(Texture, Sampler, Vector2, Matrix3x2, Single)
+- uid: Riateu.Graphics.Batch.Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  commentId: M:Riateu.Graphics.Batch.Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  id: Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Add(SpriteTexture, Texture, Sampler, Vector2, Matrix3x2, float)
+  nameWithType: Batch.Add(SpriteTexture, Texture, Sampler, Vector2, Matrix3x2, float)
+  fullName: Riateu.Graphics.Batch.Add(Riateu.Graphics.SpriteTexture, MoonWorks.Graphics.Texture, MoonWorks.Graphics.Sampler, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2, float)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void Add(SpriteTexture sTexture, Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform, float layerDepth = 1)
+    parameters:
+    - id: sTexture
+      type: Riateu.Graphics.SpriteTexture
+    - id: texture
+      type: MoonWorks.Graphics.Texture
+    - id: sampler
+      type: MoonWorks.Graphics.Sampler
+    - id: position
+      type: MoonWorks.Math.Float.Vector2
+    - id: transform
+      type: MoonWorks.Math.Float.Matrix3x2
+    - id: layerDepth
+      type: System.Single
+    content.vb: Public Sub Add(sTexture As SpriteTexture, texture As Texture, sampler As Sampler, position As Vector2, transform As Matrix3x2, layerDepth As Single = 1)
+  overload: Riateu.Graphics.Batch.Add*
+  implements:
+  - Riateu.Graphics.IBatch.Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  nameWithType.vb: Batch.Add(SpriteTexture, Texture, Sampler, Vector2, Matrix3x2, Single)
+  fullName.vb: Riateu.Graphics.Batch.Add(Riateu.Graphics.SpriteTexture, MoonWorks.Graphics.Texture, MoonWorks.Graphics.Sampler, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2, Single)
+  name.vb: Add(SpriteTexture, Texture, Sampler, Vector2, Matrix3x2, Single)
+- uid: Riateu.Graphics.Batch.AddCanvas(Riateu.Canvas,MoonWorks.Graphics.Sampler)
+  commentId: M:Riateu.Graphics.Batch.AddCanvas(Riateu.Canvas,MoonWorks.Graphics.Sampler)
+  id: AddCanvas(Riateu.Canvas,MoonWorks.Graphics.Sampler)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: AddCanvas(Canvas, Sampler)
+  nameWithType: Batch.AddCanvas(Canvas, Sampler)
+  fullName: Riateu.Graphics.Batch.AddCanvas(Riateu.Canvas, MoonWorks.Graphics.Sampler)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public void AddCanvas(Canvas canvas, Sampler sampler)
+    parameters:
+    - id: canvas
+      type: Riateu.Canvas
+    - id: sampler
+      type: MoonWorks.Graphics.Sampler
+    content.vb: Public Sub AddCanvas(canvas As Canvas, sampler As Sampler)
+  overload: Riateu.Graphics.Batch.AddCanvas*
+- uid: Riateu.Graphics.Batch.Dispose(System.Boolean)
+  commentId: M:Riateu.Graphics.Batch.Dispose(System.Boolean)
+  id: Dispose(System.Boolean)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Dispose(bool)
+  nameWithType: Batch.Dispose(bool)
+  fullName: Riateu.Graphics.Batch.Dispose(bool)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: protected virtual void Dispose(bool disposing)
+    parameters:
+    - id: disposing
+      type: System.Boolean
+    content.vb: Protected Overridable Sub Dispose(disposing As Boolean)
+  overload: Riateu.Graphics.Batch.Dispose*
+  nameWithType.vb: Batch.Dispose(Boolean)
+  fullName.vb: Riateu.Graphics.Batch.Dispose(Boolean)
+  name.vb: Dispose(Boolean)
+- uid: Riateu.Graphics.Batch.Finalize
+  commentId: M:Riateu.Graphics.Batch.Finalize
+  id: Finalize
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: ~Batch()
+  nameWithType: Batch.~Batch()
+  fullName: Riateu.Graphics.Batch.~Batch()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: protected ~Batch()
+    content.vb: 'Protected '
+  overload: Riateu.Graphics.Batch.Finalize*
+  nameWithType.vb: ''
+  fullName.vb: ''
+  name.vb: ''
+- uid: Riateu.Graphics.Batch.Dispose
+  commentId: M:Riateu.Graphics.Batch.Dispose
+  id: Dispose
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: Batch.Dispose()
+  fullName: Riateu.Graphics.Batch.Dispose()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: Riateu.Graphics.Batch.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: Riateu.Graphics.Batch.Start
+  commentId: M:Riateu.Graphics.Batch.Start
+  id: Start
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: Start()
+  nameWithType: Batch.Start()
+  fullName: Riateu.Graphics.Batch.Start()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void Start()
+    content.vb: Public Sub Start()
+  overload: Riateu.Graphics.Batch.Start*
+  implements:
+  - Riateu.Graphics.IBatch.Start
+- uid: Riateu.Graphics.Batch.End(MoonWorks.Graphics.CommandBuffer)
+  commentId: M:Riateu.Graphics.Batch.End(MoonWorks.Graphics.CommandBuffer)
+  id: End(MoonWorks.Graphics.CommandBuffer)
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: End(CommandBuffer)
+  nameWithType: Batch.End(CommandBuffer)
+  fullName: Riateu.Graphics.Batch.End(MoonWorks.Graphics.CommandBuffer)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public void End(CommandBuffer cmdBuf)
+    parameters:
+    - id: cmdBuf
+      type: MoonWorks.Graphics.CommandBuffer
+    content.vb: Public Sub [End](cmdBuf As CommandBuffer)
+  overload: Riateu.Graphics.Batch.End*
+  implements:
+  - Riateu.Graphics.IBatch.End(MoonWorks.Graphics.CommandBuffer)
+- uid: Riateu.Graphics.Batch.IsDisposed
+  commentId: P:Riateu.Graphics.Batch.IsDisposed
+  id: IsDisposed
+  parent: Riateu.Graphics.Batch
+  langs:
+  - csharp
+  - vb
+  name: IsDisposed
+  nameWithType: Batch.IsDisposed
+  fullName: Riateu.Graphics.Batch.IsDisposed
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/Batch.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public bool IsDisposed { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsDisposed As Boolean
+  overload: Riateu.Graphics.Batch.IsDisposed*
+references:
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: Riateu.Graphics.IBatch
+  commentId: T:Riateu.Graphics.IBatch
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html
+  name: IBatch
+  nameWithType: IBatch
+  fullName: Riateu.Graphics.IBatch
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: MoonWorks.Math.Float.Matrix4x4
+  commentId: T:MoonWorks.Math.Float.Matrix4x4
+  parent: MoonWorks.Math.Float
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix4x4.cs
+  name: Matrix4x4
+  nameWithType: Matrix4x4
+  fullName: MoonWorks.Math.Float.Matrix4x4
+- uid: MoonWorks.Math.Float
+  commentId: N:MoonWorks.Math.Float
+  isExternal: true
+  name: MoonWorks.Math.Float
+  nameWithType: MoonWorks.Math.Float
+  fullName: MoonWorks.Math.Float
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+- uid: Riateu.Graphics.Batch.#ctor*
+  commentId: Overload:Riateu.Graphics.Batch.#ctor
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch__ctor_MoonWorks_Graphics_GraphicsDevice_System_Int32_System_Int32_
+  name: Batch
+  nameWithType: Batch.Batch
+  fullName: Riateu.Graphics.Batch.Batch
+  nameWithType.vb: Batch.New
+  fullName.vb: Riateu.Graphics.Batch.New
+  name.vb: New
+- uid: MoonWorks.Graphics.GraphicsDevice
+  commentId: T:MoonWorks.Graphics.GraphicsDevice
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/GraphicsDevice.cs
+  name: GraphicsDevice
+  nameWithType: GraphicsDevice
+  fullName: MoonWorks.Graphics.GraphicsDevice
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: MoonWorks.Graphics
+  commentId: N:MoonWorks.Graphics
+  isExternal: true
+  name: MoonWorks.Graphics
+  nameWithType: MoonWorks.Graphics
+  fullName: MoonWorks.Graphics
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+- uid: Riateu.Graphics.Batch.PushMatrix*
+  commentId: Overload:Riateu.Graphics.Batch.PushMatrix
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_PushMatrix_MoonWorks_Math_Float_Matrix4x4__
+  name: PushMatrix
+  nameWithType: Batch.PushMatrix
+  fullName: Riateu.Graphics.Batch.PushMatrix
+- uid: Riateu.Camera
+  commentId: T:Riateu.Camera
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Camera.html
+  name: Camera
+  nameWithType: Camera
+  fullName: Riateu.Camera
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: Riateu.Graphics.Batch.PopMatrix*
+  commentId: Overload:Riateu.Graphics.Batch.PopMatrix
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_PopMatrix
+  name: PopMatrix
+  nameWithType: Batch.PopMatrix
+  fullName: Riateu.Graphics.Batch.PopMatrix
+- uid: Riateu.Graphics.IBatch.PopMatrix
+  commentId: M:Riateu.Graphics.IBatch.PopMatrix
+  parent: Riateu.Graphics.IBatch
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_PopMatrix
+  name: PopMatrix()
+  nameWithType: IBatch.PopMatrix()
+  fullName: Riateu.Graphics.IBatch.PopMatrix()
+  spec.csharp:
+  - uid: Riateu.Graphics.IBatch.PopMatrix
+    name: PopMatrix
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_PopMatrix
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Riateu.Graphics.IBatch.PopMatrix
+    name: PopMatrix
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_PopMatrix
+  - name: (
+  - name: )
+- uid: Riateu.Graphics.Batch.FlushVertex*
+  commentId: Overload:Riateu.Graphics.Batch.FlushVertex
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_FlushVertex_MoonWorks_Graphics_CommandBuffer_
+  name: FlushVertex
+  nameWithType: Batch.FlushVertex
+  fullName: Riateu.Graphics.Batch.FlushVertex
+- uid: Riateu.Graphics.IBatch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+  commentId: M:Riateu.Graphics.IBatch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+  parent: Riateu.Graphics.IBatch
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_FlushVertex_MoonWorks_Graphics_CommandBuffer_
+  name: FlushVertex(CommandBuffer)
+  nameWithType: IBatch.FlushVertex(CommandBuffer)
+  fullName: Riateu.Graphics.IBatch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+  spec.csharp:
+  - uid: Riateu.Graphics.IBatch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+    name: FlushVertex
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_FlushVertex_MoonWorks_Graphics_CommandBuffer_
+  - name: (
+  - uid: MoonWorks.Graphics.CommandBuffer
+    name: CommandBuffer
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  - name: )
+  spec.vb:
+  - uid: Riateu.Graphics.IBatch.FlushVertex(MoonWorks.Graphics.CommandBuffer)
+    name: FlushVertex
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_FlushVertex_MoonWorks_Graphics_CommandBuffer_
+  - name: (
+  - uid: MoonWorks.Graphics.CommandBuffer
+    name: CommandBuffer
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  - name: )
+- uid: MoonWorks.Graphics.CommandBuffer
+  commentId: T:MoonWorks.Graphics.CommandBuffer
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  name: CommandBuffer
+  nameWithType: CommandBuffer
+  fullName: MoonWorks.Graphics.CommandBuffer
+- uid: Riateu.Graphics.Batch.Draw*
+  commentId: Overload:Riateu.Graphics.Batch.Draw
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_Draw_MoonWorks_Graphics_CommandBuffer_
+  name: Draw
+  nameWithType: Batch.Draw
+  fullName: Riateu.Graphics.Batch.Draw
+- uid: Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer)
+  commentId: M:Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer)
+  parent: Riateu.Graphics.IBatch
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Draw_MoonWorks_Graphics_CommandBuffer_
+  name: Draw(CommandBuffer)
+  nameWithType: IBatch.Draw(CommandBuffer)
+  fullName: Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer)
+  spec.csharp:
+  - uid: Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer)
+    name: Draw
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Draw_MoonWorks_Graphics_CommandBuffer_
+  - name: (
+  - uid: MoonWorks.Graphics.CommandBuffer
+    name: CommandBuffer
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  - name: )
+  spec.vb:
+  - uid: Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer)
+    name: Draw
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Draw_MoonWorks_Graphics_CommandBuffer_
+  - name: (
+  - uid: MoonWorks.Graphics.CommandBuffer
+    name: CommandBuffer
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  - name: )
+- uid: Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+  commentId: M:Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+  parent: Riateu.Graphics.IBatch
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Draw_MoonWorks_Graphics_CommandBuffer_MoonWorks_Math_Float_Matrix4x4_
+  name: Draw(CommandBuffer, Matrix4x4)
+  nameWithType: IBatch.Draw(CommandBuffer, Matrix4x4)
+  fullName: Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer, MoonWorks.Math.Float.Matrix4x4)
+  spec.csharp:
+  - uid: Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+    name: Draw
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Draw_MoonWorks_Graphics_CommandBuffer_MoonWorks_Math_Float_Matrix4x4_
+  - name: (
+  - uid: MoonWorks.Graphics.CommandBuffer
+    name: CommandBuffer
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Matrix4x4
+    name: Matrix4x4
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix4x4.cs
+  - name: )
+  spec.vb:
+  - uid: Riateu.Graphics.IBatch.Draw(MoonWorks.Graphics.CommandBuffer,MoonWorks.Math.Float.Matrix4x4)
+    name: Draw
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Draw_MoonWorks_Graphics_CommandBuffer_MoonWorks_Math_Float_Matrix4x4_
+  - name: (
+  - uid: MoonWorks.Graphics.CommandBuffer
+    name: CommandBuffer
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Matrix4x4
+    name: Matrix4x4
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix4x4.cs
+  - name: )
+- uid: Riateu.Graphics.Batch.Add*
+  commentId: Overload:Riateu.Graphics.Batch.Add
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_Add_MoonWorks_Graphics_Texture_MoonWorks_Graphics_Sampler_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Matrix3x2_System_Single_
+  name: Add
+  nameWithType: Batch.Add
+  fullName: Riateu.Graphics.Batch.Add
+- uid: Riateu.Graphics.IBatch.Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  commentId: M:Riateu.Graphics.IBatch.Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  parent: Riateu.Graphics.IBatch
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Add_MoonWorks_Graphics_Texture_MoonWorks_Graphics_Sampler_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Matrix3x2_System_Single_
+  name: Add(Texture, Sampler, Vector2, Matrix3x2, float)
+  nameWithType: IBatch.Add(Texture, Sampler, Vector2, Matrix3x2, float)
+  fullName: Riateu.Graphics.IBatch.Add(MoonWorks.Graphics.Texture, MoonWorks.Graphics.Sampler, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2, float)
+  nameWithType.vb: IBatch.Add(Texture, Sampler, Vector2, Matrix3x2, Single)
+  fullName.vb: Riateu.Graphics.IBatch.Add(MoonWorks.Graphics.Texture, MoonWorks.Graphics.Sampler, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2, Single)
+  name.vb: Add(Texture, Sampler, Vector2, Matrix3x2, Single)
+  spec.csharp:
+  - uid: Riateu.Graphics.IBatch.Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+    name: Add
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Add_MoonWorks_Graphics_Texture_MoonWorks_Graphics_Sampler_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Matrix3x2_System_Single_
+  - name: (
+  - uid: MoonWorks.Graphics.Texture
+    name: Texture
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Texture.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Graphics.Sampler
+    name: Sampler
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Sampler.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Matrix3x2
+    name: Matrix3x2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix3x2.cs
+  - name: ','
+  - name: " "
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+  spec.vb:
+  - uid: Riateu.Graphics.IBatch.Add(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+    name: Add
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Add_MoonWorks_Graphics_Texture_MoonWorks_Graphics_Sampler_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Matrix3x2_System_Single_
+  - name: (
+  - uid: MoonWorks.Graphics.Texture
+    name: Texture
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Texture.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Graphics.Sampler
+    name: Sampler
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Sampler.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Matrix3x2
+    name: Matrix3x2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix3x2.cs
+  - name: ','
+  - name: " "
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+- uid: MoonWorks.Graphics.Texture
+  commentId: T:MoonWorks.Graphics.Texture
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Texture.cs
+  name: Texture
+  nameWithType: Texture
+  fullName: MoonWorks.Graphics.Texture
+- uid: MoonWorks.Graphics.Sampler
+  commentId: T:MoonWorks.Graphics.Sampler
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Sampler.cs
+  name: Sampler
+  nameWithType: Sampler
+  fullName: MoonWorks.Graphics.Sampler
+- uid: MoonWorks.Math.Float.Vector2
+  commentId: T:MoonWorks.Math.Float.Vector2
+  parent: MoonWorks.Math.Float
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  name: Vector2
+  nameWithType: Vector2
+  fullName: MoonWorks.Math.Float.Vector2
+- uid: MoonWorks.Math.Float.Matrix3x2
+  commentId: T:MoonWorks.Math.Float.Matrix3x2
+  parent: MoonWorks.Math.Float
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix3x2.cs
+  name: Matrix3x2
+  nameWithType: Matrix3x2
+  fullName: MoonWorks.Math.Float.Matrix3x2
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: Riateu.Graphics.IBatch.Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  commentId: M:Riateu.Graphics.IBatch.Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+  parent: Riateu.Graphics.IBatch
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Add_Riateu_Graphics_SpriteTexture_MoonWorks_Graphics_Texture_MoonWorks_Graphics_Sampler_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Matrix3x2_System_Single_
+  name: Add(SpriteTexture, Texture, Sampler, Vector2, Matrix3x2, float)
+  nameWithType: IBatch.Add(SpriteTexture, Texture, Sampler, Vector2, Matrix3x2, float)
+  fullName: Riateu.Graphics.IBatch.Add(Riateu.Graphics.SpriteTexture, MoonWorks.Graphics.Texture, MoonWorks.Graphics.Sampler, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2, float)
+  nameWithType.vb: IBatch.Add(SpriteTexture, Texture, Sampler, Vector2, Matrix3x2, Single)
+  fullName.vb: Riateu.Graphics.IBatch.Add(Riateu.Graphics.SpriteTexture, MoonWorks.Graphics.Texture, MoonWorks.Graphics.Sampler, MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Matrix3x2, Single)
+  name.vb: Add(SpriteTexture, Texture, Sampler, Vector2, Matrix3x2, Single)
+  spec.csharp:
+  - uid: Riateu.Graphics.IBatch.Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+    name: Add
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Add_Riateu_Graphics_SpriteTexture_MoonWorks_Graphics_Texture_MoonWorks_Graphics_Sampler_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Matrix3x2_System_Single_
+  - name: (
+  - uid: Riateu.Graphics.SpriteTexture
+    name: SpriteTexture
+    isExternal: true
+    href: Riateu.Graphics.SpriteTexture.html
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Graphics.Texture
+    name: Texture
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Texture.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Graphics.Sampler
+    name: Sampler
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Sampler.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Matrix3x2
+    name: Matrix3x2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix3x2.cs
+  - name: ','
+  - name: " "
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+  spec.vb:
+  - uid: Riateu.Graphics.IBatch.Add(Riateu.Graphics.SpriteTexture,MoonWorks.Graphics.Texture,MoonWorks.Graphics.Sampler,MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Matrix3x2,System.Single)
+    name: Add
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Add_Riateu_Graphics_SpriteTexture_MoonWorks_Graphics_Texture_MoonWorks_Graphics_Sampler_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Matrix3x2_System_Single_
+  - name: (
+  - uid: Riateu.Graphics.SpriteTexture
+    name: SpriteTexture
+    isExternal: true
+    href: Riateu.Graphics.SpriteTexture.html
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Graphics.Texture
+    name: Texture
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Texture.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Graphics.Sampler
+    name: Sampler
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Sampler.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Matrix3x2
+    name: Matrix3x2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Matrix3x2.cs
+  - name: ','
+  - name: " "
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+- uid: Riateu.Graphics.SpriteTexture
+  commentId: T:Riateu.Graphics.SpriteTexture
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.SpriteTexture.html
+  name: SpriteTexture
+  nameWithType: SpriteTexture
+  fullName: Riateu.Graphics.SpriteTexture
+- uid: Riateu.Graphics.Batch.AddCanvas*
+  commentId: Overload:Riateu.Graphics.Batch.AddCanvas
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_AddCanvas_Riateu_Canvas_MoonWorks_Graphics_Sampler_
+  name: AddCanvas
+  nameWithType: Batch.AddCanvas
+  fullName: Riateu.Graphics.Batch.AddCanvas
+- uid: Riateu.Canvas
+  commentId: T:Riateu.Canvas
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Canvas.html
+  name: Canvas
+  nameWithType: Canvas
+  fullName: Riateu.Canvas
+- uid: Riateu.Graphics.Batch.Dispose*
+  commentId: Overload:Riateu.Graphics.Batch.Dispose
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_Dispose_System_Boolean_
+  name: Dispose
+  nameWithType: Batch.Dispose
+  fullName: Riateu.Graphics.Batch.Dispose
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Riateu.Graphics.Batch.Finalize*
+  commentId: Overload:Riateu.Graphics.Batch.Finalize
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_Finalize
+  name: ~Batch
+  nameWithType: Batch.~Batch
+  fullName: Riateu.Graphics.Batch.~Batch
+  spec.csharp:
+  - name: "~"
+  - uid: Riateu.Graphics.Batch.Finalize*
+    name: Batch
+    isExternal: true
+    href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_Finalize
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: Riateu.Graphics.Batch.Start*
+  commentId: Overload:Riateu.Graphics.Batch.Start
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_Start
+  name: Start
+  nameWithType: Batch.Start
+  fullName: Riateu.Graphics.Batch.Start
+- uid: Riateu.Graphics.IBatch.Start
+  commentId: M:Riateu.Graphics.IBatch.Start
+  parent: Riateu.Graphics.IBatch
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Start
+  name: Start()
+  nameWithType: IBatch.Start()
+  fullName: Riateu.Graphics.IBatch.Start()
+  spec.csharp:
+  - uid: Riateu.Graphics.IBatch.Start
+    name: Start
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Start
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Riateu.Graphics.IBatch.Start
+    name: Start
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_Start
+  - name: (
+  - name: )
+- uid: Riateu.Graphics.Batch.End*
+  commentId: Overload:Riateu.Graphics.Batch.End
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_End_MoonWorks_Graphics_CommandBuffer_
+  name: End
+  nameWithType: Batch.End
+  fullName: Riateu.Graphics.Batch.End
+- uid: Riateu.Graphics.IBatch.End(MoonWorks.Graphics.CommandBuffer)
+  commentId: M:Riateu.Graphics.IBatch.End(MoonWorks.Graphics.CommandBuffer)
+  parent: Riateu.Graphics.IBatch
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_End_MoonWorks_Graphics_CommandBuffer_
+  name: End(CommandBuffer)
+  nameWithType: IBatch.End(CommandBuffer)
+  fullName: Riateu.Graphics.IBatch.End(MoonWorks.Graphics.CommandBuffer)
+  spec.csharp:
+  - uid: Riateu.Graphics.IBatch.End(MoonWorks.Graphics.CommandBuffer)
+    name: End
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_End_MoonWorks_Graphics_CommandBuffer_
+  - name: (
+  - uid: MoonWorks.Graphics.CommandBuffer
+    name: CommandBuffer
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  - name: )
+  spec.vb:
+  - uid: Riateu.Graphics.IBatch.End(MoonWorks.Graphics.CommandBuffer)
+    name: End
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html#Riateu_Graphics_IBatch_End_MoonWorks_Graphics_CommandBuffer_
+  - name: (
+  - uid: MoonWorks.Graphics.CommandBuffer
+    name: CommandBuffer
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  - name: )
+- uid: Riateu.Graphics.Batch.IsDisposed*
+  commentId: Overload:Riateu.Graphics.Batch.IsDisposed
+  isExternal: true
+  href: Riateu.Graphics.Batch.html#Riateu_Graphics_Batch_IsDisposed
+  name: IsDisposed
+  nameWithType: Batch.IsDisposed
+  fullName: Riateu.Graphics.Batch.IsDisposed

@@ -1,0 +1,483 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Graphics.UV
+  commentId: T:Riateu.Graphics.UV
+  id: UV
+  parent: Riateu.Graphics
+  children:
+  - Riateu.Graphics.UV.#ctor(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  - Riateu.Graphics.UV.BottomLeft
+  - Riateu.Graphics.UV.BottomRight
+  - Riateu.Graphics.UV.Dimensions
+  - Riateu.Graphics.UV.Position
+  - Riateu.Graphics.UV.TopLeft
+  - Riateu.Graphics.UV.TopRight
+  langs:
+  - csharp
+  - vb
+  name: UV
+  nameWithType: UV
+  fullName: Riateu.Graphics.UV
+  type: Struct
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public struct UV
+    content.vb: Public Structure UV
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Riateu.Graphics.UV.Position
+  commentId: F:Riateu.Graphics.UV.Position
+  id: Position
+  parent: Riateu.Graphics.UV
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: UV.Position
+  fullName: Riateu.Graphics.UV.Position
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Vector2 Position
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Position As Vector2
+- uid: Riateu.Graphics.UV.Dimensions
+  commentId: F:Riateu.Graphics.UV.Dimensions
+  id: Dimensions
+  parent: Riateu.Graphics.UV
+  langs:
+  - csharp
+  - vb
+  name: Dimensions
+  nameWithType: UV.Dimensions
+  fullName: Riateu.Graphics.UV.Dimensions
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Vector2 Dimensions
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Dimensions As Vector2
+- uid: Riateu.Graphics.UV.TopLeft
+  commentId: F:Riateu.Graphics.UV.TopLeft
+  id: TopLeft
+  parent: Riateu.Graphics.UV
+  langs:
+  - csharp
+  - vb
+  name: TopLeft
+  nameWithType: UV.TopLeft
+  fullName: Riateu.Graphics.UV.TopLeft
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Vector2 TopLeft
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public TopLeft As Vector2
+- uid: Riateu.Graphics.UV.TopRight
+  commentId: F:Riateu.Graphics.UV.TopRight
+  id: TopRight
+  parent: Riateu.Graphics.UV
+  langs:
+  - csharp
+  - vb
+  name: TopRight
+  nameWithType: UV.TopRight
+  fullName: Riateu.Graphics.UV.TopRight
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Vector2 TopRight
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public TopRight As Vector2
+- uid: Riateu.Graphics.UV.BottomLeft
+  commentId: F:Riateu.Graphics.UV.BottomLeft
+  id: BottomLeft
+  parent: Riateu.Graphics.UV
+  langs:
+  - csharp
+  - vb
+  name: BottomLeft
+  nameWithType: UV.BottomLeft
+  fullName: Riateu.Graphics.UV.BottomLeft
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Vector2 BottomLeft
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public BottomLeft As Vector2
+- uid: Riateu.Graphics.UV.BottomRight
+  commentId: F:Riateu.Graphics.UV.BottomRight
+  id: BottomRight
+  parent: Riateu.Graphics.UV
+  langs:
+  - csharp
+  - vb
+  name: BottomRight
+  nameWithType: UV.BottomRight
+  fullName: Riateu.Graphics.UV.BottomRight
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Vector2 BottomRight
+    return:
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public BottomRight As Vector2
+- uid: Riateu.Graphics.UV.#ctor(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.Graphics.UV.#ctor(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)
+  id: '#ctor(MoonWorks.Math.Float.Vector2,MoonWorks.Math.Float.Vector2)'
+  parent: Riateu.Graphics.UV
+  langs:
+  - csharp
+  - vb
+  name: UV(Vector2, Vector2)
+  nameWithType: UV.UV(Vector2, Vector2)
+  fullName: Riateu.Graphics.UV.UV(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public UV(Vector2 position, Vector2 dimensions)
+    parameters:
+    - id: position
+      type: MoonWorks.Math.Float.Vector2
+    - id: dimensions
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Sub New(position As Vector2, dimensions As Vector2)
+  overload: Riateu.Graphics.UV.#ctor*
+  nameWithType.vb: UV.New(Vector2, Vector2)
+  fullName.vb: Riateu.Graphics.UV.New(MoonWorks.Math.Float.Vector2, MoonWorks.Math.Float.Vector2)
+  name.vb: New(Vector2, Vector2)
+references:
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: MoonWorks.Math.Float.Vector2
+  commentId: T:MoonWorks.Math.Float.Vector2
+  parent: MoonWorks.Math.Float
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  name: Vector2
+  nameWithType: Vector2
+  fullName: MoonWorks.Math.Float.Vector2
+- uid: MoonWorks.Math.Float
+  commentId: N:MoonWorks.Math.Float
+  isExternal: true
+  name: MoonWorks.Math.Float
+  nameWithType: MoonWorks.Math.Float
+  fullName: MoonWorks.Math.Float
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+- uid: Riateu.Graphics.UV.#ctor*
+  commentId: Overload:Riateu.Graphics.UV.#ctor
+  isExternal: true
+  href: Riateu.Graphics.UV.html#Riateu_Graphics_UV__ctor_MoonWorks_Math_Float_Vector2_MoonWorks_Math_Float_Vector2_
+  name: UV
+  nameWithType: UV.UV
+  fullName: Riateu.Graphics.UV.UV
+  nameWithType.vb: UV.New
+  fullName.vb: Riateu.Graphics.UV.New
+  name.vb: New

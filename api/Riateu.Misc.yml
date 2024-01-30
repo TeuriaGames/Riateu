@@ -1,0 +1,32 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Misc
+  commentId: N:Riateu.Misc
+  id: Riateu.Misc
+  children:
+  - Riateu.Misc.CoroutineContext
+  - Riateu.Misc.Resources
+  langs:
+  - csharp
+  - vb
+  name: Riateu.Misc
+  nameWithType: Riateu.Misc
+  fullName: Riateu.Misc
+  type: Namespace
+  assemblies:
+  - Riateu
+references:
+- uid: Riateu.Misc.CoroutineContext
+  commentId: T:Riateu.Misc.CoroutineContext
+  isExternal: true
+  href: Riateu.Misc.CoroutineContext.html
+  name: CoroutineContext
+  nameWithType: CoroutineContext
+  fullName: Riateu.Misc.CoroutineContext
+- uid: Riateu.Misc.Resources
+  commentId: T:Riateu.Misc.Resources
+  isExternal: true
+  href: Riateu.Misc.Resources.html
+  name: Resources
+  nameWithType: Resources
+  fullName: Riateu.Misc.Resources

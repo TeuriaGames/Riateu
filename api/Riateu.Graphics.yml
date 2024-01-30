@@ -1,0 +1,201 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  id: Riateu.Graphics
+  children:
+  - Riateu.Graphics.Atlas
+  - Riateu.Graphics.Atlas.FileType
+  - Riateu.Graphics.Batch
+  - Riateu.Graphics.FlipMode
+  - Riateu.Graphics.IBatch
+  - Riateu.Graphics.InstanceBatch
+  - Riateu.Graphics.PositionColorVertex
+  - Riateu.Graphics.PositionTextureColorVertex
+  - Riateu.Graphics.PositionVertex
+  - Riateu.Graphics.Ruleset
+  - Riateu.Graphics.SpriteTexture
+  - Riateu.Graphics.Spritesheet
+  - Riateu.Graphics.SubBatch
+  - Riateu.Graphics.SubInstanceBatch
+  - Riateu.Graphics.Tileset
+  - Riateu.Graphics.UV
+  langs:
+  - csharp
+  - vb
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  type: Namespace
+  assemblies:
+  - Riateu
+references:
+- uid: Riateu.Graphics.Atlas
+  commentId: T:Riateu.Graphics.Atlas
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.Atlas.html
+  name: Atlas
+  nameWithType: Atlas
+  fullName: Riateu.Graphics.Atlas
+- uid: Riateu.Graphics.Atlas.FileType
+  commentId: T:Riateu.Graphics.Atlas.FileType
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.Atlas.html
+  name: Atlas.FileType
+  nameWithType: Atlas.FileType
+  fullName: Riateu.Graphics.Atlas.FileType
+  spec.csharp:
+  - uid: Riateu.Graphics.Atlas
+    name: Atlas
+    isExternal: true
+    href: Riateu.Graphics.Atlas.html
+  - name: .
+  - uid: Riateu.Graphics.Atlas.FileType
+    name: FileType
+    isExternal: true
+    href: Riateu.Graphics.Atlas.FileType.html
+  spec.vb:
+  - uid: Riateu.Graphics.Atlas
+    name: Atlas
+    isExternal: true
+    href: Riateu.Graphics.Atlas.html
+  - name: .
+  - uid: Riateu.Graphics.Atlas.FileType
+    name: FileType
+    isExternal: true
+    href: Riateu.Graphics.Atlas.FileType.html
+- uid: Riateu.Graphics.SubBatch
+  commentId: T:Riateu.Graphics.SubBatch
+  isExternal: true
+  href: Riateu.Graphics.SubBatch.html
+  name: SubBatch
+  nameWithType: SubBatch
+  fullName: Riateu.Graphics.SubBatch
+- uid: Riateu.Graphics.Batch
+  commentId: T:Riateu.Graphics.Batch
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.Batch.html
+  name: Batch
+  nameWithType: Batch
+  fullName: Riateu.Graphics.Batch
+- uid: Riateu.Graphics.FlipMode
+  commentId: T:Riateu.Graphics.FlipMode
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.FlipMode.html
+  name: FlipMode
+  nameWithType: FlipMode
+  fullName: Riateu.Graphics.FlipMode
+- uid: Riateu.Graphics.IBatch
+  commentId: T:Riateu.Graphics.IBatch
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html
+  name: IBatch
+  nameWithType: IBatch
+  fullName: Riateu.Graphics.IBatch
+- uid: Riateu.Graphics.SubInstanceBatch
+  commentId: T:Riateu.Graphics.SubInstanceBatch
+  isExternal: true
+  href: Riateu.Graphics.SubInstanceBatch.html
+  name: SubInstanceBatch
+  nameWithType: SubInstanceBatch
+  fullName: Riateu.Graphics.SubInstanceBatch
+- uid: Riateu.Graphics.InstanceBatch
+  commentId: T:Riateu.Graphics.InstanceBatch
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.InstanceBatch.html
+  name: InstanceBatch
+  nameWithType: InstanceBatch
+  fullName: Riateu.Graphics.InstanceBatch
+- uid: Riateu.Graphics.Spritesheet
+  commentId: T:Riateu.Graphics.Spritesheet
+  isExternal: true
+  href: Riateu.Graphics.Spritesheet.html
+  name: Spritesheet
+  nameWithType: Spritesheet
+  fullName: Riateu.Graphics.Spritesheet
+- uid: Riateu.Graphics.SpriteTexture
+  commentId: T:Riateu.Graphics.SpriteTexture
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.SpriteTexture.html
+  name: SpriteTexture
+  nameWithType: SpriteTexture
+  fullName: Riateu.Graphics.SpriteTexture
+- uid: Riateu.Graphics.UV
+  commentId: T:Riateu.Graphics.UV
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.UV.html
+  name: UV
+  nameWithType: UV
+  fullName: Riateu.Graphics.UV
+- uid: Riateu.Graphics.Tileset
+  commentId: T:Riateu.Graphics.Tileset
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.Tileset.html
+  name: Tileset
+  nameWithType: Tileset
+  fullName: Riateu.Graphics.Tileset
+- uid: Riateu.Graphics.Ruleset
+  commentId: T:Riateu.Graphics.Ruleset
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.Ruleset.html
+  name: Ruleset
+  nameWithType: Ruleset
+  fullName: Riateu.Graphics.Ruleset
+- uid: Riateu.Graphics.PositionColorVertex
+  commentId: T:Riateu.Graphics.PositionColorVertex
+  isExternal: true
+  href: Riateu.Graphics.PositionColorVertex.html
+  name: PositionColorVertex
+  nameWithType: PositionColorVertex
+  fullName: Riateu.Graphics.PositionColorVertex
+- uid: Riateu.Graphics.PositionTextureColorVertex
+  commentId: T:Riateu.Graphics.PositionTextureColorVertex
+  isExternal: true
+  href: Riateu.Graphics.PositionTextureColorVertex.html
+  name: PositionTextureColorVertex
+  nameWithType: PositionTextureColorVertex
+  fullName: Riateu.Graphics.PositionTextureColorVertex
+- uid: Riateu.Graphics.PositionVertex
+  commentId: T:Riateu.Graphics.PositionVertex
+  isExternal: true
+  href: Riateu.Graphics.PositionVertex.html
+  name: PositionVertex
+  nameWithType: PositionVertex
+  fullName: Riateu.Graphics.PositionVertex
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html

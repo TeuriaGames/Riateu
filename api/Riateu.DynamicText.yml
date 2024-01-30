@@ -1,0 +1,809 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.DynamicText
+  commentId: T:Riateu.DynamicText
+  id: DynamicText
+  parent: Riateu
+  children:
+  - Riateu.DynamicText.#ctor(MoonWorks.Graphics.GraphicsDevice,MoonWorks.Graphics.Font.Font,System.String,System.Int32,System.Int32)
+  - Riateu.DynamicText.Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+  - Riateu.DynamicText.Height
+  - Riateu.DynamicText.Text
+  - Riateu.DynamicText.VisibleText
+  - Riateu.DynamicText.Width
+  langs:
+  - csharp
+  - vb
+  name: DynamicText
+  nameWithType: DynamicText
+  fullName: Riateu.DynamicText
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Canvases/DynamicText.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: 'public class DynamicText : Text, IDisposable'
+    content.vb: Public Class DynamicText Inherits Text Implements IDisposable
+  inheritance:
+  - System.Object
+  - Riateu.Text
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - Riateu.Text.pixelSize
+  - Riateu.Text.text
+  - Riateu.Text.Dispose(System.Boolean)
+  - Riateu.Text.Dispose
+  - Riateu.Text.Texture
+  - Riateu.Text.Bounds
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Riateu.DynamicText.#ctor(MoonWorks.Graphics.GraphicsDevice,MoonWorks.Graphics.Font.Font,System.String,System.Int32,System.Int32)
+  commentId: M:Riateu.DynamicText.#ctor(MoonWorks.Graphics.GraphicsDevice,MoonWorks.Graphics.Font.Font,System.String,System.Int32,System.Int32)
+  id: '#ctor(MoonWorks.Graphics.GraphicsDevice,MoonWorks.Graphics.Font.Font,System.String,System.Int32,System.Int32)'
+  parent: Riateu.DynamicText
+  langs:
+  - csharp
+  - vb
+  name: DynamicText(GraphicsDevice, Font, string, int, int)
+  nameWithType: DynamicText.DynamicText(GraphicsDevice, Font, string, int, int)
+  fullName: Riateu.DynamicText.DynamicText(MoonWorks.Graphics.GraphicsDevice, MoonWorks.Graphics.Font.Font, string, int, int)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Canvases/DynamicText.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public DynamicText(GraphicsDevice device, Font font, string text, int pixel, int textVisible = -1)
+    parameters:
+    - id: device
+      type: MoonWorks.Graphics.GraphicsDevice
+    - id: font
+      type: MoonWorks.Graphics.Font.Font
+    - id: text
+      type: System.String
+    - id: pixel
+      type: System.Int32
+    - id: textVisible
+      type: System.Int32
+    content.vb: Public Sub New(device As GraphicsDevice, font As Font, text As String, pixel As Integer, textVisible As Integer = -1)
+  overload: Riateu.DynamicText.#ctor*
+  nameWithType.vb: DynamicText.New(GraphicsDevice, Font, String, Integer, Integer)
+  fullName.vb: Riateu.DynamicText.New(MoonWorks.Graphics.GraphicsDevice, MoonWorks.Graphics.Font.Font, String, Integer, Integer)
+  name.vb: New(GraphicsDevice, Font, String, Integer, Integer)
+- uid: Riateu.DynamicText.Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.DynamicText.Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+  id: Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+  parent: Riateu.DynamicText
+  langs:
+  - csharp
+  - vb
+  name: Draw(IBatch, Vector2)
+  nameWithType: DynamicText.Draw(IBatch, Vector2)
+  fullName: Riateu.DynamicText.Draw(Riateu.Graphics.IBatch, MoonWorks.Math.Float.Vector2)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Canvases/DynamicText.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  example: []
+  syntax:
+    content: public override void Draw(IBatch batch, Vector2 position)
+    parameters:
+    - id: batch
+      type: Riateu.Graphics.IBatch
+    - id: position
+      type: MoonWorks.Math.Float.Vector2
+    content.vb: Public Overrides Sub Draw(batch As IBatch, position As Vector2)
+  overridden: Riateu.Text.Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+  overload: Riateu.DynamicText.Draw*
+- uid: Riateu.DynamicText.Text
+  commentId: P:Riateu.DynamicText.Text
+  id: Text
+  parent: Riateu.DynamicText
+  langs:
+  - csharp
+  - vb
+  name: Text
+  nameWithType: DynamicText.Text
+  fullName: Riateu.DynamicText.Text
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Canvases/DynamicText.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public string Text { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Text As String
+  overload: Riateu.DynamicText.Text*
+- uid: Riateu.DynamicText.VisibleText
+  commentId: P:Riateu.DynamicText.VisibleText
+  id: VisibleText
+  parent: Riateu.DynamicText
+  langs:
+  - csharp
+  - vb
+  name: VisibleText
+  nameWithType: DynamicText.VisibleText
+  fullName: Riateu.DynamicText.VisibleText
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Canvases/DynamicText.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public int VisibleText { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property VisibleText As Integer
+  overload: Riateu.DynamicText.VisibleText*
+- uid: Riateu.DynamicText.Width
+  commentId: P:Riateu.DynamicText.Width
+  id: Width
+  parent: Riateu.DynamicText
+  langs:
+  - csharp
+  - vb
+  name: Width
+  nameWithType: DynamicText.Width
+  fullName: Riateu.DynamicText.Width
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Canvases/DynamicText.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public uint Width { get; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public ReadOnly Property Width As UInteger
+  overload: Riateu.DynamicText.Width*
+- uid: Riateu.DynamicText.Height
+  commentId: P:Riateu.DynamicText.Height
+  id: Height
+  parent: Riateu.DynamicText
+  langs:
+  - csharp
+  - vb
+  name: Height
+  nameWithType: DynamicText.Height
+  fullName: Riateu.DynamicText.Height
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Canvases/DynamicText.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public uint Height { get; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public ReadOnly Property Height As UInteger
+  overload: Riateu.DynamicText.Height*
+references:
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Riateu.Text
+  commentId: T:Riateu.Text
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Text.html
+  name: Text
+  nameWithType: Text
+  fullName: Riateu.Text
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: Riateu.Text.pixelSize
+  commentId: F:Riateu.Text.pixelSize
+  parent: Riateu.Text
+  isExternal: true
+  href: Riateu.Text.html#Riateu_Text_pixelSize
+  name: pixelSize
+  nameWithType: Text.pixelSize
+  fullName: Riateu.Text.pixelSize
+- uid: Riateu.Text.text
+  commentId: F:Riateu.Text.text
+  parent: Riateu.Text
+  isExternal: true
+  href: Riateu.Text.html#Riateu_Text_text
+  name: text
+  nameWithType: Text.text
+  fullName: Riateu.Text.text
+- uid: Riateu.Text.Dispose(System.Boolean)
+  commentId: M:Riateu.Text.Dispose(System.Boolean)
+  parent: Riateu.Text
+  isExternal: true
+  href: Riateu.Text.html#Riateu_Text_Dispose_System_Boolean_
+  name: Dispose(bool)
+  nameWithType: Text.Dispose(bool)
+  fullName: Riateu.Text.Dispose(bool)
+  nameWithType.vb: Text.Dispose(Boolean)
+  fullName.vb: Riateu.Text.Dispose(Boolean)
+  name.vb: Dispose(Boolean)
+  spec.csharp:
+  - uid: Riateu.Text.Dispose(System.Boolean)
+    name: Dispose
+    isExternal: true
+    href: Riateu.Text.html#Riateu_Text_Dispose_System_Boolean_
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Riateu.Text.Dispose(System.Boolean)
+    name: Dispose
+    isExternal: true
+    href: Riateu.Text.html#Riateu_Text_Dispose_System_Boolean_
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Riateu.Text.Dispose
+  commentId: M:Riateu.Text.Dispose
+  parent: Riateu.Text
+  isExternal: true
+  href: Riateu.Text.html#Riateu_Text_Dispose
+  name: Dispose()
+  nameWithType: Text.Dispose()
+  fullName: Riateu.Text.Dispose()
+  spec.csharp:
+  - uid: Riateu.Text.Dispose
+    name: Dispose
+    isExternal: true
+    href: Riateu.Text.html#Riateu_Text_Dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Riateu.Text.Dispose
+    name: Dispose
+    isExternal: true
+    href: Riateu.Text.html#Riateu_Text_Dispose
+  - name: (
+  - name: )
+- uid: Riateu.Text.Texture
+  commentId: P:Riateu.Text.Texture
+  parent: Riateu.Text
+  isExternal: true
+  href: Riateu.Text.html#Riateu_Text_Texture
+  name: Texture
+  nameWithType: Text.Texture
+  fullName: Riateu.Text.Texture
+- uid: Riateu.Text.Bounds
+  commentId: P:Riateu.Text.Bounds
+  parent: Riateu.Text
+  isExternal: true
+  href: Riateu.Text.html#Riateu_Text_Bounds
+  name: Bounds
+  nameWithType: Text.Bounds
+  fullName: Riateu.Text.Bounds
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Riateu.DynamicText.#ctor*
+  commentId: Overload:Riateu.DynamicText.#ctor
+  isExternal: true
+  href: Riateu.DynamicText.html#Riateu_DynamicText__ctor_MoonWorks_Graphics_GraphicsDevice_MoonWorks_Graphics_Font_Font_System_String_System_Int32_System_Int32_
+  name: DynamicText
+  nameWithType: DynamicText.DynamicText
+  fullName: Riateu.DynamicText.DynamicText
+  nameWithType.vb: DynamicText.New
+  fullName.vb: Riateu.DynamicText.New
+  name.vb: New
+- uid: MoonWorks.Graphics.GraphicsDevice
+  commentId: T:MoonWorks.Graphics.GraphicsDevice
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/GraphicsDevice.cs
+  name: GraphicsDevice
+  nameWithType: GraphicsDevice
+  fullName: MoonWorks.Graphics.GraphicsDevice
+- uid: MoonWorks.Graphics.Font.Font
+  commentId: T:MoonWorks.Graphics.Font.Font
+  parent: MoonWorks.Graphics.Font
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Font/Font.cs
+  name: Font
+  nameWithType: Font
+  fullName: MoonWorks.Graphics.Font.Font
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: MoonWorks.Graphics
+  commentId: N:MoonWorks.Graphics
+  isExternal: true
+  name: MoonWorks.Graphics
+  nameWithType: MoonWorks.Graphics
+  fullName: MoonWorks.Graphics
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+- uid: MoonWorks.Graphics.Font
+  commentId: N:MoonWorks.Graphics.Font
+  isExternal: true
+  name: MoonWorks.Graphics.Font
+  nameWithType: MoonWorks.Graphics.Font
+  fullName: MoonWorks.Graphics.Font
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics.Font
+    name: Font
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics.Font
+    name: Font
+    isExternal: true
+- uid: Riateu.Text.Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+  commentId: M:Riateu.Text.Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+  parent: Riateu.Text
+  isExternal: true
+  href: Riateu.Text.html#Riateu_Text_Draw_Riateu_Graphics_IBatch_MoonWorks_Math_Float_Vector2_
+  name: Draw(IBatch, Vector2)
+  nameWithType: Text.Draw(IBatch, Vector2)
+  fullName: Riateu.Text.Draw(Riateu.Graphics.IBatch, MoonWorks.Math.Float.Vector2)
+  spec.csharp:
+  - uid: Riateu.Text.Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+    name: Draw
+    isExternal: true
+    href: Riateu.Text.html#Riateu_Text_Draw_Riateu_Graphics_IBatch_MoonWorks_Math_Float_Vector2_
+  - name: (
+  - uid: Riateu.Graphics.IBatch
+    name: IBatch
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  - name: )
+  spec.vb:
+  - uid: Riateu.Text.Draw(Riateu.Graphics.IBatch,MoonWorks.Math.Float.Vector2)
+    name: Draw
+    isExternal: true
+    href: Riateu.Text.html#Riateu_Text_Draw_Riateu_Graphics_IBatch_MoonWorks_Math_Float_Vector2_
+  - name: (
+  - uid: Riateu.Graphics.IBatch
+    name: IBatch
+    isExternal: true
+    href: Riateu.Graphics.IBatch.html
+  - name: ','
+  - name: " "
+  - uid: MoonWorks.Math.Float.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  - name: )
+- uid: Riateu.DynamicText.Draw*
+  commentId: Overload:Riateu.DynamicText.Draw
+  isExternal: true
+  href: Riateu.DynamicText.html#Riateu_DynamicText_Draw_Riateu_Graphics_IBatch_MoonWorks_Math_Float_Vector2_
+  name: Draw
+  nameWithType: DynamicText.Draw
+  fullName: Riateu.DynamicText.Draw
+- uid: Riateu.Graphics.IBatch
+  commentId: T:Riateu.Graphics.IBatch
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html
+  name: IBatch
+  nameWithType: IBatch
+  fullName: Riateu.Graphics.IBatch
+- uid: MoonWorks.Math.Float.Vector2
+  commentId: T:MoonWorks.Math.Float.Vector2
+  parent: MoonWorks.Math.Float
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector2.cs
+  name: Vector2
+  nameWithType: Vector2
+  fullName: MoonWorks.Math.Float.Vector2
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+- uid: MoonWorks.Math.Float
+  commentId: N:MoonWorks.Math.Float
+  isExternal: true
+  name: MoonWorks.Math.Float
+  nameWithType: MoonWorks.Math.Float
+  fullName: MoonWorks.Math.Float
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+- uid: Riateu.DynamicText.Text*
+  commentId: Overload:Riateu.DynamicText.Text
+  isExternal: true
+  href: Riateu.DynamicText.html#Riateu_DynamicText_Text
+  name: Text
+  nameWithType: DynamicText.Text
+  fullName: Riateu.DynamicText.Text
+- uid: Riateu.DynamicText.VisibleText*
+  commentId: Overload:Riateu.DynamicText.VisibleText
+  isExternal: true
+  href: Riateu.DynamicText.html#Riateu_DynamicText_VisibleText
+  name: VisibleText
+  nameWithType: DynamicText.VisibleText
+  fullName: Riateu.DynamicText.VisibleText
+- uid: Riateu.DynamicText.Width*
+  commentId: Overload:Riateu.DynamicText.Width
+  isExternal: true
+  href: Riateu.DynamicText.html#Riateu_DynamicText_Width
+  name: Width
+  nameWithType: DynamicText.Width
+  fullName: Riateu.DynamicText.Width
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: Riateu.DynamicText.Height*
+  commentId: Overload:Riateu.DynamicText.Height
+  isExternal: true
+  href: Riateu.DynamicText.html#Riateu_DynamicText_Height
+  name: Height
+  nameWithType: DynamicText.Height
+  fullName: Riateu.DynamicText.Height

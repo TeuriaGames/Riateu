@@ -1,0 +1,100 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Components.TilemapMode
+  commentId: T:Riateu.Components.TilemapMode
+  id: TilemapMode
+  parent: Riateu.Components
+  children:
+  - Riateu.Components.TilemapMode.Baked
+  - Riateu.Components.TilemapMode.Cull
+  langs:
+  - csharp
+  - vb
+  name: TilemapMode
+  nameWithType: TilemapMode
+  fullName: Riateu.Components.TilemapMode
+  type: Enum
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Component/Tilemap.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Components
+  syntax:
+    content: public enum TilemapMode
+    content.vb: Public Enum TilemapMode
+- uid: Riateu.Components.TilemapMode.Baked
+  commentId: F:Riateu.Components.TilemapMode.Baked
+  id: Baked
+  parent: Riateu.Components.TilemapMode
+  langs:
+  - csharp
+  - vb
+  name: Baked
+  nameWithType: TilemapMode.Baked
+  fullName: Riateu.Components.TilemapMode.Baked
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Component/Tilemap.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Components
+  syntax:
+    content: Baked = 0
+    return:
+      type: Riateu.Components.TilemapMode
+- uid: Riateu.Components.TilemapMode.Cull
+  commentId: F:Riateu.Components.TilemapMode.Cull
+  id: Cull
+  parent: Riateu.Components.TilemapMode
+  langs:
+  - csharp
+  - vb
+  name: Cull
+  nameWithType: TilemapMode.Cull
+  fullName: Riateu.Components.TilemapMode.Cull
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Component/Tilemap.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Components
+  syntax:
+    content: Cull = 1
+    return:
+      type: Riateu.Components.TilemapMode
+references:
+- uid: Riateu.Components
+  commentId: N:Riateu.Components
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Components
+  nameWithType: Riateu.Components
+  fullName: Riateu.Components
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Components
+    name: Components
+    isExternal: true
+    href: Riateu.Components.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Components
+    name: Components
+    isExternal: true
+    href: Riateu.Components.html
+- uid: Riateu.Components.TilemapMode
+  commentId: T:Riateu.Components.TilemapMode
+  parent: Riateu.Components
+  isExternal: true
+  href: Riateu.Components.TilemapMode.html
+  name: TilemapMode
+  nameWithType: TilemapMode
+  fullName: Riateu.Components.TilemapMode

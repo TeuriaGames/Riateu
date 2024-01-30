@@ -1,0 +1,487 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Tag
+  commentId: T:Riateu.Tag
+  id: Tag
+  parent: Riateu
+  children:
+  - Riateu.Tag.#ctor(System.String)
+  - Riateu.Tag.GetTag(System.String)
+  - Riateu.Tag.ID
+  - Riateu.Tag.Name
+  - Riateu.Tag.Value
+  - Riateu.Tag.op_Implicit(Riateu.Tag)~System.Int32
+  langs:
+  - csharp
+  - vb
+  name: Tag
+  nameWithType: Tag
+  fullName: Riateu.Tag
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Tag.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public class Tag
+    content.vb: Public Class Tag
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Riateu.Tag.ID
+  commentId: F:Riateu.Tag.ID
+  id: ID
+  parent: Riateu.Tag
+  langs:
+  - csharp
+  - vb
+  name: ID
+  nameWithType: Tag.ID
+  fullName: Riateu.Tag.ID
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Tag.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public int ID
+    return:
+      type: System.Int32
+    content.vb: Public ID As Integer
+- uid: Riateu.Tag.Value
+  commentId: F:Riateu.Tag.Value
+  id: Value
+  parent: Riateu.Tag
+  langs:
+  - csharp
+  - vb
+  name: Value
+  nameWithType: Tag.Value
+  fullName: Riateu.Tag.Value
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Tag.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public int Value
+    return:
+      type: System.Int32
+    content.vb: Public Value As Integer
+- uid: Riateu.Tag.Name
+  commentId: F:Riateu.Tag.Name
+  id: Name
+  parent: Riateu.Tag
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: Tag.Name
+  fullName: Riateu.Tag.Name
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Tag.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public string Name
+    return:
+      type: System.String
+    content.vb: Public Name As String
+- uid: Riateu.Tag.GetTag(System.String)
+  commentId: M:Riateu.Tag.GetTag(System.String)
+  id: GetTag(System.String)
+  parent: Riateu.Tag
+  langs:
+  - csharp
+  - vb
+  name: GetTag(string)
+  nameWithType: Tag.GetTag(string)
+  fullName: Riateu.Tag.GetTag(string)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Tag.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Tag GetTag(string outputName)
+    parameters:
+    - id: outputName
+      type: System.String
+    return:
+      type: Riateu.Tag
+    content.vb: Public Shared Function GetTag(outputName As String) As Tag
+  overload: Riateu.Tag.GetTag*
+  nameWithType.vb: Tag.GetTag(String)
+  fullName.vb: Riateu.Tag.GetTag(String)
+  name.vb: GetTag(String)
+- uid: Riateu.Tag.#ctor(System.String)
+  commentId: M:Riateu.Tag.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: Riateu.Tag
+  langs:
+  - csharp
+  - vb
+  name: Tag(string)
+  nameWithType: Tag.Tag(string)
+  fullName: Riateu.Tag.Tag(string)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Tag.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Tag(string outputName)
+    parameters:
+    - id: outputName
+      type: System.String
+    content.vb: Public Sub New(outputName As String)
+  overload: Riateu.Tag.#ctor*
+  nameWithType.vb: Tag.New(String)
+  fullName.vb: Riateu.Tag.New(String)
+  name.vb: New(String)
+- uid: Riateu.Tag.op_Implicit(Riateu.Tag)~System.Int32
+  commentId: M:Riateu.Tag.op_Implicit(Riateu.Tag)~System.Int32
+  id: op_Implicit(Riateu.Tag)~System.Int32
+  parent: Riateu.Tag
+  langs:
+  - csharp
+  - vb
+  name: implicit operator int(Tag)
+  nameWithType: Tag.implicit operator int(Tag)
+  fullName: Riateu.Tag.implicit operator int(Riateu.Tag)
+  type: Operator
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Tag.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static implicit operator int(Tag tag)
+    parameters:
+    - id: tag
+      type: Riateu.Tag
+    return:
+      type: System.Int32
+    content.vb: Public Shared Widening Operator CType(tag As Tag) As Integer
+  overload: Riateu.Tag.op_Implicit*
+  nameWithType.vb: Tag.CType(Tag)
+  fullName.vb: Riateu.Tag.CType(Riateu.Tag)
+  name.vb: CType(Tag)
+references:
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Riateu.Tag.GetTag*
+  commentId: Overload:Riateu.Tag.GetTag
+  isExternal: true
+  href: Riateu.Tag.html#Riateu_Tag_GetTag_System_String_
+  name: GetTag
+  nameWithType: Tag.GetTag
+  fullName: Riateu.Tag.GetTag
+- uid: Riateu.Tag
+  commentId: T:Riateu.Tag
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Tag.html
+  name: Tag
+  nameWithType: Tag
+  fullName: Riateu.Tag
+- uid: Riateu.Tag.#ctor*
+  commentId: Overload:Riateu.Tag.#ctor
+  isExternal: true
+  href: Riateu.Tag.html#Riateu_Tag__ctor_System_String_
+  name: Tag
+  nameWithType: Tag.Tag
+  fullName: Riateu.Tag.Tag
+  nameWithType.vb: Tag.New
+  fullName.vb: Riateu.Tag.New
+  name.vb: New
+- uid: Riateu.Tag.op_Implicit*
+  commentId: Overload:Riateu.Tag.op_Implicit
+  name: implicit operator
+  nameWithType: Tag.implicit operator
+  fullName: Riateu.Tag.implicit operator
+  nameWithType.vb: Tag.CType
+  fullName.vb: Riateu.Tag.CType
+  name.vb: CType
+  spec.csharp:
+  - name: implicit
+  - name: " "
+  - name: operator

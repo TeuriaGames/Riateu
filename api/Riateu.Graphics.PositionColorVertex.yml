@@ -1,0 +1,501 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Graphics.PositionColorVertex
+  commentId: T:Riateu.Graphics.PositionColorVertex
+  id: PositionColorVertex
+  parent: Riateu.Graphics
+  children:
+  - Riateu.Graphics.PositionColorVertex.#ctor(MoonWorks.Math.Float.Vector3,MoonWorks.Graphics.Color)
+  - Riateu.Graphics.PositionColorVertex.Color
+  - Riateu.Graphics.PositionColorVertex.Formats
+  - Riateu.Graphics.PositionColorVertex.Position
+  langs:
+  - csharp
+  - vb
+  name: PositionColorVertex
+  nameWithType: PositionColorVertex
+  fullName: Riateu.Graphics.PositionColorVertex
+  type: Struct
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Structs/PositionColorVertex.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: 'public struct PositionColorVertex : IVertexType'
+    content.vb: Public Structure PositionColorVertex Implements IVertexType
+  implements:
+  - MoonWorks.Graphics.IVertexType
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Riateu.Graphics.PositionColorVertex.Position
+  commentId: F:Riateu.Graphics.PositionColorVertex.Position
+  id: Position
+  parent: Riateu.Graphics.PositionColorVertex
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: PositionColorVertex.Position
+  fullName: Riateu.Graphics.PositionColorVertex.Position
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Structs/PositionColorVertex.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Vector3 Position
+    return:
+      type: MoonWorks.Math.Float.Vector3
+    content.vb: Public Position As Vector3
+- uid: Riateu.Graphics.PositionColorVertex.Color
+  commentId: F:Riateu.Graphics.PositionColorVertex.Color
+  id: Color
+  parent: Riateu.Graphics.PositionColorVertex
+  langs:
+  - csharp
+  - vb
+  name: Color
+  nameWithType: PositionColorVertex.Color
+  fullName: Riateu.Graphics.PositionColorVertex.Color
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Structs/PositionColorVertex.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Color Color
+    return:
+      type: MoonWorks.Graphics.Color
+    content.vb: Public Color As Color
+- uid: Riateu.Graphics.PositionColorVertex.#ctor(MoonWorks.Math.Float.Vector3,MoonWorks.Graphics.Color)
+  commentId: M:Riateu.Graphics.PositionColorVertex.#ctor(MoonWorks.Math.Float.Vector3,MoonWorks.Graphics.Color)
+  id: '#ctor(MoonWorks.Math.Float.Vector3,MoonWorks.Graphics.Color)'
+  parent: Riateu.Graphics.PositionColorVertex
+  langs:
+  - csharp
+  - vb
+  name: PositionColorVertex(Vector3, Color)
+  nameWithType: PositionColorVertex.PositionColorVertex(Vector3, Color)
+  fullName: Riateu.Graphics.PositionColorVertex.PositionColorVertex(MoonWorks.Math.Float.Vector3, MoonWorks.Graphics.Color)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Structs/PositionColorVertex.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public PositionColorVertex(Vector3 position, Color color)
+    parameters:
+    - id: position
+      type: MoonWorks.Math.Float.Vector3
+    - id: color
+      type: MoonWorks.Graphics.Color
+    content.vb: Public Sub New(position As Vector3, color As Color)
+  overload: Riateu.Graphics.PositionColorVertex.#ctor*
+  nameWithType.vb: PositionColorVertex.New(Vector3, Color)
+  fullName.vb: Riateu.Graphics.PositionColorVertex.New(MoonWorks.Math.Float.Vector3, MoonWorks.Graphics.Color)
+  name.vb: New(Vector3, Color)
+- uid: Riateu.Graphics.PositionColorVertex.Formats
+  commentId: P:Riateu.Graphics.PositionColorVertex.Formats
+  id: Formats
+  isEii: true
+  parent: Riateu.Graphics.PositionColorVertex
+  langs:
+  - csharp
+  - vb
+  name: Formats
+  nameWithType: PositionColorVertex.Formats
+  fullName: Riateu.Graphics.PositionColorVertex.Formats
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Structs/PositionColorVertex.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: static VertexElementFormat[] Formats { get; }
+    parameters: []
+    return:
+      type: MoonWorks.Graphics.VertexElementFormat[]
+    content.vb: Shared ReadOnly Property Formats As VertexElementFormat()
+  overload: Riateu.Graphics.PositionColorVertex.Formats*
+  implements:
+  - MoonWorks.Graphics.IVertexType.Formats
+references:
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+- uid: MoonWorks.Graphics.IVertexType
+  commentId: T:MoonWorks.Graphics.IVertexType
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/IVertexType.cs
+  name: IVertexType
+  nameWithType: IVertexType
+  fullName: MoonWorks.Graphics.IVertexType
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: MoonWorks.Graphics
+  commentId: N:MoonWorks.Graphics
+  isExternal: true
+  name: MoonWorks.Graphics
+  nameWithType: MoonWorks.Graphics
+  fullName: MoonWorks.Graphics
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: MoonWorks.Math.Float.Vector3
+  commentId: T:MoonWorks.Math.Float.Vector3
+  parent: MoonWorks.Math.Float
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Math/Float/Vector3.cs
+  name: Vector3
+  nameWithType: Vector3
+  fullName: MoonWorks.Math.Float.Vector3
+- uid: MoonWorks.Math.Float
+  commentId: N:MoonWorks.Math.Float
+  isExternal: true
+  name: MoonWorks.Math.Float
+  nameWithType: MoonWorks.Math.Float
+  fullName: MoonWorks.Math.Float
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math
+    name: Math
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Math.Float
+    name: Float
+    isExternal: true
+- uid: MoonWorks.Graphics.Color
+  commentId: T:MoonWorks.Graphics.Color
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Color.cs
+  name: Color
+  nameWithType: Color
+  fullName: MoonWorks.Graphics.Color
+- uid: Riateu.Graphics.PositionColorVertex.#ctor*
+  commentId: Overload:Riateu.Graphics.PositionColorVertex.#ctor
+  isExternal: true
+  href: Riateu.Graphics.PositionColorVertex.html#Riateu_Graphics_PositionColorVertex__ctor_MoonWorks_Math_Float_Vector3_MoonWorks_Graphics_Color_
+  name: PositionColorVertex
+  nameWithType: PositionColorVertex.PositionColorVertex
+  fullName: Riateu.Graphics.PositionColorVertex.PositionColorVertex
+  nameWithType.vb: PositionColorVertex.New
+  fullName.vb: Riateu.Graphics.PositionColorVertex.New
+  name.vb: New
+- uid: Riateu.Graphics.PositionColorVertex.Formats*
+  commentId: Overload:Riateu.Graphics.PositionColorVertex.Formats
+  isExternal: true
+  href: Riateu.Graphics.PositionColorVertex.html#Riateu_Graphics_PositionColorVertex_Formats
+  name: Formats
+  nameWithType: PositionColorVertex.Formats
+  fullName: Riateu.Graphics.PositionColorVertex.Formats
+- uid: MoonWorks.Graphics.IVertexType.Formats
+  commentId: P:MoonWorks.Graphics.IVertexType.Formats
+  parent: MoonWorks.Graphics.IVertexType
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/IVertexType.cs
+  name: Formats
+  nameWithType: IVertexType.Formats
+  fullName: MoonWorks.Graphics.IVertexType.Formats
+- uid: MoonWorks.Graphics.VertexElementFormat[]
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/RefreshEnums.cs
+  name: VertexElementFormat[]
+  nameWithType: VertexElementFormat[]
+  fullName: MoonWorks.Graphics.VertexElementFormat[]
+  nameWithType.vb: VertexElementFormat()
+  fullName.vb: MoonWorks.Graphics.VertexElementFormat()
+  name.vb: VertexElementFormat()
+  spec.csharp:
+  - uid: MoonWorks.Graphics.VertexElementFormat
+    name: VertexElementFormat
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/RefreshEnums.cs
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: MoonWorks.Graphics.VertexElementFormat
+    name: VertexElementFormat
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/RefreshEnums.cs
+  - name: (
+  - name: )

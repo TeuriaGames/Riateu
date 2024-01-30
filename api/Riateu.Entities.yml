@@ -1,0 +1,1257 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Entities
+  commentId: T:Riateu.Entities
+  id: Entities
+  parent: Riateu
+  children:
+  - Riateu.Entities.Add(Riateu.Entity)
+  - Riateu.Entities.Clear
+  - Riateu.Entities.CompareDepth
+  - Riateu.Entities.CompareID
+  - Riateu.Entities.Count
+  - Riateu.Entities.Draw(MoonWorks.Graphics.CommandBuffer,Riateu.Graphics.IBatch)
+  - Riateu.Entities.GetEntities(System.String)
+  - Riateu.Entities.GetEntitiesAndSortedByID
+  - Riateu.Entities.GetEntities``1
+  - Riateu.Entities.GetEntity``1
+  - Riateu.Entities.GetEntity``1(System.String)
+  - Riateu.Entities.GetEnumerator
+  - Riateu.Entities.Item(System.Int32)
+  - Riateu.Entities.Remove(Riateu.Entity)
+  - Riateu.Entities.Scene
+  - Riateu.Entities.UpdateSystem
+  langs:
+  - csharp
+  - vb
+  name: Entities
+  nameWithType: Entities
+  fullName: Riateu.Entities
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: 'public sealed class Entities : IEnumerable<Entity>, IEnumerable'
+    content.vb: Public NotInheritable Class Entities Implements IEnumerable(Of Entity), IEnumerable
+  inheritance:
+  - System.Object
+  implements:
+  - System.Collections.Generic.IEnumerable{Riateu.Entity}
+  - System.Collections.IEnumerable
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Riateu.Entities.CompareDepth
+  commentId: F:Riateu.Entities.CompareDepth
+  id: CompareDepth
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: CompareDepth
+  nameWithType: Entities.CompareDepth
+  fullName: Riateu.Entities.CompareDepth
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Comparison<Entity> CompareDepth
+    return:
+      type: System.Comparison{Riateu.Entity}
+    content.vb: Public Shared CompareDepth As Comparison(Of Entity)
+- uid: Riateu.Entities.CompareID
+  commentId: F:Riateu.Entities.CompareID
+  id: CompareID
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: CompareID
+  nameWithType: Entities.CompareID
+  fullName: Riateu.Entities.CompareID
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Comparison<Entity> CompareID
+    return:
+      type: System.Comparison{Riateu.Entity}
+    content.vb: Public Shared CompareID As Comparison(Of Entity)
+- uid: Riateu.Entities.UpdateSystem
+  commentId: M:Riateu.Entities.UpdateSystem
+  id: UpdateSystem
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: UpdateSystem()
+  nameWithType: Entities.UpdateSystem()
+  fullName: Riateu.Entities.UpdateSystem()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void UpdateSystem()
+    content.vb: Public Sub UpdateSystem()
+  overload: Riateu.Entities.UpdateSystem*
+- uid: Riateu.Entities.Add(Riateu.Entity)
+  commentId: M:Riateu.Entities.Add(Riateu.Entity)
+  id: Add(Riateu.Entity)
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: Add(Entity)
+  nameWithType: Entities.Add(Entity)
+  fullName: Riateu.Entities.Add(Riateu.Entity)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Add(Entity entity)
+    parameters:
+    - id: entity
+      type: Riateu.Entity
+    content.vb: Public Sub Add(entity As Entity)
+  overload: Riateu.Entities.Add*
+- uid: Riateu.Entities.Remove(Riateu.Entity)
+  commentId: M:Riateu.Entities.Remove(Riateu.Entity)
+  id: Remove(Riateu.Entity)
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: Remove(Entity)
+  nameWithType: Entities.Remove(Entity)
+  fullName: Riateu.Entities.Remove(Riateu.Entity)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Remove(Entity entity)
+    parameters:
+    - id: entity
+      type: Riateu.Entity
+    content.vb: Public Sub Remove(entity As Entity)
+  overload: Riateu.Entities.Remove*
+- uid: Riateu.Entities.Clear
+  commentId: M:Riateu.Entities.Clear
+  id: Clear
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: Entities.Clear()
+  fullName: Riateu.Entities.Clear()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: Riateu.Entities.Clear*
+- uid: Riateu.Entities.Draw(MoonWorks.Graphics.CommandBuffer,Riateu.Graphics.IBatch)
+  commentId: M:Riateu.Entities.Draw(MoonWorks.Graphics.CommandBuffer,Riateu.Graphics.IBatch)
+  id: Draw(MoonWorks.Graphics.CommandBuffer,Riateu.Graphics.IBatch)
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: Draw(CommandBuffer, IBatch)
+  nameWithType: Entities.Draw(CommandBuffer, IBatch)
+  fullName: Riateu.Entities.Draw(MoonWorks.Graphics.CommandBuffer, Riateu.Graphics.IBatch)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Draw(CommandBuffer buffer, IBatch spriteBatch)
+    parameters:
+    - id: buffer
+      type: MoonWorks.Graphics.CommandBuffer
+    - id: spriteBatch
+      type: Riateu.Graphics.IBatch
+    content.vb: Public Sub Draw(buffer As CommandBuffer, spriteBatch As IBatch)
+  overload: Riateu.Entities.Draw*
+- uid: Riateu.Entities.GetEntitiesAndSortedByID
+  commentId: M:Riateu.Entities.GetEntitiesAndSortedByID
+  id: GetEntitiesAndSortedByID
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: GetEntitiesAndSortedByID()
+  nameWithType: Entities.GetEntitiesAndSortedByID()
+  fullName: Riateu.Entities.GetEntitiesAndSortedByID()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public List<Entity> GetEntitiesAndSortedByID()
+    return:
+      type: System.Collections.Generic.List{Riateu.Entity}
+    content.vb: Public Function GetEntitiesAndSortedByID() As List(Of Entity)
+  overload: Riateu.Entities.GetEntitiesAndSortedByID*
+- uid: Riateu.Entities.GetEntities``1
+  commentId: M:Riateu.Entities.GetEntities``1
+  id: GetEntities``1
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: GetEntities<T>()
+  nameWithType: Entities.GetEntities<T>()
+  fullName: Riateu.Entities.GetEntities<T>()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: 'public List<T> GetEntities<T>() where T : Entity'
+    typeParameters:
+    - id: T
+    return:
+      type: System.Collections.Generic.List{{T}}
+    content.vb: Public Function GetEntities(Of T As Entity)() As List(Of T)
+  overload: Riateu.Entities.GetEntities*
+  nameWithType.vb: Entities.GetEntities(Of T)()
+  fullName.vb: Riateu.Entities.GetEntities(Of T)()
+  name.vb: GetEntities(Of T)()
+- uid: Riateu.Entities.GetEntities(System.String)
+  commentId: M:Riateu.Entities.GetEntities(System.String)
+  id: GetEntities(System.String)
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: GetEntities(string)
+  nameWithType: Entities.GetEntities(string)
+  fullName: Riateu.Entities.GetEntities(string)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public List<Entity> GetEntities(string name)
+    parameters:
+    - id: name
+      type: System.String
+    return:
+      type: System.Collections.Generic.List{Riateu.Entity}
+    content.vb: Public Function GetEntities(name As String) As List(Of Entity)
+  overload: Riateu.Entities.GetEntities*
+  nameWithType.vb: Entities.GetEntities(String)
+  fullName.vb: Riateu.Entities.GetEntities(String)
+  name.vb: GetEntities(String)
+- uid: Riateu.Entities.GetEntity``1
+  commentId: M:Riateu.Entities.GetEntity``1
+  id: GetEntity``1
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: GetEntity<T>()
+  nameWithType: Entities.GetEntity<T>()
+  fullName: Riateu.Entities.GetEntity<T>()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: 'public T GetEntity<T>() where T : Entity'
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function GetEntity(Of T As Entity)() As T
+  overload: Riateu.Entities.GetEntity*
+  nameWithType.vb: Entities.GetEntity(Of T)()
+  fullName.vb: Riateu.Entities.GetEntity(Of T)()
+  name.vb: GetEntity(Of T)()
+- uid: Riateu.Entities.GetEntity``1(System.String)
+  commentId: M:Riateu.Entities.GetEntity``1(System.String)
+  id: GetEntity``1(System.String)
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: GetEntity<T>(string)
+  nameWithType: Entities.GetEntity<T>(string)
+  fullName: Riateu.Entities.GetEntity<T>(string)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: 'public T GetEntity<T>(string name) where T : Entity'
+    parameters:
+    - id: name
+      type: System.String
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function GetEntity(Of T As Entity)(name As String) As T
+  overload: Riateu.Entities.GetEntity*
+  nameWithType.vb: Entities.GetEntity(Of T)(String)
+  fullName.vb: Riateu.Entities.GetEntity(Of T)(String)
+  name.vb: GetEntity(Of T)(String)
+- uid: Riateu.Entities.GetEnumerator
+  commentId: M:Riateu.Entities.GetEnumerator
+  id: GetEnumerator
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: GetEnumerator()
+  nameWithType: Entities.GetEnumerator()
+  fullName: Riateu.Entities.GetEnumerator()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  example: []
+  syntax:
+    content: public IEnumerator<Entity> GetEnumerator()
+    return:
+      type: System.Collections.Generic.IEnumerator{Riateu.Entity}
+    content.vb: Public Function GetEnumerator() As IEnumerator(Of Entity)
+  overload: Riateu.Entities.GetEnumerator*
+  implements:
+  - System.Collections.Generic.IEnumerable{Riateu.Entity}.GetEnumerator
+- uid: Riateu.Entities.Scene
+  commentId: P:Riateu.Entities.Scene
+  id: Scene
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: Scene
+  nameWithType: Entities.Scene
+  fullName: Riateu.Entities.Scene
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Scene Scene { get; }
+    parameters: []
+    return:
+      type: Riateu.Scene
+    content.vb: Public ReadOnly Property Scene As Scene
+  overload: Riateu.Entities.Scene*
+- uid: Riateu.Entities.Count
+  commentId: P:Riateu.Entities.Count
+  id: Count
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: Entities.Count
+  fullName: Riateu.Entities.Count
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: Riateu.Entities.Count*
+- uid: Riateu.Entities.Item(System.Int32)
+  commentId: P:Riateu.Entities.Item(System.Int32)
+  id: Item(System.Int32)
+  parent: Riateu.Entities
+  langs:
+  - csharp
+  - vb
+  name: this[int]
+  nameWithType: Entities.this[int]
+  fullName: Riateu.Entities.this[int]
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Entities.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Entity this[int idx] { get; }
+    parameters:
+    - id: idx
+      type: System.Int32
+    return:
+      type: Riateu.Entity
+    content.vb: Public ReadOnly Default Property this[](idx As Integer) As Entity
+  overload: Riateu.Entities.Item*
+  nameWithType.vb: Entities.this[](Integer)
+  fullName.vb: Riateu.Entities.this[](Integer)
+  name.vb: this[](Integer)
+references:
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Collections.Generic.IEnumerable{Riateu.Entity}
+  commentId: T:System.Collections.Generic.IEnumerable{Riateu.Entity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<Entity>
+  nameWithType: IEnumerable<Entity>
+  fullName: System.Collections.Generic.IEnumerable<Riateu.Entity>
+  nameWithType.vb: IEnumerable(Of Entity)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Riateu.Entity)
+  name.vb: IEnumerable(Of Entity)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: System.Comparison{Riateu.Entity}
+  commentId: T:System.Comparison{Riateu.Entity}
+  parent: System
+  definition: System.Comparison`1
+  href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  name: Comparison<Entity>
+  nameWithType: Comparison<Entity>
+  fullName: System.Comparison<Riateu.Entity>
+  nameWithType.vb: Comparison(Of Entity)
+  fullName.vb: System.Comparison(Of Riateu.Entity)
+  name.vb: Comparison(Of Entity)
+  spec.csharp:
+  - uid: System.Comparison`1
+    name: Comparison
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  - name: <
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Comparison`1
+    name: Comparison
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: )
+- uid: System.Comparison`1
+  commentId: T:System.Comparison`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  name: Comparison<T>
+  nameWithType: Comparison<T>
+  fullName: System.Comparison<T>
+  nameWithType.vb: Comparison(Of T)
+  fullName.vb: System.Comparison(Of T)
+  name.vb: Comparison(Of T)
+  spec.csharp:
+  - uid: System.Comparison`1
+    name: Comparison
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Comparison`1
+    name: Comparison
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.comparison-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.Entities.UpdateSystem*
+  commentId: Overload:Riateu.Entities.UpdateSystem
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_UpdateSystem
+  name: UpdateSystem
+  nameWithType: Entities.UpdateSystem
+  fullName: Riateu.Entities.UpdateSystem
+- uid: Riateu.Entities.Add*
+  commentId: Overload:Riateu.Entities.Add
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_Add_Riateu_Entity_
+  name: Add
+  nameWithType: Entities.Add
+  fullName: Riateu.Entities.Add
+- uid: Riateu.Entity
+  commentId: T:Riateu.Entity
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Entity.html
+  name: Entity
+  nameWithType: Entity
+  fullName: Riateu.Entity
+- uid: Riateu.Entities.Remove*
+  commentId: Overload:Riateu.Entities.Remove
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_Remove_Riateu_Entity_
+  name: Remove
+  nameWithType: Entities.Remove
+  fullName: Riateu.Entities.Remove
+- uid: Riateu.Entities.Clear*
+  commentId: Overload:Riateu.Entities.Clear
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_Clear
+  name: Clear
+  nameWithType: Entities.Clear
+  fullName: Riateu.Entities.Clear
+- uid: Riateu.Entities.Draw*
+  commentId: Overload:Riateu.Entities.Draw
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_Draw_MoonWorks_Graphics_CommandBuffer_Riateu_Graphics_IBatch_
+  name: Draw
+  nameWithType: Entities.Draw
+  fullName: Riateu.Entities.Draw
+- uid: MoonWorks.Graphics.CommandBuffer
+  commentId: T:MoonWorks.Graphics.CommandBuffer
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/CommandBuffer.cs
+  name: CommandBuffer
+  nameWithType: CommandBuffer
+  fullName: MoonWorks.Graphics.CommandBuffer
+- uid: Riateu.Graphics.IBatch
+  commentId: T:Riateu.Graphics.IBatch
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.IBatch.html
+  name: IBatch
+  nameWithType: IBatch
+  fullName: Riateu.Graphics.IBatch
+- uid: MoonWorks.Graphics
+  commentId: N:MoonWorks.Graphics
+  isExternal: true
+  name: MoonWorks.Graphics
+  nameWithType: MoonWorks.Graphics
+  fullName: MoonWorks.Graphics
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+- uid: Riateu.Entities.GetEntitiesAndSortedByID*
+  commentId: Overload:Riateu.Entities.GetEntitiesAndSortedByID
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_GetEntitiesAndSortedByID
+  name: GetEntitiesAndSortedByID
+  nameWithType: Entities.GetEntitiesAndSortedByID
+  fullName: Riateu.Entities.GetEntitiesAndSortedByID
+- uid: System.Collections.Generic.List{Riateu.Entity}
+  commentId: T:System.Collections.Generic.List{Riateu.Entity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Entity>
+  nameWithType: List<Entity>
+  fullName: System.Collections.Generic.List<Riateu.Entity>
+  nameWithType.vb: List(Of Entity)
+  fullName.vb: System.Collections.Generic.List(Of Riateu.Entity)
+  name.vb: List(Of Entity)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.Entities.GetEntities*
+  commentId: Overload:Riateu.Entities.GetEntities
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_GetEntities__1
+  name: GetEntities
+  nameWithType: Entities.GetEntities
+  fullName: Riateu.Entities.GetEntities
+- uid: System.Collections.Generic.List{{T}}
+  commentId: T:System.Collections.Generic.List{``0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Riateu.Entities.GetEntity*
+  commentId: Overload:Riateu.Entities.GetEntity
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_GetEntity__1
+  name: GetEntity
+  nameWithType: Entities.GetEntity
+  fullName: Riateu.Entities.GetEntity
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Riateu.Entities.GetEnumerator*
+  commentId: Overload:Riateu.Entities.GetEnumerator
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_GetEnumerator
+  name: GetEnumerator
+  nameWithType: Entities.GetEnumerator
+  fullName: Riateu.Entities.GetEnumerator
+- uid: System.Collections.Generic.IEnumerable{Riateu.Entity}.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable{Riateu.Entity}.GetEnumerator
+  parent: System.Collections.Generic.IEnumerable{Riateu.Entity}
+  definition: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<Entity>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<Riateu.Entity>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of Entity).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Riateu.Entity).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable{Riateu.Entity}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable{Riateu.Entity}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator{Riateu.Entity}
+  commentId: T:System.Collections.Generic.IEnumerator{Riateu.Entity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerator`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<Entity>
+  nameWithType: IEnumerator<Entity>
+  fullName: System.Collections.Generic.IEnumerator<Riateu.Entity>
+  nameWithType.vb: IEnumerator(Of Entity)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of Riateu.Entity)
+  name.vb: IEnumerator(Of Entity)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Riateu.Entity
+    name: Entity
+    isExternal: true
+    href: Riateu.Entity.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable`1.GetEnumerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator`1
+  commentId: T:System.Collections.Generic.IEnumerator`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.Entities.Scene*
+  commentId: Overload:Riateu.Entities.Scene
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_Scene
+  name: Scene
+  nameWithType: Entities.Scene
+  fullName: Riateu.Entities.Scene
+- uid: Riateu.Scene
+  commentId: T:Riateu.Scene
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Scene.html
+  name: Scene
+  nameWithType: Scene
+  fullName: Riateu.Scene
+- uid: Riateu.Entities.Count*
+  commentId: Overload:Riateu.Entities.Count
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_Count
+  name: Count
+  nameWithType: Entities.Count
+  fullName: Riateu.Entities.Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Riateu.Entities.Item*
+  commentId: Overload:Riateu.Entities.Item
+  isExternal: true
+  href: Riateu.Entities.html#Riateu_Entities_Item_System_Int32_
+  name: this
+  nameWithType: Entities.this
+  fullName: Riateu.Entities.this
+  nameWithType.vb: Entities.this[]
+  fullName.vb: Riateu.Entities.this[]
+  name.vb: this[]

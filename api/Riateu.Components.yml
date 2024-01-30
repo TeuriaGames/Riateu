@@ -1,0 +1,128 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Components
+  commentId: N:Riateu.Components
+  id: Riateu.Components
+  children:
+  - Riateu.Components.AnimatedSprite
+  - Riateu.Components.Animation
+  - Riateu.Components.Coroutine
+  - Riateu.Components.GraphicsComponent
+  - Riateu.Components.InstancedTilemap
+  - Riateu.Components.InstancedVertex
+  - Riateu.Components.PhysicsComponent
+  - Riateu.Components.SpriteRenderer
+  - Riateu.Components.Tilemap
+  - Riateu.Components.TilemapMode
+  langs:
+  - csharp
+  - vb
+  name: Riateu.Components
+  nameWithType: Riateu.Components
+  fullName: Riateu.Components
+  type: Namespace
+  assemblies:
+  - Riateu
+references:
+- uid: Riateu.Components.AnimatedSprite
+  commentId: T:Riateu.Components.AnimatedSprite
+  parent: Riateu.Components
+  isExternal: true
+  href: Riateu.Components.AnimatedSprite.html
+  name: AnimatedSprite
+  nameWithType: AnimatedSprite
+  fullName: Riateu.Components.AnimatedSprite
+- uid: Riateu.Components.Animation
+  commentId: T:Riateu.Components.Animation
+  parent: Riateu.Components
+  isExternal: true
+  href: Riateu.Components.Animation.html
+  name: Animation
+  nameWithType: Animation
+  fullName: Riateu.Components.Animation
+- uid: Riateu.Components.Coroutine
+  commentId: T:Riateu.Components.Coroutine
+  isExternal: true
+  href: Riateu.Components.Coroutine.html
+  name: Coroutine
+  nameWithType: Coroutine
+  fullName: Riateu.Components.Coroutine
+- uid: Riateu.Components.GraphicsComponent
+  commentId: T:Riateu.Components.GraphicsComponent
+  parent: Riateu.Components
+  isExternal: true
+  href: Riateu.Components.GraphicsComponent.html
+  name: GraphicsComponent
+  nameWithType: GraphicsComponent
+  fullName: Riateu.Components.GraphicsComponent
+- uid: Riateu.Components.InstancedTilemap
+  commentId: T:Riateu.Components.InstancedTilemap
+  isExternal: true
+  href: Riateu.Components.InstancedTilemap.html
+  name: InstancedTilemap
+  nameWithType: InstancedTilemap
+  fullName: Riateu.Components.InstancedTilemap
+- uid: Riateu.Components.PhysicsComponent
+  commentId: T:Riateu.Components.PhysicsComponent
+  parent: Riateu.Components
+  isExternal: true
+  href: Riateu.Components.PhysicsComponent.html
+  name: PhysicsComponent
+  nameWithType: PhysicsComponent
+  fullName: Riateu.Components.PhysicsComponent
+- uid: Riateu.Components.SpriteRenderer
+  commentId: T:Riateu.Components.SpriteRenderer
+  isExternal: true
+  href: Riateu.Components.SpriteRenderer.html
+  name: SpriteRenderer
+  nameWithType: SpriteRenderer
+  fullName: Riateu.Components.SpriteRenderer
+- uid: Riateu.Components.TilemapMode
+  commentId: T:Riateu.Components.TilemapMode
+  parent: Riateu.Components
+  isExternal: true
+  href: Riateu.Components.TilemapMode.html
+  name: TilemapMode
+  nameWithType: TilemapMode
+  fullName: Riateu.Components.TilemapMode
+- uid: Riateu.Components.Tilemap
+  commentId: T:Riateu.Components.Tilemap
+  isExternal: true
+  href: Riateu.Components.Tilemap.html
+  name: Tilemap
+  nameWithType: Tilemap
+  fullName: Riateu.Components.Tilemap
+- uid: Riateu.Components.InstancedVertex
+  commentId: T:Riateu.Components.InstancedVertex
+  isExternal: true
+  href: Riateu.Components.InstancedVertex.html
+  name: InstancedVertex
+  nameWithType: InstancedVertex
+  fullName: Riateu.Components.InstancedVertex
+- uid: Riateu.Components
+  commentId: N:Riateu.Components
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Components
+  nameWithType: Riateu.Components
+  fullName: Riateu.Components
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Components
+    name: Components
+    isExternal: true
+    href: Riateu.Components.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Components
+    name: Components
+    isExternal: true
+    href: Riateu.Components.html

@@ -1,0 +1,628 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.RiateuExtensions
+  commentId: T:Riateu.RiateuExtensions
+  id: RiateuExtensions
+  parent: Riateu
+  children:
+  - Riateu.RiateuExtensions.Font_Handle(MoonWorks.Graphics.Font.Font)
+  - Riateu.RiateuExtensions.Font_StringBytes(MoonWorks.Graphics.Font.Font)
+  - Riateu.RiateuExtensions.Font_StringBytesLength(MoonWorks.Graphics.Font.Font)
+  - Riateu.RiateuExtensions.TextBounds(MoonWorks.Graphics.Font.Font,System.ReadOnlySpan{System.Char},System.Int32,MoonWorks.Graphics.Font.HorizontalAlignment,MoonWorks.Graphics.Font.VerticalAlignment,WellspringCS.Wellspring.Rectangle@)
+  langs:
+  - csharp
+  - vb
+  name: RiateuExtensions
+  nameWithType: RiateuExtensions
+  fullName: Riateu.RiateuExtensions
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Extensions.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static class RiateuExtensions
+    content.vb: Public Module RiateuExtensions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+- uid: Riateu.RiateuExtensions.Font_StringBytesLength(MoonWorks.Graphics.Font.Font)
+  commentId: M:Riateu.RiateuExtensions.Font_StringBytesLength(MoonWorks.Graphics.Font.Font)
+  id: Font_StringBytesLength(MoonWorks.Graphics.Font.Font)
+  parent: Riateu.RiateuExtensions
+  langs:
+  - csharp
+  - vb
+  name: Font_StringBytesLength(Font)
+  nameWithType: RiateuExtensions.Font_StringBytesLength(Font)
+  fullName: Riateu.RiateuExtensions.Font_StringBytesLength(MoonWorks.Graphics.Font.Font)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Extensions.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static ref int Font_StringBytesLength(Font font)
+    parameters:
+    - id: font
+      type: MoonWorks.Graphics.Font.Font
+    return:
+      type: System.Int32
+    content.vb: Public Shared ByRef Function Font_StringBytesLength(font As Font) As Integer
+  overload: Riateu.RiateuExtensions.Font_StringBytesLength*
+- uid: Riateu.RiateuExtensions.Font_StringBytes(MoonWorks.Graphics.Font.Font)
+  commentId: M:Riateu.RiateuExtensions.Font_StringBytes(MoonWorks.Graphics.Font.Font)
+  id: Font_StringBytes(MoonWorks.Graphics.Font.Font)
+  parent: Riateu.RiateuExtensions
+  langs:
+  - csharp
+  - vb
+  name: Font_StringBytes(Font)
+  nameWithType: RiateuExtensions.Font_StringBytes(Font)
+  fullName: Riateu.RiateuExtensions.Font_StringBytes(MoonWorks.Graphics.Font.Font)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Extensions.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static ref byte* Font_StringBytes(Font font)
+    parameters:
+    - id: font
+      type: MoonWorks.Graphics.Font.Font
+    return:
+      type: System.Byte*
+    content.vb: Public Shared ByRef Function Font_StringBytes(font As Font) As Byte*
+  overload: Riateu.RiateuExtensions.Font_StringBytes*
+- uid: Riateu.RiateuExtensions.Font_Handle(MoonWorks.Graphics.Font.Font)
+  commentId: M:Riateu.RiateuExtensions.Font_Handle(MoonWorks.Graphics.Font.Font)
+  id: Font_Handle(MoonWorks.Graphics.Font.Font)
+  parent: Riateu.RiateuExtensions
+  langs:
+  - csharp
+  - vb
+  name: Font_Handle(Font)
+  nameWithType: RiateuExtensions.Font_Handle(Font)
+  fullName: Riateu.RiateuExtensions.Font_Handle(MoonWorks.Graphics.Font.Font)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Extensions.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static ref nint Font_Handle(Font font)
+    parameters:
+    - id: font
+      type: MoonWorks.Graphics.Font.Font
+    return:
+      type: System.IntPtr
+    content.vb: Public Shared ByRef Function Font_Handle(font As Font) As IntPtr
+  overload: Riateu.RiateuExtensions.Font_Handle*
+- uid: Riateu.RiateuExtensions.TextBounds(MoonWorks.Graphics.Font.Font,System.ReadOnlySpan{System.Char},System.Int32,MoonWorks.Graphics.Font.HorizontalAlignment,MoonWorks.Graphics.Font.VerticalAlignment,WellspringCS.Wellspring.Rectangle@)
+  commentId: M:Riateu.RiateuExtensions.TextBounds(MoonWorks.Graphics.Font.Font,System.ReadOnlySpan{System.Char},System.Int32,MoonWorks.Graphics.Font.HorizontalAlignment,MoonWorks.Graphics.Font.VerticalAlignment,WellspringCS.Wellspring.Rectangle@)
+  id: TextBounds(MoonWorks.Graphics.Font.Font,System.ReadOnlySpan{System.Char},System.Int32,MoonWorks.Graphics.Font.HorizontalAlignment,MoonWorks.Graphics.Font.VerticalAlignment,WellspringCS.Wellspring.Rectangle@)
+  isExtensionMethod: true
+  parent: Riateu.RiateuExtensions
+  langs:
+  - csharp
+  - vb
+  name: TextBounds(Font, ReadOnlySpan<char>, int, HorizontalAlignment, VerticalAlignment, out Rectangle)
+  nameWithType: RiateuExtensions.TextBounds(Font, ReadOnlySpan<char>, int, HorizontalAlignment, VerticalAlignment, out Wellspring.Rectangle)
+  fullName: Riateu.RiateuExtensions.TextBounds(MoonWorks.Graphics.Font.Font, System.ReadOnlySpan<char>, int, MoonWorks.Graphics.Font.HorizontalAlignment, MoonWorks.Graphics.Font.VerticalAlignment, out WellspringCS.Wellspring.Rectangle)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Extensions.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static bool TextBounds(this Font font, ReadOnlySpan<char> text, int pixelSize, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment, out Wellspring.Rectangle rectangle)
+    parameters:
+    - id: font
+      type: MoonWorks.Graphics.Font.Font
+    - id: text
+      type: System.ReadOnlySpan{System.Char}
+    - id: pixelSize
+      type: System.Int32
+    - id: horizontalAlignment
+      type: MoonWorks.Graphics.Font.HorizontalAlignment
+    - id: verticalAlignment
+      type: MoonWorks.Graphics.Font.VerticalAlignment
+    - id: rectangle
+      type: WellspringCS.Wellspring.Rectangle
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function TextBounds(font As Font, text As ReadOnlySpan(Of Char), pixelSize As Integer, horizontalAlignment As HorizontalAlignment, verticalAlignment As VerticalAlignment, rectangle As Wellspring.Rectangle) As Boolean
+  overload: Riateu.RiateuExtensions.TextBounds*
+  nameWithType.vb: RiateuExtensions.TextBounds(Font, ReadOnlySpan(Of Char), Integer, HorizontalAlignment, VerticalAlignment, Wellspring.Rectangle)
+  fullName.vb: Riateu.RiateuExtensions.TextBounds(MoonWorks.Graphics.Font.Font, System.ReadOnlySpan(Of Char), Integer, MoonWorks.Graphics.Font.HorizontalAlignment, MoonWorks.Graphics.Font.VerticalAlignment, WellspringCS.Wellspring.Rectangle)
+  name.vb: TextBounds(Font, ReadOnlySpan(Of Char), Integer, HorizontalAlignment, VerticalAlignment, Rectangle)
+references:
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Riateu.RiateuExtensions.Font_StringBytesLength*
+  commentId: Overload:Riateu.RiateuExtensions.Font_StringBytesLength
+  isExternal: true
+  href: Riateu.RiateuExtensions.html#Riateu_RiateuExtensions_Font_StringBytesLength_MoonWorks_Graphics_Font_Font_
+  name: Font_StringBytesLength
+  nameWithType: RiateuExtensions.Font_StringBytesLength
+  fullName: Riateu.RiateuExtensions.Font_StringBytesLength
+- uid: MoonWorks.Graphics.Font.Font
+  commentId: T:MoonWorks.Graphics.Font.Font
+  parent: MoonWorks.Graphics.Font
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Font/Font.cs
+  name: Font
+  nameWithType: Font
+  fullName: MoonWorks.Graphics.Font.Font
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: MoonWorks.Graphics.Font
+  commentId: N:MoonWorks.Graphics.Font
+  isExternal: true
+  name: MoonWorks.Graphics.Font
+  nameWithType: MoonWorks.Graphics.Font
+  fullName: MoonWorks.Graphics.Font
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics.Font
+    name: Font
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics.Font
+    name: Font
+    isExternal: true
+- uid: Riateu.RiateuExtensions.Font_StringBytes*
+  commentId: Overload:Riateu.RiateuExtensions.Font_StringBytes
+  isExternal: true
+  href: Riateu.RiateuExtensions.html#Riateu_RiateuExtensions_Font_StringBytes_MoonWorks_Graphics_Font_Font_
+  name: Font_StringBytes
+  nameWithType: RiateuExtensions.Font_StringBytes
+  fullName: Riateu.RiateuExtensions.Font_StringBytes
+- uid: System.Byte*
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte*
+  nameWithType: byte*
+  fullName: byte*
+  nameWithType.vb: Byte*
+  fullName.vb: Byte*
+  name.vb: Byte*
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '*'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '*'
+- uid: Riateu.RiateuExtensions.Font_Handle*
+  commentId: Overload:Riateu.RiateuExtensions.Font_Handle
+  isExternal: true
+  href: Riateu.RiateuExtensions.html#Riateu_RiateuExtensions_Font_Handle_MoonWorks_Graphics_Font_Font_
+  name: Font_Handle
+  nameWithType: RiateuExtensions.Font_Handle
+  fullName: Riateu.RiateuExtensions.Font_Handle
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: Riateu.RiateuExtensions.TextBounds*
+  commentId: Overload:Riateu.RiateuExtensions.TextBounds
+  isExternal: true
+  href: Riateu.RiateuExtensions.html#Riateu_RiateuExtensions_TextBounds_MoonWorks_Graphics_Font_Font_System_ReadOnlySpan_System_Char__System_Int32_MoonWorks_Graphics_Font_HorizontalAlignment_MoonWorks_Graphics_Font_VerticalAlignment_WellspringCS_Wellspring_Rectangle__
+  name: TextBounds
+  nameWithType: RiateuExtensions.TextBounds
+  fullName: Riateu.RiateuExtensions.TextBounds
+- uid: System.ReadOnlySpan{System.Char}
+  commentId: T:System.ReadOnlySpan{System.Char}
+  parent: System
+  definition: System.ReadOnlySpan`1
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<char>
+  nameWithType: ReadOnlySpan<char>
+  fullName: System.ReadOnlySpan<char>
+  nameWithType.vb: ReadOnlySpan(Of Char)
+  fullName.vb: System.ReadOnlySpan(Of Char)
+  name.vb: ReadOnlySpan(Of Char)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - uid: System.Char
+    name: char
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.char
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Char
+    name: Char
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.char
+  - name: )
+- uid: MoonWorks.Graphics.Font.HorizontalAlignment
+  commentId: T:MoonWorks.Graphics.Font.HorizontalAlignment
+  parent: MoonWorks.Graphics.Font
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Font/Enums.cs
+  name: HorizontalAlignment
+  nameWithType: HorizontalAlignment
+  fullName: MoonWorks.Graphics.Font.HorizontalAlignment
+- uid: MoonWorks.Graphics.Font.VerticalAlignment
+  commentId: T:MoonWorks.Graphics.Font.VerticalAlignment
+  parent: MoonWorks.Graphics.Font
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Font/Enums.cs
+  name: VerticalAlignment
+  nameWithType: VerticalAlignment
+  fullName: MoonWorks.Graphics.Font.VerticalAlignment
+- uid: WellspringCS.Wellspring.Rectangle
+  commentId: T:WellspringCS.Wellspring.Rectangle
+  parent: WellspringCS
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/lib/WellspringCS/WellspringCS.cs
+  name: Wellspring.Rectangle
+  nameWithType: Wellspring.Rectangle
+  fullName: WellspringCS.Wellspring.Rectangle
+  spec.csharp:
+  - uid: WellspringCS.Wellspring
+    name: Wellspring
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/lib/WellspringCS/WellspringCS.cs
+  - name: .
+  - uid: WellspringCS.Wellspring.Rectangle
+    name: Rectangle
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/lib/WellspringCS/WellspringCS.cs
+  spec.vb:
+  - uid: WellspringCS.Wellspring
+    name: Wellspring
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/lib/WellspringCS/WellspringCS.cs
+  - name: .
+  - uid: WellspringCS.Wellspring.Rectangle
+    name: Rectangle
+    isExternal: true
+    href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/lib/WellspringCS/WellspringCS.cs
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.ReadOnlySpan`1
+  commentId: T:System.ReadOnlySpan`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  name: ReadOnlySpan<T>
+  nameWithType: ReadOnlySpan<T>
+  fullName: System.ReadOnlySpan<T>
+  nameWithType.vb: ReadOnlySpan(Of T)
+  fullName.vb: System.ReadOnlySpan(Of T)
+  name.vb: ReadOnlySpan(Of T)
+  spec.csharp:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.ReadOnlySpan`1
+    name: ReadOnlySpan
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.readonlyspan-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: WellspringCS
+  commentId: N:WellspringCS
+  isExternal: true
+  name: WellspringCS
+  nameWithType: WellspringCS
+  fullName: WellspringCS

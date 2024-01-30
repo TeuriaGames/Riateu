@@ -1,0 +1,719 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Graphics.SpriteTexture
+  commentId: T:Riateu.Graphics.SpriteTexture
+  id: SpriteTexture
+  parent: Riateu.Graphics
+  children:
+  - Riateu.Graphics.SpriteTexture.#ctor(MoonWorks.Graphics.Texture)
+  - Riateu.Graphics.SpriteTexture.#ctor(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Rect)
+  - Riateu.Graphics.SpriteTexture.Equals(Riateu.Graphics.SpriteTexture)
+  - Riateu.Graphics.SpriteTexture.FlipUV(Riateu.Graphics.FlipMode)
+  - Riateu.Graphics.SpriteTexture.Height
+  - Riateu.Graphics.SpriteTexture.Source
+  - Riateu.Graphics.SpriteTexture.UV
+  - Riateu.Graphics.SpriteTexture.Width
+  langs:
+  - csharp
+  - vb
+  name: SpriteTexture
+  nameWithType: SpriteTexture
+  fullName: Riateu.Graphics.SpriteTexture
+  type: Struct
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: 'public struct SpriteTexture : IEquatable<SpriteTexture>'
+    content.vb: Public Structure SpriteTexture Implements IEquatable(Of SpriteTexture)
+  implements:
+  - System.IEquatable{Riateu.Graphics.SpriteTexture}
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.GetType
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: Riateu.Graphics.SpriteTexture.UV
+  commentId: F:Riateu.Graphics.SpriteTexture.UV
+  id: UV
+  parent: Riateu.Graphics.SpriteTexture
+  langs:
+  - csharp
+  - vb
+  name: UV
+  nameWithType: SpriteTexture.UV
+  fullName: Riateu.Graphics.SpriteTexture.UV
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public UV UV
+    return:
+      type: Riateu.Graphics.UV
+    content.vb: Public UV As UV
+- uid: Riateu.Graphics.SpriteTexture.Source
+  commentId: F:Riateu.Graphics.SpriteTexture.Source
+  id: Source
+  parent: Riateu.Graphics.SpriteTexture
+  langs:
+  - csharp
+  - vb
+  name: Source
+  nameWithType: SpriteTexture.Source
+  fullName: Riateu.Graphics.SpriteTexture.Source
+  type: Field
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public Rect Source
+    return:
+      type: MoonWorks.Graphics.Rect
+    content.vb: Public Source As Rect
+- uid: Riateu.Graphics.SpriteTexture.#ctor(MoonWorks.Graphics.Texture)
+  commentId: M:Riateu.Graphics.SpriteTexture.#ctor(MoonWorks.Graphics.Texture)
+  id: '#ctor(MoonWorks.Graphics.Texture)'
+  parent: Riateu.Graphics.SpriteTexture
+  langs:
+  - csharp
+  - vb
+  name: SpriteTexture(Texture)
+  nameWithType: SpriteTexture.SpriteTexture(Texture)
+  fullName: Riateu.Graphics.SpriteTexture.SpriteTexture(MoonWorks.Graphics.Texture)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public SpriteTexture(Texture texture)
+    parameters:
+    - id: texture
+      type: MoonWorks.Graphics.Texture
+    content.vb: Public Sub New(texture As Texture)
+  overload: Riateu.Graphics.SpriteTexture.#ctor*
+  nameWithType.vb: SpriteTexture.New(Texture)
+  fullName.vb: Riateu.Graphics.SpriteTexture.New(MoonWorks.Graphics.Texture)
+  name.vb: New(Texture)
+- uid: Riateu.Graphics.SpriteTexture.#ctor(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Rect)
+  commentId: M:Riateu.Graphics.SpriteTexture.#ctor(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Rect)
+  id: '#ctor(MoonWorks.Graphics.Texture,MoonWorks.Graphics.Rect)'
+  parent: Riateu.Graphics.SpriteTexture
+  langs:
+  - csharp
+  - vb
+  name: SpriteTexture(Texture, Rect)
+  nameWithType: SpriteTexture.SpriteTexture(Texture, Rect)
+  fullName: Riateu.Graphics.SpriteTexture.SpriteTexture(MoonWorks.Graphics.Texture, MoonWorks.Graphics.Rect)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public SpriteTexture(Texture texture, Rect source)
+    parameters:
+    - id: texture
+      type: MoonWorks.Graphics.Texture
+    - id: source
+      type: MoonWorks.Graphics.Rect
+    content.vb: Public Sub New(texture As Texture, source As Rect)
+  overload: Riateu.Graphics.SpriteTexture.#ctor*
+  nameWithType.vb: SpriteTexture.New(Texture, Rect)
+  fullName.vb: Riateu.Graphics.SpriteTexture.New(MoonWorks.Graphics.Texture, MoonWorks.Graphics.Rect)
+  name.vb: New(Texture, Rect)
+- uid: Riateu.Graphics.SpriteTexture.Equals(Riateu.Graphics.SpriteTexture)
+  commentId: M:Riateu.Graphics.SpriteTexture.Equals(Riateu.Graphics.SpriteTexture)
+  id: Equals(Riateu.Graphics.SpriteTexture)
+  parent: Riateu.Graphics.SpriteTexture
+  langs:
+  - csharp
+  - vb
+  name: Equals(SpriteTexture)
+  nameWithType: SpriteTexture.Equals(SpriteTexture)
+  fullName: Riateu.Graphics.SpriteTexture.Equals(Riateu.Graphics.SpriteTexture)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  example: []
+  syntax:
+    content: public bool Equals(SpriteTexture other)
+    parameters:
+    - id: other
+      type: Riateu.Graphics.SpriteTexture
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As SpriteTexture) As Boolean
+  overload: Riateu.Graphics.SpriteTexture.Equals*
+  implements:
+  - System.IEquatable{Riateu.Graphics.SpriteTexture}.Equals(Riateu.Graphics.SpriteTexture)
+- uid: Riateu.Graphics.SpriteTexture.FlipUV(Riateu.Graphics.FlipMode)
+  commentId: M:Riateu.Graphics.SpriteTexture.FlipUV(Riateu.Graphics.FlipMode)
+  id: FlipUV(Riateu.Graphics.FlipMode)
+  parent: Riateu.Graphics.SpriteTexture
+  langs:
+  - csharp
+  - vb
+  name: FlipUV(FlipMode)
+  nameWithType: SpriteTexture.FlipUV(FlipMode)
+  fullName: Riateu.Graphics.SpriteTexture.FlipUV(Riateu.Graphics.FlipMode)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public void FlipUV(FlipMode flipMode)
+    parameters:
+    - id: flipMode
+      type: Riateu.Graphics.FlipMode
+    content.vb: Public Sub FlipUV(flipMode As FlipMode)
+  overload: Riateu.Graphics.SpriteTexture.FlipUV*
+- uid: Riateu.Graphics.SpriteTexture.Width
+  commentId: P:Riateu.Graphics.SpriteTexture.Width
+  id: Width
+  parent: Riateu.Graphics.SpriteTexture
+  langs:
+  - csharp
+  - vb
+  name: Width
+  nameWithType: SpriteTexture.Width
+  fullName: Riateu.Graphics.SpriteTexture.Width
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public int Width { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Width As Integer
+  overload: Riateu.Graphics.SpriteTexture.Width*
+- uid: Riateu.Graphics.SpriteTexture.Height
+  commentId: P:Riateu.Graphics.SpriteTexture.Height
+  id: Height
+  parent: Riateu.Graphics.SpriteTexture
+  langs:
+  - csharp
+  - vb
+  name: Height
+  nameWithType: SpriteTexture.Height
+  fullName: Riateu.Graphics.SpriteTexture.Height
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Graphics/SpriteTexture.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu.Graphics
+  syntax:
+    content: public int Height { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Height As Integer
+  overload: Riateu.Graphics.SpriteTexture.Height*
+references:
+- uid: Riateu.Graphics
+  commentId: N:Riateu.Graphics
+  isExternal: true
+  href: Riateu.html
+  name: Riateu.Graphics
+  nameWithType: Riateu.Graphics
+  fullName: Riateu.Graphics
+  spec.csharp:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+  spec.vb:
+  - uid: Riateu
+    name: Riateu
+    isExternal: true
+    href: Riateu.html
+  - name: .
+  - uid: Riateu.Graphics
+    name: Graphics
+    isExternal: true
+    href: Riateu.Graphics.html
+- uid: System.IEquatable{Riateu.Graphics.SpriteTexture}
+  commentId: T:System.IEquatable{Riateu.Graphics.SpriteTexture}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<SpriteTexture>
+  nameWithType: IEquatable<SpriteTexture>
+  fullName: System.IEquatable<Riateu.Graphics.SpriteTexture>
+  nameWithType.vb: IEquatable(Of SpriteTexture)
+  fullName.vb: System.IEquatable(Of Riateu.Graphics.SpriteTexture)
+  name.vb: IEquatable(Of SpriteTexture)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: Riateu.Graphics.SpriteTexture
+    name: SpriteTexture
+    isExternal: true
+    href: Riateu.Graphics.SpriteTexture.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Riateu.Graphics.SpriteTexture
+    name: SpriteTexture
+    isExternal: true
+    href: Riateu.Graphics.SpriteTexture.html
+  - name: )
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Riateu.Graphics.UV
+  commentId: T:Riateu.Graphics.UV
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.UV.html
+  name: UV
+  nameWithType: UV
+  fullName: Riateu.Graphics.UV
+- uid: MoonWorks.Graphics.Rect
+  commentId: T:MoonWorks.Graphics.Rect
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/RefreshStructs.cs
+  name: Rect
+  nameWithType: Rect
+  fullName: MoonWorks.Graphics.Rect
+- uid: MoonWorks.Graphics
+  commentId: N:MoonWorks.Graphics
+  isExternal: true
+  name: MoonWorks.Graphics
+  nameWithType: MoonWorks.Graphics
+  fullName: MoonWorks.Graphics
+  spec.csharp:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+  spec.vb:
+  - uid: MoonWorks
+    name: MoonWorks
+    isExternal: true
+  - name: .
+  - uid: MoonWorks.Graphics
+    name: Graphics
+    isExternal: true
+- uid: Riateu.Graphics.SpriteTexture.#ctor*
+  commentId: Overload:Riateu.Graphics.SpriteTexture.#ctor
+  isExternal: true
+  href: Riateu.Graphics.SpriteTexture.html#Riateu_Graphics_SpriteTexture__ctor_MoonWorks_Graphics_Texture_
+  name: SpriteTexture
+  nameWithType: SpriteTexture.SpriteTexture
+  fullName: Riateu.Graphics.SpriteTexture.SpriteTexture
+  nameWithType.vb: SpriteTexture.New
+  fullName.vb: Riateu.Graphics.SpriteTexture.New
+  name.vb: New
+- uid: MoonWorks.Graphics.Texture
+  commentId: T:MoonWorks.Graphics.Texture
+  parent: MoonWorks.Graphics
+  isExternal: true
+  href: https://github.com/MoonsideGames/MoonWorks/blob/42e3ac91af1c5251235f226e76443f0c5675dcbd/src/Graphics/Resources/Texture.cs
+  name: Texture
+  nameWithType: Texture
+  fullName: MoonWorks.Graphics.Texture
+- uid: Riateu.Graphics.SpriteTexture.Equals*
+  commentId: Overload:Riateu.Graphics.SpriteTexture.Equals
+  isExternal: true
+  href: Riateu.Graphics.SpriteTexture.html#Riateu_Graphics_SpriteTexture_Equals_Riateu_Graphics_SpriteTexture_
+  name: Equals
+  nameWithType: SpriteTexture.Equals
+  fullName: Riateu.Graphics.SpriteTexture.Equals
+- uid: System.IEquatable{Riateu.Graphics.SpriteTexture}.Equals(Riateu.Graphics.SpriteTexture)
+  commentId: M:System.IEquatable{Riateu.Graphics.SpriteTexture}.Equals(Riateu.Graphics.SpriteTexture)
+  parent: System.IEquatable{Riateu.Graphics.SpriteTexture}
+  definition: System.IEquatable`1.Equals(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(SpriteTexture)
+  nameWithType: IEquatable<SpriteTexture>.Equals(SpriteTexture)
+  fullName: System.IEquatable<Riateu.Graphics.SpriteTexture>.Equals(Riateu.Graphics.SpriteTexture)
+  nameWithType.vb: IEquatable(Of SpriteTexture).Equals(SpriteTexture)
+  fullName.vb: System.IEquatable(Of Riateu.Graphics.SpriteTexture).Equals(Riateu.Graphics.SpriteTexture)
+  spec.csharp:
+  - uid: System.IEquatable{Riateu.Graphics.SpriteTexture}.Equals(Riateu.Graphics.SpriteTexture)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - uid: Riateu.Graphics.SpriteTexture
+    name: SpriteTexture
+    isExternal: true
+    href: Riateu.Graphics.SpriteTexture.html
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable{Riateu.Graphics.SpriteTexture}.Equals(Riateu.Graphics.SpriteTexture)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - uid: Riateu.Graphics.SpriteTexture
+    name: SpriteTexture
+    isExternal: true
+    href: Riateu.Graphics.SpriteTexture.html
+  - name: )
+- uid: Riateu.Graphics.SpriteTexture
+  commentId: T:Riateu.Graphics.SpriteTexture
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.SpriteTexture.html
+  name: SpriteTexture
+  nameWithType: SpriteTexture
+  fullName: Riateu.Graphics.SpriteTexture
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+- uid: Riateu.Graphics.SpriteTexture.FlipUV*
+  commentId: Overload:Riateu.Graphics.SpriteTexture.FlipUV
+  isExternal: true
+  href: Riateu.Graphics.SpriteTexture.html#Riateu_Graphics_SpriteTexture_FlipUV_Riateu_Graphics_FlipMode_
+  name: FlipUV
+  nameWithType: SpriteTexture.FlipUV
+  fullName: Riateu.Graphics.SpriteTexture.FlipUV
+- uid: Riateu.Graphics.FlipMode
+  commentId: T:Riateu.Graphics.FlipMode
+  parent: Riateu.Graphics
+  isExternal: true
+  href: Riateu.Graphics.FlipMode.html
+  name: FlipMode
+  nameWithType: FlipMode
+  fullName: Riateu.Graphics.FlipMode
+- uid: Riateu.Graphics.SpriteTexture.Width*
+  commentId: Overload:Riateu.Graphics.SpriteTexture.Width
+  isExternal: true
+  href: Riateu.Graphics.SpriteTexture.html#Riateu_Graphics_SpriteTexture_Width
+  name: Width
+  nameWithType: SpriteTexture.Width
+  fullName: Riateu.Graphics.SpriteTexture.Width
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Riateu.Graphics.SpriteTexture.Height*
+  commentId: Overload:Riateu.Graphics.SpriteTexture.Height
+  isExternal: true
+  href: Riateu.Graphics.SpriteTexture.html#Riateu_Graphics_SpriteTexture_Height
+  name: Height
+  nameWithType: SpriteTexture.Height
+  fullName: Riateu.Graphics.SpriteTexture.Height

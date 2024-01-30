@@ -1,0 +1,812 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu.Array2D`1
+  commentId: T:Riateu.Array2D`1
+  id: Array2D`1
+  parent: Riateu
+  children:
+  - Riateu.Array2D`1.#ctor(System.Int32,System.Int32)
+  - Riateu.Array2D`1.AsArray
+  - Riateu.Array2D`1.Clone
+  - Riateu.Array2D`1.Columns
+  - Riateu.Array2D`1.Empty
+  - Riateu.Array2D`1.Fill(`0)
+  - Riateu.Array2D`1.FromArray(System.Int32,System.Int32,`0[])
+  - Riateu.Array2D`1.FromArray2D(`0[0:,0:])
+  - Riateu.Array2D`1.Item(System.Int32,System.Int32)
+  - Riateu.Array2D`1.Resize(System.Int32,System.Int32)
+  - Riateu.Array2D`1.Resize(System.Int32,System.Int32,`0)
+  - Riateu.Array2D`1.Rows
+  - Riateu.Array2D`1.ToArray
+  langs:
+  - csharp
+  - vb
+  name: Array2D<T>
+  nameWithType: Array2D<T>
+  fullName: Riateu.Array2D<T>
+  type: Class
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public sealed class Array2D<T>
+    typeParameters:
+    - id: T
+    content.vb: Public NotInheritable Class Array2D(Of T)
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.GetType
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  nameWithType.vb: Array2D(Of T)
+  fullName.vb: Riateu.Array2D(Of T)
+  name.vb: Array2D(Of T)
+- uid: Riateu.Array2D`1.Fill(`0)
+  commentId: M:Riateu.Array2D`1.Fill(`0)
+  id: Fill(`0)
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: Fill(T)
+  nameWithType: Array2D<T>.Fill(T)
+  fullName: Riateu.Array2D<T>.Fill(T)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Fill(T value)
+    parameters:
+    - id: value
+      type: '{T}'
+    content.vb: Public Sub Fill(value As T)
+  overload: Riateu.Array2D`1.Fill*
+  nameWithType.vb: Array2D(Of T).Fill(T)
+  fullName.vb: Riateu.Array2D(Of T).Fill(T)
+- uid: Riateu.Array2D`1.#ctor(System.Int32,System.Int32)
+  commentId: M:Riateu.Array2D`1.#ctor(System.Int32,System.Int32)
+  id: '#ctor(System.Int32,System.Int32)'
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: Array2D(int, int)
+  nameWithType: Array2D<T>.Array2D(int, int)
+  fullName: Riateu.Array2D<T>.Array2D(int, int)
+  type: Constructor
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Array2D(int numRows, int numColumns)
+    parameters:
+    - id: numRows
+      type: System.Int32
+    - id: numColumns
+      type: System.Int32
+    content.vb: Public Sub New(numRows As Integer, numColumns As Integer)
+  overload: Riateu.Array2D`1.#ctor*
+  nameWithType.vb: Array2D(Of T).New(Integer, Integer)
+  fullName.vb: Riateu.Array2D(Of T).New(Integer, Integer)
+  name.vb: New(Integer, Integer)
+- uid: Riateu.Array2D`1.FromArray(System.Int32,System.Int32,`0[])
+  commentId: M:Riateu.Array2D`1.FromArray(System.Int32,System.Int32,`0[])
+  id: FromArray(System.Int32,System.Int32,`0[])
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: FromArray(int, int, T[])
+  nameWithType: Array2D<T>.FromArray(int, int, T[])
+  fullName: Riateu.Array2D<T>.FromArray(int, int, T[])
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Array2D<T> FromArray(int numRows, int numColumns, T[] grid)
+    parameters:
+    - id: numRows
+      type: System.Int32
+    - id: numColumns
+      type: System.Int32
+    - id: grid
+      type: '{T}[]'
+    return:
+      type: Riateu.Array2D`1
+    content.vb: Public Shared Function FromArray(numRows As Integer, numColumns As Integer, grid As T()) As Array2D(Of T)
+  overload: Riateu.Array2D`1.FromArray*
+  nameWithType.vb: Array2D(Of T).FromArray(Integer, Integer, T())
+  fullName.vb: Riateu.Array2D(Of T).FromArray(Integer, Integer, T())
+  name.vb: FromArray(Integer, Integer, T())
+- uid: Riateu.Array2D`1.FromArray2D(`0[0:,0:])
+  commentId: M:Riateu.Array2D`1.FromArray2D(`0[0:,0:])
+  id: FromArray2D(`0[0:,0:])
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: FromArray2D(T[,])
+  nameWithType: Array2D<T>.FromArray2D(T[,])
+  fullName: Riateu.Array2D<T>.FromArray2D(T[,])
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Array2D<T> FromArray2D(T[,] grid2D)
+    parameters:
+    - id: grid2D
+      type: '{T}[,]'
+    return:
+      type: Riateu.Array2D`1
+    content.vb: Public Shared Function FromArray2D(grid2D As T(,)) As Array2D(Of T)
+  overload: Riateu.Array2D`1.FromArray2D*
+  nameWithType.vb: Array2D(Of T).FromArray2D(T(,))
+  fullName.vb: Riateu.Array2D(Of T).FromArray2D(T(,))
+  name.vb: FromArray2D(T(,))
+- uid: Riateu.Array2D`1.AsArray
+  commentId: M:Riateu.Array2D`1.AsArray
+  id: AsArray
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: AsArray()
+  nameWithType: Array2D<T>.AsArray()
+  fullName: Riateu.Array2D<T>.AsArray()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public T[] AsArray()
+    return:
+      type: '{T}[]'
+    content.vb: Public Function AsArray() As T()
+  overload: Riateu.Array2D`1.AsArray*
+  nameWithType.vb: Array2D(Of T).AsArray()
+  fullName.vb: Riateu.Array2D(Of T).AsArray()
+- uid: Riateu.Array2D`1.ToArray
+  commentId: M:Riateu.Array2D`1.ToArray
+  id: ToArray
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: ToArray()
+  nameWithType: Array2D<T>.ToArray()
+  fullName: Riateu.Array2D<T>.ToArray()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public T[] ToArray()
+    return:
+      type: '{T}[]'
+    content.vb: Public Function ToArray() As T()
+  overload: Riateu.Array2D`1.ToArray*
+  nameWithType.vb: Array2D(Of T).ToArray()
+  fullName.vb: Riateu.Array2D(Of T).ToArray()
+- uid: Riateu.Array2D`1.Clone
+  commentId: M:Riateu.Array2D`1.Clone
+  id: Clone
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: Array2D<T>.Clone()
+  fullName: Riateu.Array2D<T>.Clone()
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public Array2D<T> Clone()
+    return:
+      type: Riateu.Array2D`1
+    content.vb: Public Function Clone() As Array2D(Of T)
+  overload: Riateu.Array2D`1.Clone*
+  nameWithType.vb: Array2D(Of T).Clone()
+  fullName.vb: Riateu.Array2D(Of T).Clone()
+- uid: Riateu.Array2D`1.Resize(System.Int32,System.Int32)
+  commentId: M:Riateu.Array2D`1.Resize(System.Int32,System.Int32)
+  id: Resize(System.Int32,System.Int32)
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: Resize(int, int)
+  nameWithType: Array2D<T>.Resize(int, int)
+  fullName: Riateu.Array2D<T>.Resize(int, int)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Resize(int rows, int columns)
+    parameters:
+    - id: rows
+      type: System.Int32
+    - id: columns
+      type: System.Int32
+    content.vb: Public Sub Resize(rows As Integer, columns As Integer)
+  overload: Riateu.Array2D`1.Resize*
+  nameWithType.vb: Array2D(Of T).Resize(Integer, Integer)
+  fullName.vb: Riateu.Array2D(Of T).Resize(Integer, Integer)
+  name.vb: Resize(Integer, Integer)
+- uid: Riateu.Array2D`1.Resize(System.Int32,System.Int32,`0)
+  commentId: M:Riateu.Array2D`1.Resize(System.Int32,System.Int32,`0)
+  id: Resize(System.Int32,System.Int32,`0)
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: Resize(int, int, T)
+  nameWithType: Array2D<T>.Resize(int, int, T)
+  fullName: Riateu.Array2D<T>.Resize(int, int, T)
+  type: Method
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public void Resize(int rows, int columns, T filler)
+    parameters:
+    - id: rows
+      type: System.Int32
+    - id: columns
+      type: System.Int32
+    - id: filler
+      type: '{T}'
+    content.vb: Public Sub Resize(rows As Integer, columns As Integer, filler As T)
+  overload: Riateu.Array2D`1.Resize*
+  nameWithType.vb: Array2D(Of T).Resize(Integer, Integer, T)
+  fullName.vb: Riateu.Array2D(Of T).Resize(Integer, Integer, T)
+  name.vb: Resize(Integer, Integer, T)
+- uid: Riateu.Array2D`1.Rows
+  commentId: P:Riateu.Array2D`1.Rows
+  id: Rows
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: Rows
+  nameWithType: Array2D<T>.Rows
+  fullName: Riateu.Array2D<T>.Rows
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public int Rows { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Rows As Integer
+  overload: Riateu.Array2D`1.Rows*
+  nameWithType.vb: Array2D(Of T).Rows
+  fullName.vb: Riateu.Array2D(Of T).Rows
+- uid: Riateu.Array2D`1.Columns
+  commentId: P:Riateu.Array2D`1.Columns
+  id: Columns
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: Columns
+  nameWithType: Array2D<T>.Columns
+  fullName: Riateu.Array2D<T>.Columns
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public int Columns { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Columns As Integer
+  overload: Riateu.Array2D`1.Columns*
+  nameWithType.vb: Array2D(Of T).Columns
+  fullName.vb: Riateu.Array2D(Of T).Columns
+- uid: Riateu.Array2D`1.Empty
+  commentId: P:Riateu.Array2D`1.Empty
+  id: Empty
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: Empty
+  nameWithType: Array2D<T>.Empty
+  fullName: Riateu.Array2D<T>.Empty
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public static Array2D<T> Empty { get; }
+    parameters: []
+    return:
+      type: Riateu.Array2D`1
+    content.vb: Public Shared ReadOnly Property Empty As Array2D(Of T)
+  overload: Riateu.Array2D`1.Empty*
+  nameWithType.vb: Array2D(Of T).Empty
+  fullName.vb: Riateu.Array2D(Of T).Empty
+- uid: Riateu.Array2D`1.Item(System.Int32,System.Int32)
+  commentId: P:Riateu.Array2D`1.Item(System.Int32,System.Int32)
+  id: Item(System.Int32,System.Int32)
+  parent: Riateu.Array2D`1
+  langs:
+  - csharp
+  - vb
+  name: this[int, int]
+  nameWithType: Array2D<T>.this[int, int]
+  fullName: Riateu.Array2D<T>.this[int, int]
+  type: Property
+  source:
+    href: https://github.com/Terria-K/Riateu/blob/ea1ee947ed16aa25a0e9ba4f1d753f339105e26f/Riateu/Core/Misc/Array2D.cs
+  assemblies:
+  - Riateu
+  namespace: Riateu
+  syntax:
+    content: public T this[int x, int y] { get; set; }
+    parameters:
+    - id: x
+      type: System.Int32
+    - id: y
+      type: System.Int32
+    return:
+      type: '{T}'
+    content.vb: Public Default Property this[](x As Integer, y As Integer) As T
+  overload: Riateu.Array2D`1.Item*
+  nameWithType.vb: Array2D(Of T).this[](Integer, Integer)
+  fullName.vb: Riateu.Array2D(Of T).this[](Integer, Integer)
+  name.vb: this[](Integer, Integer)
+references:
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Riateu.Array2D`1.Fill*
+  commentId: Overload:Riateu.Array2D`1.Fill
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_Fill__0_
+  name: Fill
+  nameWithType: Array2D<T>.Fill
+  fullName: Riateu.Array2D<T>.Fill
+  nameWithType.vb: Array2D(Of T).Fill
+  fullName.vb: Riateu.Array2D(Of T).Fill
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Riateu.Array2D`1.#ctor*
+  commentId: Overload:Riateu.Array2D`1.#ctor
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1__ctor_System_Int32_System_Int32_
+  name: Array2D
+  nameWithType: Array2D<T>.Array2D
+  fullName: Riateu.Array2D<T>.Array2D
+  nameWithType.vb: Array2D(Of T).New
+  fullName.vb: Riateu.Array2D(Of T).New
+  name.vb: New
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Riateu.Array2D`1.FromArray*
+  commentId: Overload:Riateu.Array2D`1.FromArray
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_FromArray_System_Int32_System_Int32__0___
+  name: FromArray
+  nameWithType: Array2D<T>.FromArray
+  fullName: Riateu.Array2D<T>.FromArray
+  nameWithType.vb: Array2D(Of T).FromArray
+  fullName.vb: Riateu.Array2D(Of T).FromArray
+- uid: '{T}[]'
+  isExternal: true
+  name: T[]
+  nameWithType: T[]
+  fullName: T[]
+  nameWithType.vb: T()
+  fullName.vb: T()
+  name.vb: T()
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: )
+- uid: Riateu.Array2D`1
+  commentId: T:Riateu.Array2D`1
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Array2D-1.html
+  name: Array2D<T>
+  nameWithType: Array2D<T>
+  fullName: Riateu.Array2D<T>
+  nameWithType.vb: Array2D(Of T)
+  fullName.vb: Riateu.Array2D(Of T)
+  name.vb: Array2D(Of T)
+  spec.csharp:
+  - uid: Riateu.Array2D`1
+    name: Array2D
+    isExternal: true
+    href: Riateu.Array2D-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Riateu.Array2D`1
+    name: Array2D
+    isExternal: true
+    href: Riateu.Array2D-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.Array2D`1.FromArray2D*
+  commentId: Overload:Riateu.Array2D`1.FromArray2D
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_FromArray2D__0_0
+  name: FromArray2D
+  nameWithType: Array2D<T>.FromArray2D
+  fullName: Riateu.Array2D<T>.FromArray2D
+  nameWithType.vb: Array2D(Of T).FromArray2D
+  fullName.vb: Riateu.Array2D(Of T).FromArray2D
+- uid: '{T}[,]'
+  isExternal: true
+  name: T[,]
+  nameWithType: T[,]
+  fullName: T[,]
+  nameWithType.vb: T(,)
+  fullName.vb: T(,)
+  name.vb: T(,)
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ','
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: ','
+  - name: )
+- uid: Riateu.Array2D`1.AsArray*
+  commentId: Overload:Riateu.Array2D`1.AsArray
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_AsArray
+  name: AsArray
+  nameWithType: Array2D<T>.AsArray
+  fullName: Riateu.Array2D<T>.AsArray
+  nameWithType.vb: Array2D(Of T).AsArray
+  fullName.vb: Riateu.Array2D(Of T).AsArray
+- uid: Riateu.Array2D`1.ToArray*
+  commentId: Overload:Riateu.Array2D`1.ToArray
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_ToArray
+  name: ToArray
+  nameWithType: Array2D<T>.ToArray
+  fullName: Riateu.Array2D<T>.ToArray
+  nameWithType.vb: Array2D(Of T).ToArray
+  fullName.vb: Riateu.Array2D(Of T).ToArray
+- uid: Riateu.Array2D`1.Clone*
+  commentId: Overload:Riateu.Array2D`1.Clone
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_Clone
+  name: Clone
+  nameWithType: Array2D<T>.Clone
+  fullName: Riateu.Array2D<T>.Clone
+  nameWithType.vb: Array2D(Of T).Clone
+  fullName.vb: Riateu.Array2D(Of T).Clone
+- uid: Riateu.Array2D`1.Resize*
+  commentId: Overload:Riateu.Array2D`1.Resize
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_Resize_System_Int32_System_Int32_
+  name: Resize
+  nameWithType: Array2D<T>.Resize
+  fullName: Riateu.Array2D<T>.Resize
+  nameWithType.vb: Array2D(Of T).Resize
+  fullName.vb: Riateu.Array2D(Of T).Resize
+- uid: Riateu.Array2D`1.Rows*
+  commentId: Overload:Riateu.Array2D`1.Rows
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_Rows
+  name: Rows
+  nameWithType: Array2D<T>.Rows
+  fullName: Riateu.Array2D<T>.Rows
+  nameWithType.vb: Array2D(Of T).Rows
+  fullName.vb: Riateu.Array2D(Of T).Rows
+- uid: Riateu.Array2D`1.Columns*
+  commentId: Overload:Riateu.Array2D`1.Columns
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_Columns
+  name: Columns
+  nameWithType: Array2D<T>.Columns
+  fullName: Riateu.Array2D<T>.Columns
+  nameWithType.vb: Array2D(Of T).Columns
+  fullName.vb: Riateu.Array2D(Of T).Columns
+- uid: Riateu.Array2D`1.Empty*
+  commentId: Overload:Riateu.Array2D`1.Empty
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_Empty
+  name: Empty
+  nameWithType: Array2D<T>.Empty
+  fullName: Riateu.Array2D<T>.Empty
+  nameWithType.vb: Array2D(Of T).Empty
+  fullName.vb: Riateu.Array2D(Of T).Empty
+- uid: Riateu.Array2D`1.Item*
+  commentId: Overload:Riateu.Array2D`1.Item
+  isExternal: true
+  href: Riateu.Array2D-1.html#Riateu_Array2D_1_Item_System_Int32_System_Int32_
+  name: this
+  nameWithType: Array2D<T>.this
+  fullName: Riateu.Array2D<T>.this
+  nameWithType.vb: Array2D(Of T).this[]
+  fullName.vb: Riateu.Array2D(Of T).this[]
+  name.vb: this[]

@@ -1,0 +1,333 @@
+### YamlMime:ManagedReference
+items:
+- uid: Riateu
+  commentId: N:Riateu
+  id: Riateu
+  children:
+  - Riateu.Animations
+  - Riateu.Array2D`1
+  - Riateu.ArrayUtils
+  - Riateu.Camera
+  - Riateu.Canvas
+  - Riateu.Component
+  - Riateu.DefaultCanvas
+  - Riateu.DynamicText
+  - Riateu.Entities
+  - Riateu.Entity
+  - Riateu.EntityDoesNotExistException
+  - Riateu.GPUParticles
+  - Riateu.GameApp
+  - Riateu.GameContext
+  - Riateu.IndiciesOutOfBoundsException
+  - Riateu.MathUtils
+  - Riateu.Particle
+  - Riateu.ParticleUniform
+  - Riateu.PauseMode
+  - Riateu.RiateuExtensions
+  - Riateu.Scene
+  - Riateu.StackArray2D`1
+  - Riateu.StaticText
+  - Riateu.Tag
+  - Riateu.Text
+  - Riateu.Time
+  - Riateu.Transform
+  - Riateu.WeakList`1
+  - Riateu.World
+  langs:
+  - csharp
+  - vb
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
+  type: Namespace
+  assemblies:
+  - Riateu
+references:
+- uid: Riateu.Camera
+  commentId: T:Riateu.Camera
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Camera.html
+  name: Camera
+  nameWithType: Camera
+  fullName: Riateu.Camera
+- uid: Riateu.Canvas
+  commentId: T:Riateu.Canvas
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Canvas.html
+  name: Canvas
+  nameWithType: Canvas
+  fullName: Riateu.Canvas
+- uid: Riateu.DefaultCanvas
+  commentId: T:Riateu.DefaultCanvas
+  isExternal: true
+  href: Riateu.DefaultCanvas.html
+  name: DefaultCanvas
+  nameWithType: DefaultCanvas
+  fullName: Riateu.DefaultCanvas
+- uid: Riateu.DynamicText
+  commentId: T:Riateu.DynamicText
+  isExternal: true
+  href: Riateu.DynamicText.html
+  name: DynamicText
+  nameWithType: DynamicText
+  fullName: Riateu.DynamicText
+- uid: Riateu.StaticText
+  commentId: T:Riateu.StaticText
+  isExternal: true
+  href: Riateu.StaticText.html
+  name: StaticText
+  nameWithType: StaticText
+  fullName: Riateu.StaticText
+- uid: Riateu.Text
+  commentId: T:Riateu.Text
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Text.html
+  name: Text
+  nameWithType: Text
+  fullName: Riateu.Text
+- uid: Riateu.Component
+  commentId: T:Riateu.Component
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Component.html
+  name: Component
+  nameWithType: Component
+  fullName: Riateu.Component
+- uid: Riateu.EntityDoesNotExistException
+  commentId: T:Riateu.EntityDoesNotExistException
+  isExternal: true
+  href: Riateu.EntityDoesNotExistException.html
+  name: EntityDoesNotExistException
+  nameWithType: EntityDoesNotExistException
+  fullName: Riateu.EntityDoesNotExistException
+- uid: Riateu.Animations
+  commentId: T:Riateu.Animations
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Animations.html
+  name: Animations
+  nameWithType: Animations
+  fullName: Riateu.Animations
+- uid: Riateu.PauseMode
+  commentId: T:Riateu.PauseMode
+  parent: Riateu
+  isExternal: true
+  href: Riateu.PauseMode.html
+  name: PauseMode
+  nameWithType: PauseMode
+  fullName: Riateu.PauseMode
+- uid: Riateu.Entity
+  commentId: T:Riateu.Entity
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Entity.html
+  name: Entity
+  nameWithType: Entity
+  fullName: Riateu.Entity
+- uid: Riateu.GameApp
+  commentId: T:Riateu.GameApp
+  parent: Riateu
+  isExternal: true
+  href: Riateu.GameApp.html
+  name: GameApp
+  nameWithType: GameApp
+  fullName: Riateu.GameApp
+- uid: Riateu.GameContext
+  commentId: T:Riateu.GameContext
+  isExternal: true
+  href: Riateu.GameContext.html
+  name: GameContext
+  nameWithType: GameContext
+  fullName: Riateu.GameContext
+- uid: Riateu.MathUtils
+  commentId: T:Riateu.MathUtils
+  isExternal: true
+  href: Riateu.MathUtils.html
+  name: MathUtils
+  nameWithType: MathUtils
+  fullName: Riateu.MathUtils
+- uid: Riateu.Transform
+  commentId: T:Riateu.Transform
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Transform.html
+  name: Transform
+  nameWithType: Transform
+  fullName: Riateu.Transform
+- uid: Riateu.Array2D`1
+  commentId: T:Riateu.Array2D`1
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Array2D-1.html
+  name: Array2D<T>
+  nameWithType: Array2D<T>
+  fullName: Riateu.Array2D<T>
+  nameWithType.vb: Array2D(Of T)
+  fullName.vb: Riateu.Array2D(Of T)
+  name.vb: Array2D(Of T)
+  spec.csharp:
+  - uid: Riateu.Array2D`1
+    name: Array2D
+    isExternal: true
+    href: Riateu.Array2D-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Riateu.Array2D`1
+    name: Array2D
+    isExternal: true
+    href: Riateu.Array2D-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.StackArray2D`1
+  commentId: T:Riateu.StackArray2D`1
+  parent: Riateu
+  isExternal: true
+  href: Riateu.StackArray2D-1.html
+  name: StackArray2D<T>
+  nameWithType: StackArray2D<T>
+  fullName: Riateu.StackArray2D<T>
+  nameWithType.vb: StackArray2D(Of T)
+  fullName.vb: Riateu.StackArray2D(Of T)
+  name.vb: StackArray2D(Of T)
+  spec.csharp:
+  - uid: Riateu.StackArray2D`1
+    name: StackArray2D
+    isExternal: true
+    href: Riateu.StackArray2D-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Riateu.StackArray2D`1
+    name: StackArray2D
+    isExternal: true
+    href: Riateu.StackArray2D-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.IndiciesOutOfBoundsException
+  commentId: T:Riateu.IndiciesOutOfBoundsException
+  isExternal: true
+  href: Riateu.IndiciesOutOfBoundsException.html
+  name: IndiciesOutOfBoundsException
+  nameWithType: IndiciesOutOfBoundsException
+  fullName: Riateu.IndiciesOutOfBoundsException
+- uid: Riateu.ArrayUtils
+  commentId: T:Riateu.ArrayUtils
+  isExternal: true
+  href: Riateu.ArrayUtils.html
+  name: ArrayUtils
+  nameWithType: ArrayUtils
+  fullName: Riateu.ArrayUtils
+- uid: Riateu.Entities
+  commentId: T:Riateu.Entities
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Entities.html
+  name: Entities
+  nameWithType: Entities
+  fullName: Riateu.Entities
+- uid: Riateu.RiateuExtensions
+  commentId: T:Riateu.RiateuExtensions
+  isExternal: true
+  href: Riateu.RiateuExtensions.html
+  name: RiateuExtensions
+  nameWithType: RiateuExtensions
+  fullName: Riateu.RiateuExtensions
+- uid: Riateu.Particle
+  commentId: T:Riateu.Particle
+  isExternal: true
+  href: Riateu.Particle.html
+  name: Particle
+  nameWithType: Particle
+  fullName: Riateu.Particle
+- uid: Riateu.ParticleUniform
+  commentId: T:Riateu.ParticleUniform
+  isExternal: true
+  href: Riateu.ParticleUniform.html
+  name: ParticleUniform
+  nameWithType: ParticleUniform
+  fullName: Riateu.ParticleUniform
+- uid: Riateu.GPUParticles
+  commentId: T:Riateu.GPUParticles
+  isExternal: true
+  href: Riateu.GPUParticles.html
+  name: GPUParticles
+  nameWithType: GPUParticles
+  fullName: Riateu.GPUParticles
+- uid: Riateu.Tag
+  commentId: T:Riateu.Tag
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Tag.html
+  name: Tag
+  nameWithType: Tag
+  fullName: Riateu.Tag
+- uid: Riateu.WeakList`1
+  commentId: T:Riateu.WeakList`1
+  isExternal: true
+  href: Riateu.WeakList-1.html
+  name: WeakList<T>
+  nameWithType: WeakList<T>
+  fullName: Riateu.WeakList<T>
+  nameWithType.vb: WeakList(Of T)
+  fullName.vb: Riateu.WeakList(Of T)
+  name.vb: WeakList(Of T)
+  spec.csharp:
+  - uid: Riateu.WeakList`1
+    name: WeakList
+    isExternal: true
+    href: Riateu.WeakList-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Riateu.WeakList`1
+    name: WeakList
+    isExternal: true
+    href: Riateu.WeakList-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Riateu.World
+  commentId: T:Riateu.World
+  parent: Riateu
+  isExternal: true
+  href: Riateu.World.html
+  name: World
+  nameWithType: World
+  fullName: Riateu.World
+- uid: Riateu.Scene
+  commentId: T:Riateu.Scene
+  parent: Riateu
+  isExternal: true
+  href: Riateu.Scene.html
+  name: Scene
+  nameWithType: Scene
+  fullName: Riateu.Scene
+- uid: Riateu.Time
+  commentId: T:Riateu.Time
+  isExternal: true
+  href: Riateu.Time.html
+  name: Time
+  nameWithType: Time
+  fullName: Riateu.Time
+- uid: Riateu
+  commentId: N:Riateu
+  isExternal: true
+  href: Riateu.html
+  name: Riateu
+  nameWithType: Riateu
+  fullName: Riateu
