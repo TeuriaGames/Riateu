@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Riateu.ImGuiRend;
 
-public static unsafe class Clipboard
+internal static unsafe class Clipboard
 {
 	private static IntPtr clipboard;
 	private static readonly Dictionary<Delegate, IntPtr> pinned = new();

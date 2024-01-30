@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using ImGuiNET;
 using MoonWorks;
 using MoonWorks.Graphics;
@@ -13,6 +12,9 @@ using MBuffer = MoonWorks.Graphics.Buffer;
 
 namespace Riateu.ImGuiRend;
 
+/// <summary>
+/// A canvas renderer to render ImGui library.
+/// </summary>
 public class ImGuiRenderer 
 {
     private Dictionary<nint, Texture> PtrMap = new();
@@ -26,6 +28,14 @@ public class ImGuiRenderer
     private MBuffer imGuiIndexBuffer;
     private Color clearColor;
 
+    /// <summary>
+    /// A initilization for the ImGui renderer and to create its context.
+    /// </summary>
+    /// <param name="device">An application device</param>
+    /// <param name="window">An application window</param>
+    /// <param name="width">A width of the canvas</param>
+    /// <param name="height">A height of the canvas</param>
+    /// <param name="clearColor">A clear color of the canvas on its first draw frame</param>
     public ImGuiRenderer(GraphicsDevice device, Window window, int width, int height, Color clearColor) 
     {
         this.clearColor = clearColor;
@@ -83,6 +93,11 @@ public class ImGuiRenderer
         io.DisplaySize = new System.Numerics.Vector2(width, height);
     }
 
+    /// <summary>
+    /// A method that updates ImGui inputs and for drawing.
+    /// </summary>
+    /// <param name="inputs">An application input device</param>
+    /// <param name="imGuiCallback">A callback used for rendering</param>
     public void Update(MoonWorks.Input.Inputs inputs, Action imGuiCallback) 
     {
         var io = ImGui.GetIO();
@@ -124,6 +139,14 @@ public class ImGuiRenderer
         imGuiCallback();
         ImGui.EndFrame();
     }
+
+    /// <summary>
+    /// A draw method used for rendering all of the drawn ImGui surface.
+    /// </summary>
+    /// <param name="cmdBuf">
+    /// A command buffer used for handling and submitting a buffers
+    /// </param>
+    /// <param name="texture">A target texture to draw on</param>
     public void Draw(CommandBuffer cmdBuf, Texture texture)
     {
         ImGui.Render();
@@ -278,6 +301,9 @@ public class ImGuiRenderer
         commandBuffer.EndRenderPass();
     }
 
+    /// <summary>
+    /// Destroy the ImGui context.
+    /// </summary>
     public void Destroy() 
     {
         ImGui.DestroyContext();
@@ -314,7 +340,7 @@ public class ImGuiRenderer
         AddToPointer(fontTexture);
     }
 
-    public IntPtr AddToPointer(Texture texture) 
+    internal IntPtr AddToPointer(Texture texture) 
     {
         if (!PtrMap.ContainsKey(texture.Handle)) 
         {
@@ -324,7 +350,7 @@ public class ImGuiRenderer
         return texture.Handle;
     }
 
-    public Texture GetPointer(IntPtr ptr) 
+    internal Texture GetPointer(IntPtr ptr) 
     {
         if (!PtrMap.ContainsKey(ptr)) 
         {
@@ -335,30 +361,4 @@ public class ImGuiRenderer
         
         return texture;
     }
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct Position2DTextureColorVertex : IVertexType
-{
-    public Vector2 Position;
-    public Vector2 TexCoord;
-    public Color Color;
-
-    public Position2DTextureColorVertex(
-        Vector2 position,
-        Vector2 texcoord,
-        Color color
-    )
-    {
-        Position = position;
-        TexCoord = texcoord;
-        Color = color;
-    }
-
-    public static VertexElementFormat[] Formats { get; } = new VertexElementFormat[3]
-    {
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Color
-    };
 }
