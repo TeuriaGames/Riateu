@@ -31,6 +31,10 @@ jobs:
       with:
         dotnet-version: 8.x
 
+    - name: Update submodules
+      run: |
+        git submodule update --init --recursive
+
     - run: dotnet tool update -g docfx
     - run: docfx documentation/docfx.json
 
