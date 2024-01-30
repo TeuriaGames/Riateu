@@ -67,7 +67,7 @@ public sealed class Entities : IEnumerable<Entity>
 
                     if (Scene == null) { continue; }
                     entity.ExitScene(Scene);
-                    Scene.OnEntityDeleted?.Invoke(entity);
+                    Scene.OnEntityDestroyed?.Invoke(entity);
                 }
             }
             remove.Clear();

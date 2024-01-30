@@ -64,7 +64,7 @@ public class Component
     /// <summary>
     /// A method that is called if the entity exited the scene.
     /// </summary>
-    /// <param name="scene">A scene that entity is exited on</param>
+    /// <param name="scene">A scene that entity is previously on</param>
     public virtual void EntityExited(Scene scene) 
     {
     }

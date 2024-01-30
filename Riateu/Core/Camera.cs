@@ -4,6 +4,11 @@ using MoonWorks.Math.Float;
 
 namespace Riateu;
 
+/// <summary>
+/// A struct that holds the matrix, view, projection, and a viewport of the world space.
+/// </summary>
+/// <param name="width">A viewport width</param>
+/// <param name="height">A viewport height</param>
 public struct Camera(int width, int height) 
 {
     private Matrix4x4 transform = Matrix4x4.Identity;
@@ -46,22 +51,38 @@ public struct Camera(int width, int height)
         dirty = false;
     }
 
+    /// <summary>
+    /// Convert a screen position into a world position, such as mouse position.
+    /// </summary>
+    /// <param name="position">A screen position</param>
+    /// <returns>A world position from the screen position</returns>
     public readonly Vector2 ScreenToCamera(Vector2 position) 
     {
         return Vector2.Transform(position, inverse);
     }
 
+    /// <summary>
+    /// Convert a world position into a screen position.
+    /// </summary>
+    /// /// <param name="position">A world position</param>
+    /// <returns>A screen position from the world position</returns>
     public readonly Vector2 CameraToScreen(Vector2 position) 
     {
         return Vector2.Transform(position, transform);
     }
 
+    /// <summary>
+    /// A viewport of the world space.
+    /// </summary>
     public Viewport Viewport
     {
         get => viewport;
         set => viewport = value;
     }
 
+    /// <summary>
+    /// An X axis of the position of the camera.
+    /// </summary>
     public float X 
     {
         get => position.X;
@@ -72,6 +93,9 @@ public struct Camera(int width, int height)
         }
     }
 
+    /// <summary>
+    /// A Y axis of the position of the camera.
+    /// </summary>
     public float Y 
     {
         get => position.Y;
@@ -82,6 +106,9 @@ public struct Camera(int width, int height)
         }
     }
 
+    /// <summary>
+    /// The position of the camera.
+    /// </summary>
     public Vector2 Position 
     {
         get => position;
@@ -92,6 +119,9 @@ public struct Camera(int width, int height)
         }
     }
 
+    /// <summary>
+    /// A rotation angle of the camera. It is a z-axis rotation of the camera.
+    /// </summary>
     public float Angle 
     {
         get => angle;
@@ -102,6 +132,9 @@ public struct Camera(int width, int height)
         }
     }
 
+    /// <summary>
+    /// The world transform matrix of the camera.
+    /// </summary>
     public Matrix4x4 Transform 
     {
         get 
@@ -112,6 +145,9 @@ public struct Camera(int width, int height)
         }
     }
 
+    /// <summary>
+    /// A scale of the camera.
+    /// </summary>
     public Vector2 Zoom 
     {
         get => zoom;
@@ -122,6 +158,9 @@ public struct Camera(int width, int height)
         }
     }
 
+    /// <summary>
+    /// An offset position of the camera.
+    /// </summary>
     public Vector2 Offset
     {
         get => offset;
@@ -132,6 +171,9 @@ public struct Camera(int width, int height)
         }
     }
 
+    /// <summary>
+    /// The center offset of the camera.
+    /// </summary>
     public Vector2 Origin
     {
         get => origin;
