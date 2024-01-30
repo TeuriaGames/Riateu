@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using MoonWorks;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
-using Riateu.Components;
 
 namespace Riateu.Graphics;
 

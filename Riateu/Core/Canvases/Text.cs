@@ -7,12 +7,16 @@ using Riateu.Graphics;
 
 namespace Riateu;
 
+/// <summary>
+/// The base class for the Text object.
+/// </summary>
 public abstract class Text : IDisposable
 {
     internal TextBatch Batch;
+    /// <summary>
+    /// The texture of a text after it rendered.
+    /// </summary>
     public Texture Texture { get; protected set; }
-    protected int pixelSize;
-    protected string text;
     private bool IsDisposed { get; set; }
 
     public Rectangle Bounds { get; protected set; }

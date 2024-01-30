@@ -6,12 +6,20 @@ using Riateu.Graphics;
 
 namespace Riateu;
 
+/// <summary>
+/// This type of text can be changed their property dynamically. When the property changed,
+/// it will try to re-render and resubmit its texture. Becareful when using this text.
+/// </summary>
 public class DynamicText : Text
 {
     private bool dirty;
     private GraphicsDevice device;
     private Font font;
 
+    /// <summary>
+    /// A string text for this text. When changed, it will caused to re-render and resubmit
+    /// its texture.
+    /// </summary>
     public string Text 
     {
         get => text;
@@ -25,6 +33,27 @@ public class DynamicText : Text
         }
     }
 
+    /// <summary>
+    /// A pixel size of this font. When changed, it will caused to re-render and resubmit
+    /// its texture.
+    /// </summary>
+    public int Pixel 
+    {
+        get => pixel;
+        set 
+        {
+            if (pixel != value) 
+            {
+                pixel = value;
+                dirty = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// A numeric visibled text value. When changed, it will not resubmit, instead it will
+    /// just change the quad of the texture.
+    /// </summary>
     public int VisibleText 
     {
         get => visibleText;
@@ -49,7 +78,7 @@ public class DynamicText : Text
 
             var span = text.AsSpan();
             var newSpan = span.Slice(0, visibleText);
-            var f = font.TextBounds(newSpan, pixelSize, HorizontalAlignment.Left, 
+            var f = font.TextBounds(newSpan, pixel, HorizontalAlignment.Left, 
                 VerticalAlignment.Baseline, out WellspringCS.Wellspring.Rectangle rectVisible);
 
             DynamicTexture = new SpriteTexture(
@@ -62,11 +91,27 @@ public class DynamicText : Text
     }
 
     private int visibleText;
+    private SpriteTexture DynamicTexture;
+    /// <summary>
+    /// The texture width of the rendered text.
+    /// </summary>
     public uint Width => (uint)rect.W;
+    /// <summary>
+    /// The texture height of the rendered text.
+    /// </summary>
     public uint Height => (uint)rect.H;
     private Rect rect;
-    private SpriteTexture DynamicTexture;
+    private string text;
+    private int pixel;
     
+    /// <summary>
+    /// An initialization for this class.
+    /// </summary>
+    /// <param name="device">An application graphics device</param>
+    /// <param name="font">A font to use for rendering text</param>
+    /// <param name="text">A text that should be rendered</param>
+    /// <param name="pixel">A size of the text</param>
+    /// <param name="textVisible">A numeric visibled text value</param>
     public DynamicText(GraphicsDevice device, Font font, string text, int pixel, int textVisible = -1) 
     {
         if (textVisible == -1) 
@@ -77,9 +122,9 @@ public class DynamicText : Text
         this.font = font;
         Batch = new TextBatch(device);
         this.text = text;
-        pixelSize = pixel;
+        this.pixel = pixel;
 
-        var f = font.TextBounds(text, pixelSize, HorizontalAlignment.Left, 
+        var f = font.TextBounds(text, this.pixel, HorizontalAlignment.Left,
             VerticalAlignment.Baseline, out WellspringCS.Wellspring.Rectangle rect);
         this.rect.X = (int)rect.X;
         this.rect.Y = (int)rect.Y;
@@ -114,7 +159,7 @@ public class DynamicText : Text
             * Matrix4x4.CreateOrthographicOffCenter(0, Width, Height, 0, -1, 1);
         
         Batch.Start(font);
-        Batch.Add(text, pixelSize, Color.White);
+        Batch.Add(text, pixel, Color.White);
         Batch.UploadBufferData(buffer);
 
         buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, Color.Transparent));
@@ -124,6 +169,7 @@ public class DynamicText : Text
         device.Submit(buffer);
     }
 
+    /// <inheritdoc/>
     public override void Draw(IBatch batch, Vector2 position) 
     {
         if (dirty) 

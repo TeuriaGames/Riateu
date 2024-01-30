@@ -1,9 +1,8 @@
 using System.Runtime.InteropServices;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
-using Riateu.Graphics;
 
-namespace Riateu.Components;
+namespace Riateu.Graphics;
 
 /// <summary>
 /// A vertex type to be used for the <see cref="GameContext.InstancedPipeline"/>. 

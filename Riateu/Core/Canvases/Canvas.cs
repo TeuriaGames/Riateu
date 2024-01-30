@@ -29,11 +29,11 @@ public class Canvas : IDisposable
         this.Scene = scene;
     }
 
-    public virtual void BeforeDraw(ref CommandBuffer buffer, IBatch batch) {}
+    public virtual void BeforeDraw(CommandBuffer buffer, IBatch batch) {}
     public virtual void Draw(CommandBuffer buffer, IBatch batch) 
     {
     }
-    public virtual void AfterDraw(ref CommandBuffer buffer, IBatch batch) {}
+    public virtual void AfterDraw(CommandBuffer buffer, IBatch batch) {}
 
     public static Canvas CreateDefault(Scene scene, GraphicsDevice device) 
     {

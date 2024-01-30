@@ -7,14 +7,31 @@ using Riateu.Graphics;
 
 namespace Riateu;
 
+/// <summary>
+/// This type of text cannot be changed their property dynamically. It is readonly text
+/// that can be rendered.
+/// </summary>
 public class StaticText : Text
 {
+    /// <summary>
+    /// The immutable string text of this text.
+    /// </summary>
+    public string Text => text;
+    private string text;
+
+    /// <summary>
+    /// An initialization for this class.
+    /// </summary>
+    /// <param name="device">An application graphics device</param>
+    /// <param name="font">A font to use for rendering text</param>
+    /// <param name="text">A text that should be rendered</param>
+    /// <param name="pixel">A size of the text</param>
+    /// <param name="textVisible">A numeric visibled text value</param>
     public StaticText(GraphicsDevice device, Font font, string text, int pixel, int textVisible = -1) 
     {
         textVisible = MathHelper.Clamp(textVisible, 0, text.Length);
         CommandBuffer buffer = device.AcquireCommandBuffer();
         this.text = text;
-        pixelSize = pixel;
 
         var textSpan = text.AsSpan();
         var textSpanSliced = textSpan.Slice(0, textVisible);
@@ -45,6 +62,7 @@ public class StaticText : Text
         device.Submit(buffer);
     }
 
+    /// <inheritdoc/>
     public override void Draw(IBatch batch, Vector2 position) 
     {
         batch.Add(Texture, GameContext.GlobalSampler, position, Matrix3x2.Identity);

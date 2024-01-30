@@ -110,7 +110,7 @@ public abstract class Scene
 
     internal void InternalBeforeDraw(ref CommandBuffer buffer, IBatch batch) 
     {
-        sceneCanvas.BeforeDraw(ref buffer, batch);
+        sceneCanvas.BeforeDraw(buffer, batch);
         BeforeDraw(ref buffer, batch);
     }
 
@@ -122,7 +122,7 @@ public abstract class Scene
 
     internal void InternalAfterDraw(ref CommandBuffer buffer, IBatch batch) 
     {
-        sceneCanvas.AfterDraw(ref buffer, batch);
+        sceneCanvas.AfterDraw(buffer, batch);
         AfterDraw(ref buffer, batch);
     }
 
