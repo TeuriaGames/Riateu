@@ -28,7 +28,7 @@ public abstract class Scene
     /// <summary>
     /// The game application.
     /// </summary>
-    public GameApp GameInstance;
+    public GameApp GameInstance { get; }
     /// <summary>
     /// A callback that is called when the entity is created.
     /// </summary>
@@ -49,37 +49,13 @@ public abstract class Scene
     public Entities EntityList;
 
     /// <summary>
-    /// The current canvas running on the scene.
-    /// </summary>
-    public Canvas SceneCanvas 
-    {
-        get => sceneCanvas;
-        set 
-        {
-            sceneCanvas?.Dispose();
-            sceneCanvas = value;
-        }
-    }
-    private Canvas sceneCanvas;
-
-    /// <summary>
     /// An initialization for the scene.
     /// </summary>
     /// <param name="game">The game application</param>
-    public Scene(GameApp game) :this(game, null)
-    {
-    }
-
-    /// <summary>
-    /// An initialization for the scene.
-    /// </summary>
-    /// <param name="game">The game application</param>
-    /// <param name="canvas">The canvas that will be used for the scene</param>
-    public Scene(GameApp game, Canvas canvas) 
+    public Scene(GameApp game) 
     {
         GameInstance = game;
         EntityList = new Entities(this);
-        sceneCanvas = canvas ?? Canvas.CreateDefault(this, game.GraphicsDevice);
         SceneTags = new List<PhysicsComponent>[Tag.TotalTags];
         for (int i = 0; i < SceneTags.Length; i++) 
         {
@@ -175,16 +151,6 @@ public abstract class Scene
         }
     }
 
-    /// <summary>
-    /// Add the vertex buffer from the <see cref="Riateu.Canvas.CanvasTexture"/>.
-    /// </summary>
-    /// <param name="batch">A batch system to add the canvas texture</param>
-    /// <param name="sampler">The sampler for the texture</param>
-    public void ApplyCurrentCanvasToBatch(IBatch batch, Sampler sampler) 
-    {
-        batch.Add(sceneCanvas.CanvasTexture, sampler, Vector2.Zero, Matrix3x2.Identity);
-    }
-
     internal void InternalUpdate(double delta) 
     {
         EntityList.UpdateSystem();
@@ -194,19 +160,16 @@ public abstract class Scene
 
     internal void InternalBeforeDraw(CommandBuffer buffer, IBatch batch) 
     {
-        sceneCanvas.BeforeDraw(buffer, batch);
         BeforeDraw(buffer, batch);
     }
 
     internal void InternalDraw(CommandBuffer buffer, Texture backbuffer, IBatch batch) 
     {
-        sceneCanvas.Draw(buffer, batch);
         Draw(buffer, backbuffer, batch);
     }
 
     internal void InternalAfterDraw(CommandBuffer buffer, IBatch batch) 
     {
-        sceneCanvas.AfterDraw(buffer, batch);
         AfterDraw(buffer, batch);
     }
 
@@ -242,4 +205,15 @@ public abstract class Scene
     /// End of the scene. Do your cleanup code here.
     /// </summary>
     public abstract void End();
+
+    /// <summary>
+    /// Get the <see cref="Riateu.GameApp"/> instance from a type
+    /// </summary>
+    /// <typeparam name="T">A type of the <see cref="Riateu.GameApp"/></typeparam>
+    /// <returns>A <see cref="Riateu.GameApp"/></returns>
+    public T GameApp<T>() 
+    where T : GameApp
+    {
+        return GameInstance as T;
+    }
 }

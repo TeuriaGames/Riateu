@@ -1,6 +1,7 @@
 using System;
 using MoonWorks;
 using MoonWorks.Graphics;
+using MoonWorks.Math.Float;
 using Riateu.Graphics;
 
 namespace Riateu;
@@ -58,6 +59,17 @@ public class Canvas : IDisposable
         }
     }
 
+    /// <summary>
+    /// Add the vertex buffer from the <see cref="Riateu.Canvas.CanvasTexture"/>.
+    /// </summary>
+    /// <param name="batch">A batch system to add the canvas texture</param>
+    /// <param name="sampler">The sampler for the texture</param>
+    public void ApplyCanvasToBatch(IBatch batch, Sampler sampler) 
+    {
+        batch.Add(CanvasTexture, sampler, Vector2.Zero, Matrix3x2.Identity);
+    }
+
+    ///
     ~Canvas()
     {
 #if DEBUG
