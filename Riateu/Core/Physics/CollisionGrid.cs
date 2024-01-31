@@ -95,6 +95,12 @@ public sealed class CollisionGrid : Shape
             }
     }
 
+    public void ChangeGrid(Array2D<bool> grid) 
+    {
+        Grid = grid;
+        BoundingArea = new Rectangle(0, 0, grid.Rows * CellWidth, grid.Columns * CellHeight);
+    }
+
     public Rectangle GetAbsoluteBounds() 
     {
         return new Rectangle(
