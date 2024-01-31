@@ -4,12 +4,29 @@ using Riateu.Physics;
 
 namespace Riateu.Components;
 
+/// <summary>
+/// A component that allows to have a collisions for all entities.
+/// </summary>
 public class PhysicsComponent : Component 
 {
+    /// <summary>
+    /// A state whether this component should collide or not.
+    /// </summary>
     public bool Collidable = true;
     private Shape shape;
-    private Action<Entity, PhysicsComponent> onCollided;
 
+    /// <summary>
+    /// The shape that the component used. Changing its value will also change the hitbox.
+    /// </summary>
+    public Shape Shape 
+    {
+        get => shape;
+        set => shape = value;
+    }
+
+    /// <summary>
+    /// A physics scene tags to filter all the collisions in the scene tree.
+    /// </summary>
     public int Tags 
     {
         get => tags;
@@ -21,11 +38,14 @@ public class PhysicsComponent : Component
 
     private int tags = -1;
 
+    /// <summary>
+    /// Initialize the component with shapes.
+    /// </summary>
+    /// <param name="shape">A shape to use as a hitbox</param>
 
-    public PhysicsComponent(Shape shape, Action<Entity, PhysicsComponent> onCollided = null) 
+    public PhysicsComponent(Shape shape) 
     {
         this.shape = shape;
-        this.onCollided = onCollided;
     }
 
     public bool Check(PhysicsComponent other, Vector2 offset) 
@@ -212,6 +232,7 @@ public class PhysicsComponent : Component
 
     private bool physicsAdded;
 
+    /// <inheritdoc/>
     public override void Added(Entity entity)
     {
         base.Added(entity);
@@ -222,6 +243,7 @@ public class PhysicsComponent : Component
         }
     }
 
+    /// <inheritdoc/>
     public override void EntityEntered(Scene scene)
     {
         base.EntityEntered(scene);
@@ -233,6 +255,7 @@ public class PhysicsComponent : Component
         }
     }
 
+    /// <inheritdoc/>
     public override void EntityExited(Scene scene)
     {
         scene.RemoveBit(this);

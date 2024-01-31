@@ -23,11 +23,12 @@ public class AnimationStorage
     /// </summary>
     /// <param name="path">A path to animation storage json</param>
     /// <param name="atlas">An <see cref="Riateu.Graphics.Atlas"/> to use</param>
+    /// <param name="jsonType">Specify what json type is the file</param>
     /// <returns>A storage for all animation</returns>
-    public static AnimationStorage Create(string path, Atlas atlas) 
+    public static AnimationStorage Create(string path, Atlas atlas, JsonType jsonType = JsonType.Json) 
     {
         using var fs = File.OpenRead(path);
-        return Create(fs, atlas);
+        return Create(fs, atlas, jsonType);
     }
 
     /// <summary>
@@ -35,11 +36,20 @@ public class AnimationStorage
     /// </summary>
     /// <param name="stream">A stream containing the json contents</param>
     /// <param name="atlas">An <see cref="Riateu.Graphics.Atlas"/> to use</param>
+    /// <param name="jsonType">Specify what json type is the file</param>
     /// <returns>A storage for all animation</returns>
-    public static AnimationStorage Create(Stream stream, Atlas atlas) 
+    public static AnimationStorage Create(Stream stream, Atlas atlas, JsonType jsonType = JsonType.Json) 
     {
         var animations = new AnimationStorage();
-        var jsonBank = JsonTextReader.FromStream(stream);
+        JsonValue jsonBank;
+        if (jsonType == JsonType.Bin) 
+        {
+            jsonBank = JsonBinaryReader.FromStream(stream);
+        }
+        else 
+        {
+            jsonBank = JsonTextReader.FromStream(stream);
+        }
         var dict = new Dictionary<string, Dictionary<string, AnimatedSprite.Animation>>();
 
         foreach (var (k, v) in jsonBank.Pairs) 

@@ -32,11 +32,12 @@ public class Tileset
     /// <param name="rulesPath">A path to json</param>
     /// <param name="texture">A texture will be used for the tileset</param>
     /// <param name="atlas">An atlas containing that tileset</param>
+    /// <param name="jsonType">Specify what json type is the file</param>
     /// <returns>A created tileset</returns>
-    public static Tileset Create(string rulesPath, Texture texture, Atlas atlas) 
+    public static Tileset Create(string rulesPath, Texture texture, Atlas atlas, JsonType jsonType = JsonType.Json) 
     {
         using var fs = File.OpenRead(rulesPath);
-        return Create(fs, texture, atlas);
+        return Create(fs, texture, atlas, jsonType);
     }
 
     /// <summary>
@@ -45,10 +46,13 @@ public class Tileset
     /// <param name="rulesStream">A stream containing json</param>
     /// <param name="texture">A texture will be used for the tileset</param>
     /// <param name="atlas">An atlas containing that tileset</param>
+    /// <param name="jsonType">Specify what json type is the file</param>
     /// <returns>A created tileset</returns>
-    public static Tileset Create(Stream rulesStream, Texture texture, Atlas atlas) 
+    public static Tileset Create(Stream rulesStream, Texture texture, Atlas atlas, JsonType jsonType = JsonType.Json) 
     {
-        var json = JsonTextReader.FromStream(rulesStream);
+        JsonValue json = jsonType == JsonType.Json 
+            ? JsonTextReader.FromStream(rulesStream) 
+            : JsonBinaryReader.FromStream(rulesStream);
         int width = json["width"];
         int height = json["height"];
         var texCoord = atlas[json["path"]];
@@ -145,17 +149,22 @@ public struct Ruleset
     /// <param name="name">The name of the ruleset</param>
     /// <param name="mask">The mask of the ruleset</param>
     /// <param name="tileCount">How many tiles does this ruleset has?</param>
-    public Ruleset(string name, byte[] mask, int tileCount) 
+    public Ruleset(string name, string mask, int tileCount) 
     {
         Name = name;
         Tiles = new SpriteTexture[tileCount];
-        Mask = mask;
+        var strMask = mask.AsSpan();
+
+        for (int i = 0; i < strMask.Length; i++) 
+        {
+            Mask[i] = strMask[i] == 'X' ? (byte)0 : (byte)1;
+        }
     }
 }
 
 internal partial struct JsonRuleset : IDeserialize
 {
     [TeuObject] [Name("name")] public string Name;
-    [TeuObject] [Name("mask")] public byte[] Mask;
+    [TeuObject] [Name("mask")] public string Mask;
     [TeuObject] [Name("tiles")] public int[,] Tiles;
 }
