@@ -26,7 +26,6 @@ public class ImGuiRenderer
     private uint indexCount;
     private MBuffer imGuiVertexBuffer;
     private MBuffer imGuiIndexBuffer;
-    private Color clearColor;
 
     /// <summary>
     /// A initilization for the ImGui renderer and to create its context.
@@ -35,10 +34,8 @@ public class ImGuiRenderer
     /// <param name="window">An application window</param>
     /// <param name="width">A width of the canvas</param>
     /// <param name="height">A height of the canvas</param>
-    /// <param name="clearColor">A clear color of the canvas on its first draw frame</param>
-    public ImGuiRenderer(GraphicsDevice device, Window window, int width, int height, Color clearColor) 
+    public ImGuiRenderer(GraphicsDevice device, Window window, int width, int height) 
     {
-        this.clearColor = clearColor;
         this.device = device;
         ImGui.CreateContext();
 
@@ -135,6 +132,7 @@ public class ImGuiRenderer
         io.AddKeyEvent(ImGuiKey.ModAlt, inputs.Keyboard.IsDown(KeyCode.LeftAlt) || inputs.Keyboard.IsDown(KeyCode.RightAlt));
         io.AddKeyEvent(ImGuiKey.ModSuper, inputs.Keyboard.IsDown(KeyCode.LeftMeta) || inputs.Keyboard.IsDown(KeyCode.RightMeta));
 
+
         ImGui.NewFrame();
         imGuiCallback();
         ImGui.EndFrame();
@@ -146,9 +144,8 @@ public class ImGuiRenderer
     /// <param name="cmdBuf">
     /// A command buffer used for handling and submitting a buffers
     /// </param>
-    /// <param name="texture">A target texture to draw on</param>
-    public void Draw(CommandBuffer cmdBuf, Texture texture)
-    {
+    public void Draw(CommandBuffer cmdBuf)
+    {;
         ImGui.Render();
 
         var io = ImGui.GetIO();
@@ -156,7 +153,7 @@ public class ImGuiRenderer
 
         UpdateImGuiBuffers(drawDataPtr);
 
-        RenderCommandLists(cmdBuf, texture, drawDataPtr, io);
+        RenderCommandLists(cmdBuf, drawDataPtr, io);
     }
 
     private unsafe void UpdateImGuiBuffers(ImDrawDataPtr drawDataPtr)
@@ -217,7 +214,7 @@ public class ImGuiRenderer
         device.Submit(commandBuffer);
     }
 
-    private void RenderCommandLists(CommandBuffer commandBuffer, Texture renderTexture, ImDrawDataPtr drawDataPtr, ImGuiIOPtr ioPtr)
+    private void RenderCommandLists(CommandBuffer commandBuffer, ImDrawDataPtr drawDataPtr, ImGuiIOPtr ioPtr)
     {
         var view = Matrix4x4.CreateLookAt(
             new Vector3(0, 0, 1),
@@ -235,10 +232,6 @@ public class ImGuiRenderer
         );
 
         var viewProjectionMatrix = view * projection;
-
-        commandBuffer.BeginRenderPass(
-            new ColorAttachmentInfo(renderTexture, clearColor)
-        );
 
         commandBuffer.BindGraphicsPipeline(imGuiPipeline);
 
@@ -275,10 +268,12 @@ public class ImGuiRenderer
                     continue;
                 }
 
+                int x = drawCmd.ClipRect.X < 0 ? 0 : (int)drawCmd.ClipRect.X;
+                int y = drawCmd.ClipRect.Y < 0 ? 0 : (int)drawCmd.ClipRect.Y;
+
                 commandBuffer.SetScissor(
                     new Rect(
-                        (int)drawCmd.ClipRect.X,
-                        (int)drawCmd.ClipRect.Y,
+                        x, y,
                         (int)width,
                         (int)height
                     )
@@ -297,8 +292,6 @@ public class ImGuiRenderer
 
             vertexOffset += (uint)cmdList.VtxBuffer.Size;
         }
-
-        commandBuffer.EndRenderPass();
     }
 
     /// <summary>
