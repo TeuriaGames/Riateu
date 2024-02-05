@@ -9,7 +9,8 @@ namespace Riateu;
 /// </summary>
 /// <param name="width">A viewport width</param>
 /// <param name="height">A viewport height</param>
-public struct Camera(int width, int height) 
+/// <param name="flipped">Flip a view of the camera</param>
+public struct Camera(int width, int height, bool flipped = false) 
 {
     private Matrix4x4 transform = Matrix4x4.Identity;
     private Matrix4x4 inverse = Matrix4x4.Identity;
@@ -43,7 +44,8 @@ public struct Camera(int width, int height)
             Matrix4x4.CreateTranslation(orig);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
-        var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
+        var projection = !flipped ? Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1)
+            : Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
 
         transform = model * view * projection;
 
