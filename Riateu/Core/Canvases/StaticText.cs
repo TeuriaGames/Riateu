@@ -29,6 +29,10 @@ public class StaticText : Text
     /// <param name="textVisible">A numeric visibled text value</param>
     public StaticText(GraphicsDevice device, Font font, string text, int pixel, int textVisible = -1) 
     {
+        if (textVisible == -1) 
+        {
+            textVisible = text.Length;
+        }
         textVisible = MathHelper.Clamp(textVisible, 0, text.Length);
         CommandBuffer buffer = device.AcquireCommandBuffer();
         this.text = text;
