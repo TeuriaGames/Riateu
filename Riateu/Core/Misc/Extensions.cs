@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using MoonWorks;
+using MoonWorks.Graphics;
 using MoonWorks.Graphics.Font;
 using WellspringCS;
 
@@ -20,6 +22,8 @@ public static class RiateuExtensions
 
     [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "<Handle>k__BackingField")]
     internal static extern ref IntPtr Font_Handle(Font font);
+    [UnsafeAccessor(UnsafeAccessorKind.Constructor)]
+    internal static extern Font Font_ctor(GraphicsDevice device, IntPtr handle, Texture texture, float pixelsPerEm, float distanceRange);
 
     /// <inheritdoc cref="MoonWorks.Graphics.Font.Font.TextBounds(string, int, HorizontalAlignment, VerticalAlignment, out Wellspring.Rectangle)"/>
     public static unsafe bool TextBounds(
@@ -60,5 +64,44 @@ public static class RiateuExtensions
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Loads a TTF or OTF font from a path for use in MSDF rendering.
+    /// Note that there must be an msdf-atlas-gen JSON and image file alongside.
+    /// </summary>
+    /// <returns></returns>
+    public unsafe static Font FontLoad(
+        GraphicsDevice graphicsDevice,
+        CommandBuffer commandBuffer,
+        Stream fontFileStream,
+        Stream atlasFileStream,
+        Stream pngStream
+    ) {
+        var fontFileByteBuffer = NativeMemory.Alloc((nuint) fontFileStream.Length);
+        var fontFileByteSpan = new Span<byte>(fontFileByteBuffer, (int) fontFileStream.Length);
+        fontFileStream.ReadExactly(fontFileByteSpan);
+        fontFileStream.Close();
+
+        var atlasFileByteBuffer = NativeMemory.Alloc((nuint) atlasFileStream.Length);
+        var atlasFileByteSpan = new Span<byte>(atlasFileByteBuffer, (int) atlasFileStream.Length);
+        atlasFileStream.ReadExactly(atlasFileByteSpan);
+        atlasFileStream.Close();
+
+        var handle = Wellspring.Wellspring_CreateFont(
+            (IntPtr) fontFileByteBuffer,
+            (uint) fontFileByteSpan.Length,
+            (IntPtr) atlasFileByteBuffer,
+            (uint) atlasFileByteSpan.Length,
+            out float pixelsPerEm,
+            out float distanceRange
+        );
+
+        var texture = Texture.FromImageStream(graphicsDevice, commandBuffer, pngStream);
+
+        NativeMemory.Free(fontFileByteBuffer);
+        NativeMemory.Free(atlasFileByteBuffer);
+
+        return Font_ctor(graphicsDevice, handle, texture, pixelsPerEm, distanceRange);
     }
 }
