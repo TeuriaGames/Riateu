@@ -48,6 +48,12 @@ public class PhysicsComponent : Component
         this.shape = shape;
     }
 
+    /// <summary>
+    /// Check if this <see cref="Riateu.Components.PhysicsComponent"/> is colliding with this component.
+    /// </summary>
+    /// <param name="other">A <see cref="Riateu.Components.PhysicsComponent"/> to check with</param>
+    /// <param name="offset">A coordinate offset for collision</param>
+    /// <returns>true if it collided, else false</returns>
     public bool Check(PhysicsComponent other, Vector2 offset) 
     {
         if (other == this || !other.Collidable)
@@ -261,5 +267,12 @@ public class PhysicsComponent : Component
         scene.RemoveBit(this);
         scene.RemovePhysics(this);
         base.EntityExited(scene);
+    }
+
+    /// <inheritdoc/>
+    public override void Removed()
+    {
+        base.Removed();
+        physicsAdded = false;
     }
 }
