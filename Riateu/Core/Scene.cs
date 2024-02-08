@@ -151,6 +151,14 @@ public abstract class Scene
         }
     }
 
+    /// <summary>
+    /// Force sort all of the entities by <see cref="Riateu.Entity.Depth"/>.
+    /// </summary>
+    public void SortEntities() 
+    {
+        EntityList.SortEntities();
+    }
+
     internal void InternalUpdate(double delta) 
     {
         EntityList.UpdateSystem();

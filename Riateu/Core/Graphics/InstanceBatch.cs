@@ -168,7 +168,6 @@ public class InstanceBatch : System.IDisposable, IBatch
             cmdBuf.DrawInstancedPrimitives(0u, 0u, 2u, batch.InstanceCount, vertexOffset, 0u);
         }
 
-
         batchIndex = 0;
     }
 
@@ -283,5 +282,4 @@ public class InstanceBatch : System.IDisposable, IBatch
         Dispose(disposing: true);
         System.GC.SuppressFinalize(this);
     }
-
 }

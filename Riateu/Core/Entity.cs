@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
@@ -172,10 +173,15 @@ public class Entity : IEnumerable<Component>
     /// <param name="scene">A scene that entity is previously on</param>
     public virtual void ExitScene(Scene scene) 
     {
+        var removing = new List<Component>();
         foreach (var comp in componentList) 
         {
-            comp.Removed();
             comp.EntityExited(scene);
+            removing.Add(comp);
+        }
+        foreach (var targetComponent in removing) 
+        {
+            RemoveComponent(targetComponent);
         }
         OnRemoved?.Invoke();
         Scene = null;
@@ -270,9 +276,11 @@ public class Entity : IEnumerable<Component>
     public T GetComponent<T>() where T : Component
     {
         Span<Component> comps = CollectionsMarshal.AsSpan(componentList);
-        foreach (var comp in comps) 
+        ref var componentSearch = ref MemoryMarshal.GetReference(comps);
+        for (int i = 0; i < comps.Length; i++)
         {
-            if (comp is T c) 
+            var item = Unsafe.Add(ref componentSearch, i);
+            if (item is T c) 
             {
                 return c;
             }
