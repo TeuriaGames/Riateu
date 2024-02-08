@@ -50,7 +50,12 @@ public class AnimatedSprite : GraphicsComponent
     public string CurrentAnimation => currentAnimationName;
     
     
-    private AnimatedSprite(Texture texture) : base(texture) {}
+    /// <summary>
+    /// Initialize an empty <see cref="Riateu.Components.AnimatedSprite"/>. You might want to use 
+    /// <see cref="Riateu.Components.AnimatedSprite.Create(Texture, Dictionary{string, Animation})"/> instead.
+    /// </summary>
+    /// <param name="texture">A texture to base on</param>
+    public AnimatedSprite(Texture texture) : base(texture) {}
 
     /// <summary>
     /// Create an <see cref="Riateu.Components.AnimatedSprite"/> from a json path.
