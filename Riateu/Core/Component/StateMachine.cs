@@ -41,6 +41,7 @@ where S: unmanaged, Enum
             var corou = coroutines[sIdx];
             if (corou != null) 
             {
+                coroutine.Active = true;
                 coroutine.Run(corou);
             }
         }
