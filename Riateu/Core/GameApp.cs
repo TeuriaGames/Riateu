@@ -73,6 +73,7 @@ public abstract class GameApp : Game
         Width = (int)windowCreateInfo.WindowWidth;
         Height = (int)windowCreateInfo.WindowHeight;
         GameContext.Init(GraphicsDevice, MainWindow);
+        Input.Initialize(Inputs);
         LoadContent();
         Initialize();
         batch = new Batch(GraphicsDevice, Width, Height);
@@ -115,6 +116,7 @@ public abstract class GameApp : Game
     protected override void Update(TimeSpan delta)
     {
         Time.Update(delta);
+        Input.Update();
         if (scene == null || (scene != nextScene)) 
         {
             scene?.End();
