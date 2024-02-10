@@ -119,7 +119,7 @@ public class Canvas : IDisposable
     /// <param name="sampler">The sampler for the texture</param>
     public void ApplyCanvasToBatch(IBatch batch, Sampler sampler) 
     {
-        batch.Add(CanvasTexture, sampler, Vector2.Zero, Matrix3x2.Identity);
+        batch.Add(CanvasTexture, sampler, Vector2.Zero, Color.White, Matrix3x2.Identity);
     }
 
     ///

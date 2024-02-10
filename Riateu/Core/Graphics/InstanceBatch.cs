@@ -177,16 +177,18 @@ public class InstanceBatch : System.IDisposable, IBatch
     /// <param name="baseTexture">A texture to be used for a vertex</param>
     /// <param name="sampler">A sampler to be used for a texture</param>
     /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
     /// <param name="transform">A transform matrix</param>
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     public void Add(
         Texture baseTexture, 
         Sampler sampler, 
         Vector2 position, 
+        Color color,
         Matrix3x2 transform, 
         float layerDepth = 1) 
     {
-        Add(new SpriteTexture(baseTexture), baseTexture, sampler, position, transform, layerDepth);
+        Add(new SpriteTexture(baseTexture), baseTexture, sampler, position, color, transform, layerDepth);
     }
 
     /// <summary>
@@ -196,6 +198,7 @@ public class InstanceBatch : System.IDisposable, IBatch
     /// <param name="baseTexture">A texture to be used for a vertex</param>
     /// <param name="sampler">A sampler to be used for a texture</param>
     /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
     /// <param name="transform">A transform matrix</param>
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     public void Add(
@@ -203,6 +206,7 @@ public class InstanceBatch : System.IDisposable, IBatch
         Texture baseTexture, 
         Sampler sampler, 
         Vector2 position, 
+        Color color,
         Matrix3x2 transform, 
         float layerDepth = 1) 
     {
@@ -238,7 +242,7 @@ public class InstanceBatch : System.IDisposable, IBatch
             new Vector3(Vector2.Transform(position, transform), layerDepth),
             new Vector2(sTexture.Width, sTexture.Height),
             sTexture.UV,
-            Color.White
+            color
         );
         instanceCount++;
     }

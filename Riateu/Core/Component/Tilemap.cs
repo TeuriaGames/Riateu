@@ -30,10 +30,15 @@ public class Tilemap : Component
     private bool dirty = true;
     private TilemapMode mode;
     private Matrix4x4 Matrix;
+    private int gridSize;
     /// <summary>
     /// A size of a grid in tiles.
     /// </summary>
-    public int GridSize;
+    public int GridSize => gridSize;
+    /// <summary> 
+    /// Contains the rendering mode for the tilemap. 
+    /// </summary>
+    public TilemapMode Mode => mode;
 
     /// <summary>
     /// An initialization of a tilemap.
@@ -58,11 +63,15 @@ public class Tilemap : Component
 
         this.tiles = tiles;
         this.tilemapTexture = texture;
-        GridSize = gridSize;
-        frameBuffer = Texture.CreateTexture2D(GameContext.GraphicsDevice,
-            (uint)(rows * gridSize), (uint)(columns * gridSize),
-            TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
+        this.gridSize = gridSize;
+
         this.mode = mode;
+        if (mode == TilemapMode.Baked) 
+        {
+            frameBuffer = Texture.CreateTexture2D(GameContext.GraphicsDevice,
+                (uint)(rows * gridSize), (uint)(columns * gridSize),
+                TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
+        }
     }
     
     private void AddToBatch(IBatch spriteBatch, CommandBuffer buffer) 
@@ -76,7 +85,7 @@ public class Tilemap : Component
                     continue;
                 
                 spriteBatch.Add(sTexture.Value, tilemapTexture, GameContext.GlobalSampler, 
-                    new Vector2(x * GridSize, y * GridSize), Entity.Transform.WorldMatrix, layerDepth: 1f);
+                    new Vector2(x * gridSize, y * gridSize), Color.White, Entity.Transform.WorldMatrix, layerDepth: 1f);
             }
         }
     }
@@ -98,9 +107,18 @@ public class Tilemap : Component
                 dirty = false;
             }
             spriteBatch.Add(frameBuffer, GameContext.GlobalSampler, 
-                Vector2.Zero, Matrix3x2.Identity);
+                Vector2.Zero, Color.White, Matrix3x2.Identity);
             return;
         }
         AddToBatch(spriteBatch, buffer);
+    }
+
+    /// <inheritdoc/>
+    public override void Removed()
+    {
+        if (mode == TilemapMode.Baked) 
+        {
+            frameBuffer.Dispose();
+        }
     }
 }

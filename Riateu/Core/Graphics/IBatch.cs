@@ -18,12 +18,14 @@ public interface IBatch
     /// <param name="baseTexture">A texture to be used for a vertex</param>
     /// <param name="sampler">A sampler to be used for a texture</param>
     /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
     /// <param name="transform">A transform matrix</param>
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     void Add(
         Texture baseTexture, 
         Sampler sampler, 
         Vector2 position, 
+        Color color,
         Matrix3x2 transform, 
         float layerDepth = 1);
     
@@ -35,6 +37,7 @@ public interface IBatch
     /// <param name="baseTexture">A texture to be used for a vertex</param>
     /// <param name="sampler">A sampler to be used for a texture</param>
     /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
     /// <param name="transform">A transform matrix</param>
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     void Add(
@@ -42,6 +45,7 @@ public interface IBatch
         Texture baseTexture, 
         Sampler sampler, 
         Vector2 position, 
+        Color color,
         Matrix3x2 transform, 
         float layerDepth = 1); 
 

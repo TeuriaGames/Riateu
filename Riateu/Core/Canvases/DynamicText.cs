@@ -177,6 +177,6 @@ public class DynamicText : Text
             Resubmit();
             dirty = false;
         }
-        batch.Add(DynamicTexture, Texture, GameContext.GlobalSampler, position, Matrix3x2.Identity);
+        batch.Add(DynamicTexture, Texture, GameContext.GlobalSampler, position, Color.White, Matrix3x2.Identity);
     }
 }

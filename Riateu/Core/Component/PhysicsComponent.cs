@@ -66,6 +66,13 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check if this <see cref="Riateu.Components.PhysicsComponent"/> is colliding with this component.
+    /// </summary>
+    /// <param name="other">A <see cref="Riateu.Components.PhysicsComponent"/> to check with</param>
+    /// <param name="offset">A coordinate offset for collision</param>
+    /// <param name="onCollided">A callback that is called when any of the <see cref="Riateu.Components.PhysicsComponent"/> collided</param>
+    /// <returns>true if it collided, else false</returns>
     public bool Check(PhysicsComponent other, Vector2 offset, Action<Entity, PhysicsComponent> onCollided) 
     {
         if (onCollided == null || other == this || !other.Collidable)
@@ -79,20 +86,35 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check if this <see cref="Riateu.Components.PhysicsComponent"/> is colliding with this component.
+    /// </summary>
+    /// <param name="other">A <see cref="Riateu.Components.PhysicsComponent"/> to check with</param>
+    /// <param name="offset">A coordinate offset for collision</param>
+    /// <param name="onCollided">A callback that is called when any of the <see cref="Riateu.Components.PhysicsComponent"/> 
+    /// that has <typeparamref name="T"/> <see cref="Riateu.Entity"/> collided</param>
+    /// <typeparam name="T">An <see cref="Riateu.Entity"/> filter</typeparam>
+    /// <returns>true if it collided, else false</returns>
+
     public bool Check<T>(PhysicsComponent other, Vector2 offset, Action<T, PhysicsComponent> onCollided) 
     where T : Entity
     {
-        if (onCollided == null || other == this || !other.Collidable)
+        if (other.Entity is not T ent || onCollided == null || other == this || !other.Collidable)
             return false;
         if (shape.Collide(offset, other.shape)) 
         {
-            onCollided(other.Entity as T, other);
+            onCollided(ent, other);
             return true;
         }
 
         return false;
     }
 
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component.
+    /// </summary>
+    /// <param name="offset">A coordinate offset for collision</param>
+    /// <returns>true if it collided, else false</returns>
     public bool CheckAll(Vector2 offset)
     {
         foreach (var other in Scene.PhysicsWorld.Components) 
@@ -104,6 +126,15 @@ public class PhysicsComponent : Component
         }
         return false;
     }
+
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component.
+    /// </summary>
+    /// <param name="offset">A coordinate offset for collision</param>
+    /// <param name="tags">A <see cref="Riateu.Tag"/> filter to only check with these tags</param>
+    /// <param name="entity">An output reference to an <see cref="Riateu.Entity"/> that has been collided with</param>
+    /// <typeparam name="T">An entity filter</typeparam>
+    /// <returns>true if it collided, else false</returns>
 
     public bool CheckAll<T>(Vector2 offset, Tag tags, out T entity)
     where T : Entity
@@ -120,6 +151,13 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component.
+    /// </summary>
+    /// <param name="offset">A coordinate offset for collision</param>
+    /// <param name="entity">An output reference to an <see cref="Riateu.Entity"/> that has been collided with</param>
+    /// <param name="component">An output reference to a <see cref="Riateu.Components.PhysicsComponent"/> that has been collided with</param>
+    /// <returns>true if it collided, else false</returns>
     public bool CheckAll(Vector2 offset, out Entity entity, out PhysicsComponent component)
     {
         foreach (var other in Scene.PhysicsWorld.Components) 
@@ -136,6 +174,12 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component.
+    /// </summary>
+    /// <param name="offset">A coordinate offset for collision</param>
+    /// <param name="tags">A <see cref="Riateu.Tag"/> filter to only check with these tags</param>
+    /// <returns>true if it collided, else false</returns>
     public bool CheckAll(Vector2 offset, Tag tags)
     {
         foreach (var other in Scene.GetPhysicsFromBit(tags)) 
@@ -148,6 +192,14 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component.
+    /// </summary>
+    /// <param name="offset">A coordinate offset for collision</param>
+    /// <param name="tags">A <see cref="Riateu.Tag"/> filter to only check with these tags</param>
+    /// <param name="entity">An output reference to an <see cref="Riateu.Entity"/> that has been collided with</param>
+    /// <param name="component">An output reference to a <see cref="Riateu.Components.PhysicsComponent"/> that has been collided with</param>
+    /// <returns>true if it collided, else false</returns>
     public bool CheckAll(Vector2 offset, Tag tags, out Entity entity, out PhysicsComponent component)
     {
         foreach (var other in Scene.GetPhysicsFromBit(tags)) 
@@ -164,7 +216,12 @@ public class PhysicsComponent : Component
         return false;
     }
 
-
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component outside of its boundary.
+    /// It works by checking its collision direction.
+    /// </summary>
+    /// <param name="at">A collision direction</param>
+    /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll(Vector2 at)
     {
         foreach (var other in Scene.PhysicsWorld.Components) 
@@ -177,6 +234,15 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component outside of its boundary.
+    /// It works by checking its collision direction.
+    /// </summary>
+    /// <param name="at">A collision direction</param>
+    /// <param name="tags">A <see cref="Riateu.Tag"/> filter to only check with these tags</param>
+    /// <param name="entity">An output reference to an <see cref="Riateu.Entity"/> that has been collided with</param>
+    /// <typeparam name="T">An entity filter</typeparam>
+    /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll<T>(Vector2 at, Tag tags, out T entity)
     where T : Entity
     {
@@ -192,6 +258,14 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component outside of its boundary.
+    /// It works by checking its collision direction.
+    /// </summary>
+    /// <param name="at">A collision direction</param>
+    /// <param name="entity">An output reference to an <see cref="Riateu.Entity"/> that has been collided with</param>
+    /// <param name="component">An output reference to a <see cref="Riateu.Components.PhysicsComponent"/> that has been collided with</param>
+    /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll(Vector2 at, out Entity entity, out PhysicsComponent component)
     {
         foreach (var other in Scene.PhysicsWorld.Components) 
@@ -208,6 +282,13 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component outside of its boundary.
+    /// It works by checking its collision direction.
+    /// </summary>
+    /// <param name="at">A collision direction</param>
+    /// <param name="tags">A <see cref="Riateu.Tag"/> filter to only check with these tags</param>
+    /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll(Vector2 at, Tag tags)
     {
         foreach (var other in Scene.GetPhysicsFromBit(tags)) 
@@ -220,6 +301,15 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    /// <summary>
+    /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component outside of its boundary.
+    /// It works by checking its collision direction.
+    /// </summary>
+    /// <param name="at">A collision direction</param>
+    /// <param name="tags">A <see cref="Riateu.Tag"/> filter to only check with these tags</param>
+    /// <param name="entity">An output reference to an <see cref="Riateu.Entity"/> that has been collided with</param>
+    /// <param name="component"></param>
+    /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll(Vector2 at, Tag tags, out Entity entity, out PhysicsComponent component)
     {
         foreach (var other in Scene.GetPhysicsFromBit(tags)) 

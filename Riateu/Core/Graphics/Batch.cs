@@ -158,15 +158,14 @@ public class Batch : System.IDisposable, IBatch
 
     /// <inheritdoc/>
     public void Add(
-        Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform,
-        float layerDepth = 1) 
+        Texture texture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform, float layerDepth = 1) 
     {
-        Add(new SpriteTexture(texture), texture, sampler, position, transform, layerDepth);
+        Add(new SpriteTexture(texture), texture, sampler, position, color, transform, layerDepth);
     }
 
     /// <inheritdoc/>
     public void Add(
-        SpriteTexture sTexture, Texture texture, Sampler sampler, Vector2 position, Matrix3x2 transform,
+        SpriteTexture sTexture, Texture texture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform,
         float layerDepth = 1) 
     {
         if (texture.IsDisposed) 
@@ -227,10 +226,10 @@ public class Batch : System.IDisposable, IBatch
         vertices[vertexOffset + 2].Position = new Vector3(Vector2.Transform(topRight, transform), layerDepth);
         vertices[vertexOffset + 3].Position = new Vector3(Vector2.Transform(bottomRight, transform), layerDepth);
 
-        vertices[vertexOffset].Color = Color.White;
-        vertices[vertexOffset + 1].Color = Color.White;
-        vertices[vertexOffset + 2].Color = Color.White;
-        vertices[vertexOffset + 3].Color = Color.White;
+        vertices[vertexOffset].Color = color;
+        vertices[vertexOffset + 1].Color = color;
+        vertices[vertexOffset + 2].Color = color;
+        vertices[vertexOffset + 3].Color = color;
 
         vertices[vertexOffset].TexCoord = sTexture.UV.TopLeft;
         vertices[vertexOffset + 1].TexCoord = sTexture.UV.BottomLeft;
@@ -247,7 +246,7 @@ public class Batch : System.IDisposable, IBatch
     /// <param name="sampler">A sampler for acanvas</param>
     public void AddCanvas(Canvas canvas, Sampler sampler) 
     {
-        Add(canvas.CanvasTexture, sampler, Vector2.Zero, Matrix3x2.Identity);
+        Add(canvas.CanvasTexture, sampler, Vector2.Zero, Color.White, Matrix3x2.Identity);
     }
 
     /// <summary>

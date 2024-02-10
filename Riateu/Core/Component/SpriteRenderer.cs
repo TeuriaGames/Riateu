@@ -52,7 +52,7 @@ public class SpriteRenderer : GraphicsComponent
     {
         batch.Add(
             SpriteTexture, BaseTexture, GameContext.GlobalSampler, Vector2.Zero, 
-            Entity.Transform.WorldMatrix);
+            Color.White, Entity.Transform.WorldMatrix);
     }
 
     /// <inheritdoc/>

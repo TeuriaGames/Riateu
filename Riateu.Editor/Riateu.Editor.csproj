@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../MoonWorks/MoonWorks.csproj"/>
+    <ProjectReference Include="../Riateu/Riateu.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TeuJson" Version="3.2.0" />
+    <PackageReference Include="TeuJson.Generator" Version="3.2.0" />
+    <PackageReference Include="DotNetZip" Version="1.16.0" />
+  </ItemGroup>
+
+ <ItemGroup>
+    <Content Include="runtimes\x64\**\*.*">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
