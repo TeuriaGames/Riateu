@@ -73,6 +73,17 @@ public class Tilemap : Component
                 TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
         }
     }
+
+    /// <summary>
+    /// Set a tile to a specific grid location.
+    /// </summary>
+    /// <param name="x">A grid x</param>
+    /// <param name="y">A grid y</param>
+    /// <param name="texture">A quad or null value</param>
+    public void SetTile(int x, int y, SpriteTexture? texture) 
+    {
+        tiles[x, y] = texture;
+    }
     
     private void AddToBatch(IBatch spriteBatch, CommandBuffer buffer) 
     {
