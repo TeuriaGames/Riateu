@@ -34,7 +34,8 @@ public class ImGuiRenderer
     /// <param name="window">An application window</param>
     /// <param name="width">A width of the canvas</param>
     /// <param name="height">A height of the canvas</param>
-    public ImGuiRenderer(GraphicsDevice device, Window window, int width, int height) 
+    /// <param name="onInit">Called before building the font</param>
+    public ImGuiRenderer(GraphicsDevice device, Window window, int width, int height, Action<ImGuiIOPtr> onInit = null) 
     {
         this.device = device;
         ImGui.CreateContext();
@@ -44,6 +45,8 @@ public class ImGuiRenderer
         io.DisplayFramebufferScale = System.Numerics.Vector2.One;
         imGuiShader = Resources.GetShader(device, Resources.ImGuiShader);
         imGuiSampler = new Sampler(device, SamplerCreateInfo.LinearClamp);
+
+        var fragmentShader = Resources.GetShader(device, Resources.Texture);
 
         imGuiPipeline = new GraphicsPipeline(
             device,
@@ -59,13 +62,11 @@ public class ImGuiRenderer
                 PrimitiveType = PrimitiveType.TriangleList,
                 RasterizerState = RasterizerState.CW_CullNone,
                 MultisampleState = MultisampleState.None,
-                VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(imGuiShader, "vs_main", 0),
-                FragmentShaderInfo = GraphicsShaderInfo.Create(imGuiShader, "fs_main", 1),
+                VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(imGuiShader, "main", 0),
+                FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentShader, "main", 1),
                 VertexInputState = VertexInputState.CreateSingleBinding<Position2DTextureColorVertex>()
             }
         );
-
-        BuildFontAtlas();
 
         window.RegisterSizeChangeCallback(HandleSizeChanged);
 
@@ -82,6 +83,10 @@ public class ImGuiRenderer
             io.SetClipboardTextFn = Clipboard.SetFnPtr;
             io.GetClipboardTextFn = Clipboard.GetFnPtr;
         }
+
+        onInit?.Invoke(io);
+
+        BuildFontAtlas();
     }
 
     private void HandleSizeChanged(uint width, uint height) 
