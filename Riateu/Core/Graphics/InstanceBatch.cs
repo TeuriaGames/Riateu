@@ -156,6 +156,8 @@ public class InstanceBatch : System.IDisposable, IBatch
     /// <param name="viewProjection">A 4x4 matrix to project on screen</param>
     public void Draw(CommandBuffer cmdBuf, Matrix4x4 viewProjection) 
     {
+        if (batches[0].InstanceCount == 0)
+            return;
         var vertexOffset = cmdBuf.PushVertexShaderUniforms(viewProjection);
 
         for (int i = 0; i < batchIndex + 1; i++) 

@@ -2,16 +2,35 @@ using MoonWorks.Math.Float;
 
 namespace Riateu.Physics;
 
+/// <summary>
+/// A shape that uses for collision detection in a box shaped.
+/// </summary>
 public class AABB : Shape
 {
+    /// <summary>
+    /// A bounding hitbox of this shape.
+    /// </summary>
     public Rectangle BoundingBox;
     
 
+    /// <summary>
+    /// Initialization of this shape.
+    /// </summary>
+    /// <param name="entity">An <see cref="Riateu.Entity"/> to reference with</param>
+    /// <param name="rectangle">A hitbox of this shape</param>
     public AABB(Entity entity, Rectangle rectangle) : base(entity)
     {
         BoundingBox = rectangle;
     }
 
+    /// <summary>
+    /// Initialization of this shape.
+    /// </summary>
+    /// <param name="entity">An <see cref="Riateu.Entity"/> to reference with</param>
+    /// <param name="x">An x-axis of the hitbox</param>
+    /// <param name="y">A y-axis of the hitbox</param>
+    /// <param name="width">A width of the hitbox</param>
+    /// <param name="height">A height of the hitbox</param>
     public AABB(Entity entity, int x, int y, int width, int height) 
         : this(entity, new Rectangle(x, y, width, height)) {}
 

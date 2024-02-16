@@ -16,7 +16,14 @@ public class Tileset
     private Spritesheet spritesheet;
     private Dictionary<byte, Ruleset> rules = new();
 
-    private Tileset(
+    /// <summary>
+    /// An initialization for this class.
+    /// </summary>
+    /// <param name="tileset">A texture of this <see cref="Riateu.Graphics.Tileset"/></param>
+    /// <param name="atlasTexture">A quad of this <see cref="Riateu.Graphics.Tileset"/></param>
+    /// <param name="tileWidth">A tile width of this <see cref="Riateu.Graphics.Tileset"/></param>
+    /// <param name="tileHeight">A tile height of this <see cref="Riateu.Graphics.Tileset"/></param>
+    public Tileset(
         Texture tileset, 
         SpriteTexture atlasTexture,
         int tileWidth,

@@ -82,7 +82,16 @@ public class Tilemap : Component
     /// <param name="texture">A quad or null value</param>
     public void SetTile(int x, int y, SpriteTexture? texture) 
     {
-        tiles[x, y] = texture;
+        if (ArrayUtils.ArrayCheck(x, y, tiles))
+            tiles[x, y] = texture;
+    }
+
+    /// <summary>
+    /// Clear all tiles in this map.
+    /// </summary>
+    public void Clear() 
+    {
+        tiles.Fill(null);
     }
     
     private void AddToBatch(IBatch spriteBatch, CommandBuffer buffer) 
