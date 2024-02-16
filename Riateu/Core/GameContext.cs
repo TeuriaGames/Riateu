@@ -57,8 +57,8 @@ public static class GameContext
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
             RasterizerState = RasterizerState.CW_CullNone,
-            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(vertexPSC, "vs_main", 0),
-            FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "fs_main", 1),
+            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(vertexPSC, "main", 0),
+            FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "main", 1),
             VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
         };
 
@@ -98,8 +98,8 @@ public static class GameContext
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
             RasterizerState = RasterizerState.CW_CullNone,
-            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(instancedPSC, "vs_main", 0),
-            FragmentShaderInfo = GraphicsShaderInfo.Create(instancedPSC, "fs_main", 1),
+            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(instancedPSC, "main", 0),
+            FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "main", 1),
             VertexInputState = new VertexInputState([
                 vertexBufferDescription,
                 instancedBufferDescription

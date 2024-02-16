@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,17 +18,17 @@
   </ItemGroup>
 
   <ItemGroup>
-		<EmbeddedResource Include="Core\Misc\Refresh\PositionTextureColor.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.PositionTextureColor.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Refresh\PositionTextureColor.vert.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.PositionTextureColor.vert.wgsl.refresh</LogicalName>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Refresh\Texture.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.Texture.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Refresh\Texture.frag.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.Texture.frag.wgsl.refresh</LogicalName>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Refresh\ImGuiShader.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.ImGuiShader.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Refresh\ImGuiShader.vert.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.ImGuiShader.vert.wgsl.refresh</LogicalName>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Refresh\InstancedShader.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.InstancedShader.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Refresh\InstancedShader.vert.wgsl.refresh">
+			<LogicalName>Riateu.Misc.Refresh.InstancedShader.vert.wgsl.refresh</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
 </Project>

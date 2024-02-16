@@ -11,14 +11,9 @@ struct VertexOutput {
 @binding(0) @group(2) var<uniform> matrix_uniform: mat4x4<f32>;
 
 @vertex
-fn vs_main(in: VertexInput) -> VertexOutput {
+fn main(in: VertexInput) -> VertexOutput {
     var output: VertexOutput;
     output.color = in.color;
     output.position = matrix_uniform * vec4<f32>(in.position, 1.0);
     return output;
-}
-
-@fragment
-fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    return in.color;
 }

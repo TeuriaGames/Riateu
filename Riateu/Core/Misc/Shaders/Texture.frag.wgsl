@@ -2,6 +2,6 @@
 @binding(0) @group(0) var tex_sampler: sampler;
 
 @fragment
-fn fs_main(@location(0) color: vec4<f32>, @location(1) tex_coord: vec2<f32>) -> @location(0) vec4<f32> {
+fn main(@location(0) color: vec4<f32>, @location(1) tex_coord: vec2<f32>) -> @location(0) vec4<f32> {
     return textureSample(tex_2d, tex_sampler, tex_coord) * color;
 }

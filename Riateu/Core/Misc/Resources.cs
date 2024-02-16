@@ -12,7 +12,7 @@ public static class Resources
         {
             if (instancedShader == null) 
             {
-                instancedShader = GetShaderByte("InstancedShader.wgsl");
+                instancedShader = GetShaderByte("InstancedShader.vert.wgsl");
             }
             return instancedShader;
         }
@@ -25,7 +25,7 @@ public static class Resources
         {
             if (imGuiShader == null) 
             {
-                imGuiShader = GetShaderByte("ImGuiShader.wgsl");
+                imGuiShader = GetShaderByte("ImGuiShader.vert.wgsl");
             }
             return imGuiShader;
         }
@@ -38,7 +38,7 @@ public static class Resources
         {
             if (positionTextureColor == null) 
             {
-                positionTextureColor = GetShaderByte("PositionTextureColor.wgsl");
+                positionTextureColor = GetShaderByte("PositionTextureColor.vert.wgsl");
             }
             return positionTextureColor;
         }
@@ -51,7 +51,7 @@ public static class Resources
         {
             if (texture == null) 
             {
-                texture = GetShaderByte("Texture.wgsl");
+                texture = GetShaderByte("Texture.frag.wgsl");
             }
             return texture;
         }

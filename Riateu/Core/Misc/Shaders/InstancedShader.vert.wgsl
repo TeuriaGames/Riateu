@@ -22,7 +22,7 @@ struct VertexOutput {
 
 
 @vertex
-fn vs_main(
+fn main(
     vert: VertexInput,
     in: InstanceInput,
     @builtin(vertex_index) vert_index: u32,
@@ -35,16 +35,6 @@ fn vs_main(
     output.tex_coord = uvs[vert_index % 4u];
     output.position = matrix_uniform * matrix * vec4<f32>(vert.position, 1.0);
     return output;
-}
-
-
-@binding(0) @group(1) var tex_2d: texture_2d<f32>;
-@binding(0) @group(0) var tex_sampler: sampler;
-
-
-@fragment
-fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    return textureSample(tex_2d, tex_sampler, in.tex_coord) * in.color;
 }
 
 fn create_scale(scale_2d: vec3<f32>) -> mat4x4<f32> {
