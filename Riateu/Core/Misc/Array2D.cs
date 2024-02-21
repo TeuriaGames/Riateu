@@ -92,10 +92,8 @@ public sealed class Array2D<T>
 
     public Array2D<T> Clone()
     {
-        var array = new Array2D<T>(numRows, numColumns)
-        {
-            array = this.array
-        };
+        var array = new Array2D<T>(numRows, numColumns);
+        Array.Copy(this.array, array.array, this.array.Length);
         return array;
     }
 
