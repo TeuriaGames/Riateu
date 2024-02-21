@@ -2,7 +2,6 @@ using System.IO;
 using MoonWorks;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
-using Riateu.Components;
 using Riateu.Graphics;
 using Riateu.Misc;
 
@@ -56,7 +55,7 @@ public static class GameContext
             DepthStencilState = DepthStencilState.Disable,
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
-            RasterizerState = RasterizerState.CW_CullNone,
+            RasterizerState = RasterizerState.CCW_CullNone,
             VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(vertexPSC, "main", 0),
             FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "main", 1),
             VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
@@ -67,13 +66,13 @@ public static class GameContext
         GraphicsPipelineCreateInfo msdfPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(mainWindow.SwapchainFormat, 
+                new ColorAttachmentDescription(TextureFormat.R8G8B8A8, 
                 ColorAttachmentBlendState.AlphaBlend)
             ),
             DepthStencilState = DepthStencilState.Disable,
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
-            RasterizerState = RasterizerState.CW_CullNone,
+            RasterizerState = RasterizerState.CCW_CullNone,
             VertexShaderInfo = device.TextVertexShaderInfo,
             FragmentShaderInfo = device.TextFragmentShaderInfo,
             VertexInputState = device.TextVertexInputState
@@ -91,13 +90,13 @@ public static class GameContext
         GraphicsPipelineCreateInfo instancedPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(mainWindow.SwapchainFormat, 
+                new ColorAttachmentDescription(TextureFormat.R8G8B8A8, 
                 ColorAttachmentBlendState.AlphaBlend)
             ),
             DepthStencilState = DepthStencilState.Disable,
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
-            RasterizerState = RasterizerState.CW_CullNone,
+            RasterizerState = RasterizerState.CCW_CullNone,
             VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(instancedPSC, "main", 0),
             FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "main", 1),
             VertexInputState = new VertexInputState([
