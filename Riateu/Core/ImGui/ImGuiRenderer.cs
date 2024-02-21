@@ -44,7 +44,7 @@ public class ImGuiRenderer
         io.DisplaySize = new System.Numerics.Vector2(width, height);
         io.DisplayFramebufferScale = System.Numerics.Vector2.One;
         imGuiShader = Resources.GetShader(device, Resources.ImGuiShader);
-        imGuiSampler = new Sampler(device, SamplerCreateInfo.LinearClamp);
+        imGuiSampler = new Sampler(device, SamplerCreateInfo.PointClamp);
 
         var fragmentShader = Resources.GetShader(device, Resources.Texture);
 
@@ -60,7 +60,7 @@ public class ImGuiRenderer
                 ),
                 DepthStencilState = DepthStencilState.Disable,
                 PrimitiveType = PrimitiveType.TriangleList,
-                RasterizerState = RasterizerState.CW_CullNone,
+                RasterizerState = RasterizerState.CCW_CullNone,
                 MultisampleState = MultisampleState.None,
                 VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(imGuiShader, "main", 0),
                 FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentShader, "main", 1),
@@ -338,7 +338,7 @@ public class ImGuiRenderer
         AddToPointer(fontTexture);
     }
 
-    internal IntPtr AddToPointer(Texture texture) 
+    public IntPtr AddToPointer(Texture texture) 
     {
         if (!PtrMap.ContainsKey(texture.Handle)) 
         {
@@ -348,7 +348,7 @@ public class ImGuiRenderer
         return texture.Handle;
     }
 
-    internal Texture GetPointer(IntPtr ptr) 
+    public Texture GetPointer(IntPtr ptr) 
     {
         if (!PtrMap.ContainsKey(ptr)) 
         {
