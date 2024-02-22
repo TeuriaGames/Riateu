@@ -5,12 +5,6 @@ using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
-internal struct SubInstanceBatch 
-{
-    public Buffer InstancedBuffer;
-    public uint InstanceCount;
-    public TextureSamplerBinding Binding;
-}
 
 /// <summary>
 /// A batch system used to create many instances in one draw calls in a same vertex and index buffer 
@@ -19,6 +13,12 @@ internal struct SubInstanceBatch
 /// </summary>
 public class InstanceBatch : System.IDisposable, IBatch
 {
+    private struct SubInstanceBatch 
+    {
+        public GpuBuffer InstancedBuffer;
+        public uint InstanceCount;
+        public TextureSamplerBinding Binding;
+    }
     private const int MaxInstances = 8192;
     private const int MaxSubBatchCount = 8;
     private GraphicsDevice device;
@@ -26,8 +26,8 @@ public class InstanceBatch : System.IDisposable, IBatch
     private uint instanceCount;
     private uint batchIndex;
 
-    private Buffer vertexBuffer;
-    private Buffer indexBuffer;
+    private GpuBuffer vertexBuffer;
+    private GpuBuffer indexBuffer;
     private Stack<Matrix4x4> Matrices;
     private SubInstanceBatch[] batches = new SubInstanceBatch[MaxSubBatchCount];
 

@@ -1,0 +1,1 @@
+global using GpuBuffer = MoonWorks.Graphics.Buffer;

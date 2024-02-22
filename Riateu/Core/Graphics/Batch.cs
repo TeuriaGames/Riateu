@@ -5,12 +5,6 @@ using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
-internal struct SubBatch 
-{
-    public TextureSamplerBinding Binding;
-    public uint Offset;
-    public uint Count;
-}
 
 /// <summary>
 /// A batch system used to batch all of the vertices in one draw calls while it can. 
@@ -19,6 +13,13 @@ internal struct SubBatch
 /// </summary>
 public class Batch : System.IDisposable, IBatch
 {
+
+    private struct SubBatch 
+    {
+        public TextureSamplerBinding Binding;
+        public uint Offset;
+        public uint Count;
+    }
     private const int MaxTextures = 8192;
     private const int MaxSubBatchCount = 8;
     private GraphicsDevice device;
@@ -29,8 +30,8 @@ public class Batch : System.IDisposable, IBatch
     private uint vertexIndex;
     private uint currentMaxTexture = MaxTextures;
 
-    private Buffer vertexBuffer;
-    private Buffer indexBuffer;
+    private GpuBuffer vertexBuffer;
+    private GpuBuffer indexBuffer;
     private Stack<Matrix4x4> Matrices;
 
     /// <summary>
@@ -55,8 +56,8 @@ public class Batch : System.IDisposable, IBatch
         vertices = new PositionTextureColorVertex[MaxTextures * 4];
         indices = GenerateIndexArray(MaxTextures * 6);
 
-        vertexBuffer = Buffer.Create<PositionTextureColorVertex>(device, BufferUsageFlags.Vertex, (uint)vertices.Length);
-        indexBuffer = Buffer.Create<uint>(device, BufferUsageFlags.Index, (uint)indices.Length);
+        vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(device, BufferUsageFlags.Vertex, (uint)vertices.Length);
+        indexBuffer = GpuBuffer.Create<uint>(device, BufferUsageFlags.Index, (uint)indices.Length);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
