@@ -21,13 +21,24 @@ public struct SpriteTexture : IEquatable<SpriteTexture>
     public Rect Source;
 
     /// <summary>
-    /// A width of a quad.
+    /// A width of a quad texture.
     /// </summary>
-    public int Width => Source.W;
+    public int Width 
+    {
+        get => width;
+        set => width = value;
+    }
     /// <summary>
-    /// A height of a quad.
+    /// A height of a quad texture.
     /// </summary>
-    public int Height => Source.H;
+    public int Height
+    {
+        get => height;
+        set => height = value;
+    }
+
+    private int width;
+    private int height;
 
     /// <summary>
     /// Initialize the <see cref="Riateu.Graphics.SpriteTexture"/> by texture.
@@ -50,6 +61,8 @@ public struct SpriteTexture : IEquatable<SpriteTexture>
     public SpriteTexture(Texture texture, Rect source) 
     {
         Source = source;
+        width = source.W;
+        height = source.H;
 
         var sx = source.X / (float)texture.Width;
         var sy = source.Y / (float)texture.Height;

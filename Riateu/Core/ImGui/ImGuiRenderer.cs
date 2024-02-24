@@ -8,8 +8,6 @@ using MoonWorks.Math.Float;
 using Riateu.Graphics;
 using Riateu.Misc;
 
-using MBuffer = MoonWorks.Graphics.Buffer;
-
 namespace Riateu.ImGuiRend;
 
 /// <summary>
@@ -24,8 +22,8 @@ public class ImGuiRenderer
     private GraphicsDevice device;
     private uint vertexCount;
     private uint indexCount;
-    private MBuffer imGuiVertexBuffer;
-    private MBuffer imGuiIndexBuffer;
+    private GpuBuffer imGuiVertexBuffer;
+    private GpuBuffer imGuiIndexBuffer;
 
     /// <summary>
     /// A initilization for the ImGui renderer and to create its context.
@@ -172,7 +170,7 @@ public class ImGuiRenderer
             imGuiVertexBuffer?.Dispose();
 
             vertexCount = (uint)(drawDataPtr.TotalVtxCount * 1.5f);
-            imGuiVertexBuffer = MoonWorks.Graphics.Buffer.Create<PositionTextureColorVertex>(
+            imGuiVertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(
                 device,
                 BufferUsageFlags.Vertex,
                 vertexCount
@@ -184,7 +182,7 @@ public class ImGuiRenderer
             imGuiIndexBuffer?.Dispose();
 
             indexCount = (uint)(drawDataPtr.TotalIdxCount * 1.5f);
-            imGuiIndexBuffer = MoonWorks.Graphics.Buffer.Create<ushort>(
+            imGuiIndexBuffer = GpuBuffer.Create<ushort>(
                 device,
                 BufferUsageFlags.Index,
                 indexCount
