@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MoonWorks;
 using MoonWorks.Graphics;
@@ -32,6 +33,7 @@ public class Batch : System.IDisposable, IBatch
 
     private GpuBuffer vertexBuffer;
     private GpuBuffer indexBuffer;
+    private TransferBuffer transferBuffer;
     private Stack<Matrix4x4> Matrices;
 
     /// <summary>
@@ -58,6 +60,8 @@ public class Batch : System.IDisposable, IBatch
 
         vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(device, BufferUsageFlags.Vertex, (uint)vertices.Length);
         indexBuffer = GpuBuffer.Create<uint>(device, BufferUsageFlags.Index, (uint)indices.Length);
+
+        transferBuffer = new TransferBuffer(device, vertexBuffer.Size + indexBuffer.Size);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
@@ -123,8 +127,17 @@ public class Batch : System.IDisposable, IBatch
             return;
         }
 
-        cmdBuf.SetBufferData(indexBuffer, indices, 0, 0, vertexIndex * 6);
-        cmdBuf.SetBufferData(vertexBuffer, vertices, 0, 0, vertexIndex * 4);
+        cmdBuf.BeginCopyPass();
+
+        uint offset = 0;
+        uint length = transferBuffer.SetData(vertices.AsSpan(), SetDataOptions.Discard);
+        cmdBuf.UploadToBuffer(transferBuffer, vertexBuffer, new BufferCopy(offset, 0, length));
+
+        offset += length;
+        length = transferBuffer.SetData(indices.AsSpan(), offset, SetDataOptions.Overwrite);
+        cmdBuf.UploadToBuffer(transferBuffer, indexBuffer, new BufferCopy(offset, 0, length));
+
+        cmdBuf.EndCopyPass();
         batches[batchIndex].Count = vertexIndex;
     }
 
@@ -141,7 +154,7 @@ public class Batch : System.IDisposable, IBatch
         {
             return;
         }
-        var vertexOffset = cmdBuf.PushVertexShaderUniforms(viewProjection);
+        cmdBuf.PushVertexShaderUniforms(viewProjection);
         cmdBuf.BindVertexBuffers(vertexBuffer);
         cmdBuf.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
 
@@ -150,7 +163,7 @@ public class Batch : System.IDisposable, IBatch
             var batch = batches[i];
 
             cmdBuf.BindFragmentSamplers(batch.Binding);
-            cmdBuf.DrawIndexedPrimitives(batch.Offset * 4u, 0u, (batch.Count - batch.Offset) * 2u, vertexOffset, 0u);   
+            cmdBuf.DrawIndexedPrimitives(batch.Offset * 4u, 0u, (batch.Count - batch.Offset) * 2u);   
         }
 
         batchIndex = 0;
@@ -203,13 +216,16 @@ public class Batch : System.IDisposable, IBatch
             indices = GenerateIndexArray((uint)(maxTextures * 6));
 
             vertexBuffer.Dispose();
-            vertexBuffer = Buffer.Create<PositionTextureColorVertex>(
+            vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(
                 device, BufferUsageFlags.Vertex, (uint)vertices.Length);
 
             indexBuffer.Dispose();
-            indexBuffer = Buffer.Create<uint>(
-                device, BufferUsageFlags.Index, (uint)vertices.Length
+            indexBuffer = GpuBuffer.Create<uint>(
+                device, BufferUsageFlags.Index, (uint)indices.Length
             );
+
+            transferBuffer.Dispose();
+            transferBuffer = new TransferBuffer(device, vertexBuffer.Size + indexBuffer.Size);
         }
 
         float width = sTexture.Source.W;

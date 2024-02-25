@@ -94,7 +94,7 @@ public class Tilemap : Component
         tiles.Fill(null);
     }
     
-    private void AddToBatch(IBatch spriteBatch, CommandBuffer buffer) 
+    private void AddToBatch(IBatch spriteBatch) 
     {
         for (int x = 0; x < tiles.Rows; x++) 
         {
@@ -119,7 +119,7 @@ public class Tilemap : Component
         {
             if (dirty) 
             {
-                AddToBatch(spriteBatch, buffer);
+                AddToBatch(spriteBatch);
                 buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, Color.Transparent));
                 buffer.BindGraphicsPipeline(GameContext.DefaultPipeline);
                 spriteBatch.Draw(buffer, Matrix);
@@ -130,7 +130,7 @@ public class Tilemap : Component
                 Vector2.Zero, Color.White, Matrix3x2.Identity);
             return;
         }
-        AddToBatch(spriteBatch, buffer);
+        AddToBatch(spriteBatch);
     }
 
     /// <inheritdoc/>

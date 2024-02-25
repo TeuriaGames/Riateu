@@ -97,7 +97,26 @@ public static class RiateuExtensions
             out float distanceRange
         );
 
-        var texture = Texture.FromImageStream(graphicsDevice, commandBuffer, pngStream);
+        ImageUtils.ImageInfoFromStream(pngStream, out var width, out var height, out var sizeInBytes);
+        var texture = Texture.CreateTexture2D(graphicsDevice, width, height, TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler);
+
+        var transferBuffer = new TransferBuffer(graphicsDevice, sizeInBytes);
+        ImageUtils.DecodeIntoTransferBuffer(
+            pngStream,
+            transferBuffer,
+            0,
+            SetDataOptions.Overwrite
+        );
+
+        commandBuffer.BeginCopyPass();
+        commandBuffer.UploadToTexture(
+            transferBuffer,
+            texture
+        );
+        commandBuffer.EndCopyPass();
+
+        transferBuffer.Dispose();
+
 
         NativeMemory.Free(fontFileByteBuffer);
         NativeMemory.Free(atlasFileByteBuffer);

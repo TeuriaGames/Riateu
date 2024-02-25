@@ -57,7 +57,9 @@ public class StaticText : Text
         Batch = new TextBatch(device);
         Batch.Start(font);
         Batch.Add(text, pixel, Color.White);
+        buffer.BeginCopyPass();
         Batch.UploadBufferData(buffer);
+        buffer.EndCopyPass();
 
         buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, Color.Transparent));
         buffer.BindGraphicsPipeline(GameContext.MSDFPipeline);

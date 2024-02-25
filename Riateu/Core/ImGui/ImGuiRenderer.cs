@@ -24,6 +24,7 @@ public class ImGuiRenderer
     private uint indexCount;
     private GpuBuffer imGuiVertexBuffer;
     private GpuBuffer imGuiIndexBuffer;
+    private TransferBuffer transferBuffer;
 
     /// <summary>
     /// A initilization for the ImGui renderer and to create its context.
@@ -163,6 +164,8 @@ public class ImGuiRenderer
     {
         if (drawDataPtr.TotalVtxCount == 0) { return; }
 
+        bool needNewTransferBuffer = false;
+
         var commandBuffer = device.AcquireCommandBuffer();
 
         if (drawDataPtr.TotalVtxCount > vertexCount)
@@ -170,11 +173,12 @@ public class ImGuiRenderer
             imGuiVertexBuffer?.Dispose();
 
             vertexCount = (uint)(drawDataPtr.TotalVtxCount * 1.5f);
-            imGuiVertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(
+            imGuiVertexBuffer = GpuBuffer.Create<Position2DTextureColorVertex>(
                 device,
                 BufferUsageFlags.Vertex,
                 vertexCount
             );
+            needNewTransferBuffer = true;
         }
 
         if (drawDataPtr.TotalIdxCount > indexCount)
@@ -187,32 +191,40 @@ public class ImGuiRenderer
                 BufferUsageFlags.Index,
                 indexCount
             );
+            needNewTransferBuffer = true;
         }
 
+        if (needNewTransferBuffer) 
+        {
+            transferBuffer?.Dispose();
+            transferBuffer = new TransferBuffer(device, imGuiVertexBuffer.Size + imGuiIndexBuffer.Size);
+        }
         uint vertexOffset = 0;
         uint indexOffset = 0;
+        uint offset = 0;
 
+        commandBuffer.BeginCopyPass();
         for (var n = 0; n < drawDataPtr.CmdListsCount; n += 1)
         {
             var cmdList = drawDataPtr.CmdLists[n];
 
-            commandBuffer.SetBufferData<Position2DTextureColorVertex>(
-                imGuiVertexBuffer,
-                cmdList.VtxBuffer.Data,
-                vertexOffset,
-                (uint)cmdList.VtxBuffer.Size
-            );
+            Span<Position2DTextureColorVertex> vertexSpan = new Span<Position2DTextureColorVertex>((Position2DTextureColorVertex*)cmdList.VtxBuffer.Data, cmdList.VtxBuffer.Size);
+            Span<ushort> indexSpan = new Span<ushort>((ushort*)cmdList.IdxBuffer.Data, cmdList.IdxBuffer.Size);
 
-            commandBuffer.SetBufferData<ushort>(
-                imGuiIndexBuffer,
-                cmdList.IdxBuffer.Data,
-                indexOffset,
-                (uint)cmdList.IdxBuffer.Size
-            );
+            uint length = transferBuffer.SetData(vertexSpan, offset, SetDataOptions.Discard);
+            commandBuffer.UploadToBuffer(transferBuffer, imGuiVertexBuffer, new BufferCopy(offset, vertexOffset, length));
 
-            vertexOffset += (uint)cmdList.VtxBuffer.Size;
-            indexOffset += (uint)cmdList.IdxBuffer.Size;
+            vertexOffset += (uint)length;
+            offset += length;
+
+            length = transferBuffer.SetData(indexSpan, offset, SetDataOptions.Overwrite);
+            commandBuffer.UploadToBuffer(transferBuffer, imGuiIndexBuffer, new BufferCopy(offset, indexOffset, length));
+
+            offset += length;           
+            indexOffset += (uint)length;
         }
+
+        commandBuffer.EndCopyPass();
 
         device.Submit(commandBuffer);
     }
@@ -238,7 +250,7 @@ public class ImGuiRenderer
 
         commandBuffer.BindGraphicsPipeline(imGuiPipeline);
 
-        var vertexUniformOffset = commandBuffer.PushVertexShaderUniforms(
+        commandBuffer.PushVertexShaderUniforms(
             Matrix4x4.CreateOrthographicOffCenter(0, ioPtr.DisplaySize.X, 0, ioPtr.DisplaySize.Y, -1, 1)
         );
 
@@ -285,9 +297,7 @@ public class ImGuiRenderer
                 commandBuffer.DrawIndexedPrimitives(
                     vertexOffset,
                     indexOffset,
-                    drawCmd.ElemCount / 3,
-                    vertexUniformOffset,
-                    0
+                    drawCmd.ElemCount / 3
                 );
 
                 indexOffset += drawCmd.ElemCount;
@@ -305,7 +315,7 @@ public class ImGuiRenderer
         ImGui.DestroyContext();
     }
 
-    private void BuildFontAtlas() 
+    private unsafe void BuildFontAtlas() 
     {
         var cmdBuf = device.AcquireCommandBuffer();
 
@@ -326,9 +336,10 @@ public class ImGuiRenderer
             TextureUsageFlags.Sampler
         );
 
-        cmdBuf.SetTextureData(fontTexture, pixelData, (uint)(width * height * bytesPerPixel));
+        using var uploader = new ResourceUploader(device);
 
-        device.Submit(cmdBuf);
+        uploader.SetTextureData(fontTexture, new Span<byte>((void*)pixelData, width * height * bytesPerPixel));
+        uploader.Upload();
 
         io.Fonts.SetTexID(fontTexture.Handle);
         io.Fonts.ClearTexData();

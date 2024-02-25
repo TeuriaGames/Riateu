@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using MoonWorks;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
@@ -11,7 +13,7 @@ namespace Riateu.Graphics;
 /// while it can. This also utilizes a texture swapping which would add additional sub instance 
 /// batches to be able to draw multiple textures.
 /// </summary>
-public class InstanceBatch : System.IDisposable, IBatch
+public unsafe class InstanceBatch : System.IDisposable, IBatch
 {
     private struct SubInstanceBatch 
     {
@@ -22,12 +24,14 @@ public class InstanceBatch : System.IDisposable, IBatch
     private const int MaxInstances = 8192;
     private const int MaxSubBatchCount = 8;
     private GraphicsDevice device;
-    private InstancedVertex[] instances;
+    private InstancedVertex* instances;
+    private uint instancesSize = MaxInstances;
     private uint instanceCount;
     private uint batchIndex;
 
     private GpuBuffer vertexBuffer;
     private GpuBuffer indexBuffer;
+    private TransferBuffer transferBuffer;
     private Stack<Matrix4x4> Matrices;
     private SubInstanceBatch[] batches = new SubInstanceBatch[MaxSubBatchCount];
 
@@ -50,29 +54,31 @@ public class InstanceBatch : System.IDisposable, IBatch
     {
         Matrices = new();
         this.device = device;
-        instances = new InstancedVertex[MaxInstances];
+        instances = (InstancedVertex*)NativeMemory.Alloc(instancesSize, (nuint)Marshal.SizeOf<InstancedVertex>());
 
-        vertexBuffer = Buffer.Create<PositionVertex>(device, BufferUsageFlags.Vertex, 4);
-        indexBuffer = Buffer.Create<uint>(device, BufferUsageFlags.Index, 6);
+        transferBuffer = TransferBuffer.Create<InstancedVertex>(device, MaxInstances);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
         Matrix = view * projection;
 
+
         CommandBuffer buffer = device.AcquireCommandBuffer();
 
-        buffer.SetBufferData<PositionVertex>(vertexBuffer, [
+        using var resourceUploader = new ResourceUploader(device);
+
+        Span<PositionVertex> vertices = [
             new (new Vector3(0, 0, 0)),
             new (new Vector3(0, 1, 0)),
             new (new Vector3(1, 0, 0)),
             new (new Vector3(1, 1, 0)),
-        ]);
+        ];
 
-        buffer.SetBufferData<ushort>(indexBuffer, [
-            0, 1, 2, 2, 1, 3
-        ]);
+        Span<ushort> indices = [0, 1, 2, 2, 1, 3];
 
-        device.Submit(buffer);
+        vertexBuffer = resourceUploader.CreateBuffer<PositionVertex>(vertices, BufferUsageFlags.Vertex);
+        indexBuffer = resourceUploader.CreateBuffer<ushort>(indices, BufferUsageFlags.Index);
+        resourceUploader.Upload();
     }
 
     /// <inheritdoc/>
@@ -126,10 +132,15 @@ public class InstanceBatch : System.IDisposable, IBatch
         batches[batchIndex].InstanceCount = instanceCount;
         if (batches[batchIndex].InstancedBuffer == null) 
         {
-            batches[batchIndex].InstancedBuffer = Buffer.Create<InstancedVertex>(device, BufferUsageFlags.Vertex, (uint)instances.Length);
+            batches[batchIndex].InstancedBuffer = GpuBuffer.Create<InstancedVertex>(device, BufferUsageFlags.Vertex, instancesSize);
         }
 
-        cmdBuf.SetBufferData(batches[batchIndex].InstancedBuffer, instances, 0, 0, instanceCount);
+        Span<InstancedVertex> instanceSpan = new Span<InstancedVertex>((void*)instances, (int)instancesSize);
+
+        cmdBuf.BeginCopyPass();
+        uint length = transferBuffer.SetData(instanceSpan, SetDataOptions.Overwrite);
+        cmdBuf.UploadToBuffer(transferBuffer, batches[batchIndex].InstancedBuffer, new BufferCopy(0, 0, length));
+        cmdBuf.EndCopyPass();
 
         instanceCount = 0;
     }
@@ -158,7 +169,7 @@ public class InstanceBatch : System.IDisposable, IBatch
     {
         if (batches[0].InstanceCount == 0)
             return;
-        var vertexOffset = cmdBuf.PushVertexShaderUniforms(viewProjection);
+        cmdBuf.PushVertexShaderUniforms(viewProjection);
 
         for (int i = 0; i < batchIndex + 1; i++) 
         {
@@ -167,7 +178,7 @@ public class InstanceBatch : System.IDisposable, IBatch
             cmdBuf.BindIndexBuffer(indexBuffer, IndexElementSize.Sixteen);
 
             cmdBuf.BindFragmentSamplers(batch.Binding);
-            cmdBuf.DrawInstancedPrimitives(0u, 0u, 2u, batch.InstanceCount, vertexOffset, 0u);
+            cmdBuf.DrawInstancedPrimitives(0u, 0u, 2u, batch.InstanceCount);
         }
 
         batchIndex = 0;
@@ -234,18 +245,24 @@ public class InstanceBatch : System.IDisposable, IBatch
             batches[batchIndex].Binding = new TextureSamplerBinding(baseTexture, sampler);
         }
 
-        if (instanceCount == instances.Length) 
+        if (instanceCount == instancesSize) 
         {
-            int maxInstances = (int)(instanceCount + 2048);
-            System.Array.Resize(ref instances, maxInstances);
+            uint maxInstances = instanceCount + 2048;
+            instancesSize = maxInstances;
+            NativeMemory.Realloc(instances, instancesSize);
+
+            transferBuffer.Dispose();
+            transferBuffer = new TransferBuffer(device, maxInstances);
         }
-        
-        instances[instanceCount] = new InstancedVertex(
-            new Vector3(Vector2.Transform(position, transform), layerDepth),
-            new Vector2(sTexture.Width, sTexture.Height),
-            sTexture.UV,
-            color
-        );
+
+        instances[instanceCount].Position = new Vector3(Vector2.Transform(position, transform), layerDepth);
+        instances[instanceCount].Scale = new Vector2(sTexture.Width, sTexture.Height);
+        instances[instanceCount].UV0 = sTexture.UV.TopLeft;
+        instances[instanceCount].UV1 = sTexture.UV.BottomLeft;
+        instances[instanceCount].UV2 = sTexture.UV.TopRight;
+        instances[instanceCount].UV3 = sTexture.UV.BottomRight;
+        instances[instanceCount].Color = color;
+
         instanceCount++;
     }
 
@@ -267,6 +284,7 @@ public class InstanceBatch : System.IDisposable, IBatch
                 indexBuffer.Dispose();
             }
 
+            NativeMemory.Free(instances);
             IsDisposed = true;
         }
     }
