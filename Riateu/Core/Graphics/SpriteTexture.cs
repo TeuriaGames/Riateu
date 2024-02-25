@@ -109,7 +109,7 @@ public struct SpriteTexture : IEquatable<SpriteTexture>
     {
         ReadOnlySpan<float> CornerOffsetX = [ 0.0f, 0.0f, 1.0f, 1.0f ];
         ReadOnlySpan<float> CornerOffsetY = [ 0.0f, 1.0f, 0.0f, 1.0f ];
-        var flipByte = (byte)(flipMode & (FlipMode.Horizontal | FlipMode.Vertical));
+        var flipByte = (byte)(flipMode & (FlipMode.Vertical | FlipMode.Horizontal));
 
         UV.TopLeft.X = CornerOffsetX[0 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
         UV.TopLeft.Y = CornerOffsetY[0 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;

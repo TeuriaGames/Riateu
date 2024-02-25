@@ -17,7 +17,14 @@ public class SpriteRenderer : GraphicsComponent
         get => (flip & FlipMode.Horizontal) == FlipMode.Horizontal;
         set 
         {
-            flip |= value ? FlipMode.Horizontal : ~FlipMode.Horizontal;
+            if (value) 
+            {
+                flip |= FlipMode.Horizontal;
+            }
+            else 
+            {
+                flip &= ~FlipMode.Horizontal;
+            }
             SpriteTexture.FlipUV(flip);
         }
     }
@@ -30,7 +37,14 @@ public class SpriteRenderer : GraphicsComponent
         get => (flip & FlipMode.Vertical) == FlipMode.Vertical;
         set 
         {
-            flip |= value ? FlipMode.Vertical : ~FlipMode.Vertical;
+            if (value) 
+            {
+                flip |= FlipMode.Vertical;
+            }
+            else 
+            {
+                flip &= ~FlipMode.Vertical;
+            }
             SpriteTexture.FlipUV(flip);
         }
     }
