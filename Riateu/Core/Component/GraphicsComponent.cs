@@ -11,7 +11,7 @@ public abstract class GraphicsComponent : Component
     /// <summary>
     /// A quad for this component.
     /// </summary>
-    public SpriteTexture SpriteTexture;
+    public Quad SpriteTexture;
     /// <summary>
     /// A texture for this component.
     /// </summary>
@@ -22,7 +22,7 @@ public abstract class GraphicsComponent : Component
     /// </summary>
     /// <param name="texture">A quad for the component</param>
     /// <param name="baseTexture">A texture for the component</param>
-    public GraphicsComponent(SpriteTexture texture, Texture baseTexture) 
+    public GraphicsComponent(Quad texture, Texture baseTexture) 
     {
         SpriteTexture = texture;
         BaseTexture = baseTexture;

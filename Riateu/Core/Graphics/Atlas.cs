@@ -29,7 +29,7 @@ public class Atlas
     private bool ninePatchEnabled;
 
     private Dictionary<string, int> lookup = new();
-    private SpriteTexture[] textures;
+    private Quad[] textures;
 
     /// <summary>
     /// A map to the id of a texture by string.
@@ -38,16 +38,16 @@ public class Atlas
     /// <summary>
     /// A list of all textures in this atlas.
     /// </summary>
-    public SpriteTexture[] Textures => textures;
+    public Quad[] Textures => textures;
 
     /// <summary>
     /// Retrieve a quad by name
     /// </summary>
     /// <returns>
-    /// A <see cref="Riateu.Graphics.SpriteTexture"/> that is aligned to a specific quad 
+    /// A <see cref="Riateu.Graphics.Quad"/> that is aligned to a specific quad 
     /// to the packed texture
     /// </returns>
-    public SpriteTexture this[string name] => Get(name);
+    public Quad this[string name] => Get(name);
 
     private Atlas() {}
 
@@ -83,7 +83,7 @@ public class Atlas
             var val = JsonTextReader.FromStream(stream);
             var frames = val["frames"].AsJsonObject;
             var count = frames.Count;
-            atlas.textures = new SpriteTexture[count];
+            atlas.textures = new Quad[count];
             int textureID = -1;
             foreach (var kv in frames.Pairs) 
             {
@@ -98,7 +98,7 @@ public class Atlas
 
                 if (!value.Contains("nine_patch")) 
                 {
-                    var spriteTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
+                    var spriteTexture = new Quad(texture, new Rect(x, y, w, h));
                     atlas.textures[textureID] = spriteTexture;
                     continue;
                 }
@@ -110,7 +110,7 @@ public class Atlas
                 int nh = ninePatch["h"];
                 // TODO add nine patch
 
-                var ninePatchTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
+                var ninePatchTexture = new Quad(texture, new Rect(x, y, w, h));
                 atlas.textures[textureID] = ninePatchTexture;
             }
             return atlas;
@@ -118,7 +118,7 @@ public class Atlas
             var reader = new BinaryReader(stream);
             reader.ReadString();
             var length = reader.ReadUInt32();
-            atlas.textures = new SpriteTexture[length];
+            atlas.textures = new Quad[length];
             for (int i = 0; i < length; i++) 
             {
                 var name = reader.ReadString();
@@ -130,15 +130,15 @@ public class Atlas
                 atlas.lookup[name] = i;
                 if (!atlas.ninePatchEnabled) 
                 {
-                    var spriteTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
+                    var spriteTexture = new Quad(texture, new Rect(x, y, w, h));
                     atlas.textures[i] = spriteTexture;
                     continue;
                 }
                 var hasNinePatch = reader.ReadBoolean();
-                SpriteTexture ninePatchTexture;
+                Quad ninePatchTexture;
                 if (!hasNinePatch) 
                 {
-                    ninePatchTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
+                    ninePatchTexture = new Quad(texture, new Rect(x, y, w, h));
                 }
                 else 
                 {
@@ -147,7 +147,7 @@ public class Atlas
                     var nw = (int)reader.ReadUInt32();
                     var nh = (int)reader.ReadUInt32();
                     // TODO add nine patch here
-                    ninePatchTexture = new SpriteTexture(texture, new Rect(x, y, w, h));
+                    ninePatchTexture = new Quad(texture, new Rect(x, y, w, h));
                 }
 
                 atlas.textures[i] = ninePatchTexture;
@@ -161,10 +161,10 @@ public class Atlas
     /// </summary>
     /// <param name="name">A name of the quad from the packed texture</param>
     /// <returns>
-    /// A <see cref="Riateu.Graphics.SpriteTexture"/> that is aligned to a specific quad 
+    /// A <see cref="Riateu.Graphics.Quad"/> that is aligned to a specific quad 
     /// to the packed texture
     /// </returns>
-    public SpriteTexture Get(string name) 
+    public Quad Get(string name) 
     {
         return textures[lookup[name]];
     }
@@ -174,9 +174,9 @@ public class Atlas
     /// </summary>
     /// <param name="name">A name of the quad from the packed texture</param>
     /// <returns>
-    /// A reference to a <see cref="Riateu.Graphics.SpriteTexture"/>.
+    /// A reference to a <see cref="Riateu.Graphics.Quad"/>.
     /// </returns>
-    public ref SpriteTexture GetRef(string name) 
+    public ref Quad GetRef(string name) 
     {
         ref var textureID = ref CollectionsMarshal.GetValueRefOrNullRef(lookup, name);
         if (Unsafe.IsNullRef(in textureID)) 

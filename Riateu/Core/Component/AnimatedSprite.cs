@@ -96,7 +96,7 @@ public class AnimatedSprite : GraphicsComponent
             bool loop = value.Contains("loop") && value["loop"];
             var count = jsonFrames.Count;
 
-            var spriteTextures = new SpriteTexture[count];
+            var spriteTextures = new Quad[count];
             for (int i = 0; i < count; i++) 
             {
                 spriteTextures[i] = atlas[texture + "/" + jsonFrames[i].AsInt32];
@@ -202,7 +202,7 @@ public class AnimatedSprite : GraphicsComponent
         currentAnimationName = string.Empty;
     }
 
-    private void Set(ref SpriteTexture texture) 
+    private void Set(ref Quad texture) 
     {
         SpriteTexture = texture;
     }
@@ -222,7 +222,7 @@ public class AnimatedSprite : GraphicsComponent
         /// <summary>
         /// A list of textures to animate with.
         /// </summary>
-        public SpriteTexture[] Frames;
+        public Quad[] Frames;
         /// <summary>
         /// Whether to tell if the animation should loop when it play this animation.
         /// </summary>

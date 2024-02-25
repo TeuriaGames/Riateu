@@ -72,7 +72,7 @@ public class DynamicText : Text
             if (visibleText <= 0) 
             {
                 visibleText = 0;
-                DynamicTexture = new SpriteTexture(Texture, new Rect(0, 0, 0, 0));
+                DynamicTexture = new Quad(Texture, new Rect(0, 0, 0, 0));
                 return;
             }
 
@@ -81,7 +81,7 @@ public class DynamicText : Text
             var f = font.TextBounds(newSpan, pixel, HorizontalAlignment.Left, 
                 VerticalAlignment.Baseline, out WellspringCS.Wellspring.Rectangle rectVisible);
 
-            DynamicTexture = new SpriteTexture(
+            DynamicTexture = new Quad(
                 Texture, 
                 new Rect(0, 0, 
                     (int)rectVisible.W, 
@@ -91,7 +91,7 @@ public class DynamicText : Text
     }
 
     private int visibleText;
-    private SpriteTexture DynamicTexture;
+    private Quad DynamicTexture;
     /// <summary>
     /// The texture width of the rendered text.
     /// </summary>

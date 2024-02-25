@@ -174,12 +174,12 @@ public class Batch : System.IDisposable, IBatch
     public void Add(
         Texture texture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform, float layerDepth = 1) 
     {
-        Add(new SpriteTexture(texture), texture, sampler, position, color, transform, layerDepth);
+        Add(new Quad(texture), texture, sampler, position, color, transform, layerDepth);
     }
 
     /// <inheritdoc/>
     public void Add(
-        SpriteTexture sTexture, Texture texture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform,
+        Quad sTexture, Texture texture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform,
         float layerDepth = 1) 
     {
         if (texture.IsDisposed) 

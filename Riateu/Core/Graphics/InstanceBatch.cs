@@ -201,7 +201,7 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
         Matrix3x2 transform, 
         float layerDepth = 1) 
     {
-        Add(new SpriteTexture(baseTexture), baseTexture, sampler, position, color, transform, layerDepth);
+        Add(new Quad(baseTexture), baseTexture, sampler, position, color, transform, layerDepth);
     }
 
     /// <summary>
@@ -215,7 +215,7 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
     /// <param name="transform">A transform matrix</param>
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     public void Add(
-        SpriteTexture sTexture, 
+        Quad sTexture, 
         Texture baseTexture, 
         Sampler sampler, 
         Vector2 position, 

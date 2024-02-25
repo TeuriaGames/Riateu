@@ -8,7 +8,7 @@ namespace Riateu.Graphics;
 /// A struct that defines a quad for a given texture. Can be used to 
 /// define an <see cref="Riateu.Graphics.Atlas"/>.
 /// </summary>
-public struct SpriteTexture : IEquatable<SpriteTexture>
+public struct Quad : IEquatable<Quad>
 {
     /// <summary>
     /// A UV of a quad.
@@ -41,10 +41,10 @@ public struct SpriteTexture : IEquatable<SpriteTexture>
     private int height;
 
     /// <summary>
-    /// Initialize the <see cref="Riateu.Graphics.SpriteTexture"/> by texture.
+    /// Initialize the <see cref="Riateu.Graphics.Quad"/> by texture.
     /// </summary>
     /// <param name="texture">A texture to based on dimensions</param>
-    public SpriteTexture(Texture texture) 
+    public Quad(Texture texture) 
         : this(
             texture, 
             new Rect(0, 0, (int)texture.Width, (int)texture.Height)
@@ -54,11 +54,11 @@ public struct SpriteTexture : IEquatable<SpriteTexture>
     }
 
     /// <summary>
-    /// Initialize the <see cref="Riateu.Graphics.SpriteTexture"/> and specifiy its quad source.
+    /// Initialize the <see cref="Riateu.Graphics.Quad"/> and specifiy its quad source.
     /// </summary>
     /// <param name="texture">A texture to based on dimensions</param>
     /// <param name="source">A quad source for the texture</param>
-    public SpriteTexture(Texture texture, Rect source) 
+    public Quad(Texture texture, Rect source) 
     {
         Source = source;
         width = source.W;
@@ -74,12 +74,12 @@ public struct SpriteTexture : IEquatable<SpriteTexture>
     }
 
     /// <summary>
-    /// Initialize the <see cref="Riateu.Graphics.SpriteTexture"/> and specifiy 
+    /// Initialize the <see cref="Riateu.Graphics.Quad"/> and specifiy 
     /// its quad source by the UV.
     /// </summary>
     /// <param name="texture">A texture to based on dimensions</param>
     /// <param name="uv">A UV coords of a texture to set the quad source</param>
-    public SpriteTexture(Texture texture, UV uv) 
+    public Quad(Texture texture, UV uv) 
     {
         UV = uv;
 
@@ -93,7 +93,7 @@ public struct SpriteTexture : IEquatable<SpriteTexture>
     }
 
     /// <inheritdoc/>
-    public bool Equals(SpriteTexture other)
+    public bool Equals(Quad other)
     {
         return other.Source.X == Source.X &&
             other.Source.Y == Source.Y &&

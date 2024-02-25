@@ -24,7 +24,7 @@ public enum TilemapMode
 /// </summary>
 public class Tilemap : Component 
 {
-    private Array2D<SpriteTexture?> tiles;
+    private Array2D<Quad?> tiles;
     private Texture tilemapTexture;
     private Texture frameBuffer;
     private bool dirty = true;
@@ -47,7 +47,7 @@ public class Tilemap : Component
     /// <param name="tiles">A tiles containing the map of the tiles</param>
     /// <param name="gridSize">A size of a grid in tiles</param>
     /// <param name="mode">A rendering mode for the tilemap</param>
-    public Tilemap(Texture texture, Array2D<SpriteTexture?> tiles, int gridSize, 
+    public Tilemap(Texture texture, Array2D<Quad?> tiles, int gridSize, 
         TilemapMode mode = TilemapMode.Baked) 
     {
         int rows = tiles.Rows;
@@ -80,7 +80,7 @@ public class Tilemap : Component
     /// <param name="x">A grid x</param>
     /// <param name="y">A grid y</param>
     /// <param name="texture">A quad or null value</param>
-    public void SetTile(int x, int y, SpriteTexture? texture) 
+    public void SetTile(int x, int y, Quad? texture) 
     {
         if (ArrayUtils.ArrayCheck(x, y, tiles))
             tiles[x, y] = texture;
