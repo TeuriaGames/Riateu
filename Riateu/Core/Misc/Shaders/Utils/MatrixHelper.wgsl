@@ -24,3 +24,18 @@ fn create_translation(pos: vec3<f32>) -> mat4x4<f32> {
         vec4<f32>(pos.x, pos.y, pos.z, 1.)
     );
 }
+
+fn create_rotation(rot: f32, center_point: vec2<f32>) -> mat4x4<f32> {
+    let val1 = cos(rot);
+    let val2 = sin(rot);
+
+    let x = center_point.x * (1. - val1) + center_point.y * val2;
+    let y = center_point.y * (1. - val1) - center_point.x * val2;
+
+    return mat4x4<f32>(
+        vec4<f32>(val1, val2, 0., 0.),
+        vec4<f32>(-val2, val1, 0., 0.),
+        vec4<f32>(x, y, 1., 0.),
+        vec4<f32>(0., 0., 0., 1.)
+    );
+}

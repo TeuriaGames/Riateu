@@ -11,7 +11,8 @@ public interface IBatch
     /// <summary>
     /// A start of a batch. This should resets all batch state.
     /// </summary>
-    void Start();
+    void Begin();
+
     /// <summary>
     /// Adds a vertex data to a batch
     /// </summary>
@@ -22,8 +23,17 @@ public interface IBatch
     /// <param name="transform">A transform matrix</param>
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform, float layerDepth = 1);
-    
 
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, float layerDepth = 1);
+    
     /// <summary>
     /// Adds a vertex data to a batch
     /// </summary>
@@ -35,6 +45,147 @@ public interface IBatch
     /// <param name="transform">A transform matrix</param>
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform, float layerDepth = 1); 
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, float layerDepth = 1); 
+
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Matrix3x2 transform, float layerDepth = 1);
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, float layerDepth = 1);
+    
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Matrix3x2 transform, float layerDepth = 1); 
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, float layerDepth = 1); 
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, Matrix3x2 transform, float layerDepth = 1);
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1);
+    
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, Matrix3x2 transform, float layerDepth = 1); 
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1); 
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="rotation">A rotation of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Matrix3x2 transform, float layerDepth = 1); 
+
+    /// <summary>
+    /// Adds a vertex data to a batch
+    /// </summary>
+    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="rotation">A rotation of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1); 
 
     /// <summary>
     /// Sent the vertex buffer to the GPU.

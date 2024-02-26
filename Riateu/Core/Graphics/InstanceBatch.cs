@@ -22,7 +22,7 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
         public TextureSamplerBinding Binding;
     }
     private const int MaxInstances = 8192;
-    private const int MaxSubBatchCount = 8;
+    private const int MaxSubBatchCount = 4;
     private GraphicsDevice device;
     private InstancedVertex* instances;
     private uint instancesSize = MaxInstances;
@@ -82,7 +82,7 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
     }
 
     /// <inheritdoc/>
-    public void Start()
+    public void Begin()
     {
         batchIndex = 0;
     }
@@ -201,13 +201,31 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
         Matrix3x2 transform, 
         float layerDepth = 1) 
     {
-        Add(new Quad(baseTexture), baseTexture, sampler, position, color, transform, layerDepth);
+        Add(new Quad(baseTexture), baseTexture, sampler, position, color, Vector2.One, Vector2.Zero, 0, transform, layerDepth);
     }
 
     /// <summary>
     /// Adds an instance data to a batch
     /// </summary>
-    /// <param name="sTexture">A spriteTexture to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(
+        Texture baseTexture, 
+        Sampler sampler, 
+        Vector2 position, 
+        Color color,
+        float layerDepth = 1) 
+    {
+        Add(new Quad(baseTexture), baseTexture, sampler, position, color, Vector2.One, Vector2.Zero, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="quad">A spriteTexture to set a quad and coords for the texture</param>
     /// <param name="baseTexture">A texture to be used for a vertex</param>
     /// <param name="sampler">A sampler to be used for a texture</param>
     /// <param name="position">A position offset that will multiply in a matrix</param>
@@ -215,13 +233,162 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
     /// <param name="transform">A transform matrix</param>
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     public void Add(
-        Quad sTexture, 
+        Quad quad, 
         Texture baseTexture, 
         Sampler sampler, 
         Vector2 position, 
         Color color,
         Matrix3x2 transform, 
         float layerDepth = 1) 
+    {
+        Add(quad, baseTexture, sampler, Vector2.Transform(position, transform), color, Vector2.One, Vector2.Zero, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="quad">A spriteTexture to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, float layerDepth = 1)
+    {
+        Add(quad, baseTexture, sampler, position, color, Vector2.One, Vector2.Zero, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(new Quad(baseTexture), baseTexture, sampler, Vector2.Transform(position, transform), color, scale, Vector2.Zero, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, float layerDepth = 1)
+    {
+        Add(new Quad(baseTexture), baseTexture, sampler, position, color, scale, Vector2.Zero, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="quad">A spriteTexture to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(quad, baseTexture, sampler, Vector2.Transform(position, transform), color, scale, Vector2.Zero, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="quad">A spriteTexture to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, float layerDepth = 1)
+    {
+        Add(quad, baseTexture, sampler, position, color, scale, Vector2.Zero, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(new Quad(baseTexture), baseTexture, sampler, Vector2.Transform(position, transform), color, scale, origin, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
+    {
+        Add(new Quad(baseTexture), baseTexture, sampler, position, color, scale, origin, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="quad">A spriteTexture to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="transform">A transform matrix</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(quad, baseTexture, sampler, Vector2.Transform(position, transform), color, scale, origin, 0, layerDepth);
+    }
+
+    /// <summary>
+    /// Adds an instance data to a batch
+    /// </summary>
+    /// <param name="quad">A spriteTexture to set a quad and coords for the texture</param>
+    /// <param name="baseTexture">A texture to be used for a vertex</param>
+    /// <param name="sampler">A sampler to be used for a texture</param>
+    /// <param name="position">A position offset that will multiply in a matrix</param>
+    /// <param name="color">A color of a drawn texture</param>
+    /// <param name="scale">A scale of a drawn texture</param>
+    /// <param name="origin">An origin of a drawn texture</param>
+    /// <param name="layerDepth">A z-depth buffer of a vertex</param>
+    public void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
+    {
+        Add(quad, baseTexture, sampler, position, color, scale, origin, 0, layerDepth);
+    }
+
+
+    public void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(quad, baseTexture, sampler, Vector2.Transform(position, transform), color, scale, origin, rotation, layerDepth);
+    }
+
+    public void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1)
     {
         if (instanceCount > 0 && (
             baseTexture.Handle != batches[batchIndex].Binding.Texture.Handle ||
@@ -255,12 +422,22 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
             transferBuffer = new TransferBuffer(device, maxInstances);
         }
 
-        instances[instanceCount].Position = new Vector3(Vector2.Transform(position, transform), layerDepth);
-        instances[instanceCount].Scale = new Vector2(sTexture.Width, sTexture.Height);
-        instances[instanceCount].UV0 = sTexture.UV.TopLeft;
-        instances[instanceCount].UV1 = sTexture.UV.BottomLeft;
-        instances[instanceCount].UV2 = sTexture.UV.TopRight;
-        instances[instanceCount].UV3 = sTexture.UV.BottomRight;
+        instances[instanceCount].Position.X = position.X;
+        instances[instanceCount].Position.Y = position.Y;
+        instances[instanceCount].Position.Z = layerDepth;
+        instances[instanceCount].Scale.X = quad.Width * scale.X;
+        instances[instanceCount].Scale.Y = quad.Height * scale.Y;
+        instances[instanceCount].UV0.X = quad.UV.TopLeft.X;
+        instances[instanceCount].UV0.Y = quad.UV.TopLeft.Y;
+        instances[instanceCount].UV1.X = quad.UV.BottomLeft.X;
+        instances[instanceCount].UV1.Y = quad.UV.BottomLeft.Y;
+        instances[instanceCount].UV2.X = quad.UV.TopRight.X;
+        instances[instanceCount].UV2.Y = quad.UV.TopRight.Y;
+        instances[instanceCount].UV3.X = quad.UV.BottomRight.X;
+        instances[instanceCount].UV3.Y = quad.UV.BottomRight.Y;
+        instances[instanceCount].Origin.X = origin.X;
+        instances[instanceCount].Origin.Y = origin.Y;
+        instances[instanceCount].Rotation = rotation;
         instances[instanceCount].Color = color;
 
         instanceCount++;

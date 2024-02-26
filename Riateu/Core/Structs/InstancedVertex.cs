@@ -36,7 +36,15 @@ public struct InstancedVertex(Vector3 position, Vector2 scale, UV uv, Color colo
     /// </summary>
     public Vector2 Scale = scale;
     /// <summary>
-    /// A color that will be passed to the fragment shader 
+    /// A translation offset of the vertex.
+    /// </summary>
+    public Vector2 Origin;
+    /// <summary>
+    /// A rotation of the vertex.
+    /// </summary>
+    public float Rotation;
+    /// <summary>
+    /// A color that will be passed to the fragment shader.
     /// </summary>
     public Color Color = color;
 
@@ -53,6 +61,8 @@ public struct InstancedVertex(Vector3 position, Vector2 scale, UV uv, Color colo
         VertexElementFormat.Vector2,
 
         VertexElementFormat.Vector2,
+        VertexElementFormat.Vector2,
+        VertexElementFormat.Float,
         VertexElementFormat.Color,
     ];
 }

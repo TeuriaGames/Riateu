@@ -51,6 +51,9 @@ public class SpriteRenderer : GraphicsComponent
 
     private FlipMode flip;
 
+    public Vector2 Origin;
+    public float Rot;
+
     /// <summary>
     /// An initilization for this component.
     /// </summary>
@@ -66,7 +69,7 @@ public class SpriteRenderer : GraphicsComponent
     {
         batch.Add(
             SpriteTexture, BaseTexture, GameContext.GlobalSampler, Vector2.Zero, 
-            Color.White, Entity.Transform.WorldMatrix);
+            Color.White, Vector2.One, Origin, Entity.Transform.WorldMatrix);
     }
 
     /// <inheritdoc/>

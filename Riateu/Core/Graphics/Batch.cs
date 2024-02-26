@@ -85,7 +85,7 @@ public class Batch : System.IDisposable, IBatch
     }
 
     /// <inheritdoc/>
-    public void Start()
+    public void Begin()
     {
         batchIndex = 0;
     }
@@ -179,14 +179,127 @@ public class Batch : System.IDisposable, IBatch
 
     /// <inheritdoc/>
     public void Add(
-        Quad sTexture, Texture texture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform,
-        float layerDepth = 1) 
+        Texture texture, Sampler sampler, Vector2 position, Color color, float layerDepth = 1) 
+    {
+        Add(new Quad(texture), texture, sampler, position, color, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Quad quad, Texture texture, Sampler sampler, Vector2 position, Color color, Matrix3x2 transform, float layerDepth = 1) 
+    {
+        Add(quad, texture, sampler, position, color, Vector2.One, Vector2.Zero, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Quad quad, Texture texture, Sampler sampler, Vector2 position, Color color, float layerDepth = 1)
+    {
+        Add(quad, texture, sampler, position, color, Vector2.One, Vector2.Zero, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(new Quad(texture), texture, sampler, position, color, scale, Vector2.Zero, transform, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, float layerDepth = 1)
+    {
+        Add(new Quad(texture), texture, sampler, position, color, scale, Vector2.Zero, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Quad quad, Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(quad, texture, sampler, position, color, scale, Vector2.Zero, transform, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Quad quad, Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, float layerDepth = 1)
+    {
+        Add(quad, texture, sampler, position, color, scale, Vector2.Zero, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(new Quad(texture), texture, sampler, position, color, scale, origin, transform, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
+    {
+        Add(new Quad(texture), texture, sampler, position, color, scale, origin, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Quad quad, Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Add(quad, texture, sampler, position, color, scale, origin, 0, transform, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Quad quad, Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
+    {
+        Add(quad, texture, sampler, position, color, scale, origin, 0, Matrix3x2.Identity, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Add(Quad quad, Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Matrix3x2 transform, float layerDepth = 1)
     {
         if (texture.IsDisposed) 
         {
             throw new System.ObjectDisposedException(nameof(texture));
         }
 
+        CreateNewBatchIfNeeded(texture, sampler);
+
+        if (vertexIndex == currentMaxTexture) 
+        {
+            ResizeBuffer();
+        }
+
+
+        float width = quad.Source.W * scale.X;
+        float height = quad.Source.H * scale.Y;
+
+        transform = Matrix3x2.CreateTranslation(-origin.X, -origin.Y) 
+            * Matrix3x2.CreateRotation(rotation)
+            * transform;
+        
+        var topLeft = new Vector2(position.X, position.Y);
+        var topRight = new Vector2(position.X + width, position.Y);
+        var bottomLeft = new Vector2(position.X, position.Y + height);
+        var bottomRight = new Vector2(position.X + width, position.Y + height);
+
+        var vertexOffset = vertexIndex * 4;
+
+        vertices[vertexOffset].Position = new Vector3(Vector2.Transform(topLeft, transform), layerDepth);
+        vertices[vertexOffset + 1].Position = new Vector3(Vector2.Transform(bottomLeft, transform), layerDepth);
+        vertices[vertexOffset + 2].Position = new Vector3(Vector2.Transform(topRight, transform), layerDepth);
+        vertices[vertexOffset + 3].Position = new Vector3(Vector2.Transform(bottomRight, transform), layerDepth);
+
+        vertices[vertexOffset].Color = color;
+        vertices[vertexOffset + 1].Color = color;
+        vertices[vertexOffset + 2].Color = color;
+        vertices[vertexOffset + 3].Color = color;
+
+        vertices[vertexOffset].TexCoord = quad.UV.TopLeft;
+        vertices[vertexOffset + 1].TexCoord = quad.UV.BottomLeft;
+        vertices[vertexOffset + 2].TexCoord = quad.UV.TopRight;
+        vertices[vertexOffset + 3].TexCoord = quad.UV.BottomRight;
+
+        vertexIndex++;
+    }
+
+    /// <inheritdoc/>
+    public void Add(Quad quad, Texture texture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1)
+    {
+        Add(quad, texture, sampler, position, color, scale, origin, rotation, Matrix3x2.Identity, layerDepth);
+    }
+
+    private void CreateNewBatchIfNeeded(Texture texture, Sampler sampler) 
+    {
         if (vertexIndex > 0 && 
             (texture.Handle != batches[batchIndex].Binding.Texture.Handle || 
             sampler.Handle != batches[batchIndex].Binding.Sampler.Handle)) 
@@ -207,63 +320,26 @@ public class Batch : System.IDisposable, IBatch
         {
             batches[batchIndex].Binding = new TextureSamplerBinding(texture, sampler);
         }
-
-        if (vertexIndex == currentMaxTexture) 
-        {
-            int maxTextures = (int)(currentMaxTexture += 2048);
-            System.Array.Resize(ref vertices, vertices.Length + maxTextures * 4);
-
-            indices = GenerateIndexArray((uint)(maxTextures * 6));
-
-            vertexBuffer.Dispose();
-            vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(
-                device, BufferUsageFlags.Vertex, (uint)vertices.Length);
-
-            indexBuffer.Dispose();
-            indexBuffer = GpuBuffer.Create<uint>(
-                device, BufferUsageFlags.Index, (uint)indices.Length
-            );
-
-            transferBuffer.Dispose();
-            transferBuffer = new TransferBuffer(device, vertexBuffer.Size + indexBuffer.Size);
-        }
-
-        float width = sTexture.Source.W;
-        float height = sTexture.Source.H;
-        
-        var topLeft = new Vector2(position.X, position.Y);
-        var topRight = new Vector2(position.X + width, position.Y);
-        var bottomLeft = new Vector2(position.X, position.Y + height);
-        var bottomRight = new Vector2(position.X + width, position.Y + height);
-
-        var vertexOffset = vertexIndex * 4;
-
-        vertices[vertexOffset].Position = new Vector3(Vector2.Transform(topLeft, transform), layerDepth);
-        vertices[vertexOffset + 1].Position = new Vector3(Vector2.Transform(bottomLeft, transform), layerDepth);
-        vertices[vertexOffset + 2].Position = new Vector3(Vector2.Transform(topRight, transform), layerDepth);
-        vertices[vertexOffset + 3].Position = new Vector3(Vector2.Transform(bottomRight, transform), layerDepth);
-
-        vertices[vertexOffset].Color = color;
-        vertices[vertexOffset + 1].Color = color;
-        vertices[vertexOffset + 2].Color = color;
-        vertices[vertexOffset + 3].Color = color;
-
-        vertices[vertexOffset].TexCoord = sTexture.UV.TopLeft;
-        vertices[vertexOffset + 1].TexCoord = sTexture.UV.BottomLeft;
-        vertices[vertexOffset + 2].TexCoord = sTexture.UV.TopRight;
-        vertices[vertexOffset + 3].TexCoord = sTexture.UV.BottomRight;
-
-        vertexIndex++;
     }
 
-    /// <summary>
-    /// Add a canvas texture to the vertex buffer
-    /// </summary>
-    /// <param name="canvas">A <see cref="Riateu.Canvas"/> to submit with</param>
-    /// <param name="sampler">A sampler for acanvas</param>
-    public void AddCanvas(Canvas canvas, Sampler sampler) 
+    private void ResizeBuffer() 
     {
-        Add(canvas.CanvasTexture, sampler, Vector2.Zero, Color.White, Matrix3x2.Identity);
+        int maxTextures = (int)(currentMaxTexture += 2048);
+        System.Array.Resize(ref vertices, vertices.Length + maxTextures * 4);
+
+        indices = GenerateIndexArray((uint)(maxTextures * 6));
+
+        vertexBuffer.Dispose();
+        vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(
+            device, BufferUsageFlags.Vertex, (uint)vertices.Length);
+
+        indexBuffer.Dispose();
+        indexBuffer = GpuBuffer.Create<uint>(
+            device, BufferUsageFlags.Index, (uint)indices.Length
+        );
+
+        transferBuffer.Dispose();
+        transferBuffer = new TransferBuffer(device, vertexBuffer.Size + indexBuffer.Size);
     }
 
     /// <summary>
