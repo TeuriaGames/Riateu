@@ -1,4 +1,4 @@
-#import "./Utils/MatrixHelper.wgsl"
+#import Utils::MatrixHelper
 
 struct VertexInput {
     @location(0) position: vec3<f32>,
