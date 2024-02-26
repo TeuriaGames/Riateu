@@ -1,8 +1,4 @@
-struct VertexInput {
-    @location(0) position: vec2<f32>,
-    @location(1) tex_coord: vec2<f32>,
-    @location(2) color: vec4<f32>,
-};
+#import Structs::Position2DTextureColorVertex
 
 struct VertexOutput {
     @builtin(position) position: vec4<f32>,
@@ -14,7 +10,7 @@ struct VertexOutput {
 @binding(0) @group(2) var<uniform> matrix_uniform: mat4x4<f32>;
 
 @vertex
-fn main(in: VertexInput) -> VertexOutput {
+fn main(in: Position2DTextureColorVertex) -> VertexOutput {
     var output: VertexOutput;
     output.color = in.color;
     output.tex_coord = in.tex_coord;

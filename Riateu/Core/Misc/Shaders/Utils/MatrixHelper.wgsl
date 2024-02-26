@@ -1,3 +1,5 @@
+#define_import_path Utils::MatrixHelper
+
 fn create_scale(scale_2d: vec3<f32>) -> mat4x4<f32> {
     return mat4x4<f32>(
         vec4<f32>(scale_2d.x, 0., 0., 0.),
