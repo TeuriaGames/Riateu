@@ -208,17 +208,17 @@ public class ImGuiRenderer
         {
             var cmdList = drawDataPtr.CmdLists[n];
 
-            Span<Position2DTextureColorVertex> vertexSpan = new Span<Position2DTextureColorVertex>((Position2DTextureColorVertex*)cmdList.VtxBuffer.Data, cmdList.VtxBuffer.Size);
-            Span<ushort> indexSpan = new Span<ushort>((ushort*)cmdList.IdxBuffer.Data, cmdList.IdxBuffer.Size);
+            Span<Position2DTextureColorVertex> vertexSpan = new Span<Position2DTextureColorVertex>((void*)cmdList.VtxBuffer.Data, cmdList.VtxBuffer.Size);
+            Span<ushort> indexSpan = new Span<ushort>((void*)cmdList.IdxBuffer.Data, cmdList.IdxBuffer.Size);
 
-            uint length = transferBuffer.SetData(vertexSpan, offset, SetDataOptions.Discard);
-            commandBuffer.UploadToBuffer(transferBuffer, imGuiVertexBuffer, new BufferCopy(offset, vertexOffset, length));
+            uint length = transferBuffer.SetData(vertexSpan, offset, TransferOptions.Discard);
+            commandBuffer.UploadToBuffer(transferBuffer, imGuiVertexBuffer, new BufferCopy(offset, vertexOffset, length), CopyOptions.SafeOverwrite);
 
             vertexOffset += (uint)length;
             offset += length;
 
-            length = transferBuffer.SetData(indexSpan, offset, SetDataOptions.Overwrite);
-            commandBuffer.UploadToBuffer(transferBuffer, imGuiIndexBuffer, new BufferCopy(offset, indexOffset, length));
+            length = transferBuffer.SetData(indexSpan, offset, TransferOptions.Discard);
+            commandBuffer.UploadToBuffer(transferBuffer, imGuiIndexBuffer, new BufferCopy(offset, indexOffset, length), CopyOptions.SafeOverwrite);
 
             offset += length;           
             indexOffset += (uint)length;
@@ -328,17 +328,10 @@ public class ImGuiRenderer
             out int bytesPerPixel
         );
 
-        var fontTexture = Texture.CreateTexture2D(
-            device,
-            (uint)width,
-            (uint)height,
-            TextureFormat.R8G8B8A8,
-            TextureUsageFlags.Sampler
-        );
 
         using var uploader = new ResourceUploader(device);
+        var fontTexture = uploader.CreateTexture2D(new Span<byte>((void*)pixelData, width * height * bytesPerPixel), (uint)width, (uint)height);
 
-        uploader.SetTextureData(fontTexture, new Span<byte>((void*)pixelData, width * height * bytesPerPixel));
         uploader.Upload();
 
         io.Fonts.SetTexID(fontTexture.Handle);

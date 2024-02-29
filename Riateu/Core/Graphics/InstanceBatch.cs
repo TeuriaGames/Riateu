@@ -137,9 +137,9 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
 
         Span<InstancedVertex> instanceSpan = new Span<InstancedVertex>((void*)instances, (int)instancesSize);
 
-        uint length = transferBuffer.SetData(instanceSpan, SetDataOptions.Overwrite);
+        uint length = transferBuffer.SetData(instanceSpan, TransferOptions.Overwrite);
         cmdBuf.BeginCopyPass();
-        cmdBuf.UploadToBuffer(transferBuffer, batches[batchIndex].InstancedBuffer, new BufferCopy(0, 0, length));
+        cmdBuf.UploadToBuffer(transferBuffer, batches[batchIndex].InstancedBuffer, new BufferCopy(0, 0, length), CopyOptions.SafeDiscard);
         cmdBuf.EndCopyPass();
 
         instanceCount = 0;

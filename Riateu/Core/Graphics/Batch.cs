@@ -130,12 +130,12 @@ public class Batch : System.IDisposable, IBatch
         cmdBuf.BeginCopyPass();
 
         uint offset = 0;
-        uint length = transferBuffer.SetData(vertices.AsSpan(), SetDataOptions.Discard);
-        cmdBuf.UploadToBuffer(transferBuffer, vertexBuffer, new BufferCopy(offset, 0, length));
+        uint length = transferBuffer.SetData(vertices.AsSpan(), TransferOptions.Discard);
+        cmdBuf.UploadToBuffer(transferBuffer, vertexBuffer, new BufferCopy(offset, 0, length), CopyOptions.SafeDiscard);
 
         offset += length;
-        length = transferBuffer.SetData(indices.AsSpan(), offset, SetDataOptions.Overwrite);
-        cmdBuf.UploadToBuffer(transferBuffer, indexBuffer, new BufferCopy(offset, 0, length));
+        length = transferBuffer.SetData(indices.AsSpan(), offset, TransferOptions.Overwrite);
+        cmdBuf.UploadToBuffer(transferBuffer, indexBuffer, new BufferCopy(offset, 0, length), CopyOptions.SafeDiscard);
 
         cmdBuf.EndCopyPass();
         batches[batchIndex].Count = vertexIndex;

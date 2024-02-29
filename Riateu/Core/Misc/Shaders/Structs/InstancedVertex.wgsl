@@ -10,6 +10,6 @@ struct InstancedVertex {
 
     @location(6) scale: vec2<f32>,
     @location(7) origin: vec2<f32>,
-    @location(8) rotation : f32,
+    @location(8) rotation: f32,
     @location(9) color: vec4<f32>
 };
