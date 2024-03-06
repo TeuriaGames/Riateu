@@ -397,7 +397,7 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
             batchIndex++;
             if (batchIndex >= batches.Length) 
             {
-                System.Array.Resize(ref batches, batches.Length + MaxSubBatchCount);
+                Array.Resize(ref batches, batches.Length + MaxSubBatchCount);
             }
             batches[batchIndex].Binding = new TextureSamplerBinding(baseTexture, sampler);
         }

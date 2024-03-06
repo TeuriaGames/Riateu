@@ -337,10 +337,10 @@ public class ImGuiRenderer
         io.Fonts.SetTexID(fontTexture.Handle);
         io.Fonts.ClearTexData();
 
-        AddToPointer(fontTexture);
+        BindTexture(fontTexture);
     }
 
-    public IntPtr AddToPointer(Texture texture) 
+    public IntPtr BindTexture(Texture texture) 
     {
         if (!PtrMap.ContainsKey(texture.Handle)) 
         {
@@ -348,6 +348,14 @@ public class ImGuiRenderer
         } 
 
         return texture.Handle;
+    }
+
+    public void UnbindTexture(IntPtr ptr) 
+    {
+        if (!PtrMap.ContainsKey(ptr)) 
+        {
+            PtrMap.Remove(ptr);
+        } 
     }
 
     public Texture GetPointer(IntPtr ptr) 
