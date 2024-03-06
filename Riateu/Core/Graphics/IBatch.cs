@@ -188,13 +188,6 @@ public interface IBatch
     void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1); 
 
     /// <summary>
-    /// Sent the vertex buffer to the GPU.
-    /// </summary>
-    /// <param name="cmdBuf">
-    /// A <see cref="MoonWorks.Graphics.CommandBuffer"/> for sending the vertex buffer to the GPU
-    /// </param>
-    void FlushVertex(CommandBuffer cmdBuf);
-    /// <summary>
     /// Push a projection matrix to the batch. Call this before adding any vertices.
     /// </summary>
     /// <param name="matrix">A 4x4 matrix to project to a screen</param>
@@ -233,8 +226,7 @@ public interface IBatch
     void Draw(CommandBuffer cmdBuf, Matrix4x4 viewProjection);
 
     /// <summary>
-    /// End of the vertex state and flush all of the vertices. This is similar to the 
-    /// <see cref="IBatch.FlushVertex(CommandBuffer)"/>.
+    /// End of the vertex state and flush all of the vertices. Sent the vertex buffer to the GPU.
     /// </summary>
     /// <param name="cmdBuf">
     /// A <see cref="MoonWorks.Graphics.CommandBuffer"/> for sending the vertex buffer to the GPU

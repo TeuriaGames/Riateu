@@ -92,7 +92,23 @@ public class Batch : System.IDisposable, IBatch
     /// <inheritdoc/>
     public void End(CommandBuffer cmdBuf)
     {
-        FlushVertex(cmdBuf);
+        if (vertexIndex == 0) 
+        {
+            return;
+        }
+
+        cmdBuf.BeginCopyPass();
+
+        uint offset = 0;
+        uint length = transferBuffer.SetData(vertices.AsSpan(), TransferOptions.Discard);
+        cmdBuf.UploadToBuffer(transferBuffer, vertexBuffer, new BufferCopy(offset, 0, length), CopyOptions.SafeDiscard);
+
+        offset += length;
+        length = transferBuffer.SetData(indices.AsSpan(), offset, TransferOptions.Overwrite);
+        cmdBuf.UploadToBuffer(transferBuffer, indexBuffer, new BufferCopy(offset, 0, length), CopyOptions.SafeDiscard);
+
+        cmdBuf.EndCopyPass();
+        batches[batchIndex].Count = vertexIndex;
     }
 
     /// <inheritdoc/>
@@ -117,28 +133,6 @@ public class Batch : System.IDisposable, IBatch
             return;
         }
         Matrix = Matrices.Pop();
-    }
-
-    /// <inheritdoc/>
-    public void FlushVertex(CommandBuffer cmdBuf) 
-    {
-        if (vertexIndex == 0) 
-        {
-            return;
-        }
-
-        cmdBuf.BeginCopyPass();
-
-        uint offset = 0;
-        uint length = transferBuffer.SetData(vertices.AsSpan(), TransferOptions.Discard);
-        cmdBuf.UploadToBuffer(transferBuffer, vertexBuffer, new BufferCopy(offset, 0, length), CopyOptions.SafeDiscard);
-
-        offset += length;
-        length = transferBuffer.SetData(indices.AsSpan(), offset, TransferOptions.Overwrite);
-        cmdBuf.UploadToBuffer(transferBuffer, indexBuffer, new BufferCopy(offset, 0, length), CopyOptions.SafeDiscard);
-
-        cmdBuf.EndCopyPass();
-        batches[batchIndex].Count = vertexIndex;
     }
 
     /// <inheritdoc/>

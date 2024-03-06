@@ -87,10 +87,32 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
         batchIndex = 0;
     }
 
-    /// <inheritdoc/>
-    public void End(CommandBuffer buffer)
+    /// <summary>
+    /// Send the instances buffer to the GPU.
+    /// </summary>
+    /// <param name="cmdBuf">
+    /// A <see cref="MoonWorks.Graphics.CommandBuffer"/> for sending the vertex buffer to the GPU
+    /// </param>
+    public void End(CommandBuffer cmdBuf)
     {
-        FlushVertex(buffer);
+        if (instanceCount == 0) 
+        {
+            return;
+        }
+        batches[batchIndex].InstanceCount = instanceCount;
+        if (batches[batchIndex].InstancedBuffer == null) 
+        {
+            batches[batchIndex].InstancedBuffer = GpuBuffer.Create<InstancedVertex>(device, BufferUsageFlags.Vertex, instancesSize);
+        }
+
+        Span<InstancedVertex> instanceSpan = new Span<InstancedVertex>((void*)instances, (int)instancesSize);
+
+        uint length = transferBuffer.SetData(instanceSpan, TransferOptions.Overwrite);
+        cmdBuf.BeginCopyPass();
+        cmdBuf.UploadToBuffer(transferBuffer, batches[batchIndex].InstancedBuffer, new BufferCopy(0, 0, length), CopyOptions.SafeDiscard);
+        cmdBuf.EndCopyPass();
+
+        instanceCount = 0;
     }
 
     /// <inheritdoc/>
@@ -117,33 +139,6 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
         Matrix = Matrices.Pop();
     }
 
-    /// <summary>
-    /// Send the instances buffer to the GPU.
-    /// </summary>
-    /// <param name="cmdBuf">
-    /// A <see cref="MoonWorks.Graphics.CommandBuffer"/> for sending the vertex buffer to the GPU
-    /// </param>
-    public void FlushVertex(CommandBuffer cmdBuf) 
-    {
-        if (instanceCount == 0) 
-        {
-            return;
-        }
-        batches[batchIndex].InstanceCount = instanceCount;
-        if (batches[batchIndex].InstancedBuffer == null) 
-        {
-            batches[batchIndex].InstancedBuffer = GpuBuffer.Create<InstancedVertex>(device, BufferUsageFlags.Vertex, instancesSize);
-        }
-
-        Span<InstancedVertex> instanceSpan = new Span<InstancedVertex>((void*)instances, (int)instancesSize);
-
-        uint length = transferBuffer.SetData(instanceSpan, TransferOptions.Overwrite);
-        cmdBuf.BeginCopyPass();
-        cmdBuf.UploadToBuffer(transferBuffer, batches[batchIndex].InstancedBuffer, new BufferCopy(0, 0, length), CopyOptions.SafeDiscard);
-        cmdBuf.EndCopyPass();
-
-        instanceCount = 0;
-    }
 
     /// <summary>
     /// Draw the vertex and all instances into the screen.
@@ -396,7 +391,7 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
         )) 
         {
             CommandBuffer cmdBuf = device.AcquireCommandBuffer();
-            FlushVertex(cmdBuf);
+            End(cmdBuf);
             device.Submit(cmdBuf);
 
             batchIndex++;
