@@ -28,17 +28,12 @@ public class Atlas
     public bool NinePatchEnabled { get; set; } 
     private bool ninePatchEnabled;
 
-    private Dictionary<string, int> lookup = new();
-    private Quad[] textures;
+    private Dictionary<string, Quad> textures = new();
 
     /// <summary>
-    /// A map to the id of a texture by string.
+    /// A map to the quad by string.
     /// </summary>
-    public IReadOnlyDictionary<string, int> Lookup => lookup;
-    /// <summary>
-    /// A list of all textures in this atlas.
-    /// </summary>
-    public Quad[] Textures => textures;
+    public IReadOnlyDictionary<string, Quad> Lookup => textures;
 
     /// <summary>
     /// Retrieve a quad by name
@@ -49,7 +44,12 @@ public class Atlas
     /// </returns>
     public Quad this[string name] => Get(name);
 
-    private Atlas() {}
+    public Atlas() {}
+
+    public Atlas(bool ninePatchEnabled) 
+    {
+        this.ninePatchEnabled = ninePatchEnabled;
+    }
 
     /// <summary>
     /// A method that load and create an atlas from a file.
@@ -83,23 +83,19 @@ public class Atlas
             var val = JsonTextReader.FromStream(stream);
             var frames = val["frames"].AsJsonObject;
             var count = frames.Count;
-            atlas.textures = new Quad[count];
-            int textureID = -1;
             foreach (var kv in frames.Pairs) 
             {
-                textureID++;
                 var key = kv.Key;
                 var value = kv.Value;
                 int x = value["x"];
                 int y = value["y"];
                 int w = value["width"];
                 int h = value["height"];
-                atlas.lookup[key] = textureID;
 
                 if (!value.Contains("nine_patch")) 
                 {
                     var spriteTexture = new Quad(texture, new Rect(x, y, w, h));
-                    atlas.textures[textureID] = spriteTexture;
+                    atlas.textures[key] = spriteTexture;
                     continue;
                 }
 
@@ -111,14 +107,13 @@ public class Atlas
                 // TODO add nine patch
 
                 var ninePatchTexture = new Quad(texture, new Rect(x, y, w, h));
-                atlas.textures[textureID] = ninePatchTexture;
+                atlas.textures[key] = ninePatchTexture;
             }
             return atlas;
         case FileType.Bin:
             var reader = new BinaryReader(stream);
             reader.ReadString();
             var length = reader.ReadUInt32();
-            atlas.textures = new Quad[length];
             for (int i = 0; i < length; i++) 
             {
                 var name = reader.ReadString();
@@ -127,11 +122,10 @@ public class Atlas
                 var w = (int)reader.ReadUInt32();
                 var h = (int)reader.ReadUInt32();
 
-                atlas.lookup[name] = i;
                 if (!atlas.ninePatchEnabled) 
                 {
                     var spriteTexture = new Quad(texture, new Rect(x, y, w, h));
-                    atlas.textures[i] = spriteTexture;
+                    atlas.textures[name] = spriteTexture;
                     continue;
                 }
                 var hasNinePatch = reader.ReadBoolean();
@@ -150,10 +144,19 @@ public class Atlas
                     ninePatchTexture = new Quad(texture, new Rect(x, y, w, h));
                 }
 
-                atlas.textures[i] = ninePatchTexture;
+                atlas.textures[name] = ninePatchTexture;
             }
             return atlas;
         }
+    }
+    /// <summary>
+    /// Add a <see cref="Riateu.Graphics.Quad"/> to the atlas.
+    /// </summary>
+    /// <param name="name">A name of the quad from the packed texture</param>
+    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> from a texture with its specific position and dimension</param>
+    public void Add(string name, Quad quad) 
+    {
+        textures[name] = quad;
     }
     
     /// <summary>
@@ -166,7 +169,7 @@ public class Atlas
     /// </returns>
     public Quad Get(string name) 
     {
-        return textures[lookup[name]];
+        return textures[name];
     }
 
     /// <summary>
@@ -178,11 +181,11 @@ public class Atlas
     /// </returns>
     public ref Quad GetRef(string name) 
     {
-        ref var textureID = ref CollectionsMarshal.GetValueRefOrNullRef(lookup, name);
-        if (Unsafe.IsNullRef(in textureID)) 
+        ref var texture = ref CollectionsMarshal.GetValueRefOrNullRef(textures, name);
+        if (Unsafe.IsNullRef(in texture)) 
         {
             throw new System.Exception($"'{name}' is not found!");
         }
-        return ref textures[textureID];
+        return ref texture;
     }
 }
