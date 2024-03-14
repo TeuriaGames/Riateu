@@ -187,6 +187,8 @@ public interface IBatch
     /// <param name="layerDepth">A z-depth buffer of a vertex</param>
     void Add(Quad quad, Texture baseTexture, Sampler sampler, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1); 
 
+    void BindPipeline(GraphicsPipeline pipeline);
+
     /// <summary>
     /// Push a projection matrix to the batch. Call this before adding any vertices.
     /// </summary>

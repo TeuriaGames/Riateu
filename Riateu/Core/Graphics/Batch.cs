@@ -20,6 +20,7 @@ public class Batch : System.IDisposable, IBatch
         public TextureSamplerBinding Binding;
         public uint Offset;
         public uint Count;
+        public GraphicsPipeline GraphicsPipeline;
     }
     private const int MaxTextures = 8192;
     private const int MaxSubBatchCount = 8;
@@ -88,6 +89,7 @@ public class Batch : System.IDisposable, IBatch
     public void Begin()
     {
         batchIndex = 0;
+        batches[batchIndex].GraphicsPipeline = GameContext.DefaultPipeline;
     }
     /// <inheritdoc/>
     public void End(CommandBuffer cmdBuf)
@@ -148,14 +150,15 @@ public class Batch : System.IDisposable, IBatch
         {
             return;
         }
-        cmdBuf.PushVertexShaderUniforms(viewProjection);
-        cmdBuf.BindVertexBuffers(vertexBuffer);
-        cmdBuf.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
+
 
         for (uint i = 0; i < batchIndex + 1; i++) 
         {
             var batch = batches[i];
-
+            cmdBuf.BindGraphicsPipeline(batch.GraphicsPipeline);
+            cmdBuf.PushVertexShaderUniforms(viewProjection);
+            cmdBuf.BindVertexBuffers(vertexBuffer);
+            cmdBuf.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
             cmdBuf.BindFragmentSamplers(batch.Binding);
             cmdBuf.DrawIndexedPrimitives(batch.Offset * 4u, 0u, (batch.Count - batch.Offset) * 2u);   
         }
@@ -299,6 +302,31 @@ public class Batch : System.IDisposable, IBatch
             sampler.Handle != batches[batchIndex].Binding.Sampler.Handle)) 
         {
             batches[batchIndex].Count = vertexIndex;
+            var pipeline = batches[batchIndex].GraphicsPipeline;
+            batchIndex++;
+
+            if (batchIndex == batches.Length) 
+            {
+                System.Array.Resize(ref batches, batches.Length + MaxSubBatchCount);
+            }
+
+            batches[batchIndex].GraphicsPipeline = pipeline;
+            batches[batchIndex].Offset = vertexIndex;
+            batches[batchIndex].Binding = new TextureSamplerBinding(texture, sampler);
+        }
+
+        if (vertexIndex == 0) 
+        {
+            batches[batchIndex].Binding = new TextureSamplerBinding(texture, sampler);
+        }
+    }
+
+    public void BindPipeline(GraphicsPipeline pipeline) 
+    {
+        if (vertexIndex > 0 && batches[batchIndex].GraphicsPipeline.Handle != pipeline.Handle) 
+        {
+            var binding = batches[batchIndex].Binding;
+            batches[batchIndex].Count = vertexIndex;
             batchIndex++;
 
             if (batchIndex == batches.Length) 
@@ -307,12 +335,13 @@ public class Batch : System.IDisposable, IBatch
             }
 
             batches[batchIndex].Offset = vertexIndex;
-            batches[batchIndex].Binding = new TextureSamplerBinding(texture, sampler);
+            batches[batchIndex].GraphicsPipeline = pipeline;
+            batches[batchIndex].Binding = binding;
+            return;
         }
-
         if (vertexIndex == 0) 
         {
-            batches[batchIndex].Binding = new TextureSamplerBinding(texture, sampler);
+            batches[batchIndex].GraphicsPipeline = pipeline;
         }
     }
 

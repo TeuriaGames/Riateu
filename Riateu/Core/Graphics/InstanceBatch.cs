@@ -17,6 +17,7 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
 {
     private struct SubInstanceBatch 
     {
+        public GraphicsPipeline GraphicsPipeline;
         public GpuBuffer InstancedBuffer;
         public uint InstanceCount;
         public TextureSamplerBinding Binding;
@@ -85,6 +86,7 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
     public void Begin()
     {
         batchIndex = 0;
+        batches[batchIndex].GraphicsPipeline = GameContext.InstancedPipeline;
     }
 
     /// <summary>
@@ -164,11 +166,13 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
     {
         if (batches[0].InstanceCount == 0)
             return;
-        cmdBuf.PushVertexShaderUniforms(viewProjection);
 
         for (int i = 0; i < batchIndex + 1; i++) 
         {
             var batch = batches[i];
+
+            cmdBuf.BindGraphicsPipeline(batch.GraphicsPipeline);
+            cmdBuf.PushVertexShaderUniforms(viewProjection);
             cmdBuf.BindVertexBuffers(vertexBuffer, batch.InstancedBuffer);
             cmdBuf.BindIndexBuffer(indexBuffer, IndexElementSize.Sixteen);
 
@@ -390,16 +394,10 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
             sampler.Handle != batches[batchIndex].Binding.Sampler.Handle
         )) 
         {
-            CommandBuffer cmdBuf = device.AcquireCommandBuffer();
-            End(cmdBuf);
-            device.Submit(cmdBuf);
-
-            batchIndex++;
-            if (batchIndex >= batches.Length) 
-            {
-                Array.Resize(ref batches, batches.Length + MaxSubBatchCount);
-            }
+            var pipeline = batches[batchIndex].GraphicsPipeline;
+            CreateNewBatch();
             batches[batchIndex].Binding = new TextureSamplerBinding(baseTexture, sampler);
+            batches[batchIndex].GraphicsPipeline = pipeline;
         }
 
         if (instanceCount == 0) 
@@ -436,6 +434,35 @@ public unsafe class InstanceBatch : System.IDisposable, IBatch
         instances[instanceCount].Color = color;
 
         instanceCount++;
+    }
+
+    public void BindPipeline(GraphicsPipeline pipeline) 
+    {
+        if (instanceCount > 0 && batches[batchIndex].GraphicsPipeline.Handle != pipeline.Handle) 
+        {
+            var binding = batches[batchIndex].Binding;
+            CreateNewBatch();
+            batches[batchIndex].GraphicsPipeline = pipeline;
+            batches[batchIndex].Binding = binding;
+            return;
+        }
+        if (instanceCount == 0) 
+        {
+            batches[batchIndex].GraphicsPipeline = pipeline;
+        }
+    }
+
+    private void CreateNewBatch() 
+    {
+        CommandBuffer cmdBuf = device.AcquireCommandBuffer();
+        End(cmdBuf);
+        device.Submit(cmdBuf);
+
+        batchIndex++;
+        if (batchIndex >= batches.Length) 
+        {
+            Array.Resize(ref batches, batches.Length + MaxSubBatchCount);
+        }
     }
 
     /// <summary>
