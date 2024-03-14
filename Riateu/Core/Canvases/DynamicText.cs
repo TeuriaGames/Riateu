@@ -28,6 +28,10 @@ public class DynamicText : Text
             if (text != value) 
             {
                 text = value;
+                if (!touchedVisiblity) 
+                {
+                    visibleText = text.Length;
+                }
                 dirty = true;
             }
         }
@@ -59,6 +63,7 @@ public class DynamicText : Text
         get => visibleText;
         set 
         {
+            touchedVisiblity = true;
             if (value > text.Length) 
             {
                 visibleText = text.Length;
@@ -90,6 +95,7 @@ public class DynamicText : Text
         }
     }
 
+    private bool touchedVisiblity = false;
     private int visibleText;
     private Quad DynamicTexture;
     /// <summary>
