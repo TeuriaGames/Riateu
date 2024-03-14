@@ -18,6 +18,11 @@ public class AnimationStorage
     /// <returns></returns>
     public Dictionary<string, AnimatedSprite.Animation> this[string name] => Load(name);
 
+    public void Add(string name, Dictionary<string, AnimatedSprite.Animation> frames) 
+    {
+        animations[name] = frames;
+    }
+
     /// <summary>
     /// Create a storage from a json path that contains all of the animation frames inside.
     /// </summary>
