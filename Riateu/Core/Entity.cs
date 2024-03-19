@@ -328,4 +328,10 @@ public class Entity : IEnumerable<Component>
     
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Vector2 ToLocal(Vector2 target) 
+    {
+        return new Vector2(target.X - PosX, target.Y - PosY);
+    }
 }

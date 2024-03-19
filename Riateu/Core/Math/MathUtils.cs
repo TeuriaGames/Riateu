@@ -59,6 +59,18 @@ public static class MathUtils
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float LookAt(Vector2 target) 
+    {
+        return LookAt(target.X, target.Y);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float LookAt(float x, float y) 
+    {
+        return (float)Math.Atan2(y, x);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int MoveTowards(int current, int target, int maxDelta)
     {
         if (Math.Abs(target - current) <= maxDelta)
@@ -104,16 +116,16 @@ public static class MathUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 Slerp(Vector2 current, Vector2 target, float maxDelta) 
     {
-        var start = current.LengthSquared();
-        var end = target.LengthSquared();
+        float start = current.LengthSquared();
+        float end = target.LengthSquared();
 
         if (start == 0.0f || end == 0.0f)
             return Vector2.Lerp(current, target, maxDelta);
         
-        var startLength = (float)Math.Sqrt(start);
-        var endLength = (float)Math.Sqrt(end);
-        var result = LerpPrecise(startLength, endLength, maxDelta);
-        var angle = Angle(current, target);
+        float startLength = (float)Math.Sqrt(start);
+        float endLength = (float)Math.Sqrt(end);
+        float result = LerpPrecise(startLength, endLength, maxDelta);
+        float angle = Angle(current, target);
         return Rotated(current, angle * maxDelta * (result / startLength));
     }
 
@@ -125,8 +137,9 @@ public static class MathUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 Rotated(this Vector2 value, float angle) 
     {
-        (double sin, double cos) = Math.SinCos(angle);
-        return new Vector2(value.X * (float)cos - value.Y * (float)sin , value.X * (float)sin + value.Y * (float)cos);
+        float sin = (float)Math.Sin(angle);
+        float cos = (float)Math.Cos(angle);
+        return new Vector2(value.X * cos - value.Y * sin , value.X * sin + value.Y * cos);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
