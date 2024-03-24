@@ -87,19 +87,27 @@ public class ContentBuilder
 
     internal void InternalProcess(string file, ContentProcessor contentProcessor) 
     {
-        contentProcessor.Init(logBuilder);
-        if (contentProcessor.DirectoriesToEnsure != null) 
+        try 
         {
-            for (int i = 0; i < contentProcessor.DirectoriesToEnsure.Length; i++) 
+            contentProcessor.Init(logBuilder);
+            if (contentProcessor.DirectoriesToEnsure != null) 
             {
-                var directory = Path.Combine(destination, contentProcessor.DirectoriesToEnsure[i]);
-                if (!Directory.Exists(directory)) 
+                for (int i = 0; i < contentProcessor.DirectoriesToEnsure.Length; i++) 
                 {
-                    Directory.CreateDirectory(directory);
+                    var directory = Path.Combine(destination, contentProcessor.DirectoriesToEnsure[i]);
+                    if (!Directory.Exists(directory)) 
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
                 }
             }
+            contentProcessor.Process(file, destination);
         }
-        contentProcessor.Process(file, destination);
+        catch (Exception ex)
+        {
+            Logger.LogError("Error while processing a content");
+            Logger.LogError(ex.ToString());
+        }
     }
 
     /// <summary>
