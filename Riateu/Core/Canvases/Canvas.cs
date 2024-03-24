@@ -62,7 +62,7 @@ public class Canvas : IDisposable
         this.Scene = scene;
     }
 
-    /// <inheritdoc cref="Riateu.Scene.BeforeDraw(CommandBuffer, IBatch)"/>
+    /// <inheritdoc cref="Riateu.Scene.BeforeDraw(CommandBuffer)"/>
     public virtual void BeforeDraw(CommandBuffer buffer, IBatch batch) {}
 
     /// <summary>
@@ -70,10 +70,9 @@ public class Canvas : IDisposable
     /// </summary>
     /// <param name="buffer">A command buffer</param>
     /// <param name="batch">A default game batch system</param>
-    public virtual void Draw(CommandBuffer buffer, IBatch batch) 
-    {
-    }
-    /// <inheritdoc cref="Riateu.Scene.AfterDraw(CommandBuffer, IBatch)"/>
+    public virtual void Draw(CommandBuffer buffer, IBatch batch) {}
+
+    /// <inheritdoc cref="Riateu.Scene.AfterDraw(CommandBuffer)"/>
     public virtual void AfterDraw(CommandBuffer buffer, IBatch batch) {}
 
     /// <summary>
