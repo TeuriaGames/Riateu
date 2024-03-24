@@ -160,7 +160,7 @@ public class Batch : System.IDisposable, IBatch
             cmdBuf.BindVertexBuffers(vertexBuffer);
             cmdBuf.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
             cmdBuf.BindFragmentSamplers(batch.Binding);
-            cmdBuf.DrawIndexedPrimitives(batch.Offset * 4u, 0u, (batch.Count - batch.Offset) * 2u);   
+            cmdBuf.DrawInstancedPrimitives(batch.Offset * 4u, 0u, (batch.Count - batch.Offset) * 2u, 1);   
         }
 
         batchIndex = 0;

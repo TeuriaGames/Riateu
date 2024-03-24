@@ -36,12 +36,6 @@ public abstract class GameApp : Game
     }
     private Scene scene;
 
-    private Batch batch;
-    /// <summary>
-    /// The default batch for the game. If you want a custom batch to render, 
-    /// create a canvas instead. 
-    /// </summary>
-    public Batch Batch => batch;
 
     /// <summary>
     /// A constructor use for initializng the application. 
@@ -76,7 +70,6 @@ public abstract class GameApp : Game
         Input.Initialize(Inputs);
         LoadContent();
         Initialize();
-        batch = new Batch(GraphicsDevice, Width, Height);
     }
 
     /// <summary>
@@ -99,12 +92,12 @@ public abstract class GameApp : Game
         CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
         Texture backbuffer =  cmdBuf.AcquireSwapchainTexture(MainWindow);
 
-        scene.InternalBeforeDraw(cmdBuf, batch);
+        scene.InternalBeforeDraw(cmdBuf);
         if (backbuffer != null) 
         {
-            scene.InternalDraw(cmdBuf, backbuffer, batch);
+            scene.InternalDraw(cmdBuf, backbuffer);
         }
-        scene.InternalAfterDraw(cmdBuf, batch);
+        scene.InternalAfterDraw(cmdBuf);
 
         GraphicsDevice.Submit(cmdBuf);
     }

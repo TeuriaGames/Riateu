@@ -165,19 +165,19 @@ public abstract class Scene
         EntityList.Update(delta);
     }
 
-    internal void InternalBeforeDraw(CommandBuffer buffer, IBatch batch) 
+    internal void InternalBeforeDraw(CommandBuffer buffer) 
     {
-        BeforeDraw(buffer, batch);
+        BeforeDraw(buffer);
     }
 
-    internal void InternalDraw(CommandBuffer buffer, Texture backbuffer, IBatch batch) 
+    internal void InternalDraw(CommandBuffer buffer, Texture backbuffer) 
     {
-        Draw(buffer, backbuffer, batch);
+        Draw(buffer, backbuffer);
     }
 
-    internal void InternalAfterDraw(CommandBuffer buffer, IBatch batch) 
+    internal void InternalAfterDraw(CommandBuffer buffer) 
     {
-        AfterDraw(buffer, batch);
+        AfterDraw(buffer);
     }
 
     /// <summary>
@@ -193,21 +193,18 @@ public abstract class Scene
     /// A method that called before the main draw loop. 
     /// </summary>
     /// <param name="buffer">A command buffer</param>
-    /// <param name="batch">A default game batch system</param>
-    public virtual void BeforeDraw(CommandBuffer buffer, IBatch batch) {}
+    public virtual void BeforeDraw(CommandBuffer buffer) {}
     /// <summary>
     /// A method that called during the draw loop. Do your draw calls here.
     /// </summary>
     /// <param name="buffer">A command buffer</param>
     /// <param name="backbuffer">The swapchain texture of the main window</param>
-    /// <param name="batch">A default game batch system</param>
-    public virtual void Draw(CommandBuffer buffer, Texture backbuffer, IBatch batch) {}
+    public virtual void Draw(CommandBuffer buffer, Texture backbuffer) {}
     /// <summary>
     /// A method that called after the main draw loop. 
     /// </summary>
     /// <param name="buffer">A command buffer</param>
-    /// <param name="batch">A default game batch system</param>
-    public virtual void AfterDraw(CommandBuffer buffer, IBatch batch) {}
+    public virtual void AfterDraw(CommandBuffer buffer) {}
     /// <summary>
     /// End of the scene. Do your cleanup code here.
     /// </summary>
