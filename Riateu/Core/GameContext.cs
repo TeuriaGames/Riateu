@@ -21,6 +21,7 @@ public static class GameContext
     /// The default rendering pipeline use for basic rendering.
     /// </summary>
     public static GraphicsPipeline DefaultPipeline;
+    public static GraphicsPipeline RGBPipeline;
     /// <summary>
     /// A rendering pipeline designed specifically for text rendered in msdf format. 
     /// </summary>
@@ -62,6 +63,23 @@ public static class GameContext
         };
 
         DefaultPipeline = new GraphicsPipeline(device, pipelineCreateInfo);
+
+        GraphicsPipelineCreateInfo rgbCreateInfo = new GraphicsPipelineCreateInfo() 
+        {
+            AttachmentInfo = new GraphicsPipelineAttachmentInfo(
+                new ColorAttachmentDescription(TextureFormat.R8G8B8A8, 
+                ColorAttachmentBlendState.AlphaBlend)
+            ),
+            DepthStencilState = DepthStencilState.Disable,
+            MultisampleState = MultisampleState.None,
+            PrimitiveType = PrimitiveType.TriangleList,
+            RasterizerState = RasterizerState.CCW_CullNone,
+            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(vertexPSC, "main", 0),
+            FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "main", 1),
+            VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
+        };
+
+        RGBPipeline = new GraphicsPipeline(device, rgbCreateInfo);
 
         GraphicsPipelineCreateInfo msdfPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
         {

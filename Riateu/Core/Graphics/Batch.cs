@@ -36,6 +36,7 @@ public class Batch : System.IDisposable, IBatch
     private GpuBuffer indexBuffer;
     private TransferBuffer transferBuffer;
     private Stack<Matrix4x4> Matrices;
+    private bool rendered;
 
     /// <summary>
     /// A current matrix projection to be used for rendering.
@@ -88,6 +89,11 @@ public class Batch : System.IDisposable, IBatch
     /// <inheritdoc/>
     public void Begin()
     {
+        if (rendered) 
+        {
+            vertexIndex = 0;
+            rendered = false;
+        } 
         batchIndex = 0;
         batches[batchIndex].GraphicsPipeline = GameContext.DefaultPipeline;
     }
@@ -141,6 +147,30 @@ public class Batch : System.IDisposable, IBatch
     public void Draw(CommandBuffer cmdBuf) 
     {
         Draw(cmdBuf, Matrix);
+    }
+
+    public void Draw<T>(CommandBuffer cmdBuf, T fragment) 
+    where T : unmanaged
+    {
+        if (vertexIndex == 0) 
+        {
+            return;
+        }
+
+
+        for (uint i = 0; i < batchIndex + 1; i++) 
+        {
+            var batch = batches[i];
+            cmdBuf.BindGraphicsPipeline(batch.GraphicsPipeline);
+            cmdBuf.BindVertexBuffers(vertexBuffer);
+            cmdBuf.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
+            cmdBuf.BindFragmentSamplers(batch.Binding);
+            cmdBuf.PushVertexShaderUniforms(Matrix);
+            if (batch.GraphicsPipeline.FragmentShaderInfo.UniformBufferSize > 0)
+                cmdBuf.PushFragmentShaderUniforms<T>(fragment);
+            cmdBuf.DrawInstancedPrimitives(batch.Offset * 4u, 0u, (batch.Count - batch.Offset) * 2u, 1);   
+        }
+        rendered = true;
     }
 
     /// <inheritdoc/>
