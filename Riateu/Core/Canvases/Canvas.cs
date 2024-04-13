@@ -63,17 +63,16 @@ public class Canvas : IDisposable
     }
 
     /// <inheritdoc cref="Riateu.Scene.BeforeDraw(CommandBuffer)"/>
-    public virtual void BeforeDraw(CommandBuffer buffer, IBatch batch) {}
+    public virtual void BeforeDraw(CommandBuffer buffer) {}
 
     /// <summary>
     /// A method that called during the draw loop. Do your draw calls here.
     /// </summary>
     /// <param name="buffer">A command buffer</param>
-    /// <param name="batch">A default game batch system</param>
-    public virtual void Draw(CommandBuffer buffer, IBatch batch) {}
+    public virtual void Draw(CommandBuffer buffer) {}
 
     /// <inheritdoc cref="Riateu.Scene.AfterDraw(CommandBuffer)"/>
-    public virtual void AfterDraw(CommandBuffer buffer, IBatch batch) {}
+    public virtual void AfterDraw(CommandBuffer buffer) {}
 
     /// <summary>
     /// Create a <see cref="Riateu.DefaultCanvas"/> to do the rendering for you. 
@@ -154,16 +153,5 @@ public class DefaultCanvas : Canvas
     }
 
     /// <inheritdoc/>
-    public override void Draw(CommandBuffer buffer, IBatch batch)
-    {
-        batch.Begin();
-        Scene.EntityList.Draw(buffer, batch);
-        batch.End(buffer);
-
-        buffer.BeginRenderPass(new ColorAttachmentInfo(CanvasTexture, Color.Transparent));
-        buffer.BindGraphicsPipeline(GameContext.DefaultPipeline);
-        buffer.SetScissor(scissorRect);
-        batch.Draw(buffer);
-        buffer.EndRenderPass();
-    }
+    public override void Draw(CommandBuffer buffer) {}
 }
