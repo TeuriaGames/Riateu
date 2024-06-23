@@ -27,9 +27,9 @@ public class StaticText : Text
     /// <param name="text">A text that should be rendered</param>
     /// <param name="pixel">A size of the text</param>
     /// <param name="textVisible">A numeric visibled text value</param>
-    public StaticText(GraphicsDevice device, Font font, string text, int pixel, int textVisible = -1) 
+    public StaticText(GraphicsDevice device, Font font, string text, int pixel, int textVisible = -1)
     {
-        if (textVisible == -1) 
+        if (textVisible == -1)
         {
             textVisible = text.Length;
         }
@@ -40,7 +40,7 @@ public class StaticText : Text
         var textSpan = text.AsSpan();
         var textSpanSliced = textSpan.Slice(0, textVisible);
 
-        var f = font.TextBounds(textSpanSliced, pixel, HorizontalAlignment.Left, 
+        var f = font.TextBounds(new string(textSpanSliced), pixel, HorizontalAlignment.Left,
             VerticalAlignment.Baseline, out WellspringCS.Wellspring.Rectangle rect);
         Bounds = new Rectangle((int)rect.X, (int)rect.Y, (int)rect.W, (int)rect.H);
 
@@ -48,28 +48,28 @@ public class StaticText : Text
         uint height = (uint)rect.H;
 
         Texture = Texture.CreateTexture2D(
-            device, width, height, 
+            device, width, height,
             TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
-        
-        var matrix = Matrix4x4.CreateTranslation(0, height, 1) 
+
+        var matrix = Matrix4x4.CreateTranslation(0, height, 1)
             * Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
-        
+
         Batch = new TextBatch(device);
         Batch.Start(font);
         Batch.Add(text, pixel, Color.White);
-        buffer.BeginCopyPass();
+        CopyPass copyPass = buffer.BeginCopyPass();
         Batch.UploadBufferData(buffer);
-        buffer.EndCopyPass();
+        buffer.EndCopyPass(copyPass);
 
-        buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, Color.Transparent));
-        buffer.BindGraphicsPipeline(GameContext.MSDFPipeline);
-        Batch.Render(buffer, matrix);
-        buffer.EndRenderPass();
+        RenderPass renderPass = buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, false, Color.Transparent));
+        renderPass.BindGraphicsPipeline(GameContext.MSDFPipeline);
+        Batch.Render(renderPass, matrix);
+        buffer.EndRenderPass(renderPass);
         device.Submit(buffer);
     }
 
     /// <inheritdoc/>
-    public override void Draw(IBatch batch, Vector2 position) 
+    public override void Draw(IBatch batch, Vector2 position)
     {
         batch.Add(Texture, GameContext.GlobalSampler, position, Color.White, Matrix3x2.Identity);
     }

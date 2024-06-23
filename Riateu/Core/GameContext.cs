@@ -1,7 +1,6 @@
 using System.IO;
 using MoonWorks;
 using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 using Riateu.Graphics;
 using Riateu.Misc;
 
@@ -23,7 +22,7 @@ public static class GameContext
     public static GraphicsPipeline DefaultPipeline;
     public static GraphicsPipeline RGBPipeline;
     /// <summary>
-    /// A rendering pipeline designed specifically for text rendered in msdf format. 
+    /// A rendering pipeline designed specifically for text rendered in msdf format.
     /// </summary>
     public static GraphicsPipeline MSDFPipeline;
     /// <summary>
@@ -31,68 +30,76 @@ public static class GameContext
     /// </summary>
     public static GraphicsPipeline InstancedPipeline;
     /// <summary>
-    /// An everything sampler that uses point clamp for sampling. 
+    /// An everything sampler that uses point clamp for sampling.
     /// </summary>
     public static Sampler GlobalSampler;
 
-    internal static void Init(GraphicsDevice device, Window mainWindow) 
+    internal static void Init(GraphicsDevice device, Window mainWindow)
     {
         GraphicsDevice = device;
         GlobalSampler = new Sampler(device, SamplerCreateInfo.PointClamp);
         var positionTextureColor = Resources.PositionTextureColor;
         using var ms1 = new MemoryStream(positionTextureColor);
-        ShaderModule vertexPSC = new ShaderModule(device, ms1);
+        Shader vertexPSC = new Shader(device, ms1, "main", new ShaderCreateInfo {
+            ShaderStage = ShaderStage.Vertex,
+            ShaderFormat = ShaderFormat.SPIRV,
+            UniformBufferCount = 1
+        });
 
         var textureFragment = Resources.Texture;
         using var ms2 = new MemoryStream(textureFragment);
-        ShaderModule fragmentPSC = new ShaderModule(device, ms2);
+        Shader fragmentPSC = new Shader(device, ms2, "main", new ShaderCreateInfo {
+            ShaderStage = ShaderStage.Fragment,
+            ShaderFormat = ShaderFormat.SPIRV,
+            SamplerCount = 1
+        });
 
-        GraphicsPipelineCreateInfo pipelineCreateInfo = new GraphicsPipelineCreateInfo() 
+        GraphicsPipelineCreateInfo pipelineCreateInfo = new GraphicsPipelineCreateInfo()
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(mainWindow.SwapchainFormat, 
+                new ColorAttachmentDescription(mainWindow.SwapchainFormat,
                 ColorAttachmentBlendState.AlphaBlend)
             ),
             DepthStencilState = DepthStencilState.Disable,
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
             RasterizerState = RasterizerState.CCW_CullNone,
-            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(vertexPSC, "main", 0),
-            FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "main", 1),
+            VertexShader = vertexPSC,
+            FragmentShader = fragmentPSC,
             VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
         };
 
         DefaultPipeline = new GraphicsPipeline(device, pipelineCreateInfo);
 
-        GraphicsPipelineCreateInfo rgbCreateInfo = new GraphicsPipelineCreateInfo() 
+        GraphicsPipelineCreateInfo rgbCreateInfo = new GraphicsPipelineCreateInfo()
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(TextureFormat.R8G8B8A8, 
+                new ColorAttachmentDescription(TextureFormat.R8G8B8A8,
                 ColorAttachmentBlendState.AlphaBlend)
             ),
             DepthStencilState = DepthStencilState.Disable,
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
             RasterizerState = RasterizerState.CCW_CullNone,
-            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(vertexPSC, "main", 0),
-            FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "main", 1),
+            VertexShader = vertexPSC,
+            FragmentShader = fragmentPSC,
             VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
         };
 
         RGBPipeline = new GraphicsPipeline(device, rgbCreateInfo);
 
-        GraphicsPipelineCreateInfo msdfPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
+        GraphicsPipelineCreateInfo msdfPipelineCreateInfo = new GraphicsPipelineCreateInfo()
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(TextureFormat.R8G8B8A8, 
+                new ColorAttachmentDescription(TextureFormat.R8G8B8A8,
                 ColorAttachmentBlendState.AlphaBlend)
             ),
             DepthStencilState = DepthStencilState.Disable,
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
             RasterizerState = RasterizerState.CCW_CullNone,
-            VertexShaderInfo = device.TextVertexShaderInfo,
-            FragmentShaderInfo = device.TextFragmentShaderInfo,
+            VertexShader = device.TextVertexShader,
+            FragmentShader = device.TextFragmentShader,
             VertexInputState = device.TextVertexInputState
         };
 
@@ -103,20 +110,24 @@ public static class GameContext
 
         var tileMapBytes = Resources.InstancedShader;
         using var ms3 = new MemoryStream(tileMapBytes);
-        ShaderModule instancedPSC = new ShaderModule(device, ms3);
+        Shader instancedPSC = new Shader(device, ms3, "main", new ShaderCreateInfo {
+            ShaderStage = ShaderStage.Vertex,
+            ShaderFormat = ShaderFormat.SPIRV,
+            UniformBufferCount = 1
+        });
 
-        GraphicsPipelineCreateInfo instancedPipelineCreateInfo = new GraphicsPipelineCreateInfo() 
+        GraphicsPipelineCreateInfo instancedPipelineCreateInfo = new GraphicsPipelineCreateInfo()
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(TextureFormat.R8G8B8A8, 
+                new ColorAttachmentDescription(TextureFormat.R8G8B8A8,
                 ColorAttachmentBlendState.AlphaBlend)
             ),
             DepthStencilState = DepthStencilState.Disable,
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
             RasterizerState = RasterizerState.CCW_CullNone,
-            VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(instancedPSC, "main", 0),
-            FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentPSC, "main", 1),
+            VertexShader = instancedPSC,
+            FragmentShader = fragmentPSC,
             VertexInputState = new VertexInputState([
                 vertexBufferDescription,
                 instancedBufferDescription

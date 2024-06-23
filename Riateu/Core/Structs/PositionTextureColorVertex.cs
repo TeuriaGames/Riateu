@@ -20,7 +20,7 @@ public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Col
     /// </summary>
     public Vector2 TexCoord = texCoord;
     /// <summary>
-    /// A color that will be passed to the fragment shader 
+    /// A color that will be passed to the fragment shader
     /// </summary>
     public Color Color = color;
 
@@ -33,4 +33,6 @@ public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Col
         VertexElementFormat.Vector2,
         VertexElementFormat.Color,
     ];
+
+    public static uint[] Offsets => [0, 12, 20];
 }

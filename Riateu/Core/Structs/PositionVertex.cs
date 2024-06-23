@@ -18,8 +18,10 @@ public struct PositionVertex(Vector3 position) : IVertexType
     /// <summary>
     /// The element format used for the graphics pipeline.
     /// </summary>
-    public static VertexElementFormat[] Formats { get; } =  
+    public static VertexElementFormat[] Formats { get; } =
     [
         VertexElementFormat.Vector3
     ];
+
+    public static uint[] Offsets => [0];
 }

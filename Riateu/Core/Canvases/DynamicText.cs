@@ -20,15 +20,15 @@ public class DynamicText : Text
     /// A string text for this text. When changed, it will caused to re-render and resubmit
     /// its texture.
     /// </summary>
-    public string Text 
+    public string Text
     {
         get => text;
-        set 
+        set
         {
-            if (text != value) 
+            if (text != value)
             {
                 text = value;
-                if (!touchedVisiblity) 
+                if (!touchedVisiblity)
                 {
                     visibleText = text.Length;
                 }
@@ -41,12 +41,12 @@ public class DynamicText : Text
     /// A pixel size of this font. When changed, it will caused to re-render and resubmit
     /// its texture.
     /// </summary>
-    public int Pixel 
+    public int Pixel
     {
         get => pixel;
-        set 
+        set
         {
-            if (pixel != value) 
+            if (pixel != value)
             {
                 pixel = value;
                 dirty = true;
@@ -58,23 +58,23 @@ public class DynamicText : Text
     /// A numeric visibled text value. When changed, it will not resubmit, instead it will
     /// just change the quad of the texture.
     /// </summary>
-    public int VisibleText 
+    public int VisibleText
     {
         get => visibleText;
-        set 
+        set
         {
             touchedVisiblity = true;
-            if (value > text.Length) 
+            if (value > text.Length)
             {
                 visibleText = text.Length;
-            } 
-            else 
+            }
+            else
             {
                 visibleText = value;
             }
 
 
-            if (visibleText <= 0) 
+            if (visibleText <= 0)
             {
                 visibleText = 0;
                 DynamicTexture = new Quad(Texture, new Rect(0, 0, 0, 0));
@@ -83,13 +83,13 @@ public class DynamicText : Text
 
             var span = text.AsSpan();
             var newSpan = span.Slice(0, visibleText);
-            var f = font.TextBounds(newSpan, pixel, HorizontalAlignment.Left, 
+            var f = font.TextBounds(new string(newSpan), pixel, HorizontalAlignment.Left,
                 VerticalAlignment.Baseline, out WellspringCS.Wellspring.Rectangle rectVisible);
 
             DynamicTexture = new Quad(
-                Texture, 
-                new Rect(0, 0, 
-                    (int)rectVisible.W, 
+                Texture,
+                new Rect(0, 0,
+                    (int)rectVisible.W,
                     (int)rectVisible.H)
                 );
         }
@@ -109,7 +109,7 @@ public class DynamicText : Text
     private Rect rect;
     private string text;
     private int pixel;
-    
+
     /// <summary>
     /// An initialization for this class.
     /// </summary>
@@ -118,9 +118,9 @@ public class DynamicText : Text
     /// <param name="text">A text that should be rendered</param>
     /// <param name="pixel">A size of the text</param>
     /// <param name="textVisible">A numeric visibled text value</param>
-    public DynamicText(GraphicsDevice device, Font font, string text, int pixel, int textVisible = -1) 
+    public DynamicText(GraphicsDevice device, Font font, string text, int pixel, int textVisible = -1)
     {
-        if (textVisible == -1) 
+        if (textVisible == -1)
         {
             textVisible = text.Length;
         }
@@ -141,46 +141,46 @@ public class DynamicText : Text
         VisibleText = textVisible;
     }
 
-    private void Resubmit() 
+    private void Resubmit()
     {
         CommandBuffer buffer = device.AcquireCommandBuffer();
 
-        if (Width != Bounds.Width || Height != Bounds.Height) 
+        if (Width != Bounds.Width || Height != Bounds.Height)
         {
-            if (Texture != null) 
+            if (Texture != null)
             {
                 Texture.Dispose();
                 Texture = null;
             }
 
             Texture = Texture.CreateTexture2D(
-                device, Width, Height, 
-                TextureFormat.R8G8B8A8, 
+                device, Width, Height,
+                TextureFormat.R8G8B8A8,
                 TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
         }
 
         Bounds = new Rectangle((int)rect.X, (int)rect.Y, (int)rect.W, (int)rect.H);
-        
-        var matrix = Matrix4x4.CreateTranslation(0, Height, 1) 
+
+        var matrix = Matrix4x4.CreateTranslation(0, Height, 1)
             * Matrix4x4.CreateOrthographicOffCenter(0, Width, Height, 0, -1, 1);
-        
+
         Batch.Start(font);
         Batch.Add(text, pixel, Color.White);
-        buffer.BeginCopyPass();
+        CopyPass copyPass = buffer.BeginCopyPass();
         Batch.UploadBufferData(buffer);
-        buffer.EndCopyPass();
+        buffer.EndCopyPass(copyPass);
 
-        buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, Color.Transparent));
-        buffer.BindGraphicsPipeline(GameContext.MSDFPipeline);
-        Batch.Render(buffer, matrix);
-        buffer.EndRenderPass();
+        RenderPass renderPass = buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, false, Color.Transparent));
+        renderPass.BindGraphicsPipeline(GameContext.MSDFPipeline);
+        Batch.Render(renderPass, matrix);
+        buffer.EndRenderPass(renderPass);
         device.Submit(buffer);
     }
 
     /// <inheritdoc/>
-    public override void Draw(IBatch batch, Vector2 position) 
+    public override void Draw(IBatch batch, Vector2 position)
     {
-        if (dirty) 
+        if (dirty)
         {
             Resubmit();
             dirty = false;

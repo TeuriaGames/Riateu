@@ -5,6 +5,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591</NoWarn>
+    <DefineConstants>Metal</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,17 +19,17 @@
   </ItemGroup>
 
   <ItemGroup>
-		<EmbeddedResource Include="Core\Misc\Refresh\PositionTextureColor.vert.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.PositionTextureColor.vert.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Metal\PositionTextureColor.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.PositionTextureColor.vert.metal</LogicalName>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Refresh\Texture.frag.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.Texture.frag.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Metal\Texture.frag.metal">
+			<LogicalName>Riateu.Misc.Metal.Texture.frag.metal</LogicalName>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Refresh\ImGuiShader.vert.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.ImGuiShader.vert.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Metal\ImGuiShader.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.ImGuiShader.vert.metal</LogicalName>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Refresh\InstancedShader.vert.wgsl.refresh">
-			<LogicalName>Riateu.Misc.Refresh.InstancedShader.vert.wgsl.refresh</LogicalName>
+		<EmbeddedResource Include="Core\Misc\Metal\InstancedShader.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.InstancedShader.vert.metal</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ using MoonWorks.Math.Float;
 namespace Riateu.Graphics;
 
 /// <summary>
-/// A vertex type to be used for the <see cref="GameContext.InstancedPipeline"/>. 
+/// A vertex type to be used for the <see cref="GameContext.InstancedPipeline"/>.
 /// It can also be used elsewhere.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
@@ -64,5 +64,19 @@ public struct InstancedVertex(Vector3 position, Vector2 scale, UV uv, Color colo
         VertexElementFormat.Vector2,
         VertexElementFormat.Float,
         VertexElementFormat.Color,
+    ];
+
+    public static uint[] Offsets => [
+        0, // 4x3=12
+
+        12, // 2x4+12=20,
+        20, // 2x4+20=28,
+        28, // 2x4+28=36,
+        36, // 2x4+36=44,
+
+        44, // 2x4+44=52,
+        52, // 2x4+52=60,
+        60, // 4+60=64,
+        64, // 4+64=68
     ];
 }
