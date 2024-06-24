@@ -16,7 +16,7 @@ public class Batch : System.IDisposable
 {
     private const int MaxTextures = 8192;
     private GraphicsDevice device;
-
+    private unsafe PositionTextureColorVertex* vertices;
 
     private Stack<Matrix4x4> Matrices;
     private bool rendered;
@@ -90,7 +90,7 @@ public class Batch : System.IDisposable
     }
 
     /// <inheritdoc/>
-    public DrawBatch Begin(Texture texture, Sampler sampler)
+    public void Begin(Texture texture, Sampler sampler)
     {
         if (rendered)
         {
@@ -101,17 +101,14 @@ public class Batch : System.IDisposable
         UsedBinding = new TextureSamplerBinding(texture, sampler);
         UsedPipeline = GameContext.DefaultPipeline;
 
-        DrawBatch drawBatch = GameContext.DrawBatchPool.Obtain();
         unsafe {
             transferVertexBuffer.Map(true, out byte* vert);
-            drawBatch.SetVerticesAndBatch(vert, this);
+            vertices = (PositionTextureColorVertex*)vert;
         }
-
-        return drawBatch;
     }
 
     /// <inheritdoc/>
-    public void End(CommandBuffer cmdBuf, DrawBatch drawBatch)
+    public void End(CommandBuffer cmdBuf)
     {
         transferVertexBuffer.Unmap();
         if (VertexIndex == 0)
@@ -227,5 +224,100 @@ public class Batch : System.IDisposable
     {
         Dispose(disposing: true);
         System.GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Quad quad, Vector2 position, Color color, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Draw(quad, position, color, Vector2.One, Vector2.Zero, transform, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Quad quad, Vector2 position, Color color, float layerDepth = 1)
+    {
+        Draw(quad, position, color, Vector2.One, Vector2.Zero, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Draw(quad, position, color, scale, Vector2.Zero, transform, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, float layerDepth = 1)
+    {
+        Draw(quad, position, color, scale, Vector2.Zero, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, Matrix3x2 transform, float layerDepth = 1)
+    {
+        Draw(quad, position, color, scale, origin, 0, transform, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
+    {
+        Draw(quad, position, color, scale, origin, 0, Matrix3x2.Identity, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
+    {
+        Draw(new Quad(UsedBinding.Texture), position, color, scale, origin, 0, Matrix3x2.Identity, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Vector2 position, Color color, float layerDepth = 1)
+    {
+        Draw(new Quad(UsedBinding.Texture), position, color, Vector2.One, Vector2.Zero, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1)
+    {
+        Draw(quad, position, color, scale, origin, rotation, Matrix3x2.Identity, layerDepth);
+    }
+
+    /// <inheritdoc/>
+    public unsafe void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Matrix3x2 transform, float layerDepth = 1)
+    {
+        if (VertexIndex == CurrentMaxTexture)
+        {
+            ResizeBuffer();
+            return;
+        }
+
+        float width = quad.Source.W * scale.X;
+        float height = quad.Source.H * scale.Y;
+
+        transform = Matrix3x2.CreateTranslation(-origin.X, -origin.Y)
+            * Matrix3x2.CreateRotation(rotation)
+            * transform;
+
+        var topLeft = new Vector2(position.X, position.Y);
+        var topRight = new Vector2(position.X + width, position.Y);
+        var bottomLeft = new Vector2(position.X, position.Y + height);
+        var bottomRight = new Vector2(position.X + width, position.Y + height);
+
+        var vertexOffset = VertexIndex * 4;
+
+        vertices[vertexOffset].Position = new Vector3(Vector2.Transform(topLeft, transform), layerDepth);
+        vertices[vertexOffset + 1].Position = new Vector3(Vector2.Transform(bottomLeft, transform), layerDepth);
+        vertices[vertexOffset + 2].Position = new Vector3(Vector2.Transform(topRight, transform), layerDepth);
+        vertices[vertexOffset + 3].Position = new Vector3(Vector2.Transform(bottomRight, transform), layerDepth);
+
+        vertices[vertexOffset].Color = color;
+        vertices[vertexOffset + 1].Color = color;
+        vertices[vertexOffset + 2].Color = color;
+        vertices[vertexOffset + 3].Color = color;
+
+        vertices[vertexOffset].TexCoord = quad.UV.TopLeft;
+        vertices[vertexOffset + 1].TexCoord = quad.UV.BottomLeft;
+        vertices[vertexOffset + 2].TexCoord = quad.UV.TopRight;
+        vertices[vertexOffset + 3].TexCoord = quad.UV.BottomRight;
+
+        VertexIndex++;
     }
 }

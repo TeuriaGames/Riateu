@@ -94,7 +94,7 @@ public class Tilemap : Component
         tiles.Fill(null);
     }
 
-    private void AddToBatch(DrawBatch draw)
+    private void AddToBatch(Batch draw)
     {
         for (int x = 0; x < tiles.Rows; x++)
         {
@@ -110,7 +110,7 @@ public class Tilemap : Component
     }
 
     /// <inheritdoc/>
-    public override void Draw(CommandBuffer buffer, DrawBatch draw)
+    public override void Draw(CommandBuffer buffer, Batch draw)
     {
         var device = GameContext.GraphicsDevice;
 

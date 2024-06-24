@@ -212,7 +212,7 @@ public class Entity : IEnumerable<Component>
     /// <param name="draw">
     /// A batching system that used to built a vertices or instances to be rendered later
     /// </param>
-    public virtual void Draw(CommandBuffer buffer, DrawBatch draw) 
+    public virtual void Draw(CommandBuffer buffer, Batch draw) 
     {
         if (!Visible) return;
         for (int i = 0; i < componentList.Count; i++) 
