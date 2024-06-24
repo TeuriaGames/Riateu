@@ -13,14 +13,13 @@ namespace Riateu;
 /// </summary>
 public abstract class Scene
 {
-    /// <summary>
-    /// The physics world of the scene.
-    /// </summary>
-    public World PhysicsWorld = new();
+    internal static uint TypeIndexCount;
 
-    /// <summary>
-    /// The list of physics tags that uses for filtering the <see cref="Riateu.Entity"/> collision.
-    /// </summary>
+    public Dictionary<Type, uint> TypeIndexes = new();
+    public PhysicsStorage PhysicsStorage = new();
+    public Dictionary<Query, QueryResult> Queries = new();
+    public QueryBuilder QueryBuilder;
+
     public List<PhysicsComponent>[] SceneTags;
 
     /// <summary>
@@ -52,6 +51,7 @@ public abstract class Scene
     /// <param name="game">The game application</param>
     public Scene(GameApp game)
     {
+        QueryBuilder = new QueryBuilder(this);
         GameInstance = game;
         EntityList = new Entities(this);
         SceneTags = new List<PhysicsComponent>[Tag.TotalTags];
@@ -78,7 +78,16 @@ public abstract class Scene
     /// </param>
     public void AddPhysics(PhysicsComponent component)
     {
-        PhysicsWorld.Components.Add(component);
+        Type type = component.Entity.GetType();
+        uint indexCount;
+        if (!TypeIndexes.TryGetValue(type, out indexCount)) 
+        {
+            indexCount = TypeIndexCount;
+            TypeIndexes.Add(type, indexCount);
+            TypeIndexCount++;
+        }
+
+        PhysicsStorage.Add(indexCount, component);
     }
 
     /// <summary>
@@ -89,7 +98,28 @@ public abstract class Scene
     /// </param>
     public void RemovePhysics(PhysicsComponent component)
     {
-        PhysicsWorld.Components.Remove(component);
+        Type type = component.Entity.GetType();
+
+        uint indexCount = TypeIndexes[type];
+
+        PhysicsStorage.Remove(indexCount, component);
+    }
+
+    internal QueryResult GetQuery(Query query) 
+    {
+        QueryResult result;
+        if (!Queries.TryGetValue(query, out result)) 
+        {
+            result = new QueryResult(this, query);
+
+            foreach (var include in query.Includes) 
+            {
+                result.Add(PhysicsStorage.PhysicsQuery[include]);
+                PhysicsStorage.QueryResults[include] = result;
+            }
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -112,25 +142,6 @@ public abstract class Scene
     }
 
     /// <summary>
-    /// Get a list of <see cref="Riateu.Components.PhysicsComponent"/> from a physics bits.
-    /// </summary>
-    /// <param name="tag">The tag of the physics</param>
-    /// <returns>A list of <see cref="Riateu.Components.PhysicsComponent"/></returns>
-    public List<PhysicsComponent> GetPhysicsFromBit(Tag tag)
-    {
-        return SceneTags[tag.ID];
-    }
-
-    /// <summary>
-    /// Removes an <see cref="Riateu.Entity"/> from the scene.
-    /// </summary>
-    /// <param name="entity">An <see cref="Riateu.Entity"/> to remove</param>
-    public void Remove(Entity entity)
-    {
-        EntityList.Remove(entity);
-    }
-
-    /// <summary>
     /// Remove a physics bit and component into the <see cref="Riateu.Scene.SceneTags"/>.
     /// </summary>
     /// <param name="component">
@@ -147,6 +158,25 @@ public abstract class Scene
                 SceneTags[i].Remove(component);
             }
         }
+    }
+
+    /// <summary>
+    /// Get a list of <see cref="Riateu.Components.PhysicsComponent"/> from a physics bits.
+    /// </summary>
+    /// <param name="tag">The tag of the physics</param>
+    /// <returns>A list of <see cref="Riateu.Components.PhysicsComponent"/></returns>
+    public List<PhysicsComponent> GetPhysicsFromBit(Tag tag)
+    {
+        return SceneTags[tag.ID];
+    }
+
+    /// <summary>
+    /// Removes an <see cref="Riateu.Entity"/> from the scene.
+    /// </summary>
+    /// <param name="entity">An <see cref="Riateu.Entity"/> to remove</param>
+    public void Remove(Entity entity)
+    {
+        EntityList.Remove(entity);
     }
 
     /// <summary>
