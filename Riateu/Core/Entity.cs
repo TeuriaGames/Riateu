@@ -209,16 +209,16 @@ public class Entity : IEnumerable<Component>
     /// Called every draw frame.
     /// </summary>
     /// <param name="buffer">A command buffer</param>
-    /// <param name="spriteBatch">
+    /// <param name="draw">
     /// A batching system that used to built a vertices or instances to be rendered later
     /// </param>
-    public virtual void Draw(CommandBuffer buffer, IBatch spriteBatch) 
+    public virtual void Draw(CommandBuffer buffer, DrawBatch draw) 
     {
         if (!Visible) return;
         for (int i = 0; i < componentList.Count; i++) 
         {
             if (!componentList[i].Active) continue;
-            componentList[i].Draw(buffer, spriteBatch);
+            componentList[i].Draw(buffer, draw);
         }
     }
 

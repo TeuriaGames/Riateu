@@ -86,8 +86,8 @@ public abstract class Shape
     /// Draw a debug lines to show the hidden lines from this shape.
     /// </summary>
     /// <param name="buffer">A command buffer</param>
-    /// <param name="batch">An <see cref="Riateu.Graphics.InstanceBatch"/></param>
-    public virtual void DebugDraw(CommandBuffer buffer, InstanceBatch batch) 
+    /// <param name="draw">An <see cref="Riateu.Graphics.DrawBatch"/></param>
+    public virtual void DebugDraw(CommandBuffer buffer, DrawBatch draw) 
     {
     }
 }

@@ -99,12 +99,10 @@ public abstract class GameApp : Game
         CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
         Texture backbuffer = cmdBuf.AcquireSwapchainTexture(MainWindow);
 
-        scene.InternalBeforeDraw(cmdBuf);
         if (backbuffer != null)
         {
             scene.InternalDraw(cmdBuf, backbuffer);
         }
-        scene.InternalAfterDraw(cmdBuf);
 
         GraphicsDevice.Submit(cmdBuf);
     }

@@ -159,7 +159,7 @@ public sealed class CollisionGrid : Shape
         return false;
     }
 
-    public override void DebugDraw(CommandBuffer buffer, InstanceBatch batch)
+    public override void DebugDraw(CommandBuffer buffer, DrawBatch draw)
     {
         // for (int x = 0; x < CellY; x++)
         //     for (int y = 0; y < CellX; y++)

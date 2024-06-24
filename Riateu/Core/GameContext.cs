@@ -33,6 +33,7 @@ public static class GameContext
     /// An everything sampler that uses point clamp for sampling.
     /// </summary>
     public static Sampler GlobalSampler;
+    internal static DrawBatchPool DrawBatchPool = new DrawBatchPool();
 
     internal static void Init(GraphicsDevice device, Window mainWindow)
     {

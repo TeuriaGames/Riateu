@@ -94,7 +94,7 @@ public class Tilemap : Component
         tiles.Fill(null);
     }
 
-    private void AddToBatch(IBatch spriteBatch)
+    private void AddToBatch(DrawBatch draw)
     {
         for (int x = 0; x < tiles.Rows; x++)
         {
@@ -104,33 +104,32 @@ public class Tilemap : Component
                 if (sTexture is null)
                     continue;
 
-                spriteBatch.Add(sTexture.Value, tilemapTexture, GameContext.GlobalSampler,
-                    new Vector2(x * gridSize, y * gridSize), Color.White, Entity.Transform.WorldMatrix, layerDepth: 1f);
+                draw.Draw(sTexture.Value, new Vector2(x * gridSize, y * gridSize), Color.White, Entity.Transform.WorldMatrix, layerDepth: 1f);
             }
         }
     }
 
     /// <inheritdoc/>
-    public override void Draw(CommandBuffer buffer, IBatch spriteBatch)
+    public override void Draw(CommandBuffer buffer, DrawBatch draw)
     {
         var device = GameContext.GraphicsDevice;
 
         if (mode == TilemapMode.Baked)
         {
-            if (dirty)
-            {
-                AddToBatch(spriteBatch);
-                RenderPass renderPass = buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, false, Color.Transparent));
-                renderPass.BindGraphicsPipeline(GameContext.DefaultPipeline);
-                spriteBatch.Draw(renderPass, Matrix);
-                buffer.EndRenderPass(renderPass);
-                dirty = false;
-            }
-            spriteBatch.Add(frameBuffer, GameContext.GlobalSampler,
-                Vector2.Zero, Color.White, Matrix3x2.Identity);
+            // if (dirty)
+            // {
+            //     AddToBatch(draw);
+            //     RenderPass renderPass = buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, false, Color.Transparent));
+            //     renderPass.BindGraphicsPipeline(GameContext.DefaultPipeline);
+            //     spriteBatch.Draw(renderPass, Matrix);
+            //     buffer.EndRenderPass(renderPass);
+            //     dirty = false;
+            // }
+            // draw.Add(frameBuffer, GameContext.GlobalSampler,
+            //     Vector2.Zero, Color.White, Matrix3x2.Identity);
             return;
         }
-        AddToBatch(spriteBatch);
+        AddToBatch(draw);
     }
 
     /// <inheritdoc/>

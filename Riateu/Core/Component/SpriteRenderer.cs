@@ -63,10 +63,8 @@ public class SpriteRenderer : GraphicsComponent
     }
 
     /// <inheritdoc/>
-    public override void Draw(CommandBuffer buffer, IBatch batch) 
+    public override void Draw(CommandBuffer buffer, DrawBatch draw) 
     {
-        batch.Add(
-            SpriteTexture, BaseTexture, GameContext.GlobalSampler, Vector2.Zero, 
-            Color.White, Vector2.One, Origin, Entity.Transform.WorldMatrix);
+        draw.Draw(SpriteTexture, Vector2.Zero, Color.White, Vector2.One, Origin, Entity.Transform.WorldMatrix);
     }
 }

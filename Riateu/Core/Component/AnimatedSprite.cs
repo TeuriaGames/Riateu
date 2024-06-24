@@ -208,10 +208,9 @@ public class AnimatedSprite : GraphicsComponent
     }
 
     /// <inheritdoc/>
-    public override void Draw(CommandBuffer buffer, IBatch spriteBatch)
+    public override void Draw(CommandBuffer buffer, DrawBatch draw)
     {
-        spriteBatch.Add(SpriteTexture, BaseTexture, GameContext.GlobalSampler, 
-            Vector2.Zero, Color.White, Entity.Transform.WorldMatrix);
+        draw.Draw(SpriteTexture, Vector2.Zero, Color.White, Entity.Transform.WorldMatrix);
     }
 
     /// <summary>

@@ -80,10 +80,10 @@ public class Component
     /// <param name="buffer">
     /// A <see cref="MoonWorks.Graphics.CommandBuffer"/> to send some command to the gpu
     /// </param>
-    /// <param name="spriteBatch">
+    /// <param name="draw">
     /// A batching system that used to built a vertices or instances to be rendered later
     /// </param>
-    public virtual void Draw(CommandBuffer buffer, IBatch spriteBatch) {}
+    public virtual void Draw(CommandBuffer buffer, DrawBatch draw) {}
     /// <summary>
     /// A method that is called when the entity removed this component.
     /// </summary>

@@ -54,33 +54,26 @@ public class Canvas : IDisposable
     /// <param name="device">An application graphics device</param>
     /// <param name="width">A width of a canvas</param>
     /// <param name="height">A height of a canvas</param>
-    public Canvas(Scene scene, GraphicsDevice device, uint width, uint height) 
+    public Canvas(Scene scene, GraphicsDevice device, uint width, uint height)
     {
         CanvasTexture = Texture.CreateTexture2D(device, width, height, TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
         this.width = width;
         this.height = height;
         this.Scene = scene;
     }
-
-    /// <inheritdoc cref="Riateu.Scene.BeforeDraw(CommandBuffer)"/>
-    public virtual void BeforeDraw(CommandBuffer buffer) {}
-
     /// <summary>
     /// A method that called during the draw loop. Do your draw calls here.
     /// </summary>
     /// <param name="buffer">A command buffer</param>
-    public virtual void Draw(CommandBuffer buffer) {}
-
-    /// <inheritdoc cref="Riateu.Scene.AfterDraw(CommandBuffer)"/>
-    public virtual void AfterDraw(CommandBuffer buffer) {}
+    public virtual void Render(CommandBuffer buffer) {}
 
     /// <summary>
-    /// Create a <see cref="Riateu.DefaultCanvas"/> to do the rendering for you. 
+    /// Create a <see cref="Riateu.DefaultCanvas"/> to do the rendering for you.
     /// </summary>
     /// <param name="scene">A <see cref="Riateu.Scene"/> to reference with</param>
     /// <param name="device">An application graphics device</param>
     /// <returns>A <see cref="Riateu.DefaultCanvas"/></returns>
-    public static DefaultCanvas CreateDefault(Scene scene, GraphicsDevice device) 
+    public static DefaultCanvas CreateDefault(Scene scene, GraphicsDevice device)
     {
         return new DefaultCanvas(scene, device, scene.GameInstance.Width, scene.GameInstance.Height);
     }
@@ -88,7 +81,7 @@ public class Canvas : IDisposable
     /// <summary>
     /// End of the canvas, disposed all of the resources.
     /// </summary>
-    public virtual void End() 
+    public virtual void End()
     {
         Dispose();
     }
@@ -115,7 +108,7 @@ public class Canvas : IDisposable
     /// </summary>
     /// <param name="batch">A batch system to add the canvas texture</param>
     /// <param name="sampler">The sampler for the texture</param>
-    public void ApplyCanvasToBatch(IBatch batch, Sampler sampler) 
+    public void ApplyCanvasToBatch(IBatch batch, Sampler sampler)
     {
         batch.Add(CanvasTexture, sampler, Vector2.Zero, Color.White);
     }
@@ -140,7 +133,7 @@ public class Canvas : IDisposable
 }
 
 /// <summary>
-/// A <see cref="Riateu.DefaultCanvas"/> to do the rendering for you. 
+/// A <see cref="Riateu.DefaultCanvas"/> to do the rendering for you.
 /// </summary>
 public class DefaultCanvas : Canvas
 {
@@ -153,5 +146,5 @@ public class DefaultCanvas : Canvas
     }
 
     /// <inheritdoc/>
-    public override void Draw(CommandBuffer buffer) {}
+    public override void Render(CommandBuffer buffer) {}
 }
