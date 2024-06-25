@@ -29,7 +29,7 @@ public abstract class Text : IDisposable
     /// </summary>
     /// <param name="batch">A batch system</param>
     /// <param name="position">A position of the text</param>
-    public abstract void Draw(IBatch batch, Vector2 position);
+    public abstract void Render(Batch batch, Vector2 position);
 
     /// <summary>
     /// Dispose resources.

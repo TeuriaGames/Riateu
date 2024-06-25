@@ -178,13 +178,13 @@ public class DynamicText : Text
     }
 
     /// <inheritdoc/>
-    public override void Draw(IBatch batch, Vector2 position)
+    public override void Render(Batch batch, Vector2 position)
     {
         if (dirty)
         {
             Resubmit();
             dirty = false;
         }
-        batch.Add(DynamicTexture, Texture, GameContext.GlobalSampler, position, Color.White, Matrix3x2.Identity);
+        batch.Draw(DynamicTexture, position, Color.White, Matrix3x2.Identity);
     }
 }

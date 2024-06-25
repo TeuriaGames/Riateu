@@ -69,8 +69,8 @@ public class StaticText : Text
     }
 
     /// <inheritdoc/>
-    public override void Draw(IBatch batch, Vector2 position)
+    public override void Render(Batch batch, Vector2 position)
     {
-        batch.Add(Texture, GameContext.GlobalSampler, position, Color.White, Matrix3x2.Identity);
+        batch.Draw(position, Color.White);
     }
 }
