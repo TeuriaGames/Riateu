@@ -4,20 +4,6 @@ using Riateu.Graphics;
 
 namespace Riateu.Components;
 
-/// <summary>
-/// An enum containg the rendering mode for the tilemap.
-/// </summary>
-public enum TilemapMode
-{
-    /// <summary>
-    /// Baked the texture of the tilemap.
-    /// </summary>
-    Baked,
-    /// <summary>
-    /// Cull the vertices of the tilemap to reduces draw calls.
-    /// </summary>
-    Cull
-}
 
 /// <summary>
 /// A class that contains a collection of tiles to build a map.
@@ -27,18 +13,12 @@ public class Tilemap : Component
     private Array2D<Quad?> tiles;
     private Texture tilemapTexture;
     private Texture frameBuffer;
-    private bool dirty = true;
-    private TilemapMode mode;
     private Matrix4x4 Matrix;
     private int gridSize;
     /// <summary>
     /// A size of a grid in tiles.
     /// </summary>
     public int GridSize => gridSize;
-    /// <summary>
-    /// Contains the rendering mode for the tilemap.
-    /// </summary>
-    public TilemapMode Mode => mode;
 
     /// <summary>
     /// An initialization of a tilemap.
@@ -46,9 +26,7 @@ public class Tilemap : Component
     /// <param name="texture">A texture used for tilemap</param>
     /// <param name="tiles">A tiles containing the map of the tiles</param>
     /// <param name="gridSize">A size of a grid in tiles</param>
-    /// <param name="mode">A rendering mode for the tilemap</param>
-    public Tilemap(Texture texture, Array2D<Quad?> tiles, int gridSize,
-        TilemapMode mode = TilemapMode.Baked)
+    public Tilemap(Texture texture, Array2D<Quad?> tiles, int gridSize)
     {
         int rows = tiles.Rows;
         int columns = tiles.Columns;
@@ -64,14 +42,6 @@ public class Tilemap : Component
         this.tiles = tiles;
         this.tilemapTexture = texture;
         this.gridSize = gridSize;
-
-        this.mode = mode;
-        if (mode == TilemapMode.Baked)
-        {
-            frameBuffer = Texture.CreateTexture2D(GameContext.GraphicsDevice,
-                (uint)(rows * gridSize), (uint)(columns * gridSize),
-                TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
-        }
     }
 
     /// <summary>
@@ -104,7 +74,7 @@ public class Tilemap : Component
                 if (sTexture is null)
                     continue;
 
-                draw.Draw(sTexture.Value, new Vector2(x * gridSize, y * gridSize), Color.White, Entity.Transform.WorldMatrix, layerDepth: 1f);
+                draw.Draw(sTexture.Value, Entity.Transform.Position + new Vector2(x * gridSize, y * gridSize), Color.White, layerDepth: 1f);
             }
         }
     }
@@ -112,32 +82,6 @@ public class Tilemap : Component
     /// <inheritdoc/>
     public override void Draw(CommandBuffer buffer, Batch draw)
     {
-        var device = GameContext.GraphicsDevice;
-
-        if (mode == TilemapMode.Baked)
-        {
-            // if (dirty)
-            // {
-            //     AddToBatch(draw);
-            //     RenderPass renderPass = buffer.BeginRenderPass(new ColorAttachmentInfo(frameBuffer, false, Color.Transparent));
-            //     renderPass.BindGraphicsPipeline(GameContext.DefaultPipeline);
-            //     spriteBatch.Draw(renderPass, Matrix);
-            //     buffer.EndRenderPass(renderPass);
-            //     dirty = false;
-            // }
-            // draw.Add(frameBuffer, GameContext.GlobalSampler,
-            //     Vector2.Zero, Color.White, Matrix3x2.Identity);
-            return;
-        }
         AddToBatch(draw);
-    }
-
-    /// <inheritdoc/>
-    public override void Removed()
-    {
-        if (mode == TilemapMode.Baked)
-        {
-            frameBuffer.Dispose();
-        }
     }
 }

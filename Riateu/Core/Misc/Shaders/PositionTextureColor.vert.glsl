@@ -1,5 +1,5 @@
 #version 450
-layout(location = 0) in vec3 position;
+layout(location = 0) in vec4 position;
 layout(location = 1) in vec2 texCoord;
 layout(location = 2) in vec4 color;
 
@@ -14,5 +14,5 @@ layout (set = 1, binding = 0) uniform UniformBlock
 void main() {
     outColor = color;
     outTexCoord = texCoord;
-    gl_Position = MatrixUniform * vec4(position, 1);
+    gl_Position = MatrixUniform * vec4(position, 1, 1);
 }
