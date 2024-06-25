@@ -23,19 +23,12 @@ public struct Quad : IEquatable<Quad>
     /// <summary>
     /// A width of a quad texture.
     /// </summary>
-    public int Width 
-    {
-        get => width;
-        set => width = value;
-    }
+    public int Width => width;
+
     /// <summary>
     /// A height of a quad texture.
     /// </summary>
-    public int Height
-    {
-        get => height;
-        set => height = value;
-    }
+    public int Height => height;
 
     private int width;
     private int height;
