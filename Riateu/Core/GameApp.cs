@@ -61,7 +61,7 @@ public abstract class GameApp : Game
     /// <param name="targetTimestep">The maximum fps timestep</param>
     /// <param name="debugMode">Enable or disable debug mode, use for debugging graphics</param>
     protected GameApp(WindowCreateInfo windowCreateInfo, FrameLimiterSettings frameLimiterSettings, int targetTimestep = 60, bool debugMode = false)
-        : base(windowCreateInfo, SwapchainComposition.SDR, PresentMode.Immediate, frameLimiterSettings,
+        : base(windowCreateInfo, SwapchainComposition.SDR, PresentMode.VSync, frameLimiterSettings,
 #if D3D11
         BackendFlags.D3D11,
 #elif Metal
