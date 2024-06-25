@@ -151,6 +151,33 @@ public class Batch : System.IDisposable
     }
 
     /// <inheritdoc/>
+    public void Render<T>(RenderPass renderPass, in T fragmentUniform)
+    where T : unmanaged
+    {
+        Render(renderPass, Matrix);
+    }
+
+    /// <inheritdoc/>
+    public void Render<T>(RenderPass renderPass, Matrix4x4 viewProjection, in T fragmentUniform)
+    where T : unmanaged
+    {
+        if (VertexIndex == 0)
+        {
+            return;
+        }
+
+        renderPass.BindGraphicsPipeline(UsedPipeline);
+        renderPass.PushVertexUniformData(viewProjection);
+        renderPass.BindVertexBuffer(vertexBuffer);
+        renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
+        renderPass.BindFragmentSampler(UsedBinding);
+        renderPass.PushFragmentUniformData(fragmentUniform);
+        renderPass.DrawIndexedPrimitives(0u, 0u, VertexIndex * 2u, 1);
+
+        VertexIndex = 0;
+    }
+
+    /// <inheritdoc/>
     public void Render(RenderPass renderPass, Matrix4x4 viewProjection)
     {
         if (VertexIndex == 0)
