@@ -32,6 +32,8 @@ public struct QueryBuilder
 
     public QueryResult Build() 
     {
-        return scene.GetQuery(new Query(Includes));
+        QueryResult queryResult = scene.GetQuery(new Query(Includes));
+        Includes.Clear();
+        return queryResult;
     }
 }
