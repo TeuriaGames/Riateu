@@ -91,7 +91,7 @@ public static class GameContext
         GraphicsPipelineCreateInfo msdfPipelineCreateInfo = new GraphicsPipelineCreateInfo()
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(TextureFormat.R8G8B8A8,
+                new ColorAttachmentDescription(mainWindow.SwapchainFormat,
                 ColorAttachmentBlendState.AlphaBlend)
             ),
             DepthStencilState = DepthStencilState.Disable,
