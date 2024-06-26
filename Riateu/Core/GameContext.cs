@@ -44,7 +44,7 @@ public static class GameContext
         using var ms1 = new MemoryStream(positionTextureColor);
         Shader vertexPSC = new Shader(device, ms1, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Vertex,
-            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderFormat = BackendShaderFormat,
             UniformBufferCount = 1
         });
 
@@ -52,7 +52,7 @@ public static class GameContext
         using var ms2 = new MemoryStream(textureFragment);
         Shader fragmentPSC = new Shader(device, ms2, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Fragment,
-            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderFormat = BackendShaderFormat,
             SamplerCount = 1
         });
 
@@ -114,7 +114,7 @@ public static class GameContext
         using var ms3 = new MemoryStream(tileMapBytes);
         Shader instancedPSC = new Shader(device, ms3, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Vertex,
-            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderFormat = BackendShaderFormat,
             UniformBufferCount = 1
         });
 
@@ -142,7 +142,7 @@ public static class GameContext
         using var comp1 = new MemoryStream(spriteBatchShader);
         SpriteBatchPipeline = new ComputePipeline(device, comp1, "main", new ComputePipelineCreateInfo 
         {
-            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderFormat = BackendShaderFormat,
             ReadWriteStorageBufferCount = 1,
             ReadOnlyStorageBufferCount = 1,
             ThreadCountX = 64,
@@ -150,4 +150,13 @@ public static class GameContext
             ThreadCountZ = 1
         });
     }
+
+    public const ShaderFormat BackendShaderFormat =
+#if Metal
+    ShaderFormat.Metal;
+#elif D3D11
+    ShaderFormat.MSL;
+#elif Vulkan
+    ShaderFormat.SPIRV;
+#endif
 }

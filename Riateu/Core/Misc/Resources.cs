@@ -76,7 +76,7 @@ public static class Resources
         return "D3D11";
 #elif Metal
         return "Metal";
-#else
+#elif Vulkan
         return "Vulkan";
 #endif
     }

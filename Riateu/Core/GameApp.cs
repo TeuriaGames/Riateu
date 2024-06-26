@@ -66,7 +66,7 @@ public abstract class GameApp : Game
         BackendFlags.D3D11,
 #elif Metal
         BackendFlags.Metal,
-#else
+#elif Vulkan
         BackendFlags.Vulkan,
 #endif
         targetTimestep, debugMode)

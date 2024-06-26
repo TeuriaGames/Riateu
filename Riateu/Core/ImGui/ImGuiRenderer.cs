@@ -45,14 +45,14 @@ public class ImGuiRenderer
         io.DisplayFramebufferScale = System.Numerics.Vector2.One;
         imGuiShader = Resources.GetShader(device, Resources.ImGuiShader, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Vertex,
-            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderFormat = GameContext.BackendShaderFormat,
             UniformBufferCount = 1
         });
         imGuiSampler = new Sampler(device, SamplerCreateInfo.PointClamp);
 
         var fragmentShader = Resources.GetShader(device, Resources.Texture, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Fragment,
-            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderFormat = GameContext.BackendShaderFormat,
             SamplerCount = 1
         });
 
