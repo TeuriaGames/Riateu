@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
-for filename in Shaders/*.glsl; do
-    name=$(basename -- $filename .glsl)
+for filename in Shaders/*.{glsl,wgsl}; do
+    name=$(basename $(expr "$filename" : '\(.*\)\.'))
     vk_out="Vulkan/$name.spv"
     metal_out="Metal/$name.metal"
     d3d11_out="D3D11/$name.hlsl"
