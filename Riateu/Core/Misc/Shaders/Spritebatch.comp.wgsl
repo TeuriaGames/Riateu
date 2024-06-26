@@ -2,10 +2,7 @@ struct ComputeData {
     position: vec2<f32>,
     scale: vec2<f32>,
     origin: vec2<f32>,
-    uv0: vec2<f32>,
-    uv1: vec2<f32>,
-    uv2: vec2<f32>,
-    uv3: vec2<f32>,
+    uv: array<vec2<f32>, 4>,
     dimension: vec2<f32>,
     rotation: f32,
     color: vec4<f32>
@@ -86,10 +83,10 @@ fn main(@builtin(global_invocation_id) gID: vec3<u32>) {
         (bottomRight.x * transform[0][3]) + (bottomRight.y * transform[1][3]) + transform[3][3],
     );
 
-    vertexData[n * 4u].tex_coords      = compData.uv0;
-    vertexData[n * 4u + 1u].tex_coords = compData.uv1; 
-    vertexData[n * 4u + 2u].tex_coords = compData.uv2;
-    vertexData[n * 4u + 3u].tex_coords = compData.uv3;
+    vertexData[n * 4u].tex_coords      = compData.uv[0];
+    vertexData[n * 4u + 1u].tex_coords = compData.uv[1]; 
+    vertexData[n * 4u + 2u].tex_coords = compData.uv[2];
+    vertexData[n * 4u + 3u].tex_coords = compData.uv[3];
 
     vertexData[n * 4u].color = compData.color;
     vertexData[n * 4u + 1u].color = compData.color;

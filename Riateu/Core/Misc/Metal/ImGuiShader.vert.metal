@@ -4,63 +4,38 @@
 
 using metal::uint;
 
-struct UniformBlock {
-    metal::float4x4 MatrixUniform;
+struct VertexInput {
+    metal::float2 position;
+    metal::float2 texCoord;
+    metal::float4 color;
 };
-struct type_3 {
-    metal::float4 outColor;
-    metal::float2 outTexCoord;
-    metal::float4 gl_Position;
+struct VertexOutput {
+    metal::float4 position;
+    metal::float4 color;
+    metal::float2 texCoord;
 };
-
-void main_1(
-    thread metal::float2& position_1,
-    thread metal::float4& color_1,
-    thread metal::float4& outColor,
-    thread metal::float2& outTexCoord,
-    constant UniformBlock& global,
-    thread metal::float4& gl_Position
-) {
-    metal::float4 _e7 = color_1;
-    outColor = _e7;
-    metal::float2 _e8 = outTexCoord;
-    outTexCoord = _e8;
-    metal::float4x4 _e10 = global.MatrixUniform;
-    metal::float2 _e11 = position_1;
-    gl_Position = _e10 * metal::float4(_e11.x, _e11.y, 0.0, 1.0);
-    return;
-}
 
 struct main_Input {
     metal::float2 position [[attribute(0)]];
-    metal::float2 tex_coord [[attribute(1)]];
+    metal::float2 texCoord [[attribute(1)]];
     metal::float4 color [[attribute(2)]];
 };
 struct main_Output {
-    metal::float4 outColor [[user(loc0), center_perspective]];
-    metal::float2 outTexCoord [[user(loc1), center_perspective]];
-    metal::float4 gl_Position [[position]];
+    metal::float4 position [[position]];
+    metal::float4 color [[user(loc0), center_perspective]];
+    metal::float2 texCoord [[user(loc1), center_perspective]];
 };
 vertex main_Output main_(
   main_Input varyings [[stage_in]]
-, constant UniformBlock& global [[user(fake0)]]
+, constant metal::float4x4& MatrixUniform [[user(fake0)]]
 ) {
-    metal::float2 position_1 = {};
-    metal::float2 tex_coord_1 = {};
-    metal::float4 color_1 = {};
-    metal::float4 outColor = {};
-    metal::float2 outTexCoord = {};
-    metal::float4 gl_Position = {};
-    const auto position = varyings.position;
-    const auto tex_coord = varyings.tex_coord;
-    const auto color = varyings.color;
-    position_1 = position;
-    tex_coord_1 = tex_coord;
-    color_1 = color;
-    main_1(position_1, color_1, outColor, outTexCoord, global, gl_Position);
-    metal::float4 _e19 = outColor;
-    metal::float2 _e21 = outTexCoord;
-    metal::float4 _e23 = gl_Position;
-    const auto _tmp = type_3 {_e19, _e21, _e23};
-    return main_Output { _tmp.outColor, _tmp.outTexCoord, _tmp.gl_Position };
+    const VertexInput in = { varyings.position, varyings.texCoord, varyings.color };
+    VertexOutput output = {};
+    output.color = in.color;
+    output.texCoord = in.texCoord;
+    metal::float4x4 _e8 = MatrixUniform;
+    output.position = _e8 * metal::float4(in.position, 0.0, 1.0);
+    VertexOutput _e14 = output;
+    const auto _tmp = _e14;
+    return main_Output { _tmp.position, _tmp.color, _tmp.texCoord };
 }

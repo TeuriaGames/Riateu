@@ -9,17 +9,17 @@ struct _mslBufferSizes {
     uint size1;
 };
 
+struct type_1 {
+    metal::float2 inner[4];
+};
 struct ComputeData {
     metal::float2 position;
     metal::float2 scale;
     metal::float2 origin;
-    metal::float2 uv0_;
-    metal::float2 uv1_;
-    metal::float2 uv2_;
-    metal::float2 uv3_;
+    type_1 uv;
     metal::float2 dimension;
     float rotation;
-    char _pad9[12];
+    char _pad6[12];
     metal::float4 color;
 };
 struct PositionTextureColorVertex {
@@ -28,15 +28,15 @@ struct PositionTextureColorVertex {
     char _pad2[8];
     metal::float4 color;
 };
-typedef ComputeData type_3[1];
-typedef PositionTextureColorVertex type_4[1];
+typedef ComputeData type_4[1];
+typedef PositionTextureColorVertex type_5[1];
 
 struct main_Input {
 };
 kernel void main_(
   metal::uint3 gID [[thread_position_in_grid]]
-, device type_3 const& computeData [[user(fake0)]]
-, device type_4& vertexData [[user(fake0)]]
+, device type_4 const& computeData [[user(fake0)]]
+, device type_5& vertexData [[user(fake0)]]
 , constant _mslBufferSizes& _buffer_sizes [[user(fake0)]]
 ) {
     uint n = gID.x;
@@ -58,10 +58,10 @@ kernel void main_(
     vertexData[(n * 4u) + 1u].position = metal::float4(((topRight.x * transform[0].x) + (topRight.y * transform[1].x)) + transform[3].x, ((topRight.x * transform[0].y) + (topRight.y * transform[1].y)) + transform[3].y, ((topRight.x * transform[0].z) + (topRight.y * transform[1].z)) + transform[3].z, ((topRight.x * transform[0].w) + (topRight.y * transform[1].w)) + transform[3].w);
     vertexData[(n * 4u) + 2u].position = metal::float4(((bottomLeft.x * transform[0].x) + (bottomLeft.y * transform[1].x)) + transform[3].x, ((bottomLeft.x * transform[0].y) + (bottomLeft.y * transform[1].y)) + transform[3].y, ((bottomLeft.x * transform[0].z) + (bottomLeft.y * transform[1].z)) + transform[3].z, ((bottomLeft.x * transform[0].w) + (bottomLeft.y * transform[1].w)) + transform[3].w);
     vertexData[(n * 4u) + 3u].position = metal::float4(((bottomRight.x * transform[0].x) + (bottomRight.y * transform[1].x)) + transform[3].x, ((bottomRight.x * transform[0].y) + (bottomRight.y * transform[1].y)) + transform[3].y, ((bottomRight.x * transform[0].z) + (bottomRight.y * transform[1].z)) + transform[3].z, ((bottomRight.x * transform[0].w) + (bottomRight.y * transform[1].w)) + transform[3].w);
-    vertexData[n * 4u].tex_coords = compData.uv0_;
-    vertexData[(n * 4u) + 1u].tex_coords = compData.uv1_;
-    vertexData[(n * 4u) + 2u].tex_coords = compData.uv2_;
-    vertexData[(n * 4u) + 3u].tex_coords = compData.uv3_;
+    vertexData[n * 4u].tex_coords = compData.uv.inner[0];
+    vertexData[(n * 4u) + 1u].tex_coords = compData.uv.inner[1];
+    vertexData[(n * 4u) + 2u].tex_coords = compData.uv.inner[2];
+    vertexData[(n * 4u) + 3u].tex_coords = compData.uv.inner[3];
     vertexData[n * 4u].color = compData.color;
     vertexData[(n * 4u) + 1u].color = compData.color;
     vertexData[(n * 4u) + 2u].color = compData.color;

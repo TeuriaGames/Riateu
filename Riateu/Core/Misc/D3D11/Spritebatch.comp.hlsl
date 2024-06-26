@@ -2,15 +2,12 @@ struct ComputeData {
     float2 position;
     float2 scale;
     float2 origin;
-    float2 uv0_;
-    float2 uv1_;
-    float2 uv2_;
-    float2 uv3_;
+    float2 uv[4];
     float2 dimension;
     float rotation;
-    int _pad9_0;
-    int _pad9_1;
-    int _pad9_2;
+    int _pad6_0;
+    int _pad6_1;
+    int _pad6_2;
     float4 color;
 };
 
@@ -25,18 +22,21 @@ struct PositionTextureColorVertex {
 ByteAddressBuffer computeData : register(t0);
 RWByteAddressBuffer vertexData : register(u0, space1);
 
-ComputeData ConstructComputeData(float2 arg0, float2 arg1, float2 arg2, float2 arg3, float2 arg4, float2 arg5, float2 arg6, float2 arg7, float arg8, float4 arg9) {
+typedef float2 ret_Constructarray4_float2_[4];
+ret_Constructarray4_float2_ Constructarray4_float2_(float2 arg0, float2 arg1, float2 arg2, float2 arg3) {
+    float2 ret[4] = { arg0, arg1, arg2, arg3 };
+    return ret;
+}
+
+ComputeData ConstructComputeData(float2 arg0, float2 arg1, float2 arg2, float2 arg3[4], float2 arg4, float arg5, float4 arg6) {
     ComputeData ret = (ComputeData)0;
     ret.position = arg0;
     ret.scale = arg1;
     ret.origin = arg2;
-    ret.uv0_ = arg3;
-    ret.uv1_ = arg4;
-    ret.uv2_ = arg5;
-    ret.uv3_ = arg6;
-    ret.dimension = arg7;
-    ret.rotation = arg8;
-    ret.color = arg9;
+    ret.uv = arg3;
+    ret.dimension = arg4;
+    ret.rotation = arg5;
+    ret.color = arg6;
     return ret;
 }
 
@@ -44,7 +44,7 @@ ComputeData ConstructComputeData(float2 arg0, float2 arg1, float2 arg2, float2 a
 void main(uint3 gID : SV_DispatchThreadID)
 {
     uint n = gID.x;
-    ComputeData compData = ConstructComputeData(asfloat(computeData.Load2(n*96+0)), asfloat(computeData.Load2(n*96+8)), asfloat(computeData.Load2(n*96+16)), asfloat(computeData.Load2(n*96+24)), asfloat(computeData.Load2(n*96+32)), asfloat(computeData.Load2(n*96+40)), asfloat(computeData.Load2(n*96+48)), asfloat(computeData.Load2(n*96+56)), asfloat(computeData.Load(n*96+64)), asfloat(computeData.Load4(n*96+80)));
+    ComputeData compData = ConstructComputeData(asfloat(computeData.Load2(n*96+0)), asfloat(computeData.Load2(n*96+8)), asfloat(computeData.Load2(n*96+16)), Constructarray4_float2_(asfloat(computeData.Load2(n*96+24+0)), asfloat(computeData.Load2(n*96+24+8)), asfloat(computeData.Load2(n*96+24+16)), asfloat(computeData.Load2(n*96+24+24))), asfloat(computeData.Load2(n*96+56)), asfloat(computeData.Load(n*96+64)), asfloat(computeData.Load4(n*96+80)));
     float4x4 origin = float4x4(float4(1.0, 0.0, 0.0, 0.0), float4(0.0, 1.0, 0.0, 0.0), float4(0.0, 0.0, 1.0, 0.0), float4(-(compData.origin.x), -(compData.origin.y), 1.0, 1.0));
     float val1_ = cos(compData.rotation);
     float val2_ = sin(compData.rotation);
@@ -62,10 +62,10 @@ void main(uint3 gID : SV_DispatchThreadID)
     vertexData.Store4(0+((n * 4u) + 1u)*48, asuint(float4((((topRight.x * transform[0].x) + (topRight.y * transform[1].x)) + transform[3].x), (((topRight.x * transform[0].y) + (topRight.y * transform[1].y)) + transform[3].y), (((topRight.x * transform[0].z) + (topRight.y * transform[1].z)) + transform[3].z), (((topRight.x * transform[0].w) + (topRight.y * transform[1].w)) + transform[3].w))));
     vertexData.Store4(0+((n * 4u) + 2u)*48, asuint(float4((((bottomLeft.x * transform[0].x) + (bottomLeft.y * transform[1].x)) + transform[3].x), (((bottomLeft.x * transform[0].y) + (bottomLeft.y * transform[1].y)) + transform[3].y), (((bottomLeft.x * transform[0].z) + (bottomLeft.y * transform[1].z)) + transform[3].z), (((bottomLeft.x * transform[0].w) + (bottomLeft.y * transform[1].w)) + transform[3].w))));
     vertexData.Store4(0+((n * 4u) + 3u)*48, asuint(float4((((bottomRight.x * transform[0].x) + (bottomRight.y * transform[1].x)) + transform[3].x), (((bottomRight.x * transform[0].y) + (bottomRight.y * transform[1].y)) + transform[3].y), (((bottomRight.x * transform[0].z) + (bottomRight.y * transform[1].z)) + transform[3].z), (((bottomRight.x * transform[0].w) + (bottomRight.y * transform[1].w)) + transform[3].w))));
-    vertexData.Store2(16+(n * 4u)*48, asuint(compData.uv0_));
-    vertexData.Store2(16+((n * 4u) + 1u)*48, asuint(compData.uv1_));
-    vertexData.Store2(16+((n * 4u) + 2u)*48, asuint(compData.uv2_));
-    vertexData.Store2(16+((n * 4u) + 3u)*48, asuint(compData.uv3_));
+    vertexData.Store2(16+(n * 4u)*48, asuint(compData.uv[0]));
+    vertexData.Store2(16+((n * 4u) + 1u)*48, asuint(compData.uv[1]));
+    vertexData.Store2(16+((n * 4u) + 2u)*48, asuint(compData.uv[2]));
+    vertexData.Store2(16+((n * 4u) + 3u)*48, asuint(compData.uv[3]));
     vertexData.Store4(32+(n * 4u)*48, asuint(compData.color));
     vertexData.Store4(32+((n * 4u) + 1u)*48, asuint(compData.color));
     vertexData.Store4(32+((n * 4u) + 2u)*48, asuint(compData.color));

@@ -16,6 +16,15 @@ public struct Quad : IEquatable<Quad>
     public UV UV;
 
     /// <summary>
+    /// A local position of a texture in screen space.
+    /// </summary>
+	public Vector2 Position;
+    /// <summary>
+    /// A local size or dimension of a texture in screen space.
+    /// </summary>
+	public Vector2 Dimensions;
+
+    /// <summary>
     /// The source rect of a quad.
     /// </summary>
     public Rect Source;
@@ -63,7 +72,7 @@ public struct Quad : IEquatable<Quad>
         var sw = source.W / (float)texture.Width;
         var sh = source.H / (float)texture.Height;
 
-        UV = new UV(new Vector2(sx, sy), new Vector2(sw, sh));
+        UV = new UV(Position = new Vector2(sx, sy), Dimensions = new Vector2(sw, sh));
     }
 
     /// <summary>
@@ -76,11 +85,11 @@ public struct Quad : IEquatable<Quad>
     {
         UV = uv;
 
-        int gx = (int)(uv.Position.X) * (int)texture.Width;
-        int gy = (int)(uv.Position.Y) * (int)texture.Height;
+        int gx = (int)(Position.X) * (int)texture.Width;
+        int gy = (int)(Position.Y) * (int)texture.Height;
         
-        int gw = (int)(uv.Dimensions.X) * (int)texture.Width;
-        int gh = (int)(uv.Dimensions.Y) * (int)texture.Height;
+        int gw = (int)(Dimensions.X) * (int)texture.Width;
+        int gh = (int)(Dimensions.Y) * (int)texture.Height;
 
         Source = new Rect(gx, gy, gw, gh);
     }
@@ -104,47 +113,56 @@ public struct Quad : IEquatable<Quad>
         ReadOnlySpan<float> CornerOffsetY = [ 0.0f, 1.0f, 0.0f, 1.0f ];
         var flipByte = (byte)(flipMode & (FlipMode.Vertical | FlipMode.Horizontal));
 
-        UV.TopLeft.X = CornerOffsetX[0 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
-        UV.TopLeft.Y = CornerOffsetY[0 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;
-        UV.BottomLeft.X = CornerOffsetX[1 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
-        UV.BottomLeft.Y = CornerOffsetY[1 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;
-        UV.TopRight.X = CornerOffsetX[2 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
-        UV.TopRight.Y = CornerOffsetY[2 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;
-        UV.BottomRight.X = CornerOffsetX[3 ^ flipByte] * UV.Dimensions.X + UV.Position.X;
-        UV.BottomRight.Y = CornerOffsetY[3 ^ flipByte] * UV.Dimensions.Y + UV.Position.Y;
+        UV[0].X = CornerOffsetX[0 ^ flipByte] * Dimensions.X + Position.X;
+        UV[0].Y = CornerOffsetY[0 ^ flipByte] * Dimensions.Y + Position.Y;
+        UV[2].X = CornerOffsetX[1 ^ flipByte] * Dimensions.X + Position.X;
+        UV[2].Y = CornerOffsetY[1 ^ flipByte] * Dimensions.Y + Position.Y;
+        UV[1].X = CornerOffsetX[2 ^ flipByte] * Dimensions.X + Position.X;
+        UV[1].Y = CornerOffsetY[2 ^ flipByte] * Dimensions.Y + Position.Y;
+        UV[3].X = CornerOffsetX[3 ^ flipByte] * Dimensions.X + Position.X;
+        UV[3].Y = CornerOffsetY[3 ^ flipByte] * Dimensions.Y + Position.Y;
     }
 }
 
 /// <summary>
 /// A struct containing the texture coords of a texture.
 /// </summary>
+[System.Runtime.CompilerServices.InlineArray(4)]
 public struct UV
 {
-    /// <summary>
-    /// A local position of a texture in screen space.
-    /// </summary>
-	public Vector2 Position;
-    /// <summary>
-    /// A local size or dimension of a texture in screen space.
-    /// </summary>
-	public Vector2 Dimensions;
-
+    private Vector2 _element0;
     /// <summary>
     /// First index texture coords.
     /// </summary>
-	public Vector2 TopLeft;
+	public Vector2 TopLeft 
+    {
+        get => this[0];
+        set => this[0] = value;
+    }
     /// <summary>
     /// Second index texture coords.
     /// </summary>
-	public Vector2 TopRight;
+	public Vector2 TopRight
+    {
+        get => this[1];
+        set => this[1] = value;
+    }
     /// <summary>
     /// Third index texture coords.
     /// </summary>
-	public Vector2 BottomLeft;
+	public Vector2 BottomLeft
+    {
+        get => this[2];
+        set => this[2] = value;
+    }
     /// <summary>
     /// Fourth index texture coords.
     /// </summary>
-	public Vector2 BottomRight;
+	public Vector2 BottomRight
+    {
+        get => this[3];
+        set => this[3] = value;
+    }
 
     /// <summary>
     /// Initialize the UV of a texture.
@@ -153,12 +171,17 @@ public struct UV
     /// <param name="dimensions">A local size or dimension of a texture.</param>
 	public UV(Vector2 position, Vector2 dimensions)
 	{
-		Position = position;
-		Dimensions = dimensions;
-
-		TopLeft = Position;
-		TopRight = Position + new Vector2(Dimensions.X, 0);
-		BottomLeft = Position + new Vector2(0, Dimensions.Y);
-		BottomRight = Position + new Vector2(Dimensions.X, Dimensions.Y);
+		this[0] = position;
+		this[1] = position + new Vector2(dimensions.X, 0);
+		this[2] = position + new Vector2(0, dimensions.Y);
+		this[3] = position + new Vector2(dimensions.X, dimensions.Y);
 	}
+
+    public UV(Vector2 topLeft, Vector2 topRight, Vector2 bottomLeft, Vector2 bottomRight) 
+    {
+        this[0] = topLeft;
+        this[1] = topRight;
+        this[2] = bottomLeft;
+        this[3] = bottomRight;
+    }
 }

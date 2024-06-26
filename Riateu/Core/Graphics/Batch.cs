@@ -383,16 +383,16 @@ public class Batch : System.IDisposable
             ResizeBuffer();
             return;
         }
-
         computes[VertexIndex] = new ComputeData 
         {
             Position = position,
             Scale = scale,
             Origin = origin,
-            TopLeft = quad.UV.TopLeft,
-            TopRight = quad.UV.TopRight,
-            BottomLeft = quad.UV.BottomLeft,
-            BottomRight = quad.UV.BottomRight,
+            UV = new UV(quad.UV.TopLeft, quad.UV.TopRight, quad.UV.BottomLeft, quad.UV.BottomRight),
+            // TopLeft = quad.UV.TopLeft,
+            // TopRight = quad.UV.TopRight,
+            // BottomLeft = quad.UV.BottomLeft,
+            // BottomRight = quad.UV.BottomRight,
             Dimension = new Vector2(quad.Source.W, quad.Source.H),
             Rotation = rotation,
             Color = color.ToVector4(),
@@ -438,13 +438,7 @@ public class Batch : System.IDisposable
         [FieldOffset(16)]
         public Vector2 Origin;
         [FieldOffset(24)]
-        public Vector2 TopLeft;
-        [FieldOffset(32)]
-        public Vector2 TopRight;
-        [FieldOffset(40)]
-        public Vector2 BottomLeft;
-        [FieldOffset(48)]
-        public Vector2 BottomRight;
+        public UV UV;
         [FieldOffset(56)]
         public Vector2 Dimension;
         [FieldOffset(64)]
