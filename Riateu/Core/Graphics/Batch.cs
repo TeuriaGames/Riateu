@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using MoonWorks;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
+using System;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace Riateu.Graphics;
 
@@ -14,7 +17,14 @@ namespace Riateu.Graphics;
 /// </summary>
 public class Batch : System.IDisposable
 {
-    private const int MaxTextures = 8192;
+    private struct BatchQueue 
+    {
+        public uint Count;
+        public TextureSamplerBinding Binding;
+        public GraphicsPipeline Pipeline;
+    }
+    private const uint MaxTextures = 8192;
+    private const uint InitialMaxQueues = 4;
     private GraphicsDevice device;
     private unsafe PositionTextureColorVertex* vertices;
 
@@ -24,9 +34,13 @@ public class Batch : System.IDisposable
     private GpuBuffer vertexBuffer;
     private GpuBuffer indexBuffer;
     private TransferBuffer transferVertexBuffer;
+    private BatchQueue[] queues = new BatchQueue[InitialMaxQueues];
+    private uint onQueue = uint.MaxValue;
 
-    public TextureSamplerBinding UsedBinding;
-    public GraphicsPipeline UsedPipeline;
+#if DEBUG
+    private bool DEBUG_begin;
+#endif
+
 
     public uint VertexIndex;
     public uint CurrentMaxTexture = MaxTextures;
@@ -54,7 +68,7 @@ public class Batch : System.IDisposable
         vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(device, BufferUsageFlags.Vertex, MaxTextures * 4);
         indexBuffer = GenerateIndexArray(device, MaxTextures * 6);
 
-        transferVertexBuffer = new TransferBuffer(device, TransferBufferUsage.Upload, vertexBuffer.Size);
+        transferVertexBuffer = TransferBuffer.Create<PositionTextureColorVertex>(device, TransferBufferUsage.Upload, MaxTextures * 4);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
@@ -92,24 +106,43 @@ public class Batch : System.IDisposable
     /// <inheritdoc/>
     public void Begin(Texture texture, Sampler sampler)
     {
+#if DEBUG
+        AssertBegin();
+        DEBUG_begin = true;
+#endif
         if (rendered)
         {
             VertexIndex = 0;
+            onQueue = uint.MaxValue;
             rendered = false;
         }
-
-        UsedBinding = new TextureSamplerBinding(texture, sampler);
-        UsedPipeline = GameContext.DefaultPipeline;
 
         unsafe {
             transferVertexBuffer.Map(true, out byte* vert);
             vertices = (PositionTextureColorVertex*)vert;
         }
+
+        if (queues.Length == onQueue) 
+        {
+            Array.Resize(ref queues, queues.Length + 4);
+        }
+
+        unchecked { onQueue++; }
+        queues[onQueue] = new BatchQueue 
+        {
+            Binding = new TextureSamplerBinding(texture, sampler),
+            Pipeline = GameContext.DefaultPipeline,
+            Count = 0
+        };
     }
 
     /// <inheritdoc/>
     public void End(CommandBuffer cmdBuf)
     {
+#if DEBUG
+        AssertDoesBegin();
+        DEBUG_begin = false;
+#endif
         transferVertexBuffer.Unmap();
         if (VertexIndex == 0)
         {
@@ -118,6 +151,8 @@ public class Batch : System.IDisposable
         CopyPass copyPass = cmdBuf.BeginCopyPass();
         copyPass.UploadToBuffer(transferVertexBuffer, vertexBuffer, true);
         cmdBuf.EndCopyPass(copyPass);
+        queues[onQueue].Count = VertexIndex;
+
     }
 
     /// <inheritdoc/>
@@ -161,43 +196,75 @@ public class Batch : System.IDisposable
     public void Render<T>(RenderPass renderPass, Matrix4x4 viewProjection, in T fragmentUniform)
     where T : unmanaged
     {
+#if DEBUG
+        AssertRender();
+        DEBUG_begin = false;
+#endif
         if (VertexIndex == 0)
         {
             return;
         }
 
-        renderPass.BindGraphicsPipeline(UsedPipeline);
-        renderPass.PushVertexUniformData(viewProjection);
-        renderPass.BindVertexBuffer(vertexBuffer);
-        renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
-        renderPass.BindFragmentSampler(UsedBinding);
-        renderPass.PushFragmentUniformData(fragmentUniform);
-        renderPass.DrawIndexedPrimitives(0u, 0u, VertexIndex * 2u, 1);
+        ref var start = ref MemoryMarshal.GetArrayDataReference(queues);
+        ref var end = ref Unsafe.Add(ref start, onQueue + 1);
 
+        uint offset = 0;
+
+        while (Unsafe.IsAddressLessThan(ref start, ref end)) 
+        {
+            renderPass.BindGraphicsPipeline(start.Pipeline);
+            renderPass.PushVertexUniformData(viewProjection);
+            renderPass.BindVertexBuffer(vertexBuffer);
+            renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
+            renderPass.BindFragmentSampler(start.Binding);
+            renderPass.PushFragmentUniformData(fragmentUniform);
+            renderPass.DrawIndexedPrimitives(offset * 4u, 0u, (start.Count - offset) * 2u, 1);
+
+            offset += start.Count;
+            start = ref Unsafe.Add(ref start, 1);
+        }
+
+        rendered = true;
         VertexIndex = 0;
     }
 
     /// <inheritdoc/>
     public void Render(RenderPass renderPass, Matrix4x4 viewProjection)
     {
+#if DEBUG
+        AssertRender();
+        DEBUG_begin = false;
+#endif
         if (VertexIndex == 0)
         {
             return;
         }
 
-        renderPass.BindGraphicsPipeline(UsedPipeline);
-        renderPass.PushVertexUniformData(viewProjection);
-        renderPass.BindVertexBuffer(vertexBuffer);
-        renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
-        renderPass.BindFragmentSampler(UsedBinding);
-        renderPass.DrawIndexedPrimitives(0u, 0u, VertexIndex * 2u, 1);
+        ref var start = ref MemoryMarshal.GetArrayDataReference(queues);
+        ref var end = ref Unsafe.Add(ref start, onQueue + 1);
 
+        uint offset = 0;
+
+        while (Unsafe.IsAddressLessThan(ref start, ref end)) 
+        {
+            renderPass.BindGraphicsPipeline(start.Pipeline);
+            renderPass.PushVertexUniformData(viewProjection);
+            renderPass.BindVertexBuffer(vertexBuffer);
+            renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
+            renderPass.BindFragmentSampler(start.Binding);
+            renderPass.DrawIndexedPrimitives(offset * 4u, 0u, (start.Count - offset) * 2u, 1);
+
+            offset += start.Count;
+            start = ref Unsafe.Add(ref start, 1);
+        }
+
+        rendered = true;
         VertexIndex = 0;
     }
 
     public void BindPipeline(GraphicsPipeline pipeline)
     {
-        UsedPipeline = pipeline;
+        queues[onQueue].Pipeline = pipeline;
     }
 
     internal void ResizeBuffer()
@@ -292,13 +359,13 @@ public class Batch : System.IDisposable
     /// <inheritdoc/>
     public void Draw(Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
     {
-        Draw(new Quad(UsedBinding.Texture), position, color, scale, origin, 0, Matrix3x2.Identity, layerDepth);
+        Draw(new Quad(queues[onQueue].Binding.Texture), position, color, scale, origin, 0, Matrix3x2.Identity, layerDepth);
     }
 
     /// <inheritdoc/>
     public void Draw(Vector2 position, Color color, float layerDepth = 1)
     {
-        Draw(new Quad(UsedBinding.Texture), position, color, Vector2.One, Vector2.Zero, layerDepth);
+        Draw(new Quad(queues[onQueue].Binding.Texture), position, color, Vector2.One, Vector2.Zero, layerDepth);
     }
 
     /// <inheritdoc/>
@@ -310,6 +377,9 @@ public class Batch : System.IDisposable
     /// <inheritdoc/>
     public unsafe void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Matrix3x2 transform, float layerDepth = 1)
     {
+#if DEBUG
+        AssertDoesBegin();
+#endif
         if (VertexIndex == CurrentMaxTexture)
         {
             ResizeBuffer();
@@ -347,4 +417,30 @@ public class Batch : System.IDisposable
 
         VertexIndex++;
     }
+
+#if DEBUG
+    private void AssertBegin()
+    {
+        if (!DEBUG_begin)
+            return;
+        
+        throw new System.Exception("Batch has already begun. End should be called before starting another one.");
+    }
+
+    private void AssertRender()
+    {
+        if (!DEBUG_begin)
+            return;
+        
+        throw new System.Exception("You must End the batch first before rendering.");
+    }
+
+    private void AssertDoesBegin() 
+    {
+        if (DEBUG_begin)
+            return;
+        
+        throw new System.Exception("Batch has not begun yet, please call Begin first.");
+    }
+#endif
 }

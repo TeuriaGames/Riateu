@@ -12,7 +12,6 @@ public class Tilemap : Component
 {
     private Array2D<Quad?> tiles;
     private Texture tilemapTexture;
-    private Texture frameBuffer;
     private Matrix4x4 Matrix;
     private int gridSize;
     /// <summary>
