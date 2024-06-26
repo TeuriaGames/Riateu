@@ -23,17 +23,18 @@ public class Batch : System.IDisposable
         public TextureSamplerBinding Binding;
         public GraphicsPipeline Pipeline;
     }
-    private const uint MaxTextures = 8192;
+    private const uint MaxTextures = 4096;
     private const uint InitialMaxQueues = 4;
     private GraphicsDevice device;
-    private unsafe PositionTextureColorVertex* vertices;
+    private unsafe ComputeData* computes;
 
     private Stack<Matrix4x4> Matrices;
     private bool rendered;
 
     private GpuBuffer vertexBuffer;
     private GpuBuffer indexBuffer;
-    private TransferBuffer transferVertexBuffer;
+    private GpuBuffer computeBuffer;
+    private TransferBuffer transferComputeBuffer;
     private BatchQueue[] queues = new BatchQueue[InitialMaxQueues];
     private uint onQueue = uint.MaxValue;
 
@@ -65,10 +66,14 @@ public class Batch : System.IDisposable
         Matrices = new();
         this.device = device;
 
-        vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(device, BufferUsageFlags.Vertex, MaxTextures * 4);
+        vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(device, 
+            BufferUsageFlags.Vertex 
+            | BufferUsageFlags.ComputeStorageRead
+            | BufferUsageFlags.ComputeStorageWrite, MaxTextures * 4);
         indexBuffer = GenerateIndexArray(device, MaxTextures * 6);
 
-        transferVertexBuffer = TransferBuffer.Create<PositionTextureColorVertex>(device, TransferBufferUsage.Upload, MaxTextures * 4);
+        transferComputeBuffer = TransferBuffer.Create<ComputeData>(device, TransferBufferUsage.Upload, MaxTextures);
+        computeBuffer = GpuBuffer.Create<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, MaxTextures);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
@@ -117,11 +122,6 @@ public class Batch : System.IDisposable
             rendered = false;
         }
 
-        unsafe {
-            transferVertexBuffer.Map(true, out byte* vert);
-            vertices = (PositionTextureColorVertex*)vert;
-        }
-
         if (queues.Length == onQueue) 
         {
             Array.Resize(ref queues, queues.Length + 4);
@@ -134,6 +134,11 @@ public class Batch : System.IDisposable
             Pipeline = GameContext.DefaultPipeline,
             Count = 0
         };
+
+        unsafe {
+            transferComputeBuffer.Map(true, out byte* data);
+            computes = (ComputeData*)data;
+        }
     }
 
     /// <inheritdoc/>
@@ -143,14 +148,25 @@ public class Batch : System.IDisposable
         AssertDoesBegin();
         DEBUG_begin = false;
 #endif
-        transferVertexBuffer.Unmap();
+        transferComputeBuffer.Unmap();
         if (VertexIndex == 0)
         {
             return;
         }
         CopyPass copyPass = cmdBuf.BeginCopyPass();
-        copyPass.UploadToBuffer(transferVertexBuffer, vertexBuffer, true);
+        copyPass.UploadToBuffer(transferComputeBuffer, computeBuffer, true);
         cmdBuf.EndCopyPass(copyPass);
+
+        ComputePass computePass = cmdBuf.BeginComputePass(new StorageBufferReadWriteBinding 
+        {
+            Buffer = vertexBuffer,
+            Cycle = true
+        });
+        computePass.BindComputePipeline(GameContext.SpriteBatchPipeline);
+        computePass.BindStorageBuffer(computeBuffer);
+        computePass.Dispatch(CurrentMaxTexture / 64, 1, 1);
+
+        cmdBuf.EndComputePass(computePass);
         queues[onQueue].Count = VertexIndex;
 
     }
@@ -269,7 +285,7 @@ public class Batch : System.IDisposable
 
     internal void ResizeBuffer()
     {
-        transferVertexBuffer.Unmap();
+        transferComputeBuffer.Unmap();
         uint maxTextures = (uint)(CurrentMaxTexture += 2048);
 
         indexBuffer.Dispose();
@@ -277,10 +293,16 @@ public class Batch : System.IDisposable
 
         vertexBuffer.Dispose();
         vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(
-            device, BufferUsageFlags.Vertex, maxTextures * 4);
+            device, 
+            BufferUsageFlags.Vertex 
+            | BufferUsageFlags.ComputeStorageRead 
+            | BufferUsageFlags.ComputeStorageWrite, maxTextures * 4);
 
-        transferVertexBuffer.Dispose();
-        transferVertexBuffer = new TransferBuffer(device, TransferBufferUsage.Upload, vertexBuffer.Size);
+        transferComputeBuffer.Dispose();
+        transferComputeBuffer = TransferBuffer.Create<ComputeData>(device, TransferBufferUsage.Upload, maxTextures);
+
+        computeBuffer.Dispose();
+        computeBuffer = GpuBuffer.Create<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
         CurrentMaxTexture = maxTextures;
     }
 
@@ -386,34 +408,45 @@ public class Batch : System.IDisposable
             return;
         }
 
-        float width = quad.Source.W * scale.X;
-        float height = quad.Source.H * scale.Y;
+        computes[VertexIndex] = new ComputeData 
+        {
+            Position = position,
+            Scale = scale,
+            Origin = origin,
+            TopLeft = quad.UV.TopLeft,
+            TopRight = quad.UV.TopRight,
+            BottomLeft = quad.UV.BottomLeft,
+            BottomRight = quad.UV.BottomRight,
+            Dimension = new Vector2(quad.Source.W, quad.Source.H),
+            Rotation = rotation,
+            Color = color.ToVector4(),
+        };
 
-        transform = Matrix3x2.CreateTranslation(-origin.X, -origin.Y)
-            * Matrix3x2.CreateRotation(rotation)
-            * transform;
+        // transform = Matrix3x2.CreateTranslation(-origin.X, -origin.Y)
+        //     * Matrix3x2.CreateRotation(rotation)
+        //     * transform;
 
-        var topLeft = new Vector2(position.X, position.Y);
-        var topRight = new Vector2(position.X + width, position.Y);
-        var bottomLeft = new Vector2(position.X, position.Y + height);
-        var bottomRight = new Vector2(position.X + width, position.Y + height);
+        // var topLeft = new Vector2(position.X, position.Y);
+        // var topRight = new Vector2(position.X + width, position.Y);
+        // var bottomLeft = new Vector2(position.X, position.Y + height);
+        // var bottomRight = new Vector2(position.X + width, position.Y + height);
 
-        var vertexOffset = VertexIndex * 4;
+        // var vertexOffset = VertexIndex * 4;
 
-        vertices[vertexOffset].Position = new Vector3(Vector2.Transform(topLeft, transform), layerDepth);
-        vertices[vertexOffset + 1].Position = new Vector3(Vector2.Transform(bottomLeft, transform), layerDepth);
-        vertices[vertexOffset + 2].Position = new Vector3(Vector2.Transform(topRight, transform), layerDepth);
-        vertices[vertexOffset + 3].Position = new Vector3(Vector2.Transform(bottomRight, transform), layerDepth);
+        // vertices[vertexOffset].Position = new Vector3(Vector2.Transform(topLeft, transform), layerDepth);
+        // vertices[vertexOffset + 1].Position = new Vector3(Vector2.Transform(bottomLeft, transform), layerDepth);
+        // vertices[vertexOffset + 2].Position = new Vector3(Vector2.Transform(topRight, transform), layerDepth);
+        // vertices[vertexOffset + 3].Position = new Vector3(Vector2.Transform(bottomRight, transform), layerDepth);
 
-        vertices[vertexOffset].Color = color;
-        vertices[vertexOffset + 1].Color = color;
-        vertices[vertexOffset + 2].Color = color;
-        vertices[vertexOffset + 3].Color = color;
+        // vertices[vertexOffset].Color = color;
+        // vertices[vertexOffset + 1].Color = color;
+        // vertices[vertexOffset + 2].Color = color;
+        // vertices[vertexOffset + 3].Color = color;
 
-        vertices[vertexOffset].TexCoord = quad.UV.TopLeft;
-        vertices[vertexOffset + 1].TexCoord = quad.UV.BottomLeft;
-        vertices[vertexOffset + 2].TexCoord = quad.UV.TopRight;
-        vertices[vertexOffset + 3].TexCoord = quad.UV.BottomRight;
+        // vertices[vertexOffset].TexCoord = quad.UV.TopLeft;
+        // vertices[vertexOffset + 1].TexCoord = quad.UV.BottomLeft;
+        // vertices[vertexOffset + 2].TexCoord = quad.UV.TopRight;
+        // vertices[vertexOffset + 3].TexCoord = quad.UV.BottomRight;
 
         VertexIndex++;
     }
@@ -443,4 +476,30 @@ public class Batch : System.IDisposable
         throw new System.Exception("Batch has not begun yet, please call Begin first.");
     }
 #endif
+
+
+    [StructLayout(LayoutKind.Explicit, Size = 80)]
+    private struct ComputeData 
+    {
+        [FieldOffset(0)]
+        public Vector2 Position;
+        [FieldOffset(8)]
+        public Vector2 Scale;
+        [FieldOffset(16)]
+        public Vector2 Origin;
+        [FieldOffset(24)]
+        public Vector2 TopLeft;
+        [FieldOffset(32)]
+        public Vector2 TopRight;
+        [FieldOffset(40)]
+        public Vector2 BottomLeft;
+        [FieldOffset(48)]
+        public Vector2 BottomRight;
+        [FieldOffset(56)]
+        public Vector2 Dimension;
+        [FieldOffset(64)]
+        public float Rotation;
+        [FieldOffset(80)]
+        public Vector4 Color;
+    }
 }

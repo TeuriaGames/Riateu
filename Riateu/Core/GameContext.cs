@@ -29,6 +29,8 @@ public static class GameContext
     /// An instanced rendering pipeline use as an fast alternative for default pipeline.
     /// </summary>
     public static GraphicsPipeline InstancedPipeline;
+
+    public static ComputePipeline SpriteBatchPipeline;
     /// <summary>
     /// An everything sampler that uses point clamp for sampling.
     /// </summary>
@@ -135,5 +137,17 @@ public static class GameContext
         };
 
         InstancedPipeline = new GraphicsPipeline(device, instancedPipelineCreateInfo);
+
+        var spriteBatchShader = Resources.SpriteBatchShader;
+        using var comp1 = new MemoryStream(spriteBatchShader);
+        SpriteBatchPipeline = new ComputePipeline(device, comp1, "main", new ComputePipelineCreateInfo 
+        {
+            ShaderFormat = ShaderFormat.SPIRV,
+            ReadWriteStorageBufferCount = 1,
+            ReadOnlyStorageBufferCount = 1,
+            ThreadCountX = 64,
+            ThreadCountY = 1,
+            ThreadCountZ = 1
+        });
     }
 }

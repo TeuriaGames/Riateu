@@ -31,5 +31,8 @@
 		<EmbeddedResource Include="Core\Misc\Vulkan\InstancedShader.vert.spv">
 			<LogicalName>Riateu.Misc.Vulkan.InstancedShader.vert.spv</LogicalName>
 		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Vulkan\Spritebatch.comp.spv">
+			<LogicalName>Riateu.Misc.Vulkan.Spritebatch.comp.spv</LogicalName>
+		</EmbeddedResource>
 	</ItemGroup>
 </Project>

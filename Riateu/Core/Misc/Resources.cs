@@ -18,6 +18,19 @@ public static class Resources
         }
     }
 
+    private static byte[] spriteBatchShader;
+    public static byte[] SpriteBatchShader
+    {
+        get
+        {
+            if (spriteBatchShader == null)
+            {
+                spriteBatchShader = GetShaderByte("Spritebatch.comp");
+            }
+            return spriteBatchShader;
+        }
+    }
+
     private static byte[] imGuiShader;
     public static byte[] ImGuiShader
     {
