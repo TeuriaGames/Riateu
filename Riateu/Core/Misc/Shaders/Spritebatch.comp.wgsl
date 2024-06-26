@@ -38,12 +38,6 @@ fn main(@builtin(global_invocation_id) gID: vec3<u32>) {
         vec4<f32>(-compData.origin.x, -compData.origin.y, 1., 1.),
     );
 
-    let translation = mat4x4<f32>(
-        vec4<f32>(1., 0., 0., 0.),
-        vec4<f32>(0., 1., 0., 0.),
-        vec4<f32>(0., 0., 1., 0.),
-        vec4<f32>(compData.position.x, compData.position.y, 1., 1.),
-    );
     let val1 = cos(compData.rotation);
     let val2 = sin(compData.rotation);
 

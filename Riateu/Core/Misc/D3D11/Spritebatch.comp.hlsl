@@ -46,7 +46,6 @@ void main(uint3 gID : SV_DispatchThreadID)
     uint n = gID.x;
     ComputeData compData = ConstructComputeData(asfloat(computeData.Load2(n*96+0)), asfloat(computeData.Load2(n*96+8)), asfloat(computeData.Load2(n*96+16)), asfloat(computeData.Load2(n*96+24)), asfloat(computeData.Load2(n*96+32)), asfloat(computeData.Load2(n*96+40)), asfloat(computeData.Load2(n*96+48)), asfloat(computeData.Load2(n*96+56)), asfloat(computeData.Load(n*96+64)), asfloat(computeData.Load4(n*96+80)));
     float4x4 origin = float4x4(float4(1.0, 0.0, 0.0, 0.0), float4(0.0, 1.0, 0.0, 0.0), float4(0.0, 0.0, 1.0, 0.0), float4(-(compData.origin.x), -(compData.origin.y), 1.0, 1.0));
-    float4x4 translation = float4x4(float4(1.0, 0.0, 0.0, 0.0), float4(0.0, 1.0, 0.0, 0.0), float4(0.0, 0.0, 1.0, 0.0), float4(compData.position.x, compData.position.y, 1.0, 1.0));
     float val1_ = cos(compData.rotation);
     float val2_ = sin(compData.rotation);
     float x = ((compData.origin.x * (1.0 - val1_)) + (compData.origin.y * val2_));

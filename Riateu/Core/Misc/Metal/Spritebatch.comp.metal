@@ -42,7 +42,6 @@ kernel void main_(
     uint n = gID.x;
     ComputeData compData = computeData[n];
     metal::float4x4 origin = metal::float4x4(metal::float4(1.0, 0.0, 0.0, 0.0), metal::float4(0.0, 1.0, 0.0, 0.0), metal::float4(0.0, 0.0, 1.0, 0.0), metal::float4(-(compData.origin.x), -(compData.origin.y), 1.0, 1.0));
-    metal::float4x4 translation = metal::float4x4(metal::float4(1.0, 0.0, 0.0, 0.0), metal::float4(0.0, 1.0, 0.0, 0.0), metal::float4(0.0, 0.0, 1.0, 0.0), metal::float4(compData.position.x, compData.position.y, 1.0, 1.0));
     float val1_ = metal::cos(compData.rotation);
     float val2_ = metal::sin(compData.rotation);
     float x = (compData.origin.x * (1.0 - val1_)) + (compData.origin.y * val2_);
