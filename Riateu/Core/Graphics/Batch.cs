@@ -343,21 +343,9 @@ public class Batch : System.IDisposable
     }
 
     /// <inheritdoc/>
-    public void Draw(Quad quad, Vector2 position, Color color, Matrix3x2 transform, float layerDepth = 1)
-    {
-        Draw(quad, position, color, Vector2.One, Vector2.Zero, transform, layerDepth);
-    }
-
-    /// <inheritdoc/>
     public void Draw(Quad quad, Vector2 position, Color color, float layerDepth = 1)
     {
         Draw(quad, position, color, Vector2.One, Vector2.Zero, layerDepth);
-    }
-
-    /// <inheritdoc/>
-    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Matrix3x2 transform, float layerDepth = 1)
-    {
-        Draw(quad, position, color, scale, Vector2.Zero, transform, layerDepth);
     }
 
     /// <inheritdoc/>
@@ -367,21 +355,9 @@ public class Batch : System.IDisposable
     }
 
     /// <inheritdoc/>
-    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, Matrix3x2 transform, float layerDepth = 1)
-    {
-        Draw(quad, position, color, scale, origin, 0, transform, layerDepth);
-    }
-
-    /// <inheritdoc/>
-    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
-    {
-        Draw(quad, position, color, scale, origin, 0, Matrix3x2.Identity, layerDepth);
-    }
-
-    /// <inheritdoc/>
     public void Draw(Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
     {
-        Draw(new Quad(queues[onQueue].Binding.Texture), position, color, scale, origin, 0, Matrix3x2.Identity, layerDepth);
+        Draw(new Quad(queues[onQueue].Binding.Texture), position, color, scale, origin, 0, layerDepth);
     }
 
     /// <inheritdoc/>
@@ -391,13 +367,13 @@ public class Batch : System.IDisposable
     }
 
     /// <inheritdoc/>
-    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1)
+    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
     {
-        Draw(quad, position, color, scale, origin, rotation, Matrix3x2.Identity, layerDepth);
+        Draw(quad, position, color, scale, origin, 0, layerDepth);
     }
 
     /// <inheritdoc/>
-    public unsafe void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Matrix3x2 transform, float layerDepth = 1)
+    public unsafe void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1)
     {
 #if DEBUG
         AssertDoesBegin();

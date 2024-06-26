@@ -185,6 +185,6 @@ public class DynamicText : Text
             Resubmit();
             dirty = false;
         }
-        batch.Draw(DynamicTexture, position, Color.White, Matrix3x2.Identity);
+        batch.Draw(DynamicTexture, position, Color.White);
     }
 }

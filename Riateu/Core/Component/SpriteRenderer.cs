@@ -65,6 +65,6 @@ public class SpriteRenderer : GraphicsComponent
     /// <inheritdoc/>
     public override void Draw(CommandBuffer buffer, Batch draw) 
     {
-        draw.Draw(SpriteTexture, Vector2.Zero, Color.White, Vector2.One, Origin, Entity.Transform.WorldMatrix);
+        draw.Draw(SpriteTexture, Entity.Transform.Position, Color.White, Vector2.One, Entity.Transform.PivotOffset + Origin);
     }
 }

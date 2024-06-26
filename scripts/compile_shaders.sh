@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+cd ../Riateu/Core/Misc
 
 for filename in Shaders/*.{glsl,wgsl}; do
     name=$(basename $(expr "$filename" : '\(.*\)\.'))
