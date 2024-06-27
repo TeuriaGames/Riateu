@@ -18,19 +18,19 @@ public struct InstancedVertex(Vector3 position, Vector2 scale, UV uv, Color colo
     /// <summary>
     /// The first coordinates of a texture.
     /// </summary>
-    public Vector2 UV0 = uv.TopLeft;
+    public Vector2 UV0 = uv[0];
     /// <summary>
     /// The second coordinates of a texture.
     /// </summary>
-    public Vector2 UV1 = uv.BottomLeft;
+    public Vector2 UV1 = uv[1];
     /// <summary>
     /// The third coordinates of a texture.
     /// </summary>
-    public Vector2 UV2 = uv.TopRight;
+    public Vector2 UV2 = uv[2];
     /// <summary>
     /// The fourth coordinates of a texture.
     /// </summary>
-    public Vector2 UV3 = uv.BottomRight;
+    public Vector2 UV3 = uv[3];
     /// <summary>
     /// The amount of pixel scale of the vertex.
     /// </summary>
