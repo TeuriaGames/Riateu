@@ -63,7 +63,7 @@ public class StaticText : Text
 
         RenderPass renderPass = buffer.BeginRenderPass(new ColorAttachmentInfo(Texture, false, Color.Transparent));
         renderPass.BindGraphicsPipeline(GameContext.MSDFPipeline);
-        Batch.Render(renderPass, matrix);
+        Batch.Render(buffer, renderPass, matrix);
         buffer.EndRenderPass(renderPass);
         device.Submit(buffer);
     }

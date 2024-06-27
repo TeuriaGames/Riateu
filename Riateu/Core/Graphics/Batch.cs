@@ -28,7 +28,6 @@ public class Batch : System.IDisposable
     private GraphicsDevice device;
     private unsafe ComputeData* computes;
 
-    private Stack<Matrix4x4> Matrices;
     private bool rendered;
 
     private GpuBuffer vertexBuffer;
@@ -41,11 +40,14 @@ public class Batch : System.IDisposable
 #if DEBUG
     private bool DEBUG_begin;
 #endif
+    private uint vertexIndex;
+    private uint currentMaxTexture = MaxTextures;
 
 
-    public uint VertexIndex;
-    public uint CurrentMaxTexture = MaxTextures;
+    public uint VertexIndex => vertexIndex;
 
+    public GpuBuffer VertexBuffer => vertexBuffer;
+    public GpuBuffer IndexBuffer => indexBuffer;
     /// <summary>
     /// A current matrix projection to be used for rendering.
     /// </summary>
@@ -63,7 +65,6 @@ public class Batch : System.IDisposable
     /// <param name="height">A height of a orthographic matrix</param>
     public Batch(GraphicsDevice device, int width, int height)
     {
-        Matrices = new();
         this.device = device;
 
         vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(device, 
@@ -117,7 +118,7 @@ public class Batch : System.IDisposable
 #endif
         if (rendered)
         {
-            VertexIndex = 0;
+            vertexIndex = 0;
             onQueue = uint.MaxValue;
             rendered = false;
         }
@@ -142,14 +143,14 @@ public class Batch : System.IDisposable
     }
 
     /// <inheritdoc/>
-    public void End(CommandBuffer cmdBuf)
+    public void End(CommandBuffer cmdBuf, bool bindUniform = true)
     {
 #if DEBUG
         AssertDoesBegin();
         DEBUG_begin = false;
 #endif
         transferComputeBuffer.Unmap();
-        if (VertexIndex == 0)
+        if (vertexIndex == 0)
         {
             return;
         }
@@ -164,59 +165,37 @@ public class Batch : System.IDisposable
         });
         computePass.BindComputePipeline(GameContext.SpriteBatchPipeline);
         computePass.BindStorageBuffer(computeBuffer);
-        computePass.Dispatch(CurrentMaxTexture / 64, 1, 1);
+        computePass.Dispatch(currentMaxTexture / 64, 1, 1);
 
         cmdBuf.EndComputePass(computePass);
-        queues[onQueue].Count = VertexIndex;
+        queues[onQueue].Count = vertexIndex;
 
-    }
-
-    /// <inheritdoc/>
-    public void PushMatrix(in Matrix4x4 matrix)
-    {
-        Matrices.Push(Matrix);
-        Matrix = matrix;
-    }
-
-    /// <inheritdoc/>
-    public void PushMatrix(in Camera camera)
-    {
-        PushMatrix(camera.Transform);
-    }
-
-    /// <inheritdoc/>
-    public void PopMatrix()
-    {
-        if (Matrices.Count == 0)
+        if (bindUniform) 
         {
-            Logger.LogError("Use of PopMatrix while there is no matrix had pushed yet");
-            return;
+            BindUniformMatrix(cmdBuf, Matrix, 0);
         }
-        Matrix = Matrices.Pop();
+    }
+
+    /// <inheritdoc/>
+    public void BindUniformMatrix(CommandBuffer buffer, in Matrix4x4 matrix, uint slot)
+    {
+        buffer.PushVertexUniformData<Matrix4x4>(matrix, slot);
+    }
+
+    /// <inheritdoc/>
+    public void BindUniformMatrix(CommandBuffer buffer, in Camera camera, uint slot)
+    {
+        BindUniformMatrix(buffer, camera.Transform, slot);
     }
 
     /// <inheritdoc/>
     public void Render(RenderPass renderPass)
     {
-        Render(renderPass, Matrix);
-    }
-
-    /// <inheritdoc/>
-    public void Render<T>(RenderPass renderPass, in T fragmentUniform)
-    where T : unmanaged
-    {
-        Render(renderPass, Matrix);
-    }
-
-    /// <inheritdoc/>
-    public void Render<T>(RenderPass renderPass, Matrix4x4 viewProjection, in T fragmentUniform)
-    where T : unmanaged
-    {
 #if DEBUG
         AssertRender();
         DEBUG_begin = false;
 #endif
-        if (VertexIndex == 0)
+        if (vertexIndex == 0)
         {
             return;
         }
@@ -229,42 +208,6 @@ public class Batch : System.IDisposable
         while (Unsafe.IsAddressLessThan(ref start, ref end)) 
         {
             renderPass.BindGraphicsPipeline(start.Pipeline);
-            renderPass.PushVertexUniformData(viewProjection);
-            renderPass.BindVertexBuffer(vertexBuffer);
-            renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
-            renderPass.BindFragmentSampler(start.Binding);
-            renderPass.PushFragmentUniformData(fragmentUniform);
-            renderPass.DrawIndexedPrimitives(offset * 4u, 0u, (start.Count - offset) * 2u, 1);
-
-            offset += start.Count;
-            start = ref Unsafe.Add(ref start, 1);
-        }
-
-        rendered = true;
-        VertexIndex = 0;
-    }
-
-    /// <inheritdoc/>
-    public void Render(RenderPass renderPass, Matrix4x4 viewProjection)
-    {
-#if DEBUG
-        AssertRender();
-        DEBUG_begin = false;
-#endif
-        if (VertexIndex == 0)
-        {
-            return;
-        }
-
-        ref var start = ref MemoryMarshal.GetArrayDataReference(queues);
-        ref var end = ref Unsafe.Add(ref start, onQueue + 1);
-
-        uint offset = 0;
-
-        while (Unsafe.IsAddressLessThan(ref start, ref end)) 
-        {
-            renderPass.BindGraphicsPipeline(start.Pipeline);
-            renderPass.PushVertexUniformData(viewProjection);
             renderPass.BindVertexBuffer(vertexBuffer);
             renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
             renderPass.BindFragmentSampler(start.Binding);
@@ -275,7 +218,7 @@ public class Batch : System.IDisposable
         }
 
         rendered = true;
-        VertexIndex = 0;
+        vertexIndex = 0;
     }
 
     public void BindPipeline(GraphicsPipeline pipeline)
@@ -286,7 +229,7 @@ public class Batch : System.IDisposable
     internal void ResizeBuffer()
     {
         transferComputeBuffer.Unmap();
-        uint maxTextures = (uint)(CurrentMaxTexture += 2048);
+        uint maxTextures = (uint)(currentMaxTexture += 2048);
 
         indexBuffer.Dispose();
         indexBuffer = GenerateIndexArray(device, (uint)(maxTextures * 6));
@@ -303,7 +246,7 @@ public class Batch : System.IDisposable
 
         computeBuffer.Dispose();
         computeBuffer = GpuBuffer.Create<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
-        CurrentMaxTexture = maxTextures;
+        currentMaxTexture = maxTextures;
     }
 
     /// <summary>
@@ -378,12 +321,12 @@ public class Batch : System.IDisposable
 #if DEBUG
         AssertDoesBegin();
 #endif
-        if (VertexIndex == CurrentMaxTexture)
+        if (vertexIndex == currentMaxTexture)
         {
             ResizeBuffer();
             return;
         }
-        computes[VertexIndex] = new ComputeData 
+        computes[vertexIndex] = new ComputeData 
         {
             Position = position,
             Scale = scale,
@@ -394,7 +337,7 @@ public class Batch : System.IDisposable
             Color = color.ToVector4(),
         };
 
-        VertexIndex++;
+        vertexIndex++;
     }
 
 #if DEBUG

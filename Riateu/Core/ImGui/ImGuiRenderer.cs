@@ -154,10 +154,13 @@ public class ImGuiRenderer
     /// <summary>
     /// A draw method used for rendering all of the drawn ImGui surface.
     /// </summary>
+    /// <param name="buffer">
+    /// A command buffer to use for passing the uniform data.
+    /// </param>
     /// <param name="renderPass">
     /// A renderpass used for handling and submitting a buffers
     /// </param>
-    public void Draw(RenderPass renderPass)
+    public void Draw(CommandBuffer buffer, RenderPass renderPass)
     {;
         ImGui.Render();
 
@@ -166,7 +169,7 @@ public class ImGuiRenderer
 
         UpdateImGuiBuffers(drawDataPtr);
 
-        RenderCommandLists(renderPass, drawDataPtr, io);
+        RenderCommandLists(buffer, renderPass, drawDataPtr, io);
     }
 
     private unsafe void UpdateImGuiBuffers(ImDrawDataPtr drawDataPtr)
@@ -238,7 +241,7 @@ public class ImGuiRenderer
         device.Submit(commandBuffer);
     }
 
-    private void RenderCommandLists(RenderPass renderPass, ImDrawDataPtr drawDataPtr, ImGuiIOPtr ioPtr)
+    private void RenderCommandLists(CommandBuffer buffer, RenderPass renderPass, ImDrawDataPtr drawDataPtr, ImGuiIOPtr ioPtr)
     {
         var view = Matrix4x4.CreateLookAt(
             new Vector3(0, 0, 1),
@@ -259,7 +262,7 @@ public class ImGuiRenderer
 
         renderPass.BindGraphicsPipeline(imGuiPipeline);
 
-        renderPass.PushVertexUniformData(
+        buffer.PushVertexUniformData(
             Matrix4x4.CreateOrthographicOffCenter(0, ioPtr.DisplaySize.X, 0, ioPtr.DisplaySize.Y, -1, 1)
         );
 
