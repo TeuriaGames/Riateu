@@ -93,7 +93,6 @@ public class Tween : Component
         { 
             TimeLeft = 0;
 
-            OnEnd?.Invoke(this);
             switch (Mode) 
             {
                 case TweenMode.Persistent:
@@ -110,6 +109,8 @@ public class Tween : Component
                     Start(!Reverse, lastDelay);
                     break;
             }
+
+            OnEnd?.Invoke(this);
         }
         base.Update(delta);
     }
@@ -119,12 +120,7 @@ public class Tween : Component
 #if DEBUG
         if (duration <= 0) { throw new Exception("Infinite Tween detected! Duration cannot be less than 0"); }
 #endif
-        Duration = duration;
-        Start(reverse, delay);
-    } 
-
-    public void Start(bool reverse = false, float delay = 0f) 
-    {
+        TimeLeft = duration;
         Active = true;
         Reverse = reverse;
         TimeLeft = Duration;
@@ -132,6 +128,11 @@ public class Tween : Component
         Delay = delay;
         lastDelay = delay;
         OnReady?.Invoke(this);
+    } 
+
+    public void Start(bool reverse = false, float delay = 0f) 
+    {
+        Start(Duration, reverse, delay);
     }
 
     public async Task WaitAsync() 
