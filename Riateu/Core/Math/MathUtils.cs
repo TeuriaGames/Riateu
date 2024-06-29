@@ -51,6 +51,12 @@ public static class MathUtils
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float Approach(float val, float target, float maxMove)
+    {
+        return val > target ? Math.Max(val - maxMove, target) : Math.Min(val + maxMove, target);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Snapped(float px, float step) 
     {
         if (step != 0)
