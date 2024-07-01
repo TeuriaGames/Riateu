@@ -12,11 +12,12 @@ public class SpriteFont
     private FontStruct fonts;
     private Dictionary<char, Character> characters = new();
 
-    public int LineHeight = 12;
+    public int LineHeight;
 
     public SpriteFont(Texture texture, Quad quad, string jsonPath) 
     {
         fonts = JsonConvert.DeserializeFromFile<FontStruct>(jsonPath);
+        LineHeight = fonts.Common.LineHeight;
 
         foreach (var character in fonts.Chars) 
         {
@@ -105,6 +106,28 @@ internal partial struct FontStruct : IDeserialize
     [TeuObject]
     [Name("chars")]
     public JsonCharacter[] Chars;
+
+    [TeuObject]
+    [Name("info")]
+    public FontInfo Info;
+
+    [TeuObject]
+    [Name("common")]
+    public FontCommon Common;
+}
+
+internal partial struct FontCommon : IDeserialize 
+{
+    [TeuObject]
+    [Name("lineHeight")]
+    public int LineHeight;
+}
+
+internal partial struct FontInfo : IDeserialize 
+{
+    [TeuObject]
+    [Name("size")]
+    public int Size;
 }
 
 internal partial struct JsonCharacter : IDeserialize
