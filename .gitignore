@@ -3,3 +3,5 @@ obj/
 api/
 _site
 runtimes/
+.zig-cache/
+zig-out/

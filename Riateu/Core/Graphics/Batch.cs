@@ -340,6 +340,27 @@ public class Batch : System.IDisposable
         vertexIndex++;
     }
 
+    public void Draw(SpriteFont font, string text, Vector2 position, Color color) 
+    {
+        Draw(font, text, position, color, Vector2.One);
+    }
+
+    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Vector2 scale) 
+    {
+#if DEBUG
+        AssertDoesBegin();
+#endif
+        if (vertexIndex == currentMaxTexture)
+        {
+            ResizeBuffer();
+            return;
+        }
+
+        unsafe {
+            font.Draw(computes, ref vertexIndex, text, position, color, scale);
+        }
+    }
+
 #if DEBUG
     private void AssertBegin()
     {
@@ -368,7 +389,7 @@ public class Batch : System.IDisposable
 
 
     [StructLayout(LayoutKind.Explicit, Size = 80)]
-    private struct ComputeData 
+    internal struct ComputeData 
     {
         [FieldOffset(0)]
         public Vector2 Position;
