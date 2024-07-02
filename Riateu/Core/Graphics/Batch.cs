@@ -340,12 +340,12 @@ public class Batch : System.IDisposable
         vertexIndex++;
     }
 
-    public void Draw(SpriteFont font, string text, Vector2 position, Color color) 
+    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Alignment hAlignment = Alignment.Baseline) 
     {
-        Draw(font, text, position, color, Vector2.One);
+        Draw(font, text, position, color, Vector2.One, hAlignment);
     }
 
-    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Vector2 scale) 
+    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Vector2 scale, Alignment hAlignment = Alignment.Baseline) 
     {
 #if DEBUG
         AssertDoesBegin();
@@ -356,8 +356,15 @@ public class Batch : System.IDisposable
             return;
         }
 
+        Vector2 justify = hAlignment switch {
+            Alignment.Baseline => new Vector2(0, 0),
+            Alignment.Center => new Vector2(0.5f, 0),
+            Alignment.End => new Vector2(1, 0),
+            _ => throw new NotImplementedException()
+        };
+
         unsafe {
-            font.Draw(computes, ref vertexIndex, text, position, color, scale);
+            font.Draw(computes, ref vertexIndex, text, position, justify, color, scale);
         }
     }
 

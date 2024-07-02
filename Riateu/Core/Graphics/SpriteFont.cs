@@ -7,6 +7,13 @@ using TeuJson.Attributes;
 
 namespace Riateu.Graphics;
 
+public enum Alignment 
+{
+    Baseline,
+    Center,
+    End
+}
+
 public class SpriteFont 
 {
     private FontStruct fonts;
@@ -53,13 +60,31 @@ public class SpriteFont
         return curr;
     }
 
-    internal unsafe void Draw(Batch.ComputeData* computeData, ref uint vertexIndex, ReadOnlySpan<char> text, Vector2 position, Color color, Vector2 scale)
+    public float GetHeight(ReadOnlySpan<char> text) 
+    {
+        int lines = 1;
+        if (text.IndexOf('\n') >= 0) 
+        {
+            for (int i = 0; i < text.Length; i++) 
+            {
+                if (text[i] == '\n') 
+                {
+                    lines++;
+                }
+            }
+        }
+
+        return lines * LineHeight;
+    }
+
+    internal unsafe void Draw(Batch.ComputeData* computeData, ref uint vertexIndex, ReadOnlySpan<char> text, Vector2 position, Vector2 justify, Color color, Vector2 scale)
     {
         if (text.IsEmpty)
             return;
         
         var offset = Vector2.Zero;
         var lineWidth = GetLineWidth(text);
+        var justified = new Vector2(lineWidth * justify.X, GetHeight(text) * justify.Y);
 
         for (int i = 0; i < text.Length; i++) 
         {
@@ -72,7 +97,7 @@ public class SpriteFont
 
             if (characters.TryGetValue(text[i], out Character c)) 
             {
-                Vector2 pos = (position + (offset + new Vector2(c.XOffset, c.YOffset)) * scale);
+                Vector2 pos = (position + (offset + new Vector2(c.XOffset, c.YOffset) - justified) * scale);
 
                 computeData[vertexIndex] = new Batch.ComputeData 
                 {
