@@ -1,0 +1,13 @@
+{
+	"Name": "Riateu",
+	"Version": "0.1.0",
+	"Projects": [
+		"Riateu/Riateu.Vulkan.csproj"
+	],
+	"Dependencies": [{
+			"Name": "Riateu",
+			"Repository": "https://github.com/Terria-K",
+			"Branch": ""
+		}
+	]
+}
