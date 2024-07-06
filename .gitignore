@@ -5,3 +5,4 @@ _site
 runtimes/
 .zig-cache/
 zig-out/
+.sunpack-dep/

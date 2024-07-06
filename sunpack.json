@@ -7,9 +7,13 @@
 		"Riateu/Riateu.Metal.csproj"
 	],
 	"Dependencies": [{
-			"Name": "Riateu",
-			"Repository": "https://github.com/Terria-K",
-			"Branch": ""
+			"Name": "MoonWorks",
+			"Repository": "https://github.com/MoonsideGames",
+			"Branch": "refresh2",
+			"Project": "MoonWorks.csproj"
 		}
-	]
+	],
+	"ResolvePackages": {
+		"MoonWorks": "resolve/MoonWorks.sunpack.json"
+	}
 }

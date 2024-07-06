@@ -8,9 +8,7 @@
     <DefineConstants>D3D11</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../MoonWorks/MoonWorks.csproj"/>
-  </ItemGroup>
+  <Import Project="../Sunpack.targets" />
 
   <ItemGroup>
     <PackageReference Include="TeuJson" Version="2.2.1" />
