@@ -103,16 +103,6 @@ public class Canvas : IDisposable
         }
     }
 
-    /// <summary>
-    /// Add the vertex buffer from the <see cref="Riateu.Canvas.CanvasTexture"/>.
-    /// </summary>
-    /// <param name="batch">A batch system to add the canvas texture</param>
-    /// <param name="sampler">The sampler for the texture</param>
-    public void ApplyCanvasToBatch(IBatch batch, Sampler sampler)
-    {
-        batch.Add(CanvasTexture, sampler, Vector2.Zero, Color.White);
-    }
-
     ///
     ~Canvas()
     {
