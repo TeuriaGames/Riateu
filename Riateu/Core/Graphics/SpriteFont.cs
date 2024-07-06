@@ -42,6 +42,47 @@ public class SpriteFont
         }
     }
 
+    public Vector2 Measure(ReadOnlySpan<char> text) 
+    {
+        if (text.IsEmpty)
+            return Vector2.Zero;
+
+        Vector2 size = new Vector2(0, LineHeight);
+        float lineWidth = 0f;
+
+        for (int i = 0; i < text.Length; i++) 
+        {
+            if (text[i] == '\n') 
+            {
+                size.Y += LineHeight;
+                if (lineWidth > size.X) 
+                {
+                    size.X = lineWidth;
+                }
+                lineWidth = 0f;
+                continue;
+            }
+
+            if (characters.TryGetValue(text[i], out Character c)) 
+            {
+                lineWidth += c.XAdvance;
+            }
+#if DEBUG
+            else 
+            {
+                throw new Exception($"This character '{text[i]}' or id: {(int)text[i]} does not exists.");
+            }
+#endif
+        }
+
+        if (lineWidth > size.X) 
+        {
+            size.X = lineWidth;
+        }
+
+        return size;
+    }
+
     public float GetLineWidth(ReadOnlySpan<char> text) 
     {
         float curr = 0f;
