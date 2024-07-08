@@ -5,4 +5,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Riateu/Riateu.D3D11.csproj"/>
+  </ItemGroup>
+
 </Project>
