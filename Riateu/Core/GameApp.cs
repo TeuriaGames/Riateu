@@ -19,13 +19,13 @@ public abstract class GameApp : Game
     /// </summary>
     public int Height { get; private set; }
 
-    private Scene nextScene;
+    private GameLoop nextScene;
 
     /// <summary>
     /// A current scene that is running. Note that if you change this, the scene won't
     /// actually changed yet until next frame started.
     /// </summary>
-    public Scene Scene
+    public GameLoop Scene
     {
         get => scene;
         set
@@ -33,7 +33,7 @@ public abstract class GameApp : Game
             nextScene = value;
         }
     }
-    private Scene scene;
+    private GameLoop scene;
 
 
     /// <summary>
@@ -101,7 +101,7 @@ public abstract class GameApp : Game
 
         if (backbuffer != null)
         {
-            scene.InternalDraw(cmdBuf, backbuffer);
+            scene.Render(cmdBuf, backbuffer);
         }
 
         GraphicsDevice.Submit(cmdBuf);
@@ -121,6 +121,6 @@ public abstract class GameApp : Game
             scene = nextScene;
             scene.Begin();
         }
-        scene.InternalUpdate(Time.Delta);
+        scene.Update(Time.Delta);
     }
 }

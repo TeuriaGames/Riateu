@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 using Riateu.Components;
 using Riateu.Physics;
 
@@ -13,14 +11,10 @@ namespace Riateu;
 /// holds entities here as it should be. Adding <see cref="Riateu.Entity"/> into scene will make the entity
 /// process their initialization, update, and draw loop.
 /// </summary>
-public abstract class Scene
+public abstract class Scene : GameLoop
 {
     public List<PhysicsComponent>[] SceneTags;
 
-    /// <summary>
-    /// The game application.
-    /// </summary>
-    public GameApp GameInstance { get; }
     /// <summary>
     /// A callback that is called when the entity is created.
     /// </summary>
@@ -46,9 +40,8 @@ public abstract class Scene
     /// An initialization for the scene.
     /// </summary>
     /// <param name="game">The game application</param>
-    public Scene(GameApp game)
+    public Scene(GameApp game) : base(game)
     {
-        GameInstance = game;
         EntityList = new Entities(this);
         SceneTags = new List<PhysicsComponent>[Tag.TotalTags];
         for (int i = 0; i < SceneTags.Length; i++)
@@ -161,40 +154,24 @@ public abstract class Scene
     {
         PhysicsEngine.Update();
         EntityList.UpdateSystem();
-        Update(delta);
+        Process(delta);
         EntityList.Update(delta);
         PhysicsEngine.Finish();
     }
 
-    internal void InternalDraw(CommandBuffer buffer, Texture backbuffer)
-    {
-        Render(buffer, backbuffer);
-    }
-
-    /// <summary>
-    /// Begin your scene initialization.
-    /// </summary>
-    public abstract void Begin();
     /// <summary>
     /// A method that runs on every update frame.
     /// </summary>
     /// <param name="delta">A delta time</param>
-    public virtual void Update(double delta) {}
+    public override sealed void Update(double delta) 
+    {
+        InternalUpdate(delta);
+    }
+
+    public abstract void Process(double delta);
 
     /// <summary>
-    /// A method that called during the draw loop. Do your draw calls here.
-    /// </summary>
-    /// <param name="buffer">A command buffer</param>
-    /// <param name="backbuffer">The swapchain texture of the main window</param>
-    public virtual void Render(CommandBuffer buffer, Texture backbuffer) {}
-
-    /// <summary>
-    /// End of the scene. Do your cleanup code here.
-    /// </summary>
-    public abstract void End();
-
-    /// <summary>
-    /// Get the <see cref="Riateu.GameApp"/> instance from a type
+    /// Get the <see cref="Riateu.GameApp"/> instance from a type.
     /// </summary>
     /// <typeparam name="T">A type of the <see cref="Riateu.GameApp"/></typeparam>
     /// <returns>A <see cref="Riateu.GameApp"/></returns>
