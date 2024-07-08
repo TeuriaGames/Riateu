@@ -7,6 +7,8 @@ namespace Riateu.Physics;
 /// </summary>
 public class AABB : Shape
 {
+    public override Vector2 Min => new Vector2(Entity.PosX + BoundingBox.X, Entity.PosY + BoundingBox.Y);
+    public override Vector2 Max => new Vector2(Entity.PosX + BoundingBox.X + BoundingBox.Width, Entity.PosY + BoundingBox.Y + BoundingBox.Height);
     /// <summary>
     /// A bounding hitbox of this shape.
     /// </summary>

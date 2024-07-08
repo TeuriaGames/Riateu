@@ -12,6 +12,9 @@ public sealed class CollisionGrid : Shape
     public int CellX => Grid.Columns;
     public int CellY => Grid.Rows;
 
+    public override Vector2 Min => new Vector2(Entity.PosX + BoundingArea.X, Entity.PosY + BoundingArea.Y);
+    public override Vector2 Max => new Vector2(Entity.PosX + BoundingArea.X + BoundingArea.Width, Entity.PosY + BoundingArea.Y + BoundingArea.Height);
+
     public Rectangle BoundingArea;
 
     public CollisionGrid(

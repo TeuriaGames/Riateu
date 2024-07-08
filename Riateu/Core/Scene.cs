@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using MoonWorks.Graphics;
+using MoonWorks.Math.Float;
 using Riateu.Components;
+using Riateu.Physics;
 
 namespace Riateu;
 
@@ -13,13 +15,6 @@ namespace Riateu;
 /// </summary>
 public abstract class Scene
 {
-    internal static uint TypeIndexCount;
-
-    public Dictionary<Type, uint> TypeIndexes = new();
-    public PhysicsStorage PhysicsStorage = new();
-    public Dictionary<Query, QueryResult> Queries = new();
-    public QueryBuilder QueryBuilder;
-
     public List<PhysicsComponent>[] SceneTags;
 
     /// <summary>
@@ -44,6 +39,8 @@ public abstract class Scene
     /// A collection of entities that are added.
     /// </summary>
     public Entities EntityList;
+    public IPhysicsEngine PhysicsEngine;
+
 
     /// <summary>
     /// An initialization for the scene.
@@ -51,7 +48,6 @@ public abstract class Scene
     /// <param name="game">The game application</param>
     public Scene(GameApp game)
     {
-        QueryBuilder = new QueryBuilder(this);
         GameInstance = game;
         EntityList = new Entities(this);
         SceneTags = new List<PhysicsComponent>[Tag.TotalTags];
@@ -59,7 +55,11 @@ public abstract class Scene
         {
             SceneTags[i] = new List<PhysicsComponent>();
         }
+
+        PhysicsEngine = CreatePhysicsEngine();
     }
+
+    public virtual IPhysicsEngine CreatePhysicsEngine() => new QueryBasePhysics();
 
     /// <summary>
     /// Add an <see cref="Riateu.Entity"/> to the scene.
@@ -78,16 +78,7 @@ public abstract class Scene
     /// </param>
     public void AddPhysics(PhysicsComponent component)
     {
-        Type type = component.Entity.GetType();
-        uint indexCount;
-        if (!TypeIndexes.TryGetValue(type, out indexCount)) 
-        {
-            indexCount = TypeIndexCount;
-            TypeIndexes.Add(type, indexCount);
-            TypeIndexCount++;
-        }
-
-        PhysicsStorage.Add(indexCount, component);
+        PhysicsEngine.AddPhysics(component);
     }
 
     /// <summary>
@@ -98,28 +89,7 @@ public abstract class Scene
     /// </param>
     public void RemovePhysics(PhysicsComponent component)
     {
-        Type type = component.Entity.GetType();
-
-        uint indexCount = TypeIndexes[type];
-
-        PhysicsStorage.Remove(indexCount, component);
-    }
-
-    internal QueryResult GetQuery(Query query) 
-    {
-        QueryResult result;
-        if (!Queries.TryGetValue(query, out result)) 
-        {
-            result = new QueryResult(this, query);
-
-            foreach (var include in query.Includes) 
-            {
-                result.Add(PhysicsStorage.PhysicsQuery[include]);
-                PhysicsStorage.QueryResults[include] = result;
-            }
-        }
-
-        return result;
+        PhysicsEngine.RemovePhysics(component);
     }
 
     /// <summary>
@@ -189,9 +159,11 @@ public abstract class Scene
 
     internal void InternalUpdate(double delta)
     {
+        PhysicsEngine.Update();
         EntityList.UpdateSystem();
         Update(delta);
         EntityList.Update(delta);
+        PhysicsEngine.Finish();
     }
 
     internal void InternalDraw(CommandBuffer buffer, Texture backbuffer)

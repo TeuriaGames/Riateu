@@ -10,6 +10,9 @@ namespace Riateu.Physics;
 /// </summary>
 public abstract class Shape 
 {
+    public abstract Vector2 Min { get; }
+    public abstract Vector2 Max { get; }
+
     /// <summary>
     /// Base initialization for the collision shapes.
     /// </summary>

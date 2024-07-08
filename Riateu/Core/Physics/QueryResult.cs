@@ -1,18 +1,19 @@
 using System.Collections.Generic;
 using Riateu.Components;
+using Riateu.Physics;
 
 namespace Riateu;
 
 public class QueryResult
 {
-    private Scene scene;
+    private QueryBasePhysics queryBase;
     private Query query;
 
     public List<PhysicsComponent> Components = new();
 
-    public QueryResult(Scene scene, Query query) 
+    public QueryResult(QueryBasePhysics queryBase, Query query) 
     {
-        this.scene = scene;
+        this.queryBase = queryBase;
         this.query = query;
     }
 

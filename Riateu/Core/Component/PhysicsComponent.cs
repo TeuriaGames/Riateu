@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MoonWorks.Math.Float;
 using Riateu.Physics;
 
@@ -110,6 +111,11 @@ public class PhysicsComponent : Component
         return false;
     }
 
+    private List<PhysicsComponent> GetAllNearbyComponents<T>() 
+    {
+        return Scene.PhysicsEngine.GetPhysicsComponents<T>(this);
+    }
+
     /// <summary>
     /// Check for all <see cref="Riateu.Components.PhysicsComponent"/> if it's colliding with this component.
     /// </summary>
@@ -138,8 +144,8 @@ public class PhysicsComponent : Component
     public bool CheckAll<T>(Vector2 offset, out T entity)
     where T : Entity
     {
-        QueryResult res = Scene.QueryBuilder.Include<T>().Build();
-        foreach (var other in res.Components) 
+        var components = GetAllNearbyComponents<T>();
+        foreach (var other in components) 
         {
             if (other.Entity is T && Check(other, offset)) 
             {
@@ -158,10 +164,10 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool CheckAll<T>(Vector2 offset)
     {
-        QueryResult res = Scene.QueryBuilder.Include<T>().Build();
-        foreach (var other in res.Components) 
+        var components = GetAllNearbyComponents<T>();
+        foreach (var other in components) 
         {
-            if (Check(other, offset)) 
+            if (other.Entity is T && Check(other, offset)) 
             {
                 return true;
             }
@@ -202,10 +208,10 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool CheckAll<T>(Vector2 offset, out Entity entity, out PhysicsComponent component)
     {
-        QueryResult res = Scene.QueryBuilder.Include<T>().Build();
-        foreach (var other in res.Components) 
+        var components = GetAllNearbyComponents<T>();
+        foreach (var other in components) 
         {
-            if (Check(other, offset)) 
+            if (other.Entity is T && Check(other, offset)) 
             {
                 component = other;
                 entity = other.Entity;
@@ -225,10 +231,10 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll<T>(Vector2 at)
     {
-        QueryResult res = Scene.QueryBuilder.Include<T>().Build();
-        foreach (var other in res.Components) 
+        var components = GetAllNearbyComponents<T>();
+        foreach (var other in components) 
         {
-            if (!Check(other, Vector2.Zero) && Check(other, at)) 
+            if (other.Entity is T && !Check(other, Vector2.Zero) && Check(other, at)) 
             {
                 return true;
             }
@@ -266,8 +272,8 @@ public class PhysicsComponent : Component
     public bool OutsideCheckAll<T>(Vector2 at, out T entity)
     where T : Entity
     {
-        QueryResult res = Scene.QueryBuilder.Include<T>().Build();
-        foreach (var other in res.Components) 
+        var components = GetAllNearbyComponents<T>();
+        foreach (var other in components) 
         {
             if (other.Entity is T && (!Check(other, Vector2.Zero) && Check(other, at))) 
             {
@@ -289,10 +295,10 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll<T>(Vector2 at, out Entity entity, out PhysicsComponent component)
     {
-        QueryResult res = Scene.QueryBuilder.Include<T>().Build();
-        foreach (var other in res.Components) 
+        var components = GetAllNearbyComponents<T>();
+        foreach (var other in components) 
         {
-            if (!Check(other, Vector2.Zero) && Check(other, at)) 
+            if (other.Entity is T && !Check(other, Vector2.Zero) && Check(other, at)) 
             {
                 component = other;
                 entity = other.Entity;

@@ -1,39 +1,39 @@
 using System;
 using System.Collections.Generic;
+using Riateu.Physics;
 
 namespace Riateu;
 
 public struct QueryBuilder
 {
-    private Scene scene;
+    private QueryBasePhysics queryBase;
     public HashSet<uint> Includes;
 
-    internal QueryBuilder(Scene scene) 
+    internal QueryBuilder(QueryBasePhysics queryBase) 
     {
-        this.scene = scene;
+        this.queryBase = queryBase;
         this.Includes = new();
     }
 
-    private QueryBuilder(Scene scene, HashSet<uint> includes) 
+    private QueryBuilder(QueryBasePhysics queryBase, HashSet<uint> includes) 
     {
-        this.scene = scene;
+        this.queryBase = queryBase;
         this.Includes = includes;
     }
 
     public QueryBuilder Include<T>() 
     {
         Type type = typeof(T);
-        if (scene.TypeIndexes.TryGetValue(type, out uint val)) 
+        if (queryBase.TypeIndexes.TryGetValue(type, out uint val)) 
         {
             Includes.Add(val);
         }
-        return new QueryBuilder(scene, Includes);
+        return new QueryBuilder(queryBase, Includes);
     }
 
     public QueryResult Build() 
     {
-        QueryResult queryResult = scene.GetQuery(new Query(Includes));
-        Includes.Clear();
+        QueryResult queryResult = queryBase.GetQuery(new Query(Includes));
         return queryResult;
     }
 }
