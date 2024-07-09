@@ -266,4 +266,14 @@ public static class MathUtils
         Randomizer = random.Pop();
     }
 #endregion
+
+    public static Vector2 Min(this Rectangle rectangle) 
+    {
+        return new Vector2(rectangle.X, rectangle.Y);
+    }
+
+    public static Vector2 Max(this Rectangle rectangle) 
+    {
+        return new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
+    }
 }

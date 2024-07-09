@@ -83,7 +83,7 @@ public class RendererSystem : DrawSystem
         {
             ref Vector2 position = ref world.GetComponent<Vector2>(entity);
             ref SpriteRenderer sprite = ref world.GetComponent<SpriteRenderer>(entity);
-            batch.Draw(sprite.texture, position, Color.White);
+            batch.Draw(sprite.Texture, position, Color.White);
         }
     }
 }

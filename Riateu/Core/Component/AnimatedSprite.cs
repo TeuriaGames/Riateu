@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 using Riateu.Graphics;
 using TeuJson;
 
@@ -13,7 +12,7 @@ namespace Riateu.Components;
 /// </summary>
 public class AnimatedSprite : GraphicsComponent
 {
-    private Dictionary<string, Animation> frames;
+    private AnimationIndex frames;
     private string currentAnimationName = string.Empty;
     private int currentFrame;
     private double fps = 10;
@@ -52,7 +51,7 @@ public class AnimatedSprite : GraphicsComponent
     
     /// <summary>
     /// Initialize an empty <see cref="Riateu.Components.AnimatedSprite"/>. You might want to use 
-    /// <see cref="Riateu.Components.AnimatedSprite.Create(Texture, Dictionary{string, Animation})"/> instead.
+    /// <see cref="Riateu.Components.AnimatedSprite.Create(Texture, AnimationIndex)"/> instead.
     /// </summary>
     /// <param name="texture">A texture to base on</param>
     public AnimatedSprite(Texture texture) : base(texture) {}
@@ -85,6 +84,7 @@ public class AnimatedSprite : GraphicsComponent
         var cycles = json["cycles"];
 
         var frames = new Dictionary<string, Animation>();
+        var names = new List<string>();
 
         foreach (var cycle in cycles.Pairs) 
         {
@@ -106,9 +106,12 @@ public class AnimatedSprite : GraphicsComponent
             animation.Loop = loop;
 
             frames[key] = animation;
+            names.Add(key);
         }
 
-        animSprite.frames = frames;
+        var animationIndex = new AnimationIndex(names, frames);
+
+        animSprite.frames = animationIndex;
         return animSprite;
     }
 
@@ -116,35 +119,13 @@ public class AnimatedSprite : GraphicsComponent
     /// Create an <see cref="Riateu.Components.AnimatedSprite"/> from a map of frames.
     /// </summary>
     /// <param name="atlasTexture">A texture for the sprite</param>
-    /// <param name="frames">A map of frames</param>
+    /// <param name="animationIndex">A map of frames</param>
     /// <returns>An <see cref="Riateu.Components.AnimatedSprite"/></returns>
-    public static AnimatedSprite Create(Texture atlasTexture, Dictionary<string, Animation> frames) 
+    public static AnimatedSprite Create(Texture atlasTexture, AnimationIndex animationIndex) 
     {
         var animSprite = new AnimatedSprite(atlasTexture);
-        animSprite.frames = frames;
+        animSprite.frames = animationIndex;
         return animSprite;
-    }
-
-    /// <summary>
-    /// Create an empty <see cref="Riateu.Components.AnimatedSprite"/>. 
-    /// </summary>
-    /// <param name="atlasTexture">A texture for the sprite</param>
-    /// <returns>An <see cref="Riateu.Components.AnimatedSprite"/></returns>
-    public static AnimatedSprite Create(Texture atlasTexture) 
-    {
-        var animSprite = new AnimatedSprite(atlasTexture);
-        animSprite.frames = new Dictionary<string, Animation>();
-        return animSprite;
-    }
-
-    /// <summary>
-    /// Add an animation frame.
-    /// </summary>
-    /// <param name="name">A name of the animation</param>
-    /// <param name="animation">The animation struct containing the list of textures</param>
-    public void Add(string name, Animation animation) 
-    {
-        frames[name] = animation;
     }
 
     /// <summary>
