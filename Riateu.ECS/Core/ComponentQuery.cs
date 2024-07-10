@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-
 namespace Riateu.ECS;
 
 public class ComponentQuery 
 {
-    private List<EntityID> entities = new List<EntityID>();
+    private WeakList<EntityID> entities = new WeakList<EntityID>();
     private World world;
     private ComponentQueryIndex index;
 
-    public List<EntityID> Entities => entities;
+    public WeakEnumerator<EntityID> Entities => entities.GetEnumerator();
     
     public ComponentQuery(World world, ComponentQueryIndex index) 
     {
