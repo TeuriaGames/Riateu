@@ -123,12 +123,42 @@ public class Batch : System.IDisposable
             rendered = false;
         }
 
+        unchecked { onQueue++; }
+
         if (queues.Length == onQueue) 
         {
             Array.Resize(ref queues, queues.Length + 4);
         }
 
+        queues[onQueue] = new BatchQueue 
+        {
+            Binding = new TextureSamplerBinding(texture, sampler),
+            Pipeline = GameContext.DefaultPipeline,
+            Count = 0
+        };
+
+        unsafe {
+            transferComputeBuffer.Map(true, out byte* data);
+            computes = (ComputeData*)data;
+        }
+    }
+
+    public void Compose(Texture texture, Sampler sampler) 
+    {
+#if DEBUG
+        AssertDoesBegin();
+#endif
+        transferComputeBuffer.Unmap();
+
+        queues[onQueue].Count = vertexIndex;
+
         unchecked { onQueue++; }
+
+        if (queues.Length == onQueue) 
+        {
+            Array.Resize(ref queues, queues.Length + 4);
+        }
+
         queues[onQueue] = new BatchQueue 
         {
             Binding = new TextureSamplerBinding(texture, sampler),
@@ -154,8 +184,10 @@ public class Batch : System.IDisposable
         {
             return;
         }
+
         CopyPass copyPass = cmdBuf.BeginCopyPass();
         copyPass.UploadToBuffer(transferComputeBuffer, computeBuffer, true);
+
         cmdBuf.EndCopyPass(copyPass);
 
         ComputePass computePass = cmdBuf.BeginComputePass(new StorageBufferReadWriteBinding 
@@ -195,6 +227,8 @@ public class Batch : System.IDisposable
         AssertRender();
         DEBUG_begin = false;
 #endif
+
+        rendered = true;
         if (vertexIndex == 0)
         {
             return;
@@ -217,7 +251,6 @@ public class Batch : System.IDisposable
             start = ref Unsafe.Add(ref start, 1);
         }
 
-        rendered = true;
         vertexIndex = 0;
     }
 
@@ -334,6 +367,7 @@ public class Batch : System.IDisposable
             UV = new UV(quad.UV[0], quad.UV[1], quad.UV[2], quad.UV[3]),
             Dimension = new Vector2(quad.Source.W, quad.Source.H),
             Rotation = rotation,
+            Depth = layerDepth,
             Color = color.ToVector4(),
         };
 
@@ -395,7 +429,7 @@ public class Batch : System.IDisposable
 #endif
 
 
-    [StructLayout(LayoutKind.Explicit, Size = 80)]
+    [StructLayout(LayoutKind.Explicit, Size = 96)]
     internal struct ComputeData 
     {
         [FieldOffset(0)]
@@ -410,6 +444,8 @@ public class Batch : System.IDisposable
         public Vector2 Dimension;
         [FieldOffset(64)]
         public float Rotation;
+        [FieldOffset(68)]
+        public float Depth;
         [FieldOffset(80)]
         public Vector4 Color;
     }
