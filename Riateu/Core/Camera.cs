@@ -31,10 +31,10 @@ public struct Camera(int width, int height, bool flipped = false)
         var xy = new Vector2((int)Math.Floor(position.X + offset.X), (int)Math.Floor(position.Y + offset.Y));
         var pos = new Vector3(xy, 0);
         // Zoom
-        var zooming = new Vector3(zoom, 1);
+        var zooming = new Vector3(zoom, -1);
         // Origin
         var origXy = new Vector2((int)Math.Floor(origin.X), (int)Math.Floor(origin.Y));
-        var orig = new Vector3(origXy, 0);
+        var orig = new Vector3(origXy, -1);
 
         var model = 
             Matrix4x4.Identity               *
@@ -43,7 +43,7 @@ public struct Camera(int width, int height, bool flipped = false)
             Matrix4x4.CreateScale(zooming)   *
             Matrix4x4.CreateTranslation(orig);
 
-        var view = Matrix4x4.CreateTranslation(0, 0, 0);
+        var view = Matrix4x4.CreateTranslation(0, 0, 1);
         var projection = !flipped ? Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1)
             : Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
 
