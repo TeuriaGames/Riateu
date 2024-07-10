@@ -15,5 +15,9 @@ float4 main(FragmentInput_main fragmentinput_main) : SV_Target0
 {
     VertexInput in_ = { fragmentinput_main.color, fragmentinput_main.texCoord };
     float4 _expr4 = texture_.Sample(texSampler, in_.texCoord);
-    return (_expr4 * in_.color);
+    float4 col = (_expr4 * in_.color);
+    if ((col.w == 0.0)) {
+        discard;
+    }
+    return col;
 }

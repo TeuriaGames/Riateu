@@ -5,6 +5,7 @@ struct ComputeData {
     uv: array<vec2<f32>, 4>,
     dimension: vec2<f32>,
     rotation: f32,
+    depth: f32,
     color: vec4<f32>
 };
 
@@ -32,7 +33,7 @@ fn main(@builtin(global_invocation_id) gID: vec3<u32>) {
         vec4<f32>(1., 0., 0., 0.),
         vec4<f32>(0., 1., 0., 0.),
         vec4<f32>(0., 0., 1., 0.),
-        vec4<f32>(-compData.origin.x, -compData.origin.y, 1., 1.),
+        vec4<f32>(-compData.origin.x, -compData.origin.y, compData.depth, 1.),
     );
 
     let val1 = cos(compData.rotation);
@@ -53,10 +54,10 @@ fn main(@builtin(global_invocation_id) gID: vec3<u32>) {
     let width = compData.dimension.x * compData.scale.x;
     let height = compData.dimension.y * compData.scale.y;
 
-    let topLeft = vec4<f32>(compData.position.x, compData.position.y, 1., 1.);
-    let topRight= vec4<f32>(compData.position.x + width, compData.position.y, 1., 1.);
-    let bottomLeft = vec4<f32>(compData.position.x, compData.position.y + height, 1., 1.);
-    let bottomRight = vec4<f32>(compData.position.x + width, compData.position.y + height, 1., 1.);
+    let topLeft = vec4<f32>(compData.position.x, compData.position.y, compData.depth, 1.);
+    let topRight= vec4<f32>(compData.position.x + width, compData.position.y, compData.depth, 1.);
+    let bottomLeft = vec4<f32>(compData.position.x, compData.position.y + height, compData.depth, 1.);
+    let bottomRight = vec4<f32>(compData.position.x + width, compData.position.y + height, compData.depth, 1.);
 
     vertexData[n * 4u].position = vec4<f32>(
         (topLeft.x * transform[0][0]) + (topLeft.y * transform[1][0]) + transform[3][0],

@@ -13,5 +13,9 @@ var texSampler: sampler;
 
 @fragment
 fn main(in: VertexInput) -> @location(0) vec4<f32> {
-    return textureSample(texture, texSampler, in.texCoord) * in.color;
+    let col = textureSample(texture, texSampler, in.texCoord) * in.color;
+    if col.a == 0. {
+        discard;
+    }
+    return col; 
 }

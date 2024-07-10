@@ -23,5 +23,9 @@ fragment main_Output main_(
 ) {
     const VertexInput in = { varyings.color, varyings.texCoord };
     metal::float4 _e4 = texture.sample(texSampler, in.texCoord);
-    return main_Output { _e4 * in.color };
+    metal::float4 col = _e4 * in.color;
+    if (col.w == 0.0) {
+        metal::discard_fragment();
+    }
+    return main_Output { col };
 }
