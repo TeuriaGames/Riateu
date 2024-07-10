@@ -94,7 +94,7 @@ public abstract class GameApp : Game
     /// A method that handles the draw loop. Do your draw calls here.
     /// </summary>
     /// <param name="alpha">A delta time for the draw loop</param>
-    protected override sealed void Draw(double alpha)
+    protected override void Draw(double alpha)
     {
         CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
         Texture backbuffer = cmdBuf.AcquireSwapchainTexture(MainWindow);
@@ -111,7 +111,7 @@ public abstract class GameApp : Game
     /// A method that handles the update loop.
     /// </summary>
     /// <param name="delta">A delta time for the update loop</param>
-    protected override sealed void Update(TimeSpan delta)
+    protected override void Update(TimeSpan delta)
     {
         Time.Update(delta);
         Input.Update();
