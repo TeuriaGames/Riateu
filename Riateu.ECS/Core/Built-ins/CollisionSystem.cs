@@ -8,23 +8,20 @@ namespace Riateu.ECS;
 
 public class CollisionSystem : UpdateSystem
 {
-    private World world;
-    public ComponentQuery CollisionUpdate;
-    public ComponentQuery AddCollision;
+    public SearchResult CollisionUpdate;
+    public SearchResult AddCollision;
     public Dictionary<EntityID, List<EntityID>> HitList = new Dictionary<EntityID, List<EntityID>>();
 
     public CollisionSystem(World world) : base(world)
     {
-        this.world = world;
-
-        CollisionUpdate = world.QueryBuilder
-            .Include<Vector2>()
-            .Include<Hitbox>()
-            .Build();
+        CollisionUpdate = Search
+            .With<Vector2>()
+            .With<Hitbox>()
+            .Confirm();
         
-        AddCollision = world.QueryBuilder
-            .Include<Hitbox>()
-            .Build();
+        AddCollision = Search
+            .With<Hitbox>()
+            .Confirm();
     }
 
     public void OnEntitiesAdded() 
@@ -40,8 +37,8 @@ public class CollisionSystem : UpdateSystem
         foreach (var entity in CollisionUpdate.Entities) 
         {
             HitList[entity].Clear();
-            ref Vector2 position = ref world.GetComponent<Vector2>(entity);
-            ref Hitbox hitbox = ref world.GetComponent<Hitbox>(entity);
+            ref Vector2 position = ref Get<Vector2>(entity);
+            ref Hitbox hitbox = ref Get<Hitbox>(entity);
 
             Rectangle rect = new Rectangle((int)position.X, (int)position.Y, hitbox.shape.Width, hitbox.shape.Height);
             foreach (var another in CollisionUpdate.Entities) 
@@ -50,8 +47,8 @@ public class CollisionSystem : UpdateSystem
                 {
                     continue;
                 }
-                ref Vector2 anotherPosition = ref world.GetComponent<Vector2>(another);
-                ref Hitbox anotherHitbox = ref world.GetComponent<Hitbox>(another);
+                ref Vector2 anotherPosition = ref Get<Vector2>(another);
+                ref Hitbox anotherHitbox = ref Get<Hitbox>(another);
 
                 if (rect.Intersects(new Rectangle((int)anotherPosition.X, (int)anotherPosition.Y, anotherHitbox.shape.Width, anotherHitbox.shape.Height))) 
                 {
@@ -64,25 +61,22 @@ public class CollisionSystem : UpdateSystem
 
 public class RendererSystem : DrawSystem
 {
-    private World world;
-    private ComponentQuery DisplaySprite;
+    private SearchResult DisplaySprite;
 
     public RendererSystem(World world) : base(world)
     {
-        this.world = world;
-
-        DisplaySprite = world.QueryBuilder
-            .Include<Vector2>()
-            .Include<SpriteRenderer>()
-            .Build();
+        DisplaySprite = Search
+            .With<Vector2>()
+            .With<SpriteRenderer>()
+            .Confirm();
     }
 
     public override void Draw(CommandBuffer buffer, Batch batch) 
     {
         foreach (var entity in DisplaySprite.Entities) 
         {
-            ref Vector2 position = ref world.GetComponent<Vector2>(entity);
-            ref SpriteRenderer sprite = ref world.GetComponent<SpriteRenderer>(entity);
+            ref Vector2 position = ref Get<Vector2>(entity);
+            ref SpriteRenderer sprite = ref Get<SpriteRenderer>(entity);
             batch.Draw(sprite.Texture, position, Color.White);
         }
     }

@@ -13,18 +13,44 @@ public abstract class UpdateSystem : System
     public void Send<T>(T message) 
     where T : unmanaged
     {
-        World.Send(message);
+        World.SendMessage(message);
     }
 
     public T Receive<T>() 
     where T : unmanaged
     {
-        return World.Receive<T>();
+        return World.ReceiveMessage<T>();
+    }
+
+    public bool ReceiveSome<T>(out T message) 
+    where T : unmanaged
+    {
+        if (!World.IsEmptyMessage<T>()) 
+        {
+            T inMessage = World.ReceiveMessage<T>();
+            message = inMessage;
+            return true;
+        }
+
+        message = default;
+        return false;
     }
 
     public ReadOnlySpan<T> ReceiveAll<T>() 
     where T : unmanaged
     {
-        return World.ReceiveAll<T>();
+        return World.ReceiveAllMessage<T>();
+    }
+
+    public bool Some<T>() 
+    where T : unmanaged
+    {
+        return !World.IsEmptyMessage<T>();
+    }
+
+    public bool None<T>() 
+    where T : unmanaged
+    {
+        return World.IsEmptyMessage<T>();
     }
 }

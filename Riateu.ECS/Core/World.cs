@@ -13,11 +13,11 @@ public class World
     internal Dictionary<Type, TypeID> ComponentIDs = new Dictionary<Type, TypeID>();
     internal Dictionary<Type, TypeID> MessageIDs = new Dictionary<Type, TypeID>();
     public List<ComponentList> ComponentLists = new List<ComponentList>();
-    public List<List<ComponentQuery>> ComponentIDToQuery = new List<List<ComponentQuery>>();
+    public List<List<SearchResult>> ComponentIDToSearch = new List<List<SearchResult>>();
     public List<HashSet<TypeID>> EntityComponentIndex = new List<HashSet<TypeID>>();
 
-    public ComponentQueryBuilder QueryBuilder => new ComponentQueryBuilder(this);
-    public Dictionary<ComponentQueryIndex, ComponentQuery> ComponentQueries = new Dictionary<ComponentQueryIndex, ComponentQuery>();
+    public SearchBuilder Search => new SearchBuilder(this);
+    public Dictionary<SearchResultIndex, SearchResult> SearchResults = new Dictionary<SearchResultIndex, SearchResult>();
 
     public List<MessageList> MessageLists = new List<MessageList>();
 
@@ -51,7 +51,7 @@ public class World
         EntityComponentIndex[(int)id.id].Clear();
         danglingID.Push(id.id);
 
-        foreach (var query in ComponentIDToQuery[(int)id.id]) 
+        foreach (var query in ComponentIDToSearch[(int)id.id]) 
         {
             query.Remove(id);
         }
@@ -86,7 +86,7 @@ public class World
         TypeID componentID = new TypeID(componentIDCount++);
         ComponentIDs.Add(typeof(T), componentID);
         ComponentLists.Add(new ComponentList(sizeof(T)));
-        ComponentIDToQuery.Add(new List<ComponentQuery>());
+        ComponentIDToSearch.Add(new List<SearchResult>());
         return componentID;
     }
 
@@ -98,7 +98,7 @@ public class World
         EntityComponentIndex[(int)entity.id].Add(id);
         ComponentLists[(int)id.id].Add<T>(entity, component);
 
-        foreach (var query in ComponentIDToQuery[(int)id.id]) 
+        foreach (var query in ComponentIDToSearch[(int)id.id]) 
         {
             query.Update(entity);
         }
@@ -116,7 +116,7 @@ public class World
         if (GetComponentList<T>(out TypeID id).Remove(entity)) 
         {
             EntityComponentIndex[(int)entity.id].Remove(id);
-            foreach (var query in ComponentIDToQuery[(int)id.id]) 
+            foreach (var query in ComponentIDToSearch[(int)id.id]) 
             {
                 query.Update(entity);
             }
@@ -137,23 +137,23 @@ public class World
         return EntityComponentIndex[(int)entity.id].Contains(component);
     }
 
-    public ComponentQuery BuildQuery(ComponentQueryIndex queryIndex) 
+    public SearchResult ConfirmResult(SearchResultIndex queryIndex) 
     {
-        if (!ComponentQueries.TryGetValue(queryIndex, out var query)) 
+        if (!SearchResults.TryGetValue(queryIndex, out var query)) 
         {
-            query = new ComponentQuery(this, queryIndex);
+            query = new SearchResult(this, queryIndex);
 
-            foreach (TypeID include in queryIndex.Includes) 
+            foreach (TypeID include in queryIndex.Withs) 
             {
-                ComponentIDToQuery[(int)include.id].Add(query);
+                ComponentIDToSearch[(int)include.id].Add(query);
             }
 
-            foreach (TypeID exclude in queryIndex.Excludes) 
+            foreach (TypeID exclude in queryIndex.Withouts) 
             {
-                ComponentIDToQuery[(int)exclude.id].Add(query);
+                ComponentIDToSearch[(int)exclude.id].Add(query);
             }
 
-            ComponentQueries.Add(queryIndex, query);
+            SearchResults.Add(queryIndex, query);
         }
         return query;
     }
@@ -180,28 +180,28 @@ public class World
         return MessageLists[(int)id.id];
     }
 
-    public void Send<T>(T message) 
+    public void SendMessage<T>(T message) 
     where T : unmanaged
     {
         MessageList list = GetMessageList<T>();
         list.Add(message);
     }
 
-    public ReadOnlySpan<T> ReceiveAll<T>() 
+    public ReadOnlySpan<T> ReceiveAllMessage<T>() 
     where T : unmanaged
     {
         MessageList list = GetMessageList<T>();
         return list.ReadAll<T>();
     }
 
-    public T Receive<T>() 
+    public T ReceiveMessage<T>() 
     where T : unmanaged
     {
         MessageList list = GetMessageList<T>();
         return list.ReadFirst<T>();
     }
 
-    public bool IsEmpty<T>() 
+    public bool IsEmptyMessage<T>() 
     where T : unmanaged
     {
         MessageList list = GetMessageList<T>();

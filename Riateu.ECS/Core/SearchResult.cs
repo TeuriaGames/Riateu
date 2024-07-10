@@ -1,14 +1,14 @@
 namespace Riateu.ECS;
 
-public class ComponentQuery 
+public class SearchResult 
 {
     private WeakList<EntityID> entities = new WeakList<EntityID>();
     private World world;
-    private ComponentQueryIndex index;
+    private SearchResultIndex index;
 
     public WeakEnumerator<EntityID> Entities => entities.GetEnumerator();
     
-    public ComponentQuery(World world, ComponentQueryIndex index) 
+    public SearchResult(World world, SearchResultIndex index) 
     {
         this.world = world;
         this.index = index;
@@ -16,7 +16,7 @@ public class ComponentQuery
 
     public void Update(EntityID entity) 
     {
-        foreach (var type in index.Includes) 
+        foreach (var type in index.Withs) 
         {
             if (!world.HasComponent(entity, type)) 
             {
@@ -25,7 +25,7 @@ public class ComponentQuery
             }
         }
 
-        foreach (var type in index.Excludes) 
+        foreach (var type in index.Withouts) 
         {
             if (world.HasComponent(entity, type)) 
             {
