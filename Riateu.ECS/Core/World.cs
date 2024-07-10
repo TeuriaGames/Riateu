@@ -115,6 +115,7 @@ public class World
     {
         if (GetComponentList<T>(out TypeID id).Remove(entity)) 
         {
+            EntityComponentIndex[(int)entity.id].Remove(id);
             foreach (var query in ComponentIDToQuery[(int)id.id]) 
             {
                 query.Update(entity);
