@@ -147,6 +147,8 @@ public ref struct WeakEnumerator<T>
 
     public T Current => buffer[index];
 
+    public static WeakEnumerator<T> Empty => new WeakEnumerator<T>();
+
     public WeakEnumerator(Span<T> span) 
     {
         buffer = span;
