@@ -3,15 +3,174 @@ using System.Collections.Generic;
 
 namespace Riateu.ECS;
 
+public class RelationList : IDisposable
+{
+    private AnyOpaqueArray relations;
+    private AnyOpaqueArray relationDatas;
+    private int elementSize;
+
+    private Dictionary<(EntityID, EntityID), int> Mappings = new Dictionary<(EntityID, EntityID), int>();
+    private Dictionary<EntityID, WeakList<EntityID>> InEntityRelations = new Dictionary<EntityID, WeakList<EntityID>>();
+    private Dictionary<EntityID, WeakList<EntityID>> OutEntityRelations = new Dictionary<EntityID, WeakList<EntityID>>();
+    private Stack<WeakList<EntityID>> setPool = new Stack<WeakList<EntityID>>();
+    private bool disposedValue;
+
+    public unsafe RelationList(int elementSize) 
+    {
+        this.elementSize = elementSize;
+        relations = new AnyOpaqueArray(sizeof((EntityID, EntityID)));
+        relationDatas = new AnyOpaqueArray(elementSize);
+    }
+
+    public void Set<T>(in EntityID a, in EntityID b, in T data) 
+    where T : unmanaged
+    {
+        var relationPair = (a, b);
+
+        if (Mappings.TryGetValue(relationPair, out int val)) 
+        {
+            relationDatas.Set(val, data);
+            return;
+        }
+
+        if (!OutEntityRelations.ContainsKey(a)) 
+        {
+            OutEntityRelations[a] = CreateList();
+        }
+        OutEntityRelations[a].Add(b);
+
+        if (!InEntityRelations.ContainsKey(b)) 
+        {
+            InEntityRelations[b] = CreateList();
+        }
+        InEntityRelations[b].Add(a);
+
+        relations.Add(relationPair);
+        relationDatas.Add(data);
+        Mappings.Add(relationPair, relations.Count - 1);
+    }
+
+    public ref T Get<T>(in EntityID a, in EntityID b) 
+    where T : unmanaged
+    {
+        int relationIndex = Mappings[(a, b)];
+        return ref relationDatas.Get<T>(relationIndex);
+    }
+
+    public bool Has(in EntityID a, in EntityID b) 
+    {
+        return Mappings.ContainsKey((a, b));
+    }
+
+    public (bool, bool) Remove(in EntityID a, in EntityID b) 
+    {
+        bool emptyA = false;
+        bool emptyB = false;
+        var relationPair = (a, b);
+
+        if (OutEntityRelations.TryGetValue(a, out var outRelation)) 
+        {
+            outRelation.Remove(b);
+            if (OutEntityRelations[a].Count == 0) 
+            {
+                emptyA = true;
+            }
+        }
+        if (InEntityRelations.TryGetValue(b, out var inRelation)) 
+        {
+            inRelation.Remove(a);
+            if (InEntityRelations[b].Count == 0) 
+            {
+                emptyB = true;
+            }
+        }
+
+        if (Mappings.TryGetValue(relationPair, out var index)) 
+        {
+            var lastElementIndex = relations.Count - 1;
+
+            if (index != lastElementIndex) 
+            {
+                var lastRelation = relations.Get<(EntityID, EntityID)>(lastElementIndex);
+                Mappings[lastRelation] = index;
+            }
+
+            relationDatas.Remove(index);
+            relations.Remove(index);
+
+            Mappings.Remove(relationPair);
+        }
+
+        return (emptyA, emptyB);
+    }
+
+    public WeakEnumerator<EntityID> InAllRelations(in EntityID entityID) 
+    {
+        if (InEntityRelations.TryGetValue(entityID, out WeakList<EntityID> entityRelation)) 
+        {
+            return entityRelation.GetEnumerator();
+        }
+
+        return WeakEnumerator<EntityID>.Empty;
+    }
+
+    private WeakList<EntityID> CreateList() 
+    {
+        if (setPool.Count == 0) 
+        {
+            setPool.Push(new WeakList<EntityID>());
+        }
+
+        return setPool.Pop();
+    }
+
+    private void DestroyList(WeakList<EntityID> list) 
+    {
+        list.Clear();
+        setPool.Push(list);
+    }
+
+    public void Clear() 
+    {
+        Mappings.Clear();
+
+        relations.Clear();
+        relationDatas.Clear();
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing) 
+            {
+                relations.Dispose();
+                relationDatas.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    ~RelationList()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: false);
+    }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+}
+
 public class World 
 {
     internal Stack<uint> danglingID = new();
     internal static uint entityIDCount;
-    private static uint componentIDCount;
-    private static uint messageIDCount;
 
-    internal Dictionary<Type, TypeID> ComponentIDs = new Dictionary<Type, TypeID>();
-    internal Dictionary<Type, TypeID> MessageIDs = new Dictionary<Type, TypeID>();
     public List<ComponentList> ComponentLists = new List<ComponentList>();
     public List<List<SearchResult>> ComponentIDToSearch = new List<List<SearchResult>>();
     public List<HashSet<TypeID>> EntityComponentIndex = new List<HashSet<TypeID>>();
@@ -20,6 +179,7 @@ public class World
     public Dictionary<SearchResultIndex, SearchResult> SearchResults = new Dictionary<SearchResultIndex, SearchResult>();
 
     public List<MessageList> MessageLists = new List<MessageList>();
+    public List<RelationList> RelationLists = new List<RelationList>();
 
 
     public EntityID CreateEntity() 
@@ -60,8 +220,7 @@ public class World
     public ComponentList GetComponentList<T>(out TypeID outID) 
     where T : unmanaged
     {
-        Type type = typeof(T);
-        TypeID id = ComponentIDs[type];
+        TypeID id = GetComponentID<T>();
         outID = id;
         return ComponentLists[(int)id.id];
     }
@@ -69,22 +228,19 @@ public class World
     public ComponentList GetComponentList<T>() 
     where T : unmanaged
     {
-        Type type = typeof(T);
-        TypeID id = ComponentIDs[type];
+        TypeID id = GetComponentID<T>();
         return ComponentLists[(int)id.id];
     }
 
     public unsafe TypeID GetComponentID<T>() 
     where T : unmanaged
     {
-        Type type = typeof(T);
-        if (ComponentIDs.TryGetValue(type, out TypeID id)) 
+        TypeID componentID = new TypeID(ComponentTypeIdAssigner<T>.Id);
+        if (componentID.id < ComponentLists.Count) 
         {
-            return id;
+            return componentID;
         }
 
-        TypeID componentID = new TypeID(componentIDCount++);
-        ComponentIDs.Add(typeof(T), componentID);
         ComponentLists.Add(new ComponentList(sizeof(T)));
         ComponentIDToSearch.Add(new List<SearchResult>());
         return componentID;
@@ -164,14 +320,12 @@ public class World
     public unsafe TypeID GetMessageID<T>() 
     where T : unmanaged
     {
-        Type type = typeof(T);
-        if (MessageIDs.TryGetValue(type, out TypeID id)) 
+        TypeID messageID = new TypeID(MessageTypeIdAssigner<T>.Id);
+        if (messageID.id < MessageLists.Count) 
         {
-            return id;
+            return messageID;
         }
 
-        TypeID messageID = new TypeID(messageIDCount++);
-        MessageIDs.Add(typeof(T), messageID);
         MessageLists.Add(new MessageList(sizeof(T)));
         return messageID;
     }
@@ -209,6 +363,39 @@ public class World
     {
         MessageList list = GetMessageList<T>();
         return list.IsEmpty();
+    }
+
+    public unsafe TypeID GetRelationID<T>() 
+    where T : unmanaged
+    {
+        TypeID relationID = new TypeID(RelationTypeIdAssigner<T>.Id);
+        if (relationID.id < RelationLists.Count) 
+        {
+            return relationID;
+        }
+
+        MessageLists.Add(new MessageList(sizeof(T)));
+        return relationID;
+    }
+
+    public RelationList GetRelationList<T>() 
+    where T : unmanaged
+    {
+        TypeID relationID = GetRelationID<T>();
+        return RelationLists[(int)relationID.id];
+    }
+
+    public void Relate<T>(in EntityID a, in EntityID b, in T data) 
+    where T : unmanaged
+    {
+        RelationList list = GetRelationList<T>();
+        list.Set(a, b, data);
+    }
+
+    public void Unrelate<T>(in EntityID a, in EntityID b)
+    where T : unmanaged 
+    {
+        RelationList list = GetRelationList<T>();
     }
 
     public void Refresh() 
