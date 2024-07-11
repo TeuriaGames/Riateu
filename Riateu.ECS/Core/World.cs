@@ -30,15 +30,14 @@ public class World
             entityID = World.entityIDCount++;
         }
 
-        EntityComponentIndex.Add(new HashSet<TypeID>());
+        if (entityID == EntityComponentIndex.Count) 
+        {
+            EntityComponentIndex.Add(new HashSet<TypeID>());
+        }
+
         EntityID entity = new EntityID(entityID);
 
         return entity;
-    }
-
-    public EntityID BuildEntity(EntityID entityID) 
-    {
-        return entityID;
     }
 
     public void Destroy(EntityID id) 
@@ -46,15 +45,16 @@ public class World
         HashSet<TypeID> componentIDs = EntityComponentIndex[(int)id.id];
         foreach (var componentID in componentIDs) 
         {
-            ComponentLists[(int)id.id].Remove(id);
+            ComponentLists[(int)componentID.id].Remove(id);
+
+            foreach (var query in ComponentIDToSearch[(int)componentID.id]) 
+            {
+                query.Remove(id);
+            }
         }
-        EntityComponentIndex[(int)id.id].Clear();
         danglingID.Push(id.id);
 
-        foreach (var query in ComponentIDToSearch[(int)id.id]) 
-        {
-            query.Remove(id);
-        }
+        componentIDs.Clear();
     }
 
     public ComponentList GetComponentList<T>(out TypeID outID) 
@@ -95,13 +95,16 @@ public class World
     {
         TypeID id = GetComponentID<T>();
 
-        EntityComponentIndex[(int)entity.id].Add(id);
-        ComponentLists[(int)id.id].Add<T>(entity, component);
-
-        foreach (var query in ComponentIDToSearch[(int)id.id]) 
+        if (!ComponentLists[(int)id.id].Add<T>(entity, component)) 
         {
-            query.Update(entity);
+            EntityComponentIndex[(int)entity.id].Add(id);
+
+            foreach (var query in ComponentIDToSearch[(int)id.id]) 
+            {
+                query.Update(entity);
+            }
         }
+        
     }
 
     public ref T GetComponent<T>(in EntityID entity) 

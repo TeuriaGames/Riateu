@@ -20,17 +20,18 @@ public class ComponentList
         return Mappings.ContainsKey(entity);
     }
 
-    public void Add<T>(in EntityID entity, in T component) 
+    public bool Add<T>(in EntityID entity, in T component) 
     where T : unmanaged
     {
         if (Mappings.TryGetValue(entity, out int value)) 
         {
             Components.Set(value, component);
-            return;
+            return true;
         }
         Mappings[entity] = Components.Count;
         Components.Add(component);
         Entities.Add(entity);
+        return false;
     }
 
     public ref T Get<T>(in EntityID entity) 
@@ -44,9 +45,17 @@ public class ComponentList
     {
         if (Mappings.TryGetValue(entity, out int value)) 
         {
-            Mappings.Remove(entity);
+            int lastElementIndex = Components.Count - 1;
+            EntityID lastEntity = Entities[lastElementIndex];
+
             Components.Remove(value);
-            Entities.Remove(entity);
+            Entities.RemoveAt(value);
+            Mappings.Remove(entity);
+
+            if (lastElementIndex != value) 
+            {
+                Mappings[lastEntity] = value;
+            }
             return true;
         }
         return false;

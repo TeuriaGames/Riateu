@@ -39,6 +39,7 @@ public class Batch : System.IDisposable
 
 #if DEBUG
     private bool DEBUG_begin;
+    private bool DEBUG_hasEnd;
 #endif
     private uint vertexIndex;
     private uint currentMaxTexture = MaxTextures;
@@ -114,6 +115,7 @@ public class Batch : System.IDisposable
     {
 #if DEBUG
         AssertBegin();
+        AssertHasEnd();
         DEBUG_begin = true;
 #endif
         if (rendered)
@@ -178,6 +180,7 @@ public class Batch : System.IDisposable
 #if DEBUG
         AssertDoesBegin();
         DEBUG_begin = false;
+        DEBUG_hasEnd = true;
 #endif
         transferComputeBuffer.Unmap();
         if (vertexIndex == 0)
@@ -226,6 +229,7 @@ public class Batch : System.IDisposable
 #if DEBUG
         AssertRender();
         DEBUG_begin = false;
+        DEBUG_hasEnd = false;
 #endif
 
         rendered = true;
@@ -425,6 +429,14 @@ public class Batch : System.IDisposable
             return;
         
         throw new System.Exception("Batch has not begun yet, please call Begin first.");
+    }
+
+    private void AssertHasEnd() 
+    {
+        if (!DEBUG_hasEnd)
+            return;
+
+        throw new System.Exception("Batch just ended, you must render all the vertices first before starting a new one. Alternatively, use Compose before End.");
     }
 #endif
 
