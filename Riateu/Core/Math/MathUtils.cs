@@ -10,7 +10,7 @@ public static class MathUtils
 {
     public const float Radians = MathHelper.Pi / 180f;
     public const float Degrees = 180f / MathHelper.Pi;
-    public const float Epsilon = 1e-5f;
+    public const float Epsilon = 0.00001f;
     public static Random Randomizer = new Random();
 
 
@@ -45,9 +45,30 @@ public static class MathUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Wrap(float value, float min, float max) 
     {
-        if (value < min) { return max; }
-        if (value > max) { return min; }
-        return value;
+        float range = max - min;
+        if (Math.Abs(range) < Epsilon) 
+        {
+            return min;
+        }
+        float result = value - (range * (float)Math.Floor((value - min) / range));
+
+        if (result == max) 
+        {
+            return min;
+        }
+
+        float tolerance = Epsilon * Math.Abs(result);
+        if (tolerance < Epsilon) 
+        {
+            tolerance = Epsilon;
+        }
+
+        if (Math.Abs(result - max) < tolerance) 
+        {
+            return min;
+        }
+
+        return result;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -89,9 +110,12 @@ public static class MathUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Wrap(int value, int min, int max) 
     {
-        if (value < min) { return max; }
-        if (value > max) { return min; }
-        return value;
+        int range = max - min;
+        if (range == 0) 
+        {
+            return min;
+        }
+        return min + ((((value - min) % range) + range) % range);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
