@@ -21,30 +21,25 @@ public static class GameContext
     /// </summary>
     public static Material DefaultMaterial;
     /// <summary>
-    /// A rendering pipeline that uses R8G8B8A8 format.
+    /// A rendering material that uses R8G8B8A8 format.
     /// </summary>
-    public static GraphicsPipeline RGBPipeline;
+    public static Material RGBMaterial;
     /// <summary>
-    /// A rendering pipeline designed specifically for text rendered in msdf format.
+    /// A rendering material designed specifically for text rendered in msdf format.
     /// </summary>
-    public static GraphicsPipeline MSDFPipeline;
+    public static Material MSDFMaterial;
     /// <summary>
-    /// An instanced rendering pipeline use as an fast alternative for default pipeline.
+    /// An instanced material use as an fast alternative for default pipeline.
     /// </summary>
-    public static GraphicsPipeline InstancedPipeline;
+    public static Material InstancedMaterial;
     /// <summary>
     /// A compute pipeline used for <see cref="Riateu.Graphics.Batch"/> to work.
     /// </summary>
     public static ComputePipeline SpriteBatchPipeline;
-    /// <summary>
-    /// An everything sampler that uses point clamp for sampling.
-    /// </summary>
-    public static Sampler GlobalSampler;
 
     internal static void Init(GraphicsDevice device, Window mainWindow)
     {
         GraphicsDevice = device;
-        GlobalSampler = new Sampler(device, SamplerCreateInfo.PointClamp);
         var positionTextureColor = Resources.PositionTextureColor;
         using var ms1 = new MemoryStream(positionTextureColor);
         Shader vertexPSC = new Shader(device, ms1, "main", new ShaderCreateInfo {
@@ -93,7 +88,7 @@ public static class GameContext
             VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
         };
 
-        RGBPipeline = new GraphicsPipeline(device, rgbCreateInfo);
+        RGBMaterial = new Material(new GraphicsPipeline(device, rgbCreateInfo));
 
         GraphicsPipelineCreateInfo msdfPipelineCreateInfo = new GraphicsPipelineCreateInfo()
         {
@@ -110,7 +105,7 @@ public static class GameContext
             VertexInputState = device.TextVertexInputState
         };
 
-        MSDFPipeline = new GraphicsPipeline(device, msdfPipelineCreateInfo);
+        MSDFMaterial = new Material(new GraphicsPipeline(device, msdfPipelineCreateInfo));
 
         var vertexBufferDescription = VertexBindingAndAttributes.Create<PositionVertex>(0);
         var instancedBufferDescription = VertexBindingAndAttributes.Create<InstancedVertex>(1, 1, VertexInputRate.Instance);
@@ -141,7 +136,7 @@ public static class GameContext
             ])
         };
 
-        InstancedPipeline = new GraphicsPipeline(device, instancedPipelineCreateInfo);
+        InstancedMaterial = new Material(new GraphicsPipeline(device, instancedPipelineCreateInfo));
 
         var spriteBatchShader = Resources.SpriteBatchShader;
         using var comp1 = new MemoryStream(spriteBatchShader);
