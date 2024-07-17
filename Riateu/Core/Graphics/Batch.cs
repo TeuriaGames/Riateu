@@ -14,13 +14,13 @@ namespace Riateu.Graphics;
 /// This also utilizes a texture swapping which would add additional sub batches to be
 /// able to draw multiple textures.
 /// </summary>
-public class Batch : System.IDisposable
+public class Batch : System.IDisposable, IRenderable
 {
     private struct BatchQueue 
     {
         public uint Count;
         public TextureSamplerBinding Binding;
-        public GraphicsPipeline Pipeline;
+        public Material Material;
     }
     private const uint MaxTextures = 4096;
     private const uint InitialMaxQueues = 4;
@@ -112,6 +112,17 @@ public class Batch : System.IDisposable
     /// <param name="sampler">A sampler to used for the texture</param>
     public void Begin(Texture texture, Sampler sampler)
     {
+        Begin(texture, sampler, GameContext.DefaultMaterial);
+    }
+
+    /// <summary>
+    /// Starts a new batch.
+    /// </summary>
+    /// <param name="texture">A texture to be used in the slot</param>
+    /// <param name="sampler">A sampler to used for the texture</param>
+    /// <param name="material">A shader material to use</param>
+    public void Begin(Texture texture, Sampler sampler, Material material)
+    {
 #if DEBUG
         AssertBegin();
         AssertHasEnd();
@@ -134,7 +145,7 @@ public class Batch : System.IDisposable
         queues[onQueue] = new BatchQueue 
         {
             Binding = new TextureSamplerBinding(texture, sampler),
-            Pipeline = GameContext.DefaultPipeline,
+            Material = GameContext.DefaultMaterial,
             Count = 0
         };
 
@@ -143,13 +154,23 @@ public class Batch : System.IDisposable
             computes = (ComputeData*)data;
         }
     }
-
     /// <summary>
     /// Compose a new batch from the existing batch. This will create a new draw call.
     /// </summary>
     /// <param name="texture">A texture to be used in the slot</param>
     /// <param name="sampler">A sampler to used for the texture</param>
     public void Compose(Texture texture, Sampler sampler) 
+    {
+        Compose(texture, sampler);
+    }
+
+    /// <summary>
+    /// Compose a new batch from the existing batch. This will create a new draw call.
+    /// </summary>
+    /// <param name="texture">A texture to be used in the slot</param>
+    /// <param name="sampler">A sampler to used for the texture</param>
+    /// <param name="material">A shader material to use</param>
+    public void Compose(Texture texture, Sampler sampler, Material material) 
     {
 #if DEBUG
         AssertDoesBegin();
@@ -168,7 +189,7 @@ public class Batch : System.IDisposable
         queues[onQueue] = new BatchQueue 
         {
             Binding = new TextureSamplerBinding(texture, sampler),
-            Pipeline = GameContext.DefaultPipeline,
+            Material = GameContext.DefaultMaterial,
             Count = 0
         };
 
@@ -181,9 +202,7 @@ public class Batch : System.IDisposable
     /// <summary>
     /// End the existing batch, must render before starting a new one.
     /// </summary>
-    /// <param name="cmdBuf">A <see cref="MoonWorks.Graphics.CommandBuffer"/></param>
-    /// <param name="bindUniform">To bind the default matrix uniform</param>
-    public void End(CommandBuffer cmdBuf, bool bindUniform = true)
+    public void End()
     {
 #if DEBUG
         AssertDoesBegin();
@@ -195,6 +214,8 @@ public class Batch : System.IDisposable
         {
             return;
         }
+
+        CommandBuffer cmdBuf = GraphicsExecutor.Executor;
 
         CopyPass copyPass = cmdBuf.BeginCopyPass();
         copyPass.UploadToBuffer(transferComputeBuffer, computeBuffer, true);
@@ -213,22 +234,19 @@ public class Batch : System.IDisposable
         cmdBuf.EndComputePass(computePass);
         queues[onQueue].Count = vertexIndex;
 
-        if (bindUniform) 
-        {
-            BindUniformMatrix(cmdBuf, Matrix, 0);
-        }
+        BindUniformMatrix(Matrix);
     }
 
     /// <inheritdoc/>
-    public void BindUniformMatrix(CommandBuffer buffer, in Matrix4x4 matrix, uint slot)
+    public void BindUniformMatrix(in Matrix4x4 matrix)
     {
-        buffer.PushVertexUniformData<Matrix4x4>(matrix, slot);
+        GraphicsExecutor.Executor.PushVertexUniformData<Matrix4x4>(matrix, 0);
     }
 
     /// <inheritdoc/>
-    public void BindUniformMatrix(CommandBuffer buffer, in Camera camera, uint slot)
+    public void BindUniformMatrix(in Camera camera)
     {
-        BindUniformMatrix(buffer, camera.Transform, slot);
+        BindUniformMatrix(camera.Transform);
     }
 
     /// <inheritdoc/>
@@ -253,7 +271,7 @@ public class Batch : System.IDisposable
 
         while (Unsafe.IsAddressLessThan(ref start, ref end)) 
         {
-            renderPass.BindGraphicsPipeline(start.Pipeline);
+            renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
             renderPass.BindVertexBuffer(vertexBuffer);
             renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
             renderPass.BindFragmentSampler(start.Binding);
@@ -264,15 +282,6 @@ public class Batch : System.IDisposable
         }
 
         vertexIndex = 0;
-    }
-
-    /// <summary>
-    /// Bind a pipeline in a current batch.
-    /// </summary>
-    /// <param name="pipeline">A pipeline to bind in a current batch</param>
-    public void BindPipeline(GraphicsPipeline pipeline)
-    {
-        queues[onQueue].Pipeline = pipeline;
     }
 
     internal void ResizeBuffer()

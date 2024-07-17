@@ -17,9 +17,9 @@ public static class GameContext
     /// </summary>
     public static GraphicsDevice GraphicsDevice;
     /// <summary>
-    /// The default rendering pipeline use for basic rendering.
+    /// The default material for basic rendering.
     /// </summary>
-    public static GraphicsPipeline DefaultPipeline;
+    public static Material DefaultMaterial;
     /// <summary>
     /// A rendering pipeline that uses R8G8B8A8 format.
     /// </summary>
@@ -76,7 +76,7 @@ public static class GameContext
             VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
         };
 
-        DefaultPipeline = new GraphicsPipeline(device, pipelineCreateInfo);
+        DefaultMaterial = new Material(new GraphicsPipeline(device, pipelineCreateInfo));
 
         GraphicsPipelineCreateInfo rgbCreateInfo = new GraphicsPipelineCreateInfo()
         {

@@ -79,7 +79,7 @@ public class Tilemap : Component
     }
 
     /// <inheritdoc/>
-    public override void Draw(CommandBuffer buffer, Batch draw)
+    public override void Draw(Batch draw)
     {
         AddToBatch(draw);
     }

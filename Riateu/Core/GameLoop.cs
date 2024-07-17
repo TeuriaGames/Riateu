@@ -1,4 +1,4 @@
-using MoonWorks.Graphics;
+using Riateu.Graphics;
 
 namespace Riateu;
 
@@ -40,7 +40,6 @@ public abstract class GameLoop
     /// <summary>
     /// A method that called during the draw loop. Do your draw calls here.
     /// </summary>
-    /// <param name="buffer">A command buffer</param>
-    /// <param name="backbuffer">The swapchain texture of the main window</param>
-    public abstract void Render(CommandBuffer buffer, Texture backbuffer);
+    /// <param name="renderQueue">A render queue to queue your renderables before rendering all of them</param>
+    public abstract void Render(RenderQueue renderQueue);
 }

@@ -1,6 +1,7 @@
 using System;
 using MoonWorks;
 using MoonWorks.Graphics;
+using Riateu.Graphics;
 
 namespace Riateu;
 
@@ -20,6 +21,7 @@ public abstract class GameApp : Game
     public int Height { get; private set; }
 
     private GameLoop nextScene;
+    private RenderQueue renderQueue;
 
     /// <summary>
     /// A current scene that is running. Note that if you change this, the scene won't
@@ -33,6 +35,8 @@ public abstract class GameApp : Game
             nextScene = value;
         }
     }
+
+    public RenderQueue Surface => renderQueue;
     private GameLoop scene;
 
 
@@ -73,6 +77,7 @@ public abstract class GameApp : Game
     {
         Width = (int)windowCreateInfo.WindowWidth;
         Height = (int)windowCreateInfo.WindowHeight;
+        renderQueue = new RenderQueue();
         GameContext.Init(GraphicsDevice, MainWindow);
         Input.Initialize(Inputs);
         LoadContent();
@@ -96,13 +101,14 @@ public abstract class GameApp : Game
     /// <param name="alpha">A delta time for the draw loop</param>
     protected override void Draw(double alpha)
     {
-        CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
+        CommandBuffer cmdBuf = GraphicsExecutor.Acquire(GraphicsDevice);
         Texture backbuffer = cmdBuf.AcquireSwapchainTexture(MainWindow);
-
-        if (backbuffer != null)
+        if (backbuffer != null) 
         {
-            scene.Render(cmdBuf, backbuffer);
+            scene.Render(renderQueue);
+            renderQueue.QueueRender(backbuffer);
         }
+
 
         GraphicsDevice.Submit(cmdBuf);
     }
