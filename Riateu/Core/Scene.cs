@@ -40,7 +40,7 @@ public abstract class Scene : GameLoop
     /// <summary>
     /// A current physics engine that the scene is using.
     /// </summary>
-    public IPhysicsEngine PhysicsEngine { get; set; }
+    public IPhysicsEngine PhysicsEngine => physicsEngine;
     
     private IPhysicsEngine physicsEngine;
 
