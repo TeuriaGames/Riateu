@@ -1,3 +1,4 @@
+using GpuBuffer = MoonWorks.Graphics.Buffer;
 using System;
 using System.Collections.Generic;
 using ImGuiNET;
@@ -13,17 +14,18 @@ namespace Riateu.ImGuiRend;
 /// <summary>
 /// A canvas renderer to render ImGui library.
 /// </summary>
-public class ImGuiRenderer 
+public class ImGuiRenderer
 {
     private Dictionary<nint, Texture> PtrMap = new();
     private GraphicsPipeline imGuiPipeline;
-    private ShaderModule imGuiShader;
+    private Shader imGuiShader;
     private Sampler imGuiSampler;
     private GraphicsDevice device;
     private uint vertexCount;
     private uint indexCount;
     private GpuBuffer imGuiVertexBuffer;
     private GpuBuffer imGuiIndexBuffer;
+    private TransferBuffer transferBuffer;
 
     /// <summary>
     /// A initilization for the ImGui renderer and to create its context.
@@ -33,7 +35,7 @@ public class ImGuiRenderer
     /// <param name="width">A width of the canvas</param>
     /// <param name="height">A height of the canvas</param>
     /// <param name="onInit">Called before building the font</param>
-    public ImGuiRenderer(GraphicsDevice device, Window window, int width, int height, Action<ImGuiIOPtr> onInit = null) 
+    public ImGuiRenderer(GraphicsDevice device, Window window, int width, int height, Action<ImGuiIOPtr> onInit = null)
     {
         this.device = device;
         ImGui.CreateContext();
@@ -41,14 +43,22 @@ public class ImGuiRenderer
         var io = ImGui.GetIO();
         io.DisplaySize = new System.Numerics.Vector2(width, height);
         io.DisplayFramebufferScale = System.Numerics.Vector2.One;
-        imGuiShader = Resources.GetShader(device, Resources.ImGuiShader);
+        imGuiShader = Resources.GetShader(device, Resources.ImGuiShader, "main", new ShaderCreateInfo {
+            ShaderStage = ShaderStage.Vertex,
+            ShaderFormat = GameContext.BackendShaderFormat,
+            UniformBufferCount = 1
+        });
         imGuiSampler = new Sampler(device, SamplerCreateInfo.PointClamp);
 
-        var fragmentShader = Resources.GetShader(device, Resources.Texture);
+        var fragmentShader = Resources.GetShader(device, Resources.Texture, "main", new ShaderCreateInfo {
+            ShaderStage = ShaderStage.Fragment,
+            ShaderFormat = GameContext.BackendShaderFormat,
+            SamplerCount = 1
+        });
 
         imGuiPipeline = new GraphicsPipeline(
             device,
-            new GraphicsPipelineCreateInfo 
+            new GraphicsPipelineCreateInfo
             {
                 AttachmentInfo = new GraphicsPipelineAttachmentInfo(
                     new ColorAttachmentDescription(
@@ -60,15 +70,15 @@ public class ImGuiRenderer
                 PrimitiveType = PrimitiveType.TriangleList,
                 RasterizerState = RasterizerState.CCW_CullNone,
                 MultisampleState = MultisampleState.None,
-                VertexShaderInfo = GraphicsShaderInfo.Create<Matrix4x4>(imGuiShader, "main", 0),
-                FragmentShaderInfo = GraphicsShaderInfo.Create(fragmentShader, "main", 1),
+                VertexShader = imGuiShader,
+                FragmentShader = fragmentShader,
                 VertexInputState = VertexInputState.CreateSingleBinding<Position2DTextureColorVertex>()
             }
         );
 
         window.RegisterSizeChangeCallback(HandleSizeChanged);
 
-        MoonWorks.Input.Inputs.TextInput += c => 
+        MoonWorks.Input.Inputs.TextInput += c =>
         {
             if (c == '\t') { return; }
             io.AddInputCharacter(c);
@@ -76,7 +86,7 @@ public class ImGuiRenderer
 
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
 
-        if (!OperatingSystem.IsWindows()) 
+        if (!OperatingSystem.IsWindows())
         {
             io.SetClipboardTextFn = Clipboard.SetFnPtr;
             io.GetClipboardTextFn = Clipboard.GetFnPtr;
@@ -87,7 +97,7 @@ public class ImGuiRenderer
         BuildFontAtlas();
     }
 
-    private void HandleSizeChanged(uint width, uint height) 
+    private void HandleSizeChanged(uint width, uint height)
     {
         var io = ImGui.GetIO();
         io.DisplaySize = new System.Numerics.Vector2(width, height);
@@ -98,7 +108,7 @@ public class ImGuiRenderer
     /// </summary>
     /// <param name="inputs">An application input device</param>
     /// <param name="imGuiCallback">A callback used for rendering</param>
-    public void Update(MoonWorks.Input.Inputs inputs, Action imGuiCallback) 
+    public void Update(MoonWorks.Input.Inputs inputs, Action imGuiCallback)
     {
         var io = ImGui.GetIO();
 
@@ -144,10 +154,13 @@ public class ImGuiRenderer
     /// <summary>
     /// A draw method used for rendering all of the drawn ImGui surface.
     /// </summary>
-    /// <param name="cmdBuf">
-    /// A command buffer used for handling and submitting a buffers
+    /// <param name="buffer">
+    /// A command buffer to use for passing the uniform data.
     /// </param>
-    public void Draw(CommandBuffer cmdBuf)
+    /// <param name="renderPass">
+    /// A renderpass used for handling and submitting a buffers
+    /// </param>
+    public void Draw(CommandBuffer buffer, RenderPass renderPass)
     {;
         ImGui.Render();
 
@@ -156,12 +169,14 @@ public class ImGuiRenderer
 
         UpdateImGuiBuffers(drawDataPtr);
 
-        RenderCommandLists(cmdBuf, drawDataPtr, io);
+        RenderCommandLists(buffer, renderPass, drawDataPtr, io);
     }
 
     private unsafe void UpdateImGuiBuffers(ImDrawDataPtr drawDataPtr)
     {
         if (drawDataPtr.TotalVtxCount == 0) { return; }
+
+        bool needNewTransferBuffer = false;
 
         var commandBuffer = device.AcquireCommandBuffer();
 
@@ -170,11 +185,12 @@ public class ImGuiRenderer
             imGuiVertexBuffer?.Dispose();
 
             vertexCount = (uint)(drawDataPtr.TotalVtxCount * 1.5f);
-            imGuiVertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(
+            imGuiVertexBuffer = GpuBuffer.Create<Position2DTextureColorVertex>(
                 device,
                 BufferUsageFlags.Vertex,
                 vertexCount
             );
+            needNewTransferBuffer = true;
         }
 
         if (drawDataPtr.TotalIdxCount > indexCount)
@@ -187,37 +203,45 @@ public class ImGuiRenderer
                 BufferUsageFlags.Index,
                 indexCount
             );
+            needNewTransferBuffer = true;
         }
 
+        if (needNewTransferBuffer)
+        {
+            transferBuffer?.Dispose();
+            transferBuffer = new TransferBuffer(device, TransferBufferUsage.Upload, imGuiVertexBuffer.Size + imGuiIndexBuffer.Size);
+        }
         uint vertexOffset = 0;
         uint indexOffset = 0;
+        uint offset = 0;
 
+        CopyPass copyPass = commandBuffer.BeginCopyPass();
         for (var n = 0; n < drawDataPtr.CmdListsCount; n += 1)
         {
             var cmdList = drawDataPtr.CmdLists[n];
 
-            commandBuffer.SetBufferData<Position2DTextureColorVertex>(
-                imGuiVertexBuffer,
-                cmdList.VtxBuffer.Data,
-                vertexOffset,
-                (uint)cmdList.VtxBuffer.Size
-            );
+            Span<Position2DTextureColorVertex> vertexSpan = new Span<Position2DTextureColorVertex>((void*)cmdList.VtxBuffer.Data, cmdList.VtxBuffer.Size);
+            Span<ushort> indexSpan = new Span<ushort>((void*)cmdList.IdxBuffer.Data, cmdList.IdxBuffer.Size);
 
-            commandBuffer.SetBufferData<ushort>(
-                imGuiIndexBuffer,
-                cmdList.IdxBuffer.Data,
-                indexOffset,
-                (uint)cmdList.IdxBuffer.Size
-            );
+            uint length = transferBuffer.SetData(vertexSpan, offset, false);
+            copyPass.UploadToBuffer(new TransferBufferLocation(transferBuffer, offset), new BufferRegion(imGuiVertexBuffer, vertexOffset, length), false);
 
-            vertexOffset += (uint)cmdList.VtxBuffer.Size;
-            indexOffset += (uint)cmdList.IdxBuffer.Size;
+            vertexOffset += (uint)length;
+            offset += length;
+
+            length = transferBuffer.SetData(indexSpan, offset, false);
+            copyPass.UploadToBuffer(new TransferBufferLocation(transferBuffer, offset), new BufferRegion(imGuiIndexBuffer, indexOffset, length), false);
+
+            offset += length;
+            indexOffset += (uint)length;
         }
+
+        commandBuffer.EndCopyPass(copyPass);
 
         device.Submit(commandBuffer);
     }
 
-    private void RenderCommandLists(CommandBuffer commandBuffer, ImDrawDataPtr drawDataPtr, ImGuiIOPtr ioPtr)
+    private void RenderCommandLists(CommandBuffer buffer, RenderPass renderPass, ImDrawDataPtr drawDataPtr, ImGuiIOPtr ioPtr)
     {
         var view = Matrix4x4.CreateLookAt(
             new Vector3(0, 0, 1),
@@ -236,14 +260,14 @@ public class ImGuiRenderer
 
         var viewProjectionMatrix = view * projection;
 
-        commandBuffer.BindGraphicsPipeline(imGuiPipeline);
+        renderPass.BindGraphicsPipeline(imGuiPipeline);
 
-        var vertexUniformOffset = commandBuffer.PushVertexShaderUniforms(
+        buffer.PushVertexUniformData(
             Matrix4x4.CreateOrthographicOffCenter(0, ioPtr.DisplaySize.X, 0, ioPtr.DisplaySize.Y, -1, 1)
         );
 
-        commandBuffer.BindVertexBuffers(imGuiVertexBuffer);
-        commandBuffer.BindIndexBuffer(imGuiIndexBuffer, IndexElementSize.Sixteen);
+        renderPass.BindVertexBuffer(imGuiVertexBuffer);
+        renderPass.BindIndexBuffer(imGuiIndexBuffer, IndexElementSize.Sixteen);
 
         uint vertexOffset = 0;
         uint indexOffset = 0;
@@ -256,7 +280,7 @@ public class ImGuiRenderer
             {
                 var drawCmd = cmdList.CmdBuffer[cmdIndex];
 
-                commandBuffer.BindFragmentSamplers(
+                renderPass.BindFragmentSampler(
                     new TextureSamplerBinding(GetPointer(drawCmd.TextureId), imGuiSampler)
                 );
 
@@ -274,7 +298,7 @@ public class ImGuiRenderer
                 int x = drawCmd.ClipRect.X < 0 ? 0 : (int)drawCmd.ClipRect.X;
                 int y = drawCmd.ClipRect.Y < 0 ? 0 : (int)drawCmd.ClipRect.Y;
 
-                commandBuffer.SetScissor(
+                renderPass.SetScissor(
                     new Rect(
                         x, y,
                         (int)width,
@@ -282,12 +306,10 @@ public class ImGuiRenderer
                     )
                 );
 
-                commandBuffer.DrawIndexedPrimitives(
+                renderPass.DrawIndexedPrimitives(
                     vertexOffset,
                     indexOffset,
-                    drawCmd.ElemCount / 3,
-                    vertexUniformOffset,
-                    0
+                    drawCmd.ElemCount / 3
                 );
 
                 indexOffset += drawCmd.ElemCount;
@@ -300,12 +322,12 @@ public class ImGuiRenderer
     /// <summary>
     /// Destroy the ImGui context.
     /// </summary>
-    public void Destroy() 
+    public void Destroy()
     {
         ImGui.DestroyContext();
     }
 
-    private void BuildFontAtlas() 
+    private unsafe void BuildFontAtlas()
     {
         var cmdBuf = device.AcquireCommandBuffer();
 
@@ -318,43 +340,59 @@ public class ImGuiRenderer
             out int bytesPerPixel
         );
 
-        var fontTexture = Texture.CreateTexture2D(
-            device,
-            (uint)width,
-            (uint)height,
-            TextureFormat.R8G8B8A8,
-            TextureUsageFlags.Sampler
-        );
 
-        cmdBuf.SetTextureData(fontTexture, pixelData, (uint)(width * height * bytesPerPixel));
+        using var uploader = new ResourceUploader(device);
+        var fontTexture = uploader.CreateTexture2D(new Span<byte>((void*)pixelData, width * height * bytesPerPixel), (uint)width, (uint)height);
 
-        device.Submit(cmdBuf);
+        uploader.Upload();
 
         io.Fonts.SetTexID(fontTexture.Handle);
         io.Fonts.ClearTexData();
 
-        AddToPointer(fontTexture);
+        BindTexture(fontTexture);
     }
 
-    public IntPtr AddToPointer(Texture texture) 
+    /// <summary>
+    /// Bind a texture as an ImGui texture.
+    /// </summary>
+    /// <param name="texture">A texture to bind</param>
+    /// <returns>A pointer to the bound texture</returns>
+    public IntPtr BindTexture(Texture texture)
     {
-        if (!PtrMap.ContainsKey(texture.Handle)) 
+        if (!PtrMap.ContainsKey(texture.Handle))
         {
             PtrMap.Add(texture.Handle, texture);
-        } 
+        }
 
         return texture.Handle;
     }
 
-    public Texture GetPointer(IntPtr ptr) 
+    /// <summary>
+    /// Unbind the texture.
+    /// </summary>
+    /// <param name="ptr">A pointer to the bound texture</param>
+    public void UnbindTexture(IntPtr ptr)
     {
-        if (!PtrMap.ContainsKey(ptr)) 
+        if (!PtrMap.ContainsKey(ptr))
+        {
+            PtrMap.Remove(ptr);
+        }
+    }
+
+    /// <summary>
+    /// Get a texture base on the bound texture pointer.
+    /// </summary>
+    /// <param name="ptr">A pointer to the bound texture</param>
+    /// <returns>A texture from the pointer</returns>
+    public Texture GetPointer(IntPtr ptr)
+    {
+        if (!PtrMap.ContainsKey(ptr))
         {
             return null;
         }
 
         var texture = PtrMap[ptr];
-        
+
         return texture;
     }
 }

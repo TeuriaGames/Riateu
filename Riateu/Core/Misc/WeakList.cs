@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using MoonWorks;
 
 namespace Riateu;
 
 // https://github.com/prime31/Nez/blob/master/Nez.Portable/Utils/Collections/FastList.cs
-public class WeakList<T> 
+public class WeakList<T>
 {
     private T[] buffer;
     public int Count;
@@ -131,6 +132,44 @@ public class WeakList<T>
         var list = new List<T>(buffer);
         list.RemoveAll(t => t is null);
         return list;
+    }
+
+    public WeakEnumerator<T> GetEnumerator()
+    {
+        return new WeakEnumerator<T>(new Span<T>(buffer, 0, Count));
+    }
+}
+
+public ref struct WeakEnumerator<T>
+{
+    private ReadOnlySpan<T> buffer;
+    private int index;
+
+    public T Current => buffer[index];
+
+    public static WeakEnumerator<T> Empty => new WeakEnumerator<T>();
+
+    public WeakEnumerator(Span<T> span) 
+    {
+        buffer = span;
+        index = span.Length;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool MoveNext() 
+    {
+        if (index > 0) 
+        {
+            index -= 1;
+            return true;
+        }
+
+        return false;
+    }
+
+    public WeakEnumerator<T> GetEnumerator() 
+    {
+        return this;
     }
 }
 

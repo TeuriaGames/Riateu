@@ -5,7 +5,7 @@ using MoonWorks.Math.Float;
 namespace Riateu.Graphics;
 
 /// <summary>
-/// A vertex type to be used for the shader info. Usually used by the ImGui renderer. 
+/// A vertex type to be used for the shader info. Usually used by the ImGui renderer.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct Position2DTextureColorVertex : IVertexType
@@ -19,7 +19,7 @@ public struct Position2DTextureColorVertex : IVertexType
     /// </summary>
     public Vector2 TexCoord;
     /// <summary>
-    /// A color that will be passed to the fragment shader 
+    /// A color that will be passed to the fragment shader
     /// </summary>
     public Color Color;
 
@@ -49,4 +49,6 @@ public struct Position2DTextureColorVertex : IVertexType
         VertexElementFormat.Vector2,
         VertexElementFormat.Color
     };
+
+    public static uint[] Offsets => [0, 8, 16];
 }

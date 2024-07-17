@@ -24,7 +24,7 @@ public static class Time
     private static TimeSpan counterElapsed;
 
     /// <summary>
-    /// This method sync the from the update loop.
+    /// This method sync from the update loop.
     /// </summary>
     public static void Update(in TimeSpan delta) 
     {

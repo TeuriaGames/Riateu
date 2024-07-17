@@ -5,18 +5,48 @@ using TeuJson;
 
 namespace Riateu.Graphics;
 
+public class AnimationIndex 
+{
+    public List<string> AnimationNames;
+    public Dictionary<string, AnimatedSprite.Animation> Animations;
+
+    public AnimationIndex(List<string> names, Dictionary<string, AnimatedSprite.Animation> animations) 
+    {
+        AnimationNames = names;
+        Animations = animations;
+    }
+
+    public AnimatedSprite.Animation this[string name] 
+    {
+        get => Animations[name];
+    }
+
+    public AnimatedSprite.Animation this[uint index] 
+    {
+        get => Animations[AnimationNames[(int)index]];
+    }
+}
+
 /// <summary>
 /// A class that stores all of the frames animation from an <see cref="Riateu.Graphics.Atlas"/>.
 /// </summary>
 public class AnimationStorage 
 {
-    private Dictionary<string, Dictionary<string, AnimatedSprite.Animation>> animations = new();
+    private List<AnimationIndex> animations = new List<AnimationIndex>();
+    private Dictionary<string, uint> animationIDs = new Dictionary<string, uint>();
+    private uint count;
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    public Dictionary<string, AnimatedSprite.Animation> this[string name] => Load(name);
+    public AnimationIndex this[string name] => Load(name);
+
+    public void Add(string name, AnimationIndex index) 
+    {
+        animationIDs[name] = count++;
+        animations.Add(index);
+    }
 
     /// <summary>
     /// Create a storage from a json path that contains all of the animation frames inside.
@@ -50,13 +80,13 @@ public class AnimationStorage
         {
             jsonBank = JsonTextReader.FromStream(stream);
         }
-        var dict = new Dictionary<string, Dictionary<string, AnimatedSprite.Animation>>();
 
         foreach (var (k, v) in jsonBank.Pairs) 
         {
             var spriteName = k;
             var json = jsonBank[k];
             var frames = new Dictionary<string, AnimatedSprite.Animation>();
+            var names = new List<string>();
 
             var cycles = json["cycles"];
 
@@ -70,7 +100,7 @@ public class AnimationStorage
                 bool loop = value.Contains("loop") && value["loop"];
                 var count = jsonFrames.Count;
 
-                var spriteTextures = new SpriteTexture[count];
+                var spriteTextures = new Quad[count];
                 for (int i = 0; i < count; i++) 
                 {
                     spriteTextures[i] = atlas[spriteName + "/" + jsonFrames[i].AsInt32];
@@ -80,10 +110,12 @@ public class AnimationStorage
                 animation.Loop = loop;
 
                 frames[key] = animation;
+                names.Add(key);
             }
-            dict.Add(spriteName, frames);
+
+            var animationIndex = new AnimationIndex(names, frames);
+            animations.Add(spriteName, animationIndex);
         }
-        animations.animations = dict;
         return animations;
     }
 
@@ -92,8 +124,18 @@ public class AnimationStorage
     /// </summary>
     /// <param name="anim">A name or id of the animation</param>
     /// <returns>An animation frame</returns>
-    public Dictionary<string, AnimatedSprite.Animation> Load(string anim) 
+    public AnimationIndex Load(string anim) 
     {
-        return animations[anim];
+        return animations[(int)animationIDs[anim]];
+    }
+
+    public AnimationIndex Load(uint anim) 
+    {
+        return animations[(int)anim];
+    }
+
+    public uint GetID(string anim) 
+    {
+        return animationIDs[anim];
     }
 }

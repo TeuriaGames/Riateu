@@ -10,7 +10,7 @@ public static class MathUtils
 {
     public const float Radians = MathHelper.Pi / 180f;
     public const float Degrees = 180f / MathHelper.Pi;
-    public const float Epsilon = 1e-5f;
+    public const float Epsilon = 0.00001f;
     public static Random Randomizer = new Random();
 
 
@@ -45,9 +45,36 @@ public static class MathUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Wrap(float value, float min, float max) 
     {
-        if (value < min) { return max; }
-        if (value > max) { return min; }
-        return value;
+        float range = max - min;
+        if (Math.Abs(range) < Epsilon) 
+        {
+            return min;
+        }
+        float result = value - (range * (float)Math.Floor((value - min) / range));
+
+        if (result == max) 
+        {
+            return min;
+        }
+
+        float tolerance = Epsilon * Math.Abs(result);
+        if (tolerance < Epsilon) 
+        {
+            tolerance = Epsilon;
+        }
+
+        if (Math.Abs(result - max) < tolerance) 
+        {
+            return min;
+        }
+
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float Approach(float val, float target, float maxMove)
+    {
+        return val > target ? Math.Max(val - maxMove, target) : Math.Min(val + maxMove, target);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -56,6 +83,18 @@ public static class MathUtils
         if (step != 0)
             return (float)Math.Floor((px/ step) + 0.5f) * step;
         return px;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float LookAt(Vector2 target) 
+    {
+        return LookAt(target.X, target.Y);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float LookAt(float x, float y) 
+    {
+        return (float)Math.Atan2(y, x);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -71,9 +110,12 @@ public static class MathUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Wrap(int value, int min, int max) 
     {
-        if (value < min) { return max; }
-        if (value > max) { return min; }
-        return value;
+        int range = max - min;
+        if (range == 0) 
+        {
+            return min;
+        }
+        return min + ((((value - min) % range) + range) % range);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -104,16 +146,16 @@ public static class MathUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 Slerp(Vector2 current, Vector2 target, float maxDelta) 
     {
-        var start = current.LengthSquared();
-        var end = target.LengthSquared();
+        float start = current.LengthSquared();
+        float end = target.LengthSquared();
 
         if (start == 0.0f || end == 0.0f)
             return Vector2.Lerp(current, target, maxDelta);
         
-        var startLength = (float)Math.Sqrt(start);
-        var endLength = (float)Math.Sqrt(end);
-        var result = LerpPrecise(startLength, endLength, maxDelta);
-        var angle = Angle(current, target);
+        float startLength = (float)Math.Sqrt(start);
+        float endLength = (float)Math.Sqrt(end);
+        float result = LerpPrecise(startLength, endLength, maxDelta);
+        float angle = Angle(current, target);
         return Rotated(current, angle * maxDelta * (result / startLength));
     }
 
@@ -125,8 +167,9 @@ public static class MathUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 Rotated(this Vector2 value, float angle) 
     {
-        (double sin, double cos) = Math.SinCos(angle);
-        return new Vector2(value.X * (float)cos - value.Y * (float)sin , value.X * (float)sin + value.Y * (float)cos);
+        float sin = (float)Math.Sin(angle);
+        float cos = (float)Math.Cos(angle);
+        return new Vector2(value.X * cos - value.Y * sin , value.X * sin + value.Y * cos);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -247,4 +290,14 @@ public static class MathUtils
         Randomizer = random.Pop();
     }
 #endregion
+
+    public static Vector2 Min(this Rectangle rectangle) 
+    {
+        return new Vector2(rectangle.X, rectangle.Y);
+    }
+
+    public static Vector2 Max(this Rectangle rectangle) 
+    {
+        return new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
+    }
 }

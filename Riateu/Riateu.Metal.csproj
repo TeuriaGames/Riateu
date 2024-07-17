@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
+    <DefineConstants>Metal</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="../Sunpack.targets" />
+
+  <ItemGroup>
+    <PackageReference Include="TeuJson" Version="2.2.1" />
+    <PackageReference Include="TeuJson.Generator" Version="2.2.1" />
+    <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+		<EmbeddedResource Include="Core\Misc\Metal\PositionTextureColor.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.PositionTextureColor.vert.metal</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Metal\Texture.frag.metal">
+			<LogicalName>Riateu.Misc.Metal.Texture.frag.metal</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Metal\ImGuiShader.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.ImGuiShader.vert.metal</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Metal\InstancedShader.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.InstancedShader.vert.metal</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+</Project>

@@ -13,11 +13,11 @@ public enum FlipMode : byte
     /// </summary>
     None,
     /// <summary>
-    /// The UV texture will be flip horizontally.
-    /// </summary>
-    Horizontal,
-    /// <summary>
     /// The UV texture will be flip vertically.
     /// </summary>
-    Vertical
+    Vertical,
+    /// <summary>
+    /// The UV texture will be flip horizontally.
+    /// </summary>
+    Horizontal
 }

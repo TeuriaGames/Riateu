@@ -17,7 +17,14 @@ public class SpriteRenderer : GraphicsComponent
         get => (flip & FlipMode.Horizontal) == FlipMode.Horizontal;
         set 
         {
-            flip |= value ? FlipMode.Horizontal : ~FlipMode.Horizontal;
+            if (value) 
+            {
+                flip |= FlipMode.Horizontal;
+            }
+            else 
+            {
+                flip &= ~FlipMode.Horizontal;
+            }
             SpriteTexture.FlipUV(flip);
         }
     }
@@ -30,7 +37,14 @@ public class SpriteRenderer : GraphicsComponent
         get => (flip & FlipMode.Vertical) == FlipMode.Vertical;
         set 
         {
-            flip |= value ? FlipMode.Vertical : ~FlipMode.Vertical;
+            if (value) 
+            {
+                flip |= FlipMode.Vertical;
+            }
+            else 
+            {
+                flip &= ~FlipMode.Vertical;
+            }
             SpriteTexture.FlipUV(flip);
         }
     }
@@ -38,25 +52,23 @@ public class SpriteRenderer : GraphicsComponent
     private FlipMode flip;
 
     /// <summary>
+    /// An origin of the texture.
+    /// </summary>
+    public Vector2 Origin;
+
+    /// <summary>
     /// An initilization for this component.
     /// </summary>
     /// <param name="baseTexture">A texture for the sprite</param>
     /// <param name="texture">A quad for the sprite</param>
     /// <returns></returns>
-    public SpriteRenderer(Texture baseTexture, SpriteTexture texture) : base(texture, baseTexture)
+    public SpriteRenderer(Texture baseTexture, Quad texture) : base(texture, baseTexture)
     {
     }
 
     /// <inheritdoc/>
-    public override void Draw(CommandBuffer buffer, IBatch batch) 
+    public override void Draw(CommandBuffer buffer, Batch draw) 
     {
-        batch.Add(
-            SpriteTexture, BaseTexture, GameContext.GlobalSampler, Vector2.Zero, 
-            Color.White, Entity.Transform.WorldMatrix);
-    }
-
-    /// <inheritdoc/>
-    public override void Update(double delta)
-    {
+        draw.Draw(SpriteTexture, Entity.Transform.Position, Color.White, Vector2.One, Entity.Transform.PivotOffset + Origin);
     }
 }

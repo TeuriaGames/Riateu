@@ -12,6 +12,9 @@ public sealed class CollisionGrid : Shape
     public int CellX => Grid.Columns;
     public int CellY => Grid.Rows;
 
+    public override Vector2 Min => new Vector2(Entity.PosX + BoundingArea.X, Entity.PosY + BoundingArea.Y);
+    public override Vector2 Max => new Vector2(Entity.PosX + BoundingArea.X + BoundingArea.Width, Entity.PosY + BoundingArea.Y + BoundingArea.Height);
+
     public Rectangle BoundingArea;
 
     public CollisionGrid(
@@ -159,7 +162,7 @@ public sealed class CollisionGrid : Shape
         return false;
     }
 
-    public override void DebugDraw(CommandBuffer buffer, InstanceBatch batch)
+    public override void DebugDraw(CommandBuffer buffer, Batch draw)
     {
         // for (int x = 0; x < CellY; x++)
         //     for (int y = 0; y < CellX; y++)

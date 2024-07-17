@@ -10,6 +10,9 @@ namespace Riateu.Physics;
 /// </summary>
 public abstract class Shape 
 {
+    public abstract Vector2 Min { get; }
+    public abstract Vector2 Max { get; }
+
     /// <summary>
     /// Base initialization for the collision shapes.
     /// </summary>
@@ -86,8 +89,8 @@ public abstract class Shape
     /// Draw a debug lines to show the hidden lines from this shape.
     /// </summary>
     /// <param name="buffer">A command buffer</param>
-    /// <param name="batch">An <see cref="Riateu.Graphics.InstanceBatch"/></param>
-    public virtual void DebugDraw(CommandBuffer buffer, InstanceBatch batch) 
+    /// <param name="draw">An <see cref="Riateu.Graphics.Batch"/></param>
+    public virtual void DebugDraw(CommandBuffer buffer, Batch draw) 
     {
     }
 }

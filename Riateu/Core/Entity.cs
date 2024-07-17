@@ -209,16 +209,16 @@ public class Entity : IEnumerable<Component>
     /// Called every draw frame.
     /// </summary>
     /// <param name="buffer">A command buffer</param>
-    /// <param name="spriteBatch">
+    /// <param name="draw">
     /// A batching system that used to built a vertices or instances to be rendered later
     /// </param>
-    public virtual void Draw(CommandBuffer buffer, IBatch spriteBatch) 
+    public virtual void Draw(CommandBuffer buffer, Batch draw) 
     {
         if (!Visible) return;
         for (int i = 0; i < componentList.Count; i++) 
         {
             if (!componentList[i].Active) continue;
-            componentList[i].Draw(buffer, spriteBatch);
+            componentList[i].Draw(buffer, draw);
         }
     }
 
@@ -328,4 +328,15 @@ public class Entity : IEnumerable<Component>
     
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    /// <summary>
+    /// Get a local position from a target.
+    /// </summary>
+    /// <param name="target">A target to calculate its relativity from the Entity's position</param>
+    /// <returns>A localized position of this entity</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Vector2 ToLocal(Vector2 target) 
+    {
+        return new Vector2(target.X - PosX, target.Y - PosY);
+    }
 }
