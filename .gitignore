@@ -6,3 +6,4 @@ runtimes/
 .zig-cache/
 zig-out/
 .sunpack-dep/
+.vscode/
