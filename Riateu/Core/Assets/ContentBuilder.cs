@@ -20,16 +20,9 @@ public class ContentBuilder
     /// Initialize the <see cref="Riateu.Content.ContentBuilder"/>
     /// </summary>
     /// <param name="destination"></param>
-    /// <param name="includeBuiltinProcessor">
-    /// Whether to include builtin processor such as <see cref="Riateu.Content.ShaderProcessor"/>
-    /// </param>
-    public ContentBuilder(string destination, bool includeBuiltinProcessor = true) 
+    public ContentBuilder(string destination) 
     {
         this.destination = destination;
-        if (includeBuiltinProcessor) 
-        {
-            IncludeBuiltins();
-        }
         if (!Directory.Exists(destination)) 
         {
             Directory.CreateDirectory(destination);
@@ -45,11 +38,6 @@ public class ContentBuilder
     where T : ContentProcessor
     {
         Processors.Add(typeof(T), processor);
-    }
-
-    private void IncludeBuiltins() 
-    {
-        Processors.Add(typeof(ShaderProcessor), new ShaderProcessor());
     }
 
     /// <summary>
@@ -187,26 +175,5 @@ public abstract class ContentProcessor : IDisposable
         var text = $"[{this.GetType().Name}] {message}";
         Logger.LogInfo(text);
         logBuilder.AppendLine(text);
-    }
-}
-
-/// <summary>
-/// A content processor for shader.
-/// </summary>
-public class ShaderProcessor : ContentProcessor
-{
-    /// <inheritdoc/>
-    public override string[] DirectoriesToEnsure => ["Shaders"];
-
-    /// <inheritdoc/>
-    public override void Process(string filePath, string outputDir)
-    {
-        int code = RunCommand("refreshc", [filePath, "--vulkan", "--out", $"{outputDir}/Shaders"]);
-        if (code == 0) 
-        {
-            Log($"'{Path.GetFileName(filePath)}' has successfully been processed");
-            return;
-        }
-        Log($"'{Path.GetFileName(filePath)}' has failed to be processed");
     }
 }
