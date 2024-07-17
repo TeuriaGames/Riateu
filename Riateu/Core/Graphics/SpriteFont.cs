@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
+using Riateu.Content;
 using TeuJson;
 using TeuJson.Attributes;
 
@@ -29,7 +30,7 @@ public enum FontAlignment
 /// <summary>
 /// A SpriteFont class used for rendering the text.
 /// </summary>
-public class SpriteFont 
+public class SpriteFont : IAssets
 {
     private FontStruct fonts;
     private Dictionary<char, Character> characters = new();
@@ -64,6 +65,27 @@ public class SpriteFont
                 character.Width,
                 character.Height
             ));
+
+            Character ch = new Character(character.XOffset, character.YOffset, character.XAdvance, newQuad);
+
+            characters.Add(c, ch);
+        }
+    }
+
+    /// <summary>
+    /// Creates a spritefont
+    /// </summary>
+    /// <param name="texture">A texture to be used</param>
+    /// <param name="jsonPath">A path to the font data [fontbm]</param>
+    public SpriteFont(Texture texture, string jsonPath) 
+    {
+        fonts = JsonConvert.DeserializeFromFile<FontStruct>(jsonPath);
+        lineHeight = fonts.Common.LineHeight;
+
+        foreach (var character in fonts.Chars) 
+        {
+            char c = (char)character.ID;
+            Quad newQuad = new Quad(texture);
 
             Character ch = new Character(character.XOffset, character.YOffset, character.XAdvance, newQuad);
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Riateu.Components;
+using Riateu.Content;
 using TeuJson;
 
 namespace Riateu.Graphics;
@@ -30,7 +31,7 @@ public class AnimationIndex
 /// <summary>
 /// A class that stores all of the frames animation from an <see cref="Riateu.Graphics.Atlas"/>.
 /// </summary>
-public class AnimationStorage 
+public class AnimationStorage : IAssets
 {
     private List<AnimationIndex> animations = new List<AnimationIndex>();
     private Dictionary<string, uint> animationIDs = new Dictionary<string, uint>();

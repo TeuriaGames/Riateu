@@ -5,7 +5,7 @@ using MoonWorks.Math.Float;
 namespace Riateu.Graphics;
 
 /// <summary>
-/// A vertex type to be used for the <see cref="GameContext.DefaultPipeline"/>. It can also
+/// A vertex type to be used for the <see cref="GameContext.DefaultMaterial"/>. It can also
 /// be used elsewhere.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 48)]
@@ -28,7 +28,7 @@ public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Col
     public Vector4 Color = color.ToVector4();
 
     /// <summary>
-    /// The element format used in the <see cref="GameContext.DefaultPipeline"/>. And also
+    /// The element format used in the <see cref="GameContext.DefaultMaterial"/>. And also
     /// for other pipeline.
     /// </summary>
     public static VertexElementFormat[] Formats { get; } = [

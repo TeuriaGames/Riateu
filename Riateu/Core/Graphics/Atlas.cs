@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using MoonWorks.Graphics;
 using TeuJson;
+using Riateu.Content;
 
 namespace Riateu.Graphics;
 
@@ -11,17 +12,8 @@ namespace Riateu.Graphics;
 /// A class that contains all of the quads from a packed texture that can be retrieved
 /// by a name.
 /// </summary>
-public class Atlas 
+public class Atlas : IAssets
 {
-    /// <summary>
-    /// An enum that specify a file type of an atlas.
-    /// </summary>
-    public enum FileType 
-    {   /// 
-        Json, 
-        ///
-        Bin 
-    }
     /// <summary>
     /// A property configuration whether the nine patch feature should be enabled.
     /// </summary>
@@ -66,7 +58,7 @@ public class Atlas
     /// <param name="fileType">A file type that the atlas used</param>
     /// <param name="ninePatchEnabled">Whether the nine patch feature is enabled</param>
     /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
-    public static Atlas LoadFromFile(string path, Texture texture, FileType fileType = FileType.Json, bool ninePatchEnabled = false) 
+    public static Atlas LoadFromFile(string path, Texture texture, JsonType fileType = JsonType.Json, bool ninePatchEnabled = false) 
     {
         using var fs = File.OpenRead(path);
         return LoadFromStream(fs, texture, fileType, ninePatchEnabled);
@@ -80,7 +72,7 @@ public class Atlas
     /// <param name="fileType">A file type that the atlas used</param>
     /// <param name="ninePatchEnabled">Whether the nine patch feature is enabled</param>
     /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
-    public static Atlas LoadFromStream(Stream stream, Texture texture, FileType fileType = FileType.Json, bool ninePatchEnabled = false) 
+    public static Atlas LoadFromStream(Stream stream, Texture texture, JsonType fileType = JsonType.Json, bool ninePatchEnabled = false) 
     {
         var atlas = new Atlas();
         atlas.ninePatchEnabled = ninePatchEnabled;
@@ -117,7 +109,7 @@ public class Atlas
                 atlas.textures[key] = ninePatchTexture;
             }
             return atlas;
-        case FileType.Bin:
+        case JsonType.Bin:
             var reader = new BinaryReader(stream);
             reader.ReadString();
             var length = reader.ReadUInt32();

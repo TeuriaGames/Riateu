@@ -1,6 +1,7 @@
 using System;
 using MoonWorks;
 using MoonWorks.Graphics;
+using Riateu.Content;
 using Riateu.Graphics;
 
 namespace Riateu;
@@ -37,7 +38,10 @@ public abstract class GameApp : Game
     }
 
     public RenderQueue Surface => renderQueue;
+    public string AssetPath = "Assets";
     private GameLoop scene;
+
+    public AssetStorage Assets;
 
 
     /// <summary>
@@ -80,7 +84,11 @@ public abstract class GameApp : Game
         renderQueue = new RenderQueue();
         GameContext.Init(GraphicsDevice, MainWindow);
         Input.Initialize(Inputs);
-        LoadContent();
+        Assets = new AssetStorage(AssetPath);
+        ResourceUploader uploader = new ResourceUploader(GraphicsDevice);
+        Assets.StartContext(uploader);
+        LoadContent(Assets);
+        Assets.EndContext();
         Initialize();
     }
 
@@ -88,7 +96,7 @@ public abstract class GameApp : Game
     /// A method for loading content. You can freely acquire and submit the
     /// <see cref="MoonWorks.Graphics.CommandBuffer" /> here.
     /// </summary>
-    public virtual void LoadContent() {}
+    public virtual void LoadContent(AssetStorage storage) {}
 
     /// <summary>
     /// A method to also initialize your other resources, and to set your scene.
