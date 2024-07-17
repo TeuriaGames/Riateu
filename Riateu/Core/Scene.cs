@@ -13,6 +13,9 @@ namespace Riateu;
 /// </summary>
 public abstract class Scene : GameLoop
 {
+    /// <summary>
+    /// A storage for every physics components by tags. 
+    /// </summary>
     public List<PhysicsComponent>[] SceneTags;
 
     /// <summary>
@@ -32,8 +35,14 @@ public abstract class Scene : GameLoop
     /// <summary>
     /// A collection of entities that are added.
     /// </summary>
-    public Entities EntityList;
-    public IPhysicsEngine PhysicsEngine;
+    public Entities EntityList { get; set; }
+
+    /// <summary>
+    /// A current physics engine that the scene is using.
+    /// </summary>
+    public IPhysicsEngine PhysicsEngine { get; set; }
+    
+    private IPhysicsEngine physicsEngine;
 
 
     /// <summary>
@@ -49,9 +58,13 @@ public abstract class Scene : GameLoop
             SceneTags[i] = new List<PhysicsComponent>();
         }
 
-        PhysicsEngine = CreatePhysicsEngine();
+        physicsEngine = CreatePhysicsEngine();
     }
 
+    /// <summary>
+    /// A method to construct the physics engine.
+    /// </summary>
+    /// <returns></returns>
     public virtual IPhysicsEngine CreatePhysicsEngine() => new QueryBasePhysics();
 
     /// <summary>
@@ -71,7 +84,7 @@ public abstract class Scene : GameLoop
     /// </param>
     public void AddPhysics(PhysicsComponent component)
     {
-        PhysicsEngine.AddPhysics(component);
+        physicsEngine.AddPhysics(component);
     }
 
     /// <summary>
@@ -82,7 +95,7 @@ public abstract class Scene : GameLoop
     /// </param>
     public void RemovePhysics(PhysicsComponent component)
     {
-        PhysicsEngine.RemovePhysics(component);
+        physicsEngine.RemovePhysics(component);
     }
 
     /// <summary>
@@ -150,24 +163,23 @@ public abstract class Scene : GameLoop
         EntityList.SortEntities();
     }
 
-    internal void InternalUpdate(double delta)
+    /// <summary>
+    /// A method that runs on every update frame and its sealed by default. Override the Process instead.
+    /// </summary>
+    /// <param name="delta"></param>
+    public override sealed void Update(double delta) 
     {
-        PhysicsEngine.Update();
+        physicsEngine.Update();
         EntityList.UpdateSystem();
         Process(delta);
         EntityList.Update(delta);
-        PhysicsEngine.Finish();
+        physicsEngine.Finish();
     }
 
     /// <summary>
     /// A method that runs on every update frame.
     /// </summary>
     /// <param name="delta">A delta time</param>
-    public override sealed void Update(double delta) 
-    {
-        InternalUpdate(delta);
-    }
-
     public abstract void Process(double delta);
 
     /// <summary>

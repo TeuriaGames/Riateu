@@ -20,6 +20,9 @@ public static class GameContext
     /// The default rendering pipeline use for basic rendering.
     /// </summary>
     public static GraphicsPipeline DefaultPipeline;
+    /// <summary>
+    /// A rendering pipeline that uses R8G8B8A8 format.
+    /// </summary>
     public static GraphicsPipeline RGBPipeline;
     /// <summary>
     /// A rendering pipeline designed specifically for text rendered in msdf format.
@@ -29,7 +32,9 @@ public static class GameContext
     /// An instanced rendering pipeline use as an fast alternative for default pipeline.
     /// </summary>
     public static GraphicsPipeline InstancedPipeline;
-
+    /// <summary>
+    /// A compute pipeline used for <see cref="Riateu.Graphics.Batch"/> to work.
+    /// </summary>
     public static ComputePipeline SpriteBatchPipeline;
     /// <summary>
     /// An everything sampler that uses point clamp for sampling.
@@ -151,6 +156,9 @@ public static class GameContext
         });
     }
 
+    /// <summary>
+    /// A preprocessed shader format depending on the target backend it uses.
+    /// </summary>
     public const ShaderFormat BackendShaderFormat =
 #if Metal
     ShaderFormat.Metal;

@@ -113,7 +113,7 @@ public class PhysicsComponent : Component
 
     private List<PhysicsComponent> GetAllNearbyComponents<T>() 
     {
-        return Scene.PhysicsEngine.GetPhysicsComponents<T>(this);
+        return Scene.physicsEngine.GetPhysicsComponents<T>(this);
     }
 
     /// <summary>

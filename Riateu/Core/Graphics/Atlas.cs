@@ -44,8 +44,15 @@ public class Atlas
     /// </returns>
     public Quad this[string name] => Get(name);
 
+    /// <summary>
+    /// Creates an empty atlas.
+    /// </summary>
     public Atlas() {}
 
+    /// <summary>
+    /// Creates an empty atlas.
+    /// </summary>
+    /// <param name="ninePatchEnabled">Whether the nine patch feature is enabled</param>
     public Atlas(bool ninePatchEnabled) 
     {
         this.ninePatchEnabled = ninePatchEnabled;

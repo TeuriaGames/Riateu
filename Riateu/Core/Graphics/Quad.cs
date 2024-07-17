@@ -177,6 +177,13 @@ public struct UV
 		this[3] = position + new Vector2(dimensions.X, dimensions.Y);
 	}
 
+    /// <summary>
+    /// Initialize the UV of a texture.
+    /// </summary>
+    /// <param name="topLeft">A top left of the texture coordinates</param>
+    /// <param name="topRight">A top right of the texture coordinates</param>
+    /// <param name="bottomLeft">A bottom left of the texture coordinates</param>
+    /// <param name="bottomRight">A bottom right of the texture coordinates</param>
     public UV(Vector2 topLeft, Vector2 topRight, Vector2 bottomLeft, Vector2 bottomRight) 
     {
         this[0] = topLeft;

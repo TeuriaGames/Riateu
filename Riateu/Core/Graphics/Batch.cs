@@ -1,5 +1,4 @@
 using GpuBuffer = MoonWorks.Graphics.Buffer;
-using System.Collections.Generic;
 using MoonWorks;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
@@ -45,10 +44,6 @@ public class Batch : System.IDisposable
     private uint currentMaxTexture = MaxTextures;
 
 
-    public uint VertexIndex => vertexIndex;
-
-    public GpuBuffer VertexBuffer => vertexBuffer;
-    public GpuBuffer IndexBuffer => indexBuffer;
     /// <summary>
     /// A current matrix projection to be used for rendering.
     /// </summary>
@@ -110,7 +105,11 @@ public class Batch : System.IDisposable
         return indexBuffer;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Starts a new batch.
+    /// </summary>
+    /// <param name="texture">A texture to be used in the slot</param>
+    /// <param name="sampler">A sampler to used for the texture</param>
     public void Begin(Texture texture, Sampler sampler)
     {
 #if DEBUG
@@ -145,6 +144,11 @@ public class Batch : System.IDisposable
         }
     }
 
+    /// <summary>
+    /// Compose a new batch from the existing batch. This will create a new draw call.
+    /// </summary>
+    /// <param name="texture">A texture to be used in the slot</param>
+    /// <param name="sampler">A sampler to used for the texture</param>
     public void Compose(Texture texture, Sampler sampler) 
     {
 #if DEBUG
@@ -174,7 +178,11 @@ public class Batch : System.IDisposable
         }
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// End the existing batch, must render before starting a new one.
+    /// </summary>
+    /// <param name="cmdBuf">A <see cref="MoonWorks.Graphics.CommandBuffer"/></param>
+    /// <param name="bindUniform">To bind the default matrix uniform</param>
     public void End(CommandBuffer cmdBuf, bool bindUniform = true)
     {
 #if DEBUG
@@ -258,6 +266,10 @@ public class Batch : System.IDisposable
         vertexIndex = 0;
     }
 
+    /// <summary>
+    /// Bind a pipeline in a current batch.
+    /// </summary>
+    /// <param name="pipeline">A pipeline to bind in a current batch</param>
     public void BindPipeline(GraphicsPipeline pipeline)
     {
         queues[onQueue].Pipeline = pipeline;
@@ -322,37 +334,81 @@ public class Batch : System.IDisposable
         System.GC.SuppressFinalize(this);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Draw a texture based on the current quad and submit it in the current batch.
+    /// </summary>
+    /// <param name="quad">A quad or coordinates of the texture</param>
+    /// <param name="position">A position to where it should draw</param>
+    /// <param name="color">A color mask</param>
+    /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
     public void Draw(Quad quad, Vector2 position, Color color, float layerDepth = 1)
     {
         Draw(quad, position, color, Vector2.One, Vector2.Zero, layerDepth);
     }
 
+    /// <summary>
+    /// Draw a texture based on the current quad and submit it in the current batch.
+    /// </summary>
+    /// <param name="quad">A quad or coordinates of the texture</param>
+    /// <param name="position">A position to where it should draw</param>
+    /// <param name="color">A color mask</param>
+    /// <param name="scale">A scale of the drawn texture</param>
+    /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
     /// <inheritdoc/>
     public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, float layerDepth = 1)
     {
         Draw(quad, position, color, scale, Vector2.Zero, layerDepth);
     }
 
+    /// <summary>
+    /// Draw a texture and submit it in the current batch.
+    /// </summary>
+    /// <param name="position">A position to where it should draw</param>
+    /// <param name="color">A color mask</param>
+    /// <param name="scale">A scale of the drawn texture</param>
+    /// <param name="origin">An origin or offset of the drawn texture</param>
+    /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
     /// <inheritdoc/>
     public void Draw(Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
     {
         Draw(new Quad(queues[onQueue].Binding.Texture), position, color, scale, origin, 0, layerDepth);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Draw a texture and submit it in the current batch.
+    /// </summary>
+    /// <param name="position">A position to where it should draw</param>
+    /// <param name="color">A color mask</param>
+    /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
     public void Draw(Vector2 position, Color color, float layerDepth = 1)
     {
         Draw(new Quad(queues[onQueue].Binding.Texture), position, color, Vector2.One, Vector2.Zero, layerDepth);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Draw a texture based on the current quad and submit it in the current batch.
+    /// </summary>
+    /// <param name="quad">A quad or coordinates of the texture</param>
+    /// <param name="position">A position to where it should draw</param>
+    /// <param name="color">A color mask</param>
+    /// <param name="scale">A scale of the drawn texture</param>
+    /// <param name="origin">An origin or offset of the drawn texture</param>
+    /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
     public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
     {
         Draw(quad, position, color, scale, origin, 0, layerDepth);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Draw a texture based on the current quad and submit it in the current batch.
+    /// </summary>
+    /// <param name="quad">A quad or coordinates of the texture</param>
+    /// <param name="position">A position to where it should draw</param>
+    /// <param name="color">A color mask</param>
+    /// <param name="scale">A scale of the drawn texture</param>
+    /// <param name="origin">An origin or offset of the drawn texture</param>
+    /// <param name="rotation">A rotation of the drawn texture</param>
+    /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
     public unsafe void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1)
     {
 #if DEBUG
@@ -378,12 +434,29 @@ public class Batch : System.IDisposable
         vertexIndex++;
     }
 
-    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Alignment hAlignment = Alignment.Baseline) 
+    /// <summary>
+    /// Draw the text and submit its quad in the current batch.
+    /// </summary>
+    /// <param name="font">A font to use</param>
+    /// <param name="text">A text to be drawn</param>
+    /// <param name="position">A position of the text</param>
+    /// <param name="color">A color of the text</param>
+    /// <param name="hAlignment">A horizontal alignment of the text</param>
+    public void Draw(SpriteFont font, string text, Vector2 position, Color color, FontAlignment hAlignment = FontAlignment.Baseline) 
     {
         Draw(font, text, position, color, Vector2.One, hAlignment);
     }
 
-    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Vector2 scale, Alignment hAlignment = Alignment.Baseline) 
+    /// <summary>
+    /// Draw the text and submit its quad in the current batch.
+    /// </summary>
+    /// <param name="font">A font to use</param>
+    /// <param name="text">A text to be drawn</param>
+    /// <param name="position">A position of the text</param>
+    /// <param name="color">A color of the text</param>
+    /// <param name="scale">A scale of the text when drawn</param>
+    /// <param name="hAlignment">A horizontal alignment of the text</param>
+    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Vector2 scale, FontAlignment hAlignment = FontAlignment.Baseline) 
     {
 #if DEBUG
         AssertDoesBegin();
@@ -395,9 +468,9 @@ public class Batch : System.IDisposable
         }
 
         Vector2 justify = hAlignment switch {
-            Alignment.Baseline => new Vector2(0, 0),
-            Alignment.Center => new Vector2(0.5f, 0),
-            Alignment.End => new Vector2(1, 0),
+            FontAlignment.Baseline => new Vector2(0, 0),
+            FontAlignment.Center => new Vector2(0.5f, 0),
+            FontAlignment.End => new Vector2(1, 0),
             _ => throw new NotImplementedException()
         };
 

@@ -7,24 +7,53 @@ using TeuJson.Attributes;
 
 namespace Riateu.Graphics;
 
-public enum Alignment 
+/// <summary>
+/// A font alignment.
+/// </summary>
+public enum FontAlignment 
 {
+    /// <summary>
+    /// An alignment from the start.
+    /// </summary>
     Baseline,
+    /// <summary>
+    /// An alignment measured from the center. 
+    /// </summary>
     Center,
+    /// <summary>
+    /// An alignment measure from the end.
+    /// </summary>
     End
 }
 
+/// <summary>
+/// A SpriteFont class used for rendering the text.
+/// </summary>
 public class SpriteFont 
 {
     private FontStruct fonts;
     private Dictionary<char, Character> characters = new();
+    private int lineHeight;
 
-    public int LineHeight;
+    /// <summary>
+    /// A line height of the font.
+    /// </summary>
+    public int LineHeight 
+    {
+        get => lineHeight;
+        set => lineHeight = value;
+    }
 
+    /// <summary>
+    /// Creates a spritefont
+    /// </summary>
+    /// <param name="texture">A texture to be used</param>
+    /// <param name="quad">A texture cooordinates from the texture</param>
+    /// <param name="jsonPath">A path to the font data [fontbm]</param>
     public SpriteFont(Texture texture, Quad quad, string jsonPath) 
     {
         fonts = JsonConvert.DeserializeFromFile<FontStruct>(jsonPath);
-        LineHeight = fonts.Common.LineHeight;
+        lineHeight = fonts.Common.LineHeight;
 
         foreach (var character in fonts.Chars) 
         {
@@ -42,19 +71,24 @@ public class SpriteFont
         }
     }
 
+    /// <summary>
+    /// Measure a width and height based on the string.
+    /// </summary>
+    /// <param name="text">A string to measure on</param>
+    /// <returns>A measured width and height</returns>
     public Vector2 Measure(ReadOnlySpan<char> text) 
     {
         if (text.IsEmpty)
             return Vector2.Zero;
 
-        Vector2 size = new Vector2(0, LineHeight);
+        Vector2 size = new Vector2(0, lineHeight);
         float lineWidth = 0f;
 
         for (int i = 0; i < text.Length; i++) 
         {
             if (text[i] == '\n') 
             {
-                size.Y += LineHeight;
+                size.Y += lineHeight;
                 if (lineWidth > size.X) 
                 {
                     size.X = lineWidth;
@@ -83,6 +117,11 @@ public class SpriteFont
         return size;
     }
 
+    /// <summary>
+    /// Measure a line width based on the string.
+    /// </summary>
+    /// <param name="text">A string to measure on</param>
+    /// <returns>A measured line width</returns>
     public float GetLineWidth(ReadOnlySpan<char> text) 
     {
         float curr = 0f;
@@ -101,6 +140,11 @@ public class SpriteFont
         return curr;
     }
 
+    /// <summary>
+    /// Measure a height based on the string.
+    /// </summary>
+    /// <param name="text">A string to measure on</param>
+    /// <returns>A measured height</returns>
     public float GetHeight(ReadOnlySpan<char> text) 
     {
         int lines = 1;
@@ -115,7 +159,7 @@ public class SpriteFont
             }
         }
 
-        return lines * LineHeight;
+        return lines * lineHeight;
     }
 
     internal unsafe void Draw(Batch.ComputeData* computeData, ref uint vertexIndex, ReadOnlySpan<char> text, Vector2 position, Vector2 justify, Color color, Vector2 scale)
@@ -132,7 +176,7 @@ public class SpriteFont
             if (text[i] == '\n') 
             {
                 offset.X = 0;
-                offset.Y += LineHeight;
+                offset.Y += lineHeight;
                 continue;
             }
 
@@ -159,13 +203,11 @@ public class SpriteFont
     }
 }
 
-public struct Character(int xOffset, int yOffset, int xAdvance, Quad quad)
-{
-    public int XOffset = xOffset;
-    public int YOffset = yOffset;
-    public int XAdvance = xAdvance;
-    public Quad Quad = quad;
-}
+/// <summary>
+/// A character struct that holds the offset, advance and the texture coordinates.
+/// </summary>
+public record struct Character(int XOffset, int YOffset, int XAdvance, Quad Quad);
+
 
 internal partial struct FontStruct : IDeserialize 
 {

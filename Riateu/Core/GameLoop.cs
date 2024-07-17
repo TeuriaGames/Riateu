@@ -2,6 +2,9 @@ using MoonWorks.Graphics;
 
 namespace Riateu;
 
+/// <summary>
+/// A game loop class which only contains the game loop and does not have many functionality unlike Scene.
+/// </summary>
 public abstract class GameLoop 
 {
     /// <summary>
@@ -9,6 +12,10 @@ public abstract class GameLoop
     /// </summary>
     public GameApp GameInstance { get; }
 
+    /// <summary>
+    /// Create the game loop instance.
+    /// </summary>
+    /// <param name="gameApp">The game application</param>
     public GameLoop(GameApp gameApp) 
     {
         GameInstance = gameApp;

@@ -50,6 +50,10 @@ public class SpriteRenderer : GraphicsComponent
     }
 
     private FlipMode flip;
+
+    /// <summary>
+    /// An origin of the texture.
+    /// </summary>
     public Vector2 Origin;
 
     /// <summary>

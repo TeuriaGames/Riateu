@@ -329,6 +329,11 @@ public class Entity : IEnumerable<Component>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+    /// <summary>
+    /// Get a local position from a target.
+    /// </summary>
+    /// <param name="target">A target to calculate its relativity from the Entity's position</param>
+    /// <returns>A localized position of this entity</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2 ToLocal(Vector2 target) 
     {

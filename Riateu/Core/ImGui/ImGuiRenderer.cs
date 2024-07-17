@@ -352,6 +352,11 @@ public class ImGuiRenderer
         BindTexture(fontTexture);
     }
 
+    /// <summary>
+    /// Bind a texture as an ImGui texture.
+    /// </summary>
+    /// <param name="texture">A texture to bind</param>
+    /// <returns>A pointer to the bound texture</returns>
     public IntPtr BindTexture(Texture texture)
     {
         if (!PtrMap.ContainsKey(texture.Handle))
@@ -362,6 +367,10 @@ public class ImGuiRenderer
         return texture.Handle;
     }
 
+    /// <summary>
+    /// Unbind the texture.
+    /// </summary>
+    /// <param name="ptr">A pointer to the bound texture</param>
     public void UnbindTexture(IntPtr ptr)
     {
         if (!PtrMap.ContainsKey(ptr))
@@ -370,6 +379,11 @@ public class ImGuiRenderer
         }
     }
 
+    /// <summary>
+    /// Get a texture base on the bound texture pointer.
+    /// </summary>
+    /// <param name="ptr">A pointer to the bound texture</param>
+    /// <returns>A texture from the pointer</returns>
     public Texture GetPointer(IntPtr ptr)
     {
         if (!PtrMap.ContainsKey(ptr))
