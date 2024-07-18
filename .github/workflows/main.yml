@@ -40,7 +40,7 @@ jobs:
         repository: 'Sunpack'
 
     - name: Building Sunpack
-      run: dotnet publish --project Sunpack/Sunpack.csproj -c Release --self-contained
+      run: dotnet publish Sunpack/Sunpack.csproj -c Release --self-contained
         
     - name: Installing Sunpack
       run: cp Sunpack/bin/Release/net8.0/linux-x64/publish .
