@@ -22,7 +22,6 @@ public abstract class GameApp : Game
     public int Height { get; private set; }
 
     private GameLoop nextScene;
-    private RenderQueue renderQueue;
 
     /// <summary>
     /// A current scene that is running. Note that if you change this, the scene won't
@@ -37,11 +36,12 @@ public abstract class GameApp : Game
         }
     }
 
-    public RenderQueue Surface => renderQueue;
     public string AssetPath = "Assets";
     private GameLoop scene;
 
     public AssetStorage Assets;
+
+    internal static GameApp Instance;
 
 
     /// <summary>
@@ -79,9 +79,9 @@ public abstract class GameApp : Game
 #endif
         targetTimestep, debugMode)
     {
+        Instance = this;
         Width = (int)windowCreateInfo.WindowWidth;
         Height = (int)windowCreateInfo.WindowHeight;
-        renderQueue = new RenderQueue();
         GameContext.Init(GraphicsDevice, MainWindow);
         Input.Initialize(Inputs);
         Assets = new AssetStorage(AssetPath);
@@ -113,8 +113,7 @@ public abstract class GameApp : Game
         Texture backbuffer = cmdBuf.AcquireSwapchainTexture(MainWindow);
         if (backbuffer != null) 
         {
-            scene.Render(renderQueue);
-            renderQueue.QueueRender(backbuffer);
+            scene.Render(new BackbufferTarget(backbuffer));
         }
 
 

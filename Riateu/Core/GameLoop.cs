@@ -40,6 +40,6 @@ public abstract class GameLoop
     /// <summary>
     /// A method that called during the draw loop. Do your draw calls here.
     /// </summary>
-    /// <param name="renderQueue">A render queue to queue your renderables before rendering all of them</param>
-    public abstract void Render(RenderQueue renderQueue);
+    /// <param name="backbuffer">A backbuffer target that contains API for rendering to backbuffer</param>
+    public abstract void Render(BackbufferTarget backbuffer);
 }
