@@ -116,7 +116,7 @@ public abstract class GameApp : Game
             scene.Render(new BackbufferTarget(backbuffer));
         }
 
-
+        Time.Draw(alpha);
         GraphicsDevice.Submit(cmdBuf);
     }
 

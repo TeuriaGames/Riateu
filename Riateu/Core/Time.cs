@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace Riateu;
 
@@ -21,7 +22,7 @@ public static class Time
     public static double FPS { get; internal set; }
 
     private static int fpsCounter;
-    private static TimeSpan counterElapsed;
+    private static Stopwatch sw = Stopwatch.StartNew();
 
     /// <summary>
     /// This method sync from the update loop.
@@ -29,11 +30,17 @@ public static class Time
     public static void Update(in TimeSpan delta) 
     {
         Delta = delta.TotalSeconds * DeltaScale;
+    }
+
+    public static void Draw(double alpha) 
+    {
         fpsCounter++;
-        counterElapsed += delta;
-        if (counterElapsed < TimeSpan.FromSeconds(1)) return;
-        FPS = fpsCounter;
-        fpsCounter = 0;
-        counterElapsed -= TimeSpan.FromSeconds(1);
+        var elapsed = sw.Elapsed.TotalSeconds;
+        if (elapsed > 1) 
+        {
+            sw.Restart();
+            FPS = fpsCounter;
+            fpsCounter = 0;
+        }
     }
 }
