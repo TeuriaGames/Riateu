@@ -43,9 +43,10 @@ public class Batch : System.IDisposable, IRenderable
     private uint vertexIndex;
     private uint currentMaxTexture = MaxTextures;
 
+    private Matrix4x4 currentMatrix;
 
     /// <summary>
-    /// A current matrix projection to be used for rendering.
+    /// A default matrix projection to be used for rendering.
     /// </summary>
     public Matrix4x4 Matrix;
     /// <summary>
@@ -112,7 +113,18 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="sampler">A sampler to used for the texture</param>
     public void Begin(Texture texture, Sampler sampler)
     {
-        Begin(texture, sampler, GameContext.DefaultMaterial);
+        Begin(texture, sampler, GameContext.DefaultMaterial, Matrix);
+    }
+
+    /// <summary>
+    /// Starts a new batch.
+    /// </summary>
+    /// <param name="texture">A texture to be used in the slot</param>
+    /// <param name="sampler">A sampler to used for the texture</param>
+    /// <param name="transform">A transformation matrix</param>
+    public void Begin(Texture texture, Sampler sampler, Matrix4x4 transform)
+    {
+        Begin(texture, sampler, GameContext.DefaultMaterial, transform);
     }
 
     /// <summary>
@@ -121,7 +133,8 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="texture">A texture to be used in the slot</param>
     /// <param name="sampler">A sampler to used for the texture</param>
     /// <param name="material">A shader material to use</param>
-    public void Begin(Texture texture, Sampler sampler, Material material)
+    /// <param name="transform">A transformation matrix</param>
+    public void Begin(Texture texture, Sampler sampler, Material material, Matrix4x4 transform)
     {
 #if DEBUG
         AssertBegin();
@@ -153,6 +166,7 @@ public class Batch : System.IDisposable, IRenderable
             transferComputeBuffer.Map(true, out byte* data);
             computes = (ComputeData*)data;
         }
+        currentMatrix = transform;
     }
     /// <summary>
     /// Compose a new batch from the existing batch. This will create a new draw call.
@@ -234,19 +248,13 @@ public class Batch : System.IDisposable, IRenderable
         cmdBuf.EndComputePass(computePass);
         queues[onQueue].Count = vertexIndex;
 
-        BindUniformMatrix(Matrix);
+        BindUniformMatrix(currentMatrix);
     }
 
     /// <inheritdoc/>
-    public void BindUniformMatrix(in Matrix4x4 matrix)
+    private void BindUniformMatrix(in Matrix4x4 matrix)
     {
         GraphicsExecutor.Executor.PushVertexUniformData<Matrix4x4>(matrix, 0);
-    }
-
-    /// <inheritdoc/>
-    public void BindUniformMatrix(in Camera camera)
-    {
-        BindUniformMatrix(camera.Transform);
     }
 
     /// <inheritdoc/>

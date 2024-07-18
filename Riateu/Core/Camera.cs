@@ -185,4 +185,9 @@ public struct Camera(int width, int height, bool flipped = false)
             origin = value;
         }
     }
+
+    public static implicit operator Matrix4x4(in Camera camera) 
+    {
+        return camera.Transform;
+    }
 }
