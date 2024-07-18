@@ -313,6 +313,10 @@ public class Batch : System.IDisposable, IRenderable
         computeBuffer.Dispose();
         computeBuffer = GpuBuffer.Create<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
         currentMaxTexture = maxTextures;
+        unsafe {
+            transferComputeBuffer.Map(true, out byte* data);
+            computes = (ComputeData*)data;
+        }
     }
 
     /// <summary>
