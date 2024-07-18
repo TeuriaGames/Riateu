@@ -39,18 +39,10 @@ jobs:
         owner: 'Terria-K'
         repository: 'Sunpack'
 
-    - name: Accessing Sunpack
+    - name: Installing Sunpack
       run: cd Sunpack |
-        ls -la
-
-    - name: Building Sunpack
-      run: dotnet publish -c Release --self-contained
-    
-    - name: Copy Sunpack
-      run: cp bin/Release/net8.0/linux-x64/publish ../
-
-    - name: Moving to working directory
-      run: cd ../
+        dotnet publish -c Release --self-contained |
+        cp bin/Release/net8.0/linux-x64/publish ../
 
     - name: Update submodules
       run: |
