@@ -5,6 +5,7 @@ using MoonWorks.Math.Float;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 namespace Riateu.Graphics;
 
@@ -39,12 +40,12 @@ public class Batch : System.IDisposable, IRenderable
 
 #if DEBUG
     private bool DEBUG_begin;
-    private bool DEBUG_hasEnd;
+    private bool DEBUG_isFlushed;
 #endif
     private uint vertexIndex;
     private uint currentMaxTexture = MaxTextures;
 
-    private Matrix4x4 currentMatrix;
+    private Queue<Matrix4x4> matrices = new Queue<Matrix4x4>();
 
     /// <summary>
     /// A default matrix projection to be used for rendering.
@@ -139,7 +140,6 @@ public class Batch : System.IDisposable, IRenderable
     {
 #if DEBUG
         AssertBegin();
-        AssertHasEnd();
         DEBUG_begin = true;
 #endif
         if (rendered)
@@ -160,73 +160,58 @@ public class Batch : System.IDisposable, IRenderable
         {
             Binding = new TextureSamplerBinding(texture, sampler),
             Material = GameContext.DefaultMaterial,
-            Count = 0
+            Count = 0,
+            Offset = vertexIndex
         };
 
         unsafe {
             transferComputeBuffer.Map(true, out byte* data);
             computes = (ComputeData*)data;
         }
-        currentMatrix = transform;
-    }
-    /// <summary>
-    /// Compose a new batch from the existing batch. This will create a new draw call.
-    /// </summary>
-    /// <param name="texture">A texture to be used in the slot</param>
-    /// <param name="sampler">A sampler to used for the texture</param>
-    public void Compose(Texture texture, Sampler sampler) 
-    {
-        Compose(texture, sampler, GameContext.DefaultMaterial);
-    }
-
-    /// <summary>
-    /// Compose a new batch from the existing batch. This will create a new draw call.
-    /// </summary>
-    /// <param name="texture">A texture to be used in the slot</param>
-    /// <param name="sampler">A sampler to used for the texture</param>
-    /// <param name="material">A shader material to use</param>
-    public void Compose(Texture texture, Sampler sampler, Material material) 
-    {
-#if DEBUG
-        AssertDoesBegin();
-#endif
-
-        var offset = queues[onQueue].Offset;
-        queues[onQueue].Count = vertexIndex - offset;
-
-
-        unchecked { onQueue++; }
-
-        if (queues.Length == onQueue) 
-        {
-            Array.Resize(ref queues, queues.Length + 4);
-        }
-
-        queues[onQueue] = new BatchQueue 
-        {
-            Binding = new TextureSamplerBinding(texture, sampler),
-            Material = GameContext.DefaultMaterial,
-            Count = 0,
-            Offset = vertexIndex
-        };
+        matrices.Enqueue(transform);
     }
 
     /// <summary>
     /// End the existing batch, must render before starting a new one.
+    /// <param name="flush">Whether to flush it already and decide not go further on.</param>
     /// </summary>
-    public void End()
+    public void End(bool flush)
     {
 #if DEBUG
         AssertDoesBegin();
         DEBUG_begin = false;
-        DEBUG_hasEnd = true;
 #endif
         transferComputeBuffer.Unmap();
+
         if (vertexIndex == 0)
         {
             return;
         }
 
+        var offset = queues[onQueue].Offset;
+        queues[onQueue].Count = vertexIndex - offset;
+
+        if (flush) 
+        {
+            Flush();
+        }
+    }
+
+    /// <inheritdoc/>
+    private void BindUniformMatrix(in Matrix4x4 matrix)
+    {
+        GraphicsExecutor.Executor.PushVertexUniformData<Matrix4x4>(matrix, 0);
+    }
+
+    public void Flush() 
+    {
+#if DEBUG
+        if (DEBUG_isFlushed) 
+        {
+            Logger.LogWarn("The state has been flushed, yet has been flushed again. Avoid doing this everytime as it cost performance.");
+        }
+        DEBUG_isFlushed = true;
+#endif
         CommandBuffer cmdBuf = GraphicsExecutor.Executor;
 
         CopyPass copyPass = cmdBuf.BeginCopyPass();
@@ -244,25 +229,16 @@ public class Batch : System.IDisposable, IRenderable
         computePass.Dispatch(currentMaxTexture / 64, 1, 1);
 
         cmdBuf.EndComputePass(computePass);
-        var offset = queues[onQueue].Offset;
-        queues[onQueue].Count = vertexIndex - offset;
-
-        BindUniformMatrix(currentMatrix);
-    }
-
-    /// <inheritdoc/>
-    private void BindUniformMatrix(in Matrix4x4 matrix)
-    {
-        GraphicsExecutor.Executor.PushVertexUniformData<Matrix4x4>(matrix, 0);
     }
 
     /// <inheritdoc/>
     public void Render(RenderPass renderPass)
     {
 #if DEBUG
+        AssertIsFlushed();
         AssertRender();
+        DEBUG_isFlushed = false;
         DEBUG_begin = false;
-        DEBUG_hasEnd = false;
 #endif
 
         rendered = true;
@@ -277,6 +253,14 @@ public class Batch : System.IDisposable, IRenderable
 
         while (Unsafe.IsAddressLessThan(ref start, ref end)) 
         {
+            if (matrices.TryDequeue(out Matrix4x4 m))
+            {
+                BindUniformMatrix(m);
+            }
+            else 
+            {
+                BindUniformMatrix(Matrix);
+            }
             renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
             renderPass.BindVertexBuffer(vertexBuffer);
             renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
@@ -435,7 +419,6 @@ public class Batch : System.IDisposable, IRenderable
         if (vertexIndex == currentMaxTexture)
         {
             ResizeBuffer();
-            return;
         }
         computes[vertexIndex] = new ComputeData 
         {
@@ -482,7 +465,6 @@ public class Batch : System.IDisposable, IRenderable
         if (vertexIndex == currentMaxTexture)
         {
             ResizeBuffer();
-            return;
         }
 
         Vector2 justify = hAlignment switch {
@@ -522,12 +504,12 @@ public class Batch : System.IDisposable, IRenderable
         throw new System.Exception("Batch has not begun yet, please call Begin first.");
     }
 
-    private void AssertHasEnd() 
+    private void AssertIsFlushed() 
     {
-        if (!DEBUG_hasEnd)
+        if (DEBUG_isFlushed)
             return;
-
-        throw new System.Exception("Batch just ended, you must render all the vertices first before starting a new one. Alternatively, use Compose before End.");
+        
+        throw new System.Exception("Batch has not been flushed yet. You might need to set true on the End(true) or call .Flush()");
     }
 #endif
 
@@ -553,4 +535,5 @@ public class Batch : System.IDisposable, IRenderable
         public Vector4 Color;
     }
 }
+
 
