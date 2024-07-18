@@ -31,10 +31,15 @@ jobs:
       with:
         dotnet-version: 8.x
 
-    - name: Cloning Sunpack
-      run: git clone https://github.com/Terria-K/Sunpack.git 
+    - name: Cloning Terria-K/Sunpack PUBLIC repository
+      uses: GuillaumeFalourd/clone-github-repo-action@v2.3
+      with:
+        depth: 1
+        branch: 'main'
+        owner: 'Terria-K'
+        repository: 'Sunpack'
 
-    - name: Cding to sunpack
+    - name: Accessing Sunpack
       run: cd Sunpack
 
     - name: Building Sunpack
