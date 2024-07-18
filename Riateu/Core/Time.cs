@@ -30,9 +30,10 @@ public static class Time
     {
         Delta = delta.TotalSeconds * DeltaScale;
         fpsCounter++;
-        if (counterElapsed < TimeSpan.FromSeconds(1)) return;
         counterElapsed += delta;
+        if (counterElapsed < TimeSpan.FromSeconds(1)) return;
         FPS = fpsCounter;
+        fpsCounter = 0;
         counterElapsed -= TimeSpan.FromSeconds(1);
     }
 }
