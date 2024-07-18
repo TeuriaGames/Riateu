@@ -158,7 +158,7 @@ public static class GameContext
 #if Metal
     ShaderFormat.Metal;
 #elif D3D11
-    ShaderFormat.MSL;
+    ShaderFormat.HLSL;
 #elif Vulkan
     ShaderFormat.SPIRV;
 #endif
