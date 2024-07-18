@@ -135,6 +135,17 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="texture">A texture to be used in the slot</param>
     /// <param name="sampler">A sampler to used for the texture</param>
     /// <param name="material">A shader material to use</param>
+    public void Begin(Texture texture, Sampler sampler, Material material)
+    {
+        Begin(texture, sampler, material, Matrix);
+    }
+
+    /// <summary>
+    /// Starts a new batch.
+    /// </summary>
+    /// <param name="texture">A texture to be used in the slot</param>
+    /// <param name="sampler">A sampler to used for the texture</param>
+    /// <param name="material">A shader material to use</param>
     /// <param name="transform">A transformation matrix</param>
     public void Begin(Texture texture, Sampler sampler, Material material, Matrix4x4 transform)
     {
@@ -159,7 +170,7 @@ public class Batch : System.IDisposable, IRenderable
         queues[onQueue] = new BatchQueue 
         {
             Binding = new TextureSamplerBinding(texture, sampler),
-            Material = GameContext.DefaultMaterial,
+            Material = material,
             Count = 0,
             Offset = vertexIndex
         };
