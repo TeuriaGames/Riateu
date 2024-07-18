@@ -43,7 +43,7 @@ jobs:
       run: dotnet publish Sunpack/Sunpack.csproj -c Release --self-contained
         
     - name: Installing Sunpack
-      run: cp Sunpack/bin/Release/net8.0/linux-x64/publish .
+      run: ln -s Sunpack/bin/Release/net8.0/linux-x64/publish/sunpack ./sunpack
 
     - name: Update submodules
       run: |
