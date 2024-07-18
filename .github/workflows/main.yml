@@ -31,7 +31,7 @@ jobs:
       with:
         dotnet-version: 8.x
 
-    - name: Cloning Terria-K/Sunpack PUBLIC repository
+    - name: Cloning Terria-K/Sunpack
       uses: GuillaumeFalourd/clone-github-repo-action@v2.3
       with:
         depth: 1
@@ -40,7 +40,8 @@ jobs:
         repository: 'Sunpack'
 
     - name: Accessing Sunpack
-      run: cd Sunpack
+      run: cd Sunpack |
+        ls -la
 
     - name: Building Sunpack
       run: dotnet publish -c Release --self-contained
