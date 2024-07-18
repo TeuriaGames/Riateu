@@ -32,15 +32,15 @@ jobs:
         dotnet-version: 8.x
 
     - name: Cloning Sunpack
-      run: git clone https://github.com/Terria-K/Sunpack.git |
-        cd Sunpack
+      run: git clone https://github.com/Terria-K/Sunpack.git 
+      run: cd Sunpack
 
     - name: Building Sunpack
       run: dotnet publish -c Release --self-contained
     
     - name: Copy Sunpack
-      run: cp bin/Release/net8.0/linux-x64/publish ../ |
-        cd ..
+      run: cp bin/Release/net8.0/linux-x64/publish ../
+      run: cd..
 
     - name: Update submodules
       run: |
