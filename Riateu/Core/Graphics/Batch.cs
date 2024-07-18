@@ -175,7 +175,7 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="sampler">A sampler to used for the texture</param>
     public void Compose(Texture texture, Sampler sampler) 
     {
-        Compose(texture, sampler);
+        Compose(texture, sampler, GameContext.DefaultMaterial);
     }
 
     /// <summary>
