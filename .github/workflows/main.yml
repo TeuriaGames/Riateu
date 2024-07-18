@@ -39,17 +39,19 @@ jobs:
         owner: 'Terria-K'
         repository: 'Sunpack'
 
-    - name: Installing Sunpack
+    - name: Building Sunpack
       run: cd Sunpack |
-        dotnet publish -c Release --self-contained |
-        cp bin/Release/net8.0/linux-x64/publish ../
+        dotnet publish -c Release --self-contained
+        
+    - name: Installing Sunpack
+      run: cp Sunpack/bin/Release/net8.0/linux-x64/publish .
 
     - name: Update submodules
       run: |
         git submodule update --init --recursive
     
     - name: Sync Sunpack
-      run: sunpack sync
+      run: ./sunpack sync
 
     - run: dotnet tool update -g docfx
     - run: docfx documentation/docfx.json
