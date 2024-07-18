@@ -85,7 +85,12 @@ public class SpriteFont : IAssets
         foreach (var character in fonts.Chars) 
         {
             char c = (char)character.ID;
-            Quad newQuad = new Quad(texture);
+            Quad newQuad = new Quad(texture, new Rect(
+                character.X,
+                character.Y,
+                character.Width,
+                character.Height
+            ));
 
             Character ch = new Character(character.XOffset, character.YOffset, character.XAdvance, newQuad);
 
