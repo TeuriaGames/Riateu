@@ -31,9 +31,23 @@ jobs:
       with:
         dotnet-version: 8.x
 
+    - name: Cloning Sunpack
+      run: git clone https://github.com/Terria-K/Sunpack.git |
+        cd Sunpack
+
+    - name: Building Sunpack
+      run: dotnet publish -c Release --self-contained
+    
+    - name: Copy Sunpack
+      run: cp bin/Release/net8.0/linux-x64/publish ../ |
+        cd ..
+
     - name: Update submodules
       run: |
         git submodule update --init --recursive
+    
+    - name: Sync Sunpack
+      run: sunpack sync
 
     - run: dotnet tool update -g docfx
     - run: docfx documentation/docfx.json
