@@ -19,6 +19,7 @@ public class Batch : System.IDisposable, IRenderable
     private struct BatchQueue 
     {
         public uint Count;
+        public uint Offset;
         public TextureSamplerBinding Binding;
         public Material Material;
     }
@@ -189,9 +190,10 @@ public class Batch : System.IDisposable, IRenderable
 #if DEBUG
         AssertDoesBegin();
 #endif
-        transferComputeBuffer.Unmap();
 
-        queues[onQueue].Count = vertexIndex;
+        var offset = queues[onQueue].Offset;
+        queues[onQueue].Count = vertexIndex - offset;
+
 
         unchecked { onQueue++; }
 
@@ -204,13 +206,9 @@ public class Batch : System.IDisposable, IRenderable
         {
             Binding = new TextureSamplerBinding(texture, sampler),
             Material = GameContext.DefaultMaterial,
-            Count = 0
+            Count = 0,
+            Offset = vertexIndex
         };
-
-        unsafe {
-            transferComputeBuffer.Map(true, out byte* data);
-            computes = (ComputeData*)data;
-        }
     }
 
     /// <summary>
@@ -246,7 +244,8 @@ public class Batch : System.IDisposable, IRenderable
         computePass.Dispatch(currentMaxTexture / 64, 1, 1);
 
         cmdBuf.EndComputePass(computePass);
-        queues[onQueue].Count = vertexIndex;
+        var offset = queues[onQueue].Offset;
+        queues[onQueue].Count = vertexIndex - offset;
 
         BindUniformMatrix(currentMatrix);
     }
@@ -275,7 +274,6 @@ public class Batch : System.IDisposable, IRenderable
         ref var start = ref MemoryMarshal.GetArrayDataReference(queues);
         ref var end = ref Unsafe.Add(ref start, onQueue + 1);
 
-        uint offset = 0;
 
         while (Unsafe.IsAddressLessThan(ref start, ref end)) 
         {
@@ -283,9 +281,8 @@ public class Batch : System.IDisposable, IRenderable
             renderPass.BindVertexBuffer(vertexBuffer);
             renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
             renderPass.BindFragmentSampler(start.Binding);
-            renderPass.DrawIndexedPrimitives(offset * 4u, 0u, (start.Count - offset) * 2u, 1);
+            renderPass.DrawIndexedPrimitives(start.Offset * 4u, 0u, start.Count * 2u, 1);
 
-            offset += start.Count;
             start = ref Unsafe.Add(ref start, 1);
         }
 
@@ -556,3 +553,4 @@ public class Batch : System.IDisposable, IRenderable
         public Vector4 Color;
     }
 }
+
