@@ -5,7 +5,6 @@ using MoonWorks.Math.Float;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using System.Collections.Generic;
 
 namespace Riateu.Graphics;
 
@@ -17,13 +16,6 @@ namespace Riateu.Graphics;
 /// </summary>
 public class Batch : System.IDisposable, IRenderable
 {
-    private struct BatchQueue 
-    {
-        public uint Count;
-        public uint Offset;
-        public TextureSamplerBinding Binding;
-        public Material Material;
-    }
     private const uint MaxTextures = 4096;
     private const uint InitialMaxQueues = 4;
     private GraphicsDevice device;
@@ -45,7 +37,6 @@ public class Batch : System.IDisposable, IRenderable
     private uint vertexIndex;
     private uint currentMaxTexture = MaxTextures;
 
-    private Queue<Matrix4x4> matrices = new Queue<Matrix4x4>();
 
     /// <summary>
     /// A default matrix projection to be used for rendering.
@@ -172,14 +163,14 @@ public class Batch : System.IDisposable, IRenderable
             Binding = new TextureSamplerBinding(texture, sampler),
             Material = material,
             Count = 0,
-            Offset = vertexIndex
+            Offset = vertexIndex,
+            Matrix = transform
         };
 
         unsafe {
             transferComputeBuffer.Map(true, out byte* data);
             computes = (ComputeData*)data;
         }
-        matrices.Enqueue(transform);
     }
 
     /// <summary>
@@ -261,18 +252,12 @@ public class Batch : System.IDisposable, IRenderable
         ref var start = ref MemoryMarshal.GetArrayDataReference(queues);
         ref var end = ref Unsafe.Add(ref start, onQueue + 1);
 
-
         while (Unsafe.IsAddressLessThan(ref start, ref end)) 
         {
-            if (matrices.TryDequeue(out Matrix4x4 m))
-            {
-                BindUniformMatrix(m);
-            }
-            else 
-            {
-                BindUniformMatrix(Matrix);
-            }
+            VertexUniformBinder binder = new VertexUniformBinder();
+            BindUniformMatrix(start.Matrix);
             renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
+            start.Material.BindUniforms(binder);
             renderPass.BindVertexBuffer(vertexBuffer);
             renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
             renderPass.BindFragmentSampler(start.Binding);
@@ -523,7 +508,14 @@ public class Batch : System.IDisposable, IRenderable
         throw new System.Exception("Batch has not been flushed yet. You might need to set true on the End(true) or call .Flush()");
     }
 #endif
-
+    private struct BatchQueue 
+    {
+        public uint Count;
+        public uint Offset;
+        public TextureSamplerBinding Binding;
+        public Material Material;
+        public Matrix4x4 Matrix;
+    }
 
     [StructLayout(LayoutKind.Explicit, Size = 96)]
     internal struct ComputeData 
