@@ -14,7 +14,7 @@ namespace Riateu.ImGuiRend;
 /// <summary>
 /// A canvas renderer to render ImGui library.
 /// </summary>
-public class ImGuiRenderer
+public class ImGuiRenderer : IRenderable
 {
     private Dictionary<nint, Texture> PtrMap = new();
     private GraphicsPipeline imGuiPipeline;
@@ -154,22 +154,14 @@ public class ImGuiRenderer
     /// <summary>
     /// A draw method used for rendering all of the drawn ImGui surface.
     /// </summary>
-    /// <param name="buffer">
-    /// A command buffer to use for passing the uniform data.
-    /// </param>
-    /// <param name="renderPass">
-    /// A renderpass used for handling and submitting a buffers
-    /// </param>
-    public void Draw(CommandBuffer buffer, RenderPass renderPass)
-    {;
+    public void Draw()
+    {
         ImGui.Render();
 
         var io = ImGui.GetIO();
         var drawDataPtr = ImGui.GetDrawData();
 
         UpdateImGuiBuffers(drawDataPtr);
-
-        RenderCommandLists(buffer, renderPass, drawDataPtr, io);
     }
 
     private unsafe void UpdateImGuiBuffers(ImDrawDataPtr drawDataPtr)
@@ -239,6 +231,14 @@ public class ImGuiRenderer
         commandBuffer.EndCopyPass(copyPass);
 
         device.Submit(commandBuffer);
+    }
+
+    public void Render(RenderPass renderPass)
+    {
+        var io = ImGui.GetIO();
+        var drawDataPtr = ImGui.GetDrawData();
+        CommandBuffer buffer = GraphicsExecutor.Executor;
+        RenderCommandLists(buffer, renderPass, drawDataPtr, io);
     }
 
     private void RenderCommandLists(CommandBuffer buffer, RenderPass renderPass, ImDrawDataPtr drawDataPtr, ImGuiIOPtr ioPtr)
