@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Riateu/Riateu.Vulkan.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TeuJson" Version="3.2.0" />
+    <PackageReference Include="TeuJson.Generator" Version="3.2.0" />
+  </ItemGroup>
+
+ <ItemGroup>
+    <Content Include="../runtimes/lib64/**/*.*">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
