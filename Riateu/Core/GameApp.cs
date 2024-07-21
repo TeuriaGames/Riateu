@@ -103,28 +103,7 @@ public abstract class GameApp : Game
     /// </summary>
     public abstract void Initialize();
 
-    /// <summary>
-    /// A method that handles the draw loop. Do your draw calls here.
-    /// </summary>
-    /// <param name="alpha">A delta time for the draw loop</param>
-    protected override void Draw(double alpha)
-    {
-        CommandBuffer cmdBuf = GraphicsExecutor.Acquire(GraphicsDevice);
-        Texture backbuffer = cmdBuf.AcquireSwapchainTexture(MainWindow);
-        if (backbuffer != null) 
-        {
-            scene.Render(new BackbufferTarget(backbuffer));
-        }
-
-        Time.Draw(alpha);
-        GraphicsDevice.Submit(cmdBuf);
-    }
-
-    /// <summary>
-    /// A method that handles the update loop.
-    /// </summary>
-    /// <param name="delta">A delta time for the update loop</param>
-    protected override void Update(TimeSpan delta)
+    private void InternalUpdate(TimeSpan delta) 
     {
         Time.Update(delta);
         Input.Update();
@@ -136,4 +115,32 @@ public abstract class GameApp : Game
         }
         scene.Update(Time.Delta);
     }
+    private void InternalDraw(double alpha) 
+    {
+        CommandBuffer cmdBuf = GraphicsExecutor.Acquire(GraphicsDevice);
+        Texture backbuffer = cmdBuf.AcquireSwapchainTexture(MainWindow);
+        if (backbuffer != null) 
+        {
+            scene.Render(new BackbufferTarget(backbuffer));
+        }
+
+        Time.Draw(alpha);
+        GraphicsDevice.Submit(cmdBuf);
+    }
+    protected override sealed void Draw(double alpha) { Render(alpha); }
+    
+    protected override sealed void Update(TimeSpan delta) { Process(delta); }
+
+    /// <summary>
+    /// A method that handles the draw loop. Do your draw calls here.
+    /// </summary>
+    /// <param name="alpha">A delta time for the draw loop</param>
+    protected abstract void Render(double alpha);
+    
+
+    /// <summary>
+    /// A method that handles the update loop.
+    /// </summary>
+    /// <param name="delta">A delta time for the update loop</param>
+    protected abstract void Process(TimeSpan delta);
 }
