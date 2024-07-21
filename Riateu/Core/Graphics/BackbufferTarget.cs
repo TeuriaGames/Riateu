@@ -5,24 +5,18 @@ namespace Riateu.Graphics;
 public struct BackbufferTarget 
 {
     private Texture texture;
-    private RenderPass renderPass;
 
     public BackbufferTarget(Texture texture) 
     {
         this.texture = texture;
     }
 
-    public void BeginRendering(Color clearColor) 
+    public RenderPass BeginRendering(Color clearColor) 
     {
-        renderPass = GraphicsExecutor.Executor.BeginRenderPass(new ColorAttachmentInfo(texture, true, clearColor));
+        return GraphicsExecutor.Executor.BeginRenderPass(new ColorAttachmentInfo(texture, true, clearColor));
     }
 
-    public void Render(IRenderable renderable) 
-    {
-        renderable.Render(renderPass);
-    }
-
-    public void EndRendering() 
+    public void EndRendering(RenderPass renderPass) 
     {
         GraphicsExecutor.Executor.EndRenderPass(renderPass);
     }

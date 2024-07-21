@@ -1,10 +1,10 @@
 using GpuBuffer = MoonWorks.Graphics.Buffer;
 using MoonWorks;
 using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
