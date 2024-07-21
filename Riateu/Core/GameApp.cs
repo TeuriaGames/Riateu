@@ -98,10 +98,12 @@ public abstract class GameApp : Game
     /// </summary>
     public virtual void LoadContent(AssetStorage storage) {}
 
+
     /// <summary>
     /// A method to also initialize your other resources, and to set your scene.
     /// </summary>
-    public abstract void Initialize();
+    /// <returns>A <see cref="Riateu.Scene"/> or <see cref="Riateu.GameLoop"/></returns>
+    public abstract GameLoop Initialize();
 
     private void InternalUpdate(TimeSpan delta) 
     {
