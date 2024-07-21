@@ -68,7 +68,7 @@ public class KeyboardBinding : IBinding
     {
         foreach (var key in Keys) 
         {
-            if (Input.InputSystem.Keyboard.IsPressed(key)) 
+            if (Input.Keyboard.IsPressed(key)) 
             {
                 return true;
             }
@@ -81,7 +81,7 @@ public class KeyboardBinding : IBinding
     {
         foreach (var key in Keys) 
         {
-            if (Input.InputSystem.Keyboard.IsDown(key)) 
+            if (Input.Keyboard.IsDown(key)) 
             {
                 return true;
             }
@@ -94,7 +94,7 @@ public class KeyboardBinding : IBinding
     {
         foreach (var key in Keys) 
         {
-            if (Input.InputSystem.Keyboard.IsReleased(key)) 
+            if (Input.Keyboard.IsReleased(key)) 
             {
                 return true;
             }

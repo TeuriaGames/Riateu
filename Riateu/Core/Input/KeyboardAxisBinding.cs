@@ -74,8 +74,8 @@ public class KeyboardAxisBinding : IAxisBinding
 
     /// <inheritdoc/>
     public void Update() {
-        bool negative = Input.InputSystem.Keyboard.IsDown(Negative);
-        bool positive = Input.InputSystem.Keyboard.IsDown(Positive);
+        bool negative = Input.Keyboard.IsDown(Negative);
+        bool positive = Input.Keyboard.IsDown(Positive);
         
 
         if (negative && positive) 
