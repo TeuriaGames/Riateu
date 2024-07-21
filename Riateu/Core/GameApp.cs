@@ -113,7 +113,7 @@ public abstract class GameApp : Game
             scene = nextScene;
             scene.Begin();
         }
-        Update(delta);
+
         scene.Update(Time.Delta);
     }
     private void InternalDraw(double alpha) 
@@ -122,27 +122,19 @@ public abstract class GameApp : Game
         Texture backbuffer = cmdBuf.AcquireSwapchainTexture(MainWindow);
         if (backbuffer != null) 
         {
-            Draw(alpha);
             scene.Render(new BackbufferTarget(backbuffer));
         }
 
         Time.Draw(alpha);
         GraphicsDevice.Submit(cmdBuf);
     }
-    protected override sealed void Draw(double alpha) { Render(alpha); }
+    protected override sealed void Draw(double alpha) 
+    { 
+        InternalDraw(alpha);
+    }
     
-    protected override sealed void Update(TimeSpan delta) { Process(delta); }
-
-    /// <summary>
-    /// A method that handles the draw loop. Do your draw calls here.
-    /// </summary>
-    /// <param name="alpha">A delta time for the draw loop</param>
-    protected abstract void Render(double alpha);
-    
-
-    /// <summary>
-    /// A method that handles the update loop.
-    /// </summary>
-    /// <param name="delta">A delta time for the update loop</param>
-    protected abstract void Process(TimeSpan delta);
+    protected override sealed void Update(TimeSpan delta) 
+    { 
+        InternalUpdate(delta);
+    }
 }
