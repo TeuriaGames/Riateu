@@ -113,6 +113,7 @@ public abstract class GameApp : Game
             scene = nextScene;
             scene.Begin();
         }
+        Update(delta);
         scene.Update(Time.Delta);
     }
     private void InternalDraw(double alpha) 
@@ -121,6 +122,7 @@ public abstract class GameApp : Game
         Texture backbuffer = cmdBuf.AcquireSwapchainTexture(MainWindow);
         if (backbuffer != null) 
         {
+            Draw(alpha);
             scene.Render(new BackbufferTarget(backbuffer));
         }
 
