@@ -89,7 +89,7 @@ public abstract class GameApp : Game
         Assets.StartContext(uploader);
         LoadContent(Assets);
         Assets.EndContext();
-        Initialize();
+        Scene = Initialize();
     }
 
     /// <summary>
