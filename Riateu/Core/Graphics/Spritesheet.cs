@@ -11,11 +11,11 @@ namespace Riateu.Graphics;
 /// </summary>
 public class Spritesheet 
 {
-    private Array2D<Quad> tiles;
+    private Array2D<TextureQuad> tiles;
     /// <summary>
     /// The full quad of <see cref="Riateu.Graphics.Spritesheet"/> based on the texture atlas.
     /// </summary>
-    public Quad SpriteTexture { get; private set; }
+    public TextureQuad SpriteTexture { get; private set; }
 
     /// <summary>
     /// A width of a tile grid. 
@@ -32,11 +32,11 @@ public class Spritesheet
     /// <summary>
     /// Get a quad from xy grid.
     /// </summary>
-    public Quad this[int x, int y] => tiles[x, y];
+    public TextureQuad this[int x, int y] => tiles[x, y];
     /// <summary>
     /// Get a quad from grid id.
     /// </summary>
-    public Quad this[int gid] => tiles[gid % tiles.Rows, gid / tiles.Rows];
+    public TextureQuad this[int gid] => tiles[gid % tiles.Rows, gid / tiles.Rows];
 
     /// <summary>
     /// An initialization of this class.
@@ -45,18 +45,18 @@ public class Spritesheet
     /// <param name="texture">A quad to the <see cref="Riateu.Graphics.Spritesheet"/></param>
     /// <param name="tileWidth">A width of a tile grid</param>
     /// <param name="tileHeight">A height of a tile grid</param>
-    public Spritesheet(Texture baseTexture, Quad texture, int tileWidth, int tileHeight) 
+    public Spritesheet(Texture baseTexture, TextureQuad texture, int tileWidth, int tileHeight) 
     {
         SpriteTexture = texture;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
 
-        tiles = new Array2D<Quad>(SpriteTexture.Width / tileWidth, SpriteTexture.Height / tileHeight);
+        tiles = new Array2D<TextureQuad>(SpriteTexture.Width / tileWidth, SpriteTexture.Height / tileHeight);
         for (int y = 0; y < SpriteTexture.Height / tileHeight; y++) 
         {
             for (int x = 0; x < SpriteTexture.Width / tileWidth; x++) 
             {
-                tiles[x, y] = new Quad(baseTexture, new Rect(
+                tiles[x, y] = new TextureQuad(baseTexture, new Rect(
                     texture.Source.X + (x * tileWidth),
                     texture.Source.Y + (y * tileHeight),
                     tileWidth,
@@ -71,7 +71,7 @@ public class Spritesheet
     /// </summary>
     /// <param name="position">An xy-grid point position</param>
     /// <returns>A quad based on the xy-grid</returns>
-    public Quad GetTexture(Point position) 
+    public TextureQuad GetTexture(Point position) 
     {
         return GetTexture(position.X, position.Y);
     }
@@ -82,7 +82,7 @@ public class Spritesheet
     /// <param name="x">An x-grid position</param>
     /// <param name="y">A y-grid position</param>
     /// <returns>A quad based on the xy-grid</returns>
-    public Quad GetTexture(int x, int y) 
+    public TextureQuad GetTexture(int x, int y) 
     {
         return tiles[x, y];
     }
@@ -92,7 +92,7 @@ public class Spritesheet
     /// </summary>
     /// <param name="gid">An id of a grid</param>
     /// <returns>A quad based on the grid id</returns>
-    public Quad GetTexture(int gid) 
+    public TextureQuad GetTexture(int gid) 
     {
         if (gid >= 0) 
         {

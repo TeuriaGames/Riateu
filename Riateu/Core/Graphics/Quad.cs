@@ -8,7 +8,7 @@ namespace Riateu.Graphics;
 /// A struct that defines a quad for a given texture. Can be used to 
 /// define an <see cref="Riateu.Graphics.Atlas"/>.
 /// </summary>
-public struct Quad : IEquatable<Quad>
+public struct TextureQuad : IEquatable<TextureQuad>
 {
     /// <summary>
     /// A UV of a quad.
@@ -43,10 +43,10 @@ public struct Quad : IEquatable<Quad>
     private int height;
 
     /// <summary>
-    /// Initialize the <see cref="Riateu.Graphics.Quad"/> by texture.
+    /// Initialize the <see cref="Riateu.Graphics.TextureQuad"/> by texture.
     /// </summary>
     /// <param name="texture">A texture to based on dimensions</param>
-    public Quad(Texture texture) 
+    public TextureQuad(Texture texture) 
         : this(
             texture, 
             new Rect(0, 0, (int)texture.Width, (int)texture.Height)
@@ -56,11 +56,31 @@ public struct Quad : IEquatable<Quad>
     }
 
     /// <summary>
-    /// Initialize the <see cref="Riateu.Graphics.Quad"/> and specifiy its quad source.
+    /// Initialize the <see cref="Riateu.Graphics.TextureQuad"/> and specifiy its quad source.
+    /// </summary>
+    /// <param name="size">A size of a total texture</param>
+    /// <param name="source">A quad source for the texture</param>
+    public TextureQuad(Point size, Rect source) 
+    {
+        Source = source;
+        width = source.W;
+        height = source.H;
+
+        var sx = source.X / (float)size.X;
+        var sy = source.Y / (float)size.Y;
+        
+        var sw = source.W / (float)size.X;
+        var sh = source.H / (float)size.Y;
+
+        UV = new UV(Position = new Vector2(sx, sy), Dimensions = new Vector2(sw, sh));
+    }
+
+    /// <summary>
+    /// Initialize the <see cref="Riateu.Graphics.TextureQuad"/> and specifiy its quad source.
     /// </summary>
     /// <param name="texture">A texture to based on dimensions</param>
     /// <param name="source">A quad source for the texture</param>
-    public Quad(Texture texture, Rect source) 
+    public TextureQuad(Texture texture, Rect source) 
     {
         Source = source;
         width = source.W;
@@ -76,12 +96,12 @@ public struct Quad : IEquatable<Quad>
     }
 
     /// <summary>
-    /// Initialize the <see cref="Riateu.Graphics.Quad"/> and specifiy 
+    /// Initialize the <see cref="Riateu.Graphics.TextureQuad"/> and specifiy 
     /// its quad source by the UV.
     /// </summary>
     /// <param name="texture">A texture to based on dimensions</param>
     /// <param name="uv">A UV coords of a texture to set the quad source</param>
-    public Quad(Texture texture, UV uv) 
+    public TextureQuad(Texture texture, UV uv) 
     {
         UV = uv;
 
@@ -95,7 +115,7 @@ public struct Quad : IEquatable<Quad>
     }
 
     /// <inheritdoc/>
-    public bool Equals(Quad other)
+    public bool Equals(TextureQuad other)
     {
         return other.Source.X == Source.X &&
             other.Source.Y == Source.Y &&

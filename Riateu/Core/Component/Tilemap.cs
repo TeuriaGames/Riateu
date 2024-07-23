@@ -10,7 +10,7 @@ namespace Riateu.Components;
 /// </summary>
 public class Tilemap : Component
 {
-    private Array2D<Quad?> tiles;
+    private Array2D<TextureQuad?> tiles;
     private Texture tilemapTexture;
     private Matrix4x4 Matrix;
     private int gridSize;
@@ -25,7 +25,7 @@ public class Tilemap : Component
     /// <param name="texture">A texture used for tilemap</param>
     /// <param name="tiles">A tiles containing the map of the tiles</param>
     /// <param name="gridSize">A size of a grid in tiles</param>
-    public Tilemap(Texture texture, Array2D<Quad?> tiles, int gridSize)
+    public Tilemap(Texture texture, Array2D<TextureQuad?> tiles, int gridSize)
     {
         int rows = tiles.Rows;
         int columns = tiles.Columns;
@@ -49,7 +49,7 @@ public class Tilemap : Component
     /// <param name="x">A grid x</param>
     /// <param name="y">A grid y</param>
     /// <param name="texture">A quad or null value</param>
-    public void SetTile(int x, int y, Quad? texture)
+    public void SetTile(int x, int y, TextureQuad? texture)
     {
         if (ArrayUtils.ArrayCheck(x, y, tiles))
             tiles[x, y] = texture;

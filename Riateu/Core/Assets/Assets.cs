@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using MoonWorks.Graphics;
+using MoonWorks.Math.Float;
 using Riateu.Graphics;
 
 namespace Riateu.Content;
@@ -16,20 +20,55 @@ public class Ref<T>(T data)
     }
 }
 
+public record struct AtlasItem(string Name, Image Image);
+
 public class AssetStorage
 {
     private Dictionary<string, IAssets> assetsCache = new Dictionary<string, IAssets>();
     private string assetPath;
     private ResourceUploader uploader;
+    private Packer<AtlasItem> packer;
 
     public AssetStorage(string path) 
     {
         assetPath = path;
+        packer = new Packer<AtlasItem>(8192);
     }
 
     public void StartContext(ResourceUploader uploader) 
     {
         this.uploader = uploader;
+    }
+
+    public Atlas CreateAtlas(string basePath) 
+    {
+        void Crawl(string path) 
+        {
+            var directories = Directory.GetDirectories(path);
+            foreach (var directory in directories) 
+            {
+                Crawl(directory);
+                var files = Directory.GetFiles(directory).Where(x => x.EndsWith("png"));
+                foreach (var file in files) 
+                {
+                    string name = Path.Join(directory, Path.GetFileNameWithoutExtension(file)).Replace('\\', '/')
+                        .Substring(basePath.Length + 1);
+                    Image image = new Image(file);
+                    packer.Add(new Packer<AtlasItem>.Item(new AtlasItem(name, image), image.Width, image.Height));
+                }
+            }
+        }
+        if (basePath.EndsWith(Path.DirectorySeparatorChar)) 
+        {
+            basePath = basePath.Substring(0, basePath.Length - 1);
+        }
+
+        Crawl(basePath);
+        if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
+        {
+            return Atlas.LoadFromPacker(uploader, items, size);
+        }
+        return null;
     }
 
     public Ref<Texture> LoadTexture(string path) 
@@ -65,7 +104,7 @@ public class AssetStorage
         return spriteFont;
     }
 
-    public SpriteFont LoadFont(string path, Texture texture, Quad quad) 
+    public SpriteFont LoadFont(string path, Texture texture, TextureQuad quad) 
     {
         if (assetsCache.TryGetValue(path, out IAssets asset)) 
         {

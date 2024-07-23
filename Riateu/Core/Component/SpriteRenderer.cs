@@ -62,7 +62,7 @@ public class SpriteRenderer : GraphicsComponent
     /// <param name="baseTexture">A texture for the sprite</param>
     /// <param name="texture">A quad for the sprite</param>
     /// <returns></returns>
-    public SpriteRenderer(Texture baseTexture, Quad texture) : base(texture, baseTexture)
+    public SpriteRenderer(Texture baseTexture, TextureQuad texture) : base(texture, baseTexture)
     {
     }
 

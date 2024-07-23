@@ -51,7 +51,7 @@ public class SpriteFont : IAssets
     /// <param name="texture">A texture to be used</param>
     /// <param name="quad">A texture cooordinates from the texture</param>
     /// <param name="jsonPath">A path to the font data [fontbm]</param>
-    public SpriteFont(Texture texture, Quad quad, string jsonPath) 
+    public SpriteFont(Texture texture, TextureQuad quad, string jsonPath) 
     {
         fonts = JsonConvert.DeserializeFromFile<FontStruct>(jsonPath);
         lineHeight = fonts.Common.LineHeight;
@@ -59,7 +59,7 @@ public class SpriteFont : IAssets
         foreach (var character in fonts.Chars) 
         {
             char c = (char)character.ID;
-            Quad newQuad = new Quad(texture, new Rect(
+            TextureQuad newQuad = new TextureQuad(texture, new Rect(
                 quad.Source.X + character.X,
                 quad.Source.Y + character.Y,
                 character.Width,
@@ -85,7 +85,7 @@ public class SpriteFont : IAssets
         foreach (var character in fonts.Chars) 
         {
             char c = (char)character.ID;
-            Quad newQuad = new Quad(texture, new Rect(
+            TextureQuad newQuad = new TextureQuad(texture, new Rect(
                 character.X,
                 character.Y,
                 character.Width,
@@ -233,7 +233,7 @@ public class SpriteFont : IAssets
 /// <summary>
 /// A character struct that holds the offset, advance and the texture coordinates.
 /// </summary>
-public record struct Character(int XOffset, int YOffset, int XAdvance, Quad Quad);
+public record struct Character(int XOffset, int YOffset, int XAdvance, TextureQuad Quad);
 
 
 internal partial struct FontStruct : IDeserialize 

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using MoonWorks.Graphics;
 using TeuJson;
 using Riateu.Content;
+using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
@@ -15,26 +16,30 @@ namespace Riateu.Graphics;
 public class Atlas : IAssets
 {
     /// <summary>
+    /// A base texture of an atlas.
+    /// </summary>
+    public Texture BaseTexture { get; private set; }
+    /// <summary>
     /// A property configuration whether the nine patch feature should be enabled.
     /// </summary>
     public bool NinePatchEnabled { get; set; } 
     private bool ninePatchEnabled;
 
-    private Dictionary<string, Quad> textures = new();
+    private Dictionary<string, TextureQuad> textures = new();
 
     /// <summary>
     /// A map to the quad by string.
     /// </summary>
-    public IReadOnlyDictionary<string, Quad> Lookup => textures;
+    public IReadOnlyDictionary<string, TextureQuad> Lookup => textures;
 
     /// <summary>
     /// Retrieve a quad by name
     /// </summary>
     /// <returns>
-    /// A <see cref="Riateu.Graphics.Quad"/> that is aligned to a specific quad 
+    /// A <see cref="Riateu.Graphics.TextureQuad"/> that is aligned to a specific quad 
     /// to the packed texture
     /// </returns>
-    public Quad this[string name] => Get(name);
+    public TextureQuad this[string name] => Get(name);
 
     /// <summary>
     /// Creates an empty atlas.
@@ -64,6 +69,22 @@ public class Atlas : IAssets
         return LoadFromStream(fs, texture, fileType, ninePatchEnabled);
     }
 
+    public static Atlas LoadFromPacker(ResourceUploader uploader, List<Packer<AtlasItem>.PackedItem> items, in Point size) 
+    {
+        var atlas = new Atlas();
+        Image image = new Image(size.X, size.Y);
+
+        foreach (var item in items) 
+        {
+            image.CopyFrom(item.Data.Image, item.Rect.X, item.Rect.Y);
+            atlas.Add(item.Data.Name, new TextureQuad(size, new Rect(item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height)));
+        }
+
+        Texture texture = uploader.CreateTexture2D<Color>(image.Pixels, (uint)size.X, (uint)size.Y);
+        atlas.BaseTexture = texture;
+        return atlas;
+    }
+
     /// <summary>
     /// A method that load and create an atlas from a file.
     /// </summary>
@@ -75,6 +96,7 @@ public class Atlas : IAssets
     public static Atlas LoadFromStream(Stream stream, Texture texture, JsonType fileType = JsonType.Json, bool ninePatchEnabled = false) 
     {
         var atlas = new Atlas();
+        atlas.BaseTexture = texture;
         atlas.ninePatchEnabled = ninePatchEnabled;
         switch (fileType) 
         {
@@ -93,7 +115,7 @@ public class Atlas : IAssets
 
                 if (!value.Contains("nine_patch")) 
                 {
-                    var spriteTexture = new Quad(texture, new Rect(x, y, w, h));
+                    var spriteTexture = new TextureQuad(texture, new Rect(x, y, w, h));
                     atlas.textures[key] = spriteTexture;
                     continue;
                 }
@@ -105,7 +127,7 @@ public class Atlas : IAssets
                 int nh = ninePatch["h"];
                 // TODO add nine patch
 
-                var ninePatchTexture = new Quad(texture, new Rect(x, y, w, h));
+                var ninePatchTexture = new TextureQuad(texture, new Rect(x, y, w, h));
                 atlas.textures[key] = ninePatchTexture;
             }
             return atlas;
@@ -123,15 +145,15 @@ public class Atlas : IAssets
 
                 if (!atlas.ninePatchEnabled) 
                 {
-                    var spriteTexture = new Quad(texture, new Rect(x, y, w, h));
+                    var spriteTexture = new TextureQuad(texture, new Rect(x, y, w, h));
                     atlas.textures[name] = spriteTexture;
                     continue;
                 }
                 var hasNinePatch = reader.ReadBoolean();
-                Quad ninePatchTexture;
+                TextureQuad ninePatchTexture;
                 if (!hasNinePatch) 
                 {
-                    ninePatchTexture = new Quad(texture, new Rect(x, y, w, h));
+                    ninePatchTexture = new TextureQuad(texture, new Rect(x, y, w, h));
                 }
                 else 
                 {
@@ -140,7 +162,7 @@ public class Atlas : IAssets
                     var nw = (int)reader.ReadUInt32();
                     var nh = (int)reader.ReadUInt32();
                     // TODO add nine patch here
-                    ninePatchTexture = new Quad(texture, new Rect(x, y, w, h));
+                    ninePatchTexture = new TextureQuad(texture, new Rect(x, y, w, h));
                 }
 
                 atlas.textures[name] = ninePatchTexture;
@@ -149,11 +171,11 @@ public class Atlas : IAssets
         }
     }
     /// <summary>
-    /// Add a <see cref="Riateu.Graphics.Quad"/> to the atlas.
+    /// Add a <see cref="Riateu.Graphics.TextureQuad"/> to the atlas.
     /// </summary>
     /// <param name="name">A name of the quad from the packed texture</param>
-    /// <param name="quad">A <see cref="Riateu.Graphics.Quad"/> from a texture with its specific position and dimension</param>
-    public void Add(string name, Quad quad) 
+    /// <param name="quad">A <see cref="Riateu.Graphics.TextureQuad"/> from a texture with its specific position and dimension</param>
+    public void Add(string name, TextureQuad quad) 
     {
         textures[name] = quad;
     }
@@ -163,10 +185,10 @@ public class Atlas : IAssets
     /// </summary>
     /// <param name="name">A name of the quad from the packed texture</param>
     /// <returns>
-    /// A <see cref="Riateu.Graphics.Quad"/> that is aligned to a specific quad 
+    /// A <see cref="Riateu.Graphics.TextureQuad"/> that is aligned to a specific quad 
     /// to the packed texture
     /// </returns>
-    public Quad Get(string name) 
+    public TextureQuad Get(string name) 
     {
         return textures[name];
     }
@@ -176,9 +198,9 @@ public class Atlas : IAssets
     /// </summary>
     /// <param name="name">A name of the quad from the packed texture</param>
     /// <returns>
-    /// A reference to a <see cref="Riateu.Graphics.Quad"/>.
+    /// A reference to a <see cref="Riateu.Graphics.TextureQuad"/>.
     /// </returns>
-    public ref Quad GetRef(string name) 
+    public ref TextureQuad GetRef(string name) 
     {
         ref var texture = ref CollectionsMarshal.GetValueRefOrNullRef(textures, name);
         if (Unsafe.IsNullRef(in texture)) 
@@ -187,4 +209,6 @@ public class Atlas : IAssets
         }
         return ref texture;
     }
+
+    public static implicit operator Texture(Atlas atlas) => atlas.BaseTexture;
 }

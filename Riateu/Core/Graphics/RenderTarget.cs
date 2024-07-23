@@ -7,7 +7,6 @@ public class RenderTarget : IDisposable
 {
     private Texture texture;
 
-    private RenderPass renderPass;
     private bool IsDisposed;
 
     public uint Width => texture.Width;

@@ -101,7 +101,7 @@ public class AnimationStorage : IAssets
                 bool loop = value.Contains("loop") && value["loop"];
                 var count = jsonFrames.Count;
 
-                var spriteTextures = new Quad[count];
+                var spriteTextures = new TextureQuad[count];
                 for (int i = 0; i < count; i++) 
                 {
                     spriteTextures[i] = atlas[spriteName + "/" + jsonFrames[i].AsInt32];

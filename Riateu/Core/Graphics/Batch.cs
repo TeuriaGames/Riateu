@@ -339,7 +339,7 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="position">A position to where it should draw</param>
     /// <param name="color">A color mask</param>
     /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
-    public void Draw(Quad quad, Vector2 position, Color color, float layerDepth = 1)
+    public void Draw(TextureQuad quad, Vector2 position, Color color, float layerDepth = 1)
     {
         Draw(quad, position, color, Vector2.One, Vector2.Zero, layerDepth);
     }
@@ -353,7 +353,7 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="scale">A scale of the drawn texture</param>
     /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
     /// <inheritdoc/>
-    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, float layerDepth = 1)
+    public void Draw(TextureQuad quad, Vector2 position, Color color, Vector2 scale, float layerDepth = 1)
     {
         Draw(quad, position, color, scale, Vector2.Zero, layerDepth);
     }
@@ -369,7 +369,7 @@ public class Batch : System.IDisposable, IRenderable
     /// <inheritdoc/>
     public void Draw(Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
     {
-        Draw(new Quad(queues[onQueue].Binding.Texture), position, color, scale, origin, 0, layerDepth);
+        Draw(new TextureQuad(queues[onQueue].Binding.Texture), position, color, scale, origin, 0, layerDepth);
     }
 
     /// <summary>
@@ -380,7 +380,7 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
     public void Draw(Vector2 position, Color color, float layerDepth = 1)
     {
-        Draw(new Quad(queues[onQueue].Binding.Texture), position, color, Vector2.One, Vector2.Zero, layerDepth);
+        Draw(new TextureQuad(queues[onQueue].Binding.Texture), position, color, Vector2.One, Vector2.Zero, layerDepth);
     }
 
     /// <summary>
@@ -392,7 +392,7 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="scale">A scale of the drawn texture</param>
     /// <param name="origin">An origin or offset of the drawn texture</param>
     /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
-    public void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
+    public void Draw(TextureQuad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float layerDepth = 1)
     {
         Draw(quad, position, color, scale, origin, 0, layerDepth);
     }
@@ -407,7 +407,7 @@ public class Batch : System.IDisposable, IRenderable
     /// <param name="origin">An origin or offset of the drawn texture</param>
     /// <param name="rotation">A rotation of the drawn texture</param>
     /// <param name="layerDepth">A depth of the layer of the drawn texture</param>
-    public unsafe void Draw(Quad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1)
+    public unsafe void Draw(TextureQuad quad, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, float layerDepth = 1)
     {
 #if DEBUG
         AssertDoesBegin();

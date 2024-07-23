@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using MoonWorks.Math.Float;
 
+namespace Riateu.Content;
+
 public class Packer<T> 
 {
     public struct Node(int x, int y, int w, int h) 

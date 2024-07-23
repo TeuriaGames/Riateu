@@ -25,7 +25,7 @@ public class Tileset
     /// <param name="tileHeight">A tile height of this <see cref="Riateu.Graphics.Tileset"/></param>
     public Tileset(
         Texture tileset, 
-        Quad atlasTexture,
+        TextureQuad atlasTexture,
         int tileWidth,
         int tileHeight) 
     {
@@ -103,13 +103,13 @@ public class Tileset
     /// </summary>
     /// <param name="bit">A bit of the ruleset</param>
     /// <returns>A list of tile textures</returns>
-    public Quad[] GetTilesFromBit(byte bit) 
+    public TextureQuad[] GetTilesFromBit(byte bit) 
     {
         if (rules.TryGetValue(bit, out var rule)) 
         {
             return rule.Tiles;
         }
-        return Array.Empty<Quad>();
+        return Array.Empty<TextureQuad>();
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public struct Ruleset
     /// <summary>
     /// The tiles that will be randomly chosen.
     /// </summary>
-    public Quad[] Tiles;
+    public TextureQuad[] Tiles;
 
     /// <summary>
     /// An initialization for ruleset
@@ -159,7 +159,7 @@ public struct Ruleset
     public Ruleset(string name, string mask, int tileCount) 
     {
         Name = name;
-        Tiles = new Quad[tileCount];
+        Tiles = new TextureQuad[tileCount];
         var strMask = mask.AsSpan();
 
         for (int i = 0; i < strMask.Length; i++) 
