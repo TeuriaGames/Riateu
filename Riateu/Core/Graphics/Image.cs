@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using MoonWorks.Graphics;
 using MoonWorks.Math.Float;
 
+namespace Riateu;
+
 public class Image : IDisposable
 {
     public int Width { get; private set; }
