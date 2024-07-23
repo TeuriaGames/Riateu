@@ -300,4 +300,36 @@ public static class MathUtils
     {
         return new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
     }
+
+    public static Point Size(this Rectangle rectangle) 
+    {
+        return new Point(rectangle.Width, rectangle.Height);
+    }
+
+    public static Vector2 SizeF(this Rectangle rectangle) 
+    {
+        return new Vector2(rectangle.Width, rectangle.Height);
+    }
+
+    public static Rectangle Overlap(this Rectangle rectangle, in Rectangle other) 
+    {
+        bool overlapX = rectangle.Right > other.Left && rectangle.Left < other.Right;
+        bool overlapY = rectangle.Bottom > other.Top && rectangle.Top < other.Bottom;
+
+        Rectangle result = new Rectangle();
+
+        if (overlapX) 
+        {
+            result.X = Math.Max(rectangle.Left, other.Left);
+            result.Width = Math.Min(rectangle.Right, other.Right) - result.X;
+        }
+
+        if (overlapY) 
+        {
+            result.Y = Math.Max(rectangle.Top, other.Top);
+            result.Height = Math.Min(rectangle.Bottom, other.Bottom) - result.Y;
+        }
+
+        return result;
+    }
 }
