@@ -5,14 +5,41 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591</NoWarn>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
-  <Import Project="../Sunpack.targets" />
+  <ItemGroup>
+    <ProjectReference Include="../.sunpack-dep/MoonWorks/MoonWorks.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>MoonWorks.dll</IncludeAssets>
+    </ProjectReference>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="TeuJson" Version="2.2.1" />
     <PackageReference Include="TeuJson.Generator" Version="2.2.1" />
     <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+		<Content Include="../runtimes/x64/**/*.*">
+			<Link>%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Windows'))">PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+		</Content>
+    <Content Include="../runtimes/osx/**/*.*">
+			<Link>%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('OSX'))">PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>runtimes/osx-x64/native</PackagePath>
+		</Content>
+    <Content Include="../runtimes/lib64/**/*.*">
+			<Link>%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Linux'))" >PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>runtimes/linux-x64/native</PackagePath>
+		</Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -72,4 +99,10 @@
 		</EmbeddedResource>
 
 	</ItemGroup>
+
+	<Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+		</ItemGroup>
+	</Target>
 </Project>
