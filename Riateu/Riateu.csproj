@@ -9,10 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../.sunpack-dep/MoonWorks/MoonWorks.csproj">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>MoonWorks.dll</IncludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="../.sunpack-dep/MoonWorks/MoonWorks.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
