@@ -69,15 +69,7 @@ public abstract class GameApp : Game
     /// <param name="targetTimestep">The maximum fps timestep</param>
     /// <param name="debugMode">Enable or disable debug mode, use for debugging graphics</param>
     protected GameApp(WindowCreateInfo windowCreateInfo, FrameLimiterSettings frameLimiterSettings, int targetTimestep = 60, bool debugMode = false)
-        : base(windowCreateInfo, SwapchainComposition.SDR, PresentMode.VSync, frameLimiterSettings,
-#if D3D11
-        BackendFlags.D3D11,
-#elif Metal
-        BackendFlags.Metal,
-#elif Vulkan
-        BackendFlags.Vulkan,
-#endif
-        targetTimestep, debugMode)
+        : base(windowCreateInfo, SwapchainComposition.SDR, PresentMode.VSync, frameLimiterSettings, SelectAppropriateBackend(), targetTimestep, debugMode)
     {
         Instance = this;
         Width = (int)windowCreateInfo.WindowWidth;
@@ -90,6 +82,17 @@ public abstract class GameApp : Game
         LoadContent(Assets);
         Assets.EndContext();
         Scene = Initialize();
+    }
+
+    public static BackendFlags SelectAppropriateBackend() 
+    {
+        return Environment.OSVersion.Platform switch 
+        {
+            PlatformID.Unix => BackendFlags.Vulkan,
+            PlatformID.Other => BackendFlags.Metal,
+            PlatformID.Win32NT => BackendFlags.D3D11,
+            _ => BackendFlags.All
+        };
     }
 
     /// <summary>

@@ -1,9 +1,7 @@
 Package "Riateu"
     Version "2.0.0"
     Projects {
-        "Riateu/Riateu.Vulkan.csproj",
-        "Riateu/Riateu.D3D11.csproj",
-        "Riateu/Riateu.Metal.csproj"
+        "Riateu/Riateu.csproj"
     }
     Dependencies {
         MoonWorks = {

@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+
+  <Import Project="../Sunpack.targets" />
+
+  <ItemGroup>
+    <PackageReference Include="TeuJson" Version="2.2.1" />
+    <PackageReference Include="TeuJson.Generator" Version="2.2.1" />
+    <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <!-- Vulkan -->
+
+		<EmbeddedResource Include="Core\Misc\Vulkan\PositionTextureColor.vert.spv">
+			<LogicalName>Riateu.Misc.Vulkan.PositionTextureColor.vert.spv</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Vulkan\Texture.frag.spv">
+			<LogicalName>Riateu.Misc.Vulkan.Texture.frag.spv</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Vulkan\ImGuiShader.vert.spv">
+			<LogicalName>Riateu.Misc.Vulkan.ImGuiShader.vert.spv</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Vulkan\InstancedShader.vert.spv">
+			<LogicalName>Riateu.Misc.Vulkan.InstancedShader.vert.spv</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Vulkan\Spritebatch.comp.spv">
+			<LogicalName>Riateu.Misc.Vulkan.Spritebatch.comp.spv</LogicalName>
+		</EmbeddedResource>
+
+    <!-- Metal -->
+
+		<EmbeddedResource Include="Core\Misc\Metal\PositionTextureColor.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.PositionTextureColor.vert.metal</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Metal\Texture.frag.metal">
+			<LogicalName>Riateu.Misc.Metal.Texture.frag.metal</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Metal\ImGuiShader.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.ImGuiShader.vert.metal</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Metal\InstancedShader.vert.metal">
+			<LogicalName>Riateu.Misc.Metal.InstancedShader.vert.metal</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\Metal\Spritebatch.comp.metal">
+			<LogicalName>Riateu.Misc.Metal.Spritebatch.comp.metal</LogicalName>
+		</EmbeddedResource>
+
+    <!-- D3D11 -->
+
+		<EmbeddedResource Include="Core\Misc\D3D11\PositionTextureColor.vert.hlsl">
+			<LogicalName>Riateu.Misc.D3D11.PositionTextureColor.vert.hlsl</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\D3D11\Texture.frag.hlsl">
+			<LogicalName>Riateu.Misc.D3D11.Texture.frag.hlsl</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\D3D11\ImGuiShader.vert.hlsl">
+			<LogicalName>Riateu.Misc.D3D11.ImGuiShader.vert.hlsl</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\D3D11\InstancedShader.vert.hlsl">
+			<LogicalName>Riateu.Misc.D3D11.InstancedShader.vert.hlsl</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Core\Misc\D3D11\Spritebatch.comp.hlsl">
+			<LogicalName>Riateu.Misc.D3D11.Spritebatch.comp.hlsl</LogicalName>
+		</EmbeddedResource>
+
+	</ItemGroup>
+</Project>

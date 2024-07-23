@@ -7,3 +7,4 @@ runtimes/
 zig-out/
 .sunpack-dep/
 .vscode/
+artifacts/

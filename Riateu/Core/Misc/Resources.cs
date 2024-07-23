@@ -70,20 +70,20 @@ public static class Resources
         }
     }
 
-    private static string GetBackendName()
+    private static string GetBackendName(GraphicsDevice device)
     {
-#if D3D11
-        return "D3D11";
-#elif Metal
-        return "Metal";
-#elif Vulkan
-        return "Vulkan";
-#endif
+        return device.Backend switch 
+        {
+            BackendFlags.Vulkan => "Vulkan",
+            BackendFlags.D3D11 => "D3D11",
+            BackendFlags.Metal => "Metal",
+            _ => "Invalid"
+        };
     }
 
     private static byte[] GetShaderByte(string name)
     {
-        string backend = GetBackendName();
+        string backend = GetBackendName(GameContext.GraphicsDevice);
         Stream stream = typeof(Resources).Assembly.GetManifestResourceStream(
             $"Riateu.Misc.{backend}.{name}.spv"
         );
