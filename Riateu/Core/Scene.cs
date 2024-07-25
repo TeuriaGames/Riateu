@@ -45,7 +45,6 @@ public abstract class Scene : GameLoop
     
     private IPhysicsEngine physicsEngine;
 
-    public GraphicsDevice GraphicsDevice { get; private set; }
 
 
     /// <summary>
@@ -62,7 +61,6 @@ public abstract class Scene : GameLoop
         }
 
         physicsEngine = CreatePhysicsEngine();
-        GraphicsDevice = game.GraphicsDevice;
     }
 
     /// <summary>

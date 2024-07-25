@@ -12,6 +12,8 @@ public abstract class GameLoop
     /// </summary>
     public GameApp GameInstance { get; }
 
+    public GraphicsDevice GraphicsDevice { get; private set; }
+
     /// <summary>
     /// Create the game loop instance.
     /// </summary>
@@ -19,6 +21,7 @@ public abstract class GameLoop
     public GameLoop(GameApp gameApp) 
     {
         GameInstance = gameApp;
+        GraphicsDevice = gameApp.GraphicsDevice;
     }
 
     /// <summary>

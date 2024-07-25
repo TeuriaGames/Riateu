@@ -124,7 +124,6 @@ public abstract class GameApp
 
     private void InternalUpdate(float delta) 
     {
-        InputDevice.Update();
         if (scene == null || (scene != nextScene))
         {
             scene?.End();
