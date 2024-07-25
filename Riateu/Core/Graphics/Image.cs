@@ -1,10 +1,9 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
+using RefreshCS;
 
-namespace Riateu;
+namespace Riateu.Graphics;
 
 public class Image : IDisposable
 {
@@ -24,7 +23,6 @@ public class Image : IDisposable
     public IntPtr Data => data;
     private IntPtr data;
 
-    private GCHandle ptrHandle;
     private bool loadFromRefresh;
     private bool disposedValue;
 
@@ -38,12 +36,16 @@ public class Image : IDisposable
         }
     }
 
-    public Image(Color[] color, int width, int height) 
+    public unsafe Image(Span<Color> color, int width, int height) 
     {
         Width = width;
         Height = height;
-        ptrHandle = GCHandle.Alloc(color, GCHandleType.Pinned);
-        data = ptrHandle.AddrOfPinnedObject();
+        Color* ptr = (Color*)NativeMemory.Alloc((uint)color.Length * 4);
+        for (int i = 0; i < color.Length; i++) 
+        {
+            ptr[i] = color[i].RGBA;
+        }
+        data = (IntPtr)ptr;
     }
 
     public Image(string path) 
@@ -59,16 +61,27 @@ public class Image : IDisposable
 
     private unsafe void Load(Stream stream) 
     {
-        IntPtr mem = (IntPtr)ImageUtils.GetPixelDataFromStream(stream, out uint w, out uint h, out _);
+		var length = stream.Length;
+		var buffer = NativeMemory.Alloc((nuint) length);
+		var span = new Span<byte>(buffer, (int) length);
+		stream.ReadExactly(span);
 
-        if (mem == IntPtr.Zero) 
+        fixed (byte* ptr = span) 
+        {
+			var pixelData = Refresh.Refresh_Image_Load(ptr, span.Length, out var w, out var h, out var len);
+
+			Width = w;
+			Height = h;
+            data = (IntPtr)pixelData;
+        }
+
+		NativeMemory.Free(buffer);
+
+        if (data == IntPtr.Zero) 
         {
             throw new Exception("Failed to load an image.");
         }
 
-        Width = (int)w;
-        Height = (int)h;
-        this.data = mem;
         loadFromRefresh = true;
     }
 
@@ -108,7 +121,7 @@ public class Image : IDisposable
     {
         unsafe 
         {
-            ImageUtils.SavePNG(path, Pixels, Width, Height);
+            Refresh.Refresh_Image_SavePNG(path, (byte*)data, Width, Height);
         }
     }
 
@@ -120,14 +133,13 @@ public class Image : IDisposable
         {
             if (loadFromRefresh) 
             {
-                ImageUtils.FreePixelData((byte*)data);
+                Refresh.Refresh_Image_Free((byte*)data);
             }
             else 
             {
-                ptrHandle.Free();
+                NativeMemory.Free((byte*)data);
             }
 
-            ptrHandle = default;
             data = IntPtr.Zero;
             GC.SuppressFinalize(this);
             disposedValue = true;

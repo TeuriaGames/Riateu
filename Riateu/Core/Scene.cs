@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Riateu.Components;
+using Riateu.Graphics;
 using Riateu.Physics;
 
 namespace Riateu;
@@ -44,6 +45,8 @@ public abstract class Scene : GameLoop
     
     private IPhysicsEngine physicsEngine;
 
+    public GraphicsDevice GraphicsDevice { get; private set; }
+
 
     /// <summary>
     /// An initialization for the scene.
@@ -59,6 +62,7 @@ public abstract class Scene : GameLoop
         }
 
         physicsEngine = CreatePhysicsEngine();
+        GraphicsDevice = game.GraphicsDevice;
     }
 
     /// <summary>

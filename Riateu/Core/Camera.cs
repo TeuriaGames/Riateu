@@ -1,6 +1,6 @@
 using System;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
+using System.Numerics;
+using Riateu.Graphics;
 
 namespace Riateu;
 
@@ -49,7 +49,7 @@ public struct Camera(int width, int height, bool flipped = false)
 
         transform = model * view * projection;
 
-        Matrix4x4.Invert(ref transform, out inverse);
+        Matrix4x4.Invert(transform, out inverse);
         dirty = false;
     }
 

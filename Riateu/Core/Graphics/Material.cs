@@ -1,5 +1,3 @@
-using MoonWorks.Graphics;
-
 namespace Riateu.Graphics;
 
 public class Material 
@@ -7,9 +5,12 @@ public class Material
     private GraphicsPipeline shaderPipeline;
     public GraphicsPipeline ShaderPipeline => shaderPipeline;
 
-    public Material(GraphicsPipeline shader) 
+    public GraphicsDevice GraphicsDevice { get; internal set; }
+
+    public Material(GraphicsDevice device, GraphicsPipeline shader) 
     {
         shaderPipeline = shader;
+        GraphicsDevice = device;
     }
 
 
@@ -22,15 +23,15 @@ public struct VertexUniformBinder
 
     public VertexUniformBinder() {}
 
-    public void BindVertex<T>(T uniform) 
+    public void BindVertex<T>(GraphicsDevice device, T uniform) 
     where T : unmanaged
     {
-        GraphicsExecutor.Executor.PushVertexUniformData<T>(uniform, slotManaged++);
+        device.DeviceCommandBuffer().PushVertexUniformData<T>(uniform, slotManaged);
     }
 
-    public void BindFragment<T>(T uniform) 
+    public void BindFragment<T>(GraphicsDevice device, T uniform) 
     where T : unmanaged
     {
-        GraphicsExecutor.Executor.PushVertexUniformData<T>(uniform, slotManaged++);
+        device.DeviceCommandBuffer().PushFragmentUniformData<T>(uniform, slotManaged);
     }
 }

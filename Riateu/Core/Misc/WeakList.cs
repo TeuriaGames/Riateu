@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using MoonWorks;
 
 namespace Riateu;
 
@@ -21,8 +20,7 @@ public class WeakList<T>
             var objCheck = buffer[idx];
             if (objCheck == null) 
             {
-                Logger.LogError(
-                    "You cannot replace an object that doesn't exist yet or null. If you meant to add an element, use Add(T)");
+                throw new Exception("You cannot replace an object that doesn't exist yet or null. If you meant to add an element, use Add(T)");
             }
 #endif
             buffer[idx] = value;
@@ -60,7 +58,7 @@ public class WeakList<T>
     {
         if (index >= Count) 
         {
-            Logger.LogError($"Index {index} out of range!");
+            throw new Exception($"Index {index} out of range!");
         }
         Count--;
         if (index < Count)

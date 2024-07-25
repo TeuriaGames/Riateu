@@ -1,0 +1,7 @@
+[submodule "lib/SDL2-CS"]
+	path = lib/SDL2-CS
+	url = https://github.com/flibitijibibo/SDL2-CS.git
+[submodule "lib/RefreshCS"]
+	path = lib/RefreshCS
+	url = https://github.com/MoonsideGames/RefreshCS.git
+	branch = refresh2

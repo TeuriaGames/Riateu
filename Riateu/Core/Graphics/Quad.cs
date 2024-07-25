@@ -1,7 +1,5 @@
 using System;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
-
+using System.Numerics;
 namespace Riateu.Graphics;
 
 /// <summary>
@@ -27,7 +25,7 @@ public struct TextureQuad : IEquatable<TextureQuad>
     /// <summary>
     /// The source rect of a quad.
     /// </summary>
-    public Rect Source;
+    public Rectangle Source;
 
     /// <summary>
     /// A width of a quad texture.
@@ -49,7 +47,7 @@ public struct TextureQuad : IEquatable<TextureQuad>
     public TextureQuad(Texture texture) 
         : this(
             texture, 
-            new Rect(0, 0, (int)texture.Width, (int)texture.Height)
+            new Rectangle(0, 0, (int)texture.Width, (int)texture.Height)
 
         )
     {
@@ -60,17 +58,17 @@ public struct TextureQuad : IEquatable<TextureQuad>
     /// </summary>
     /// <param name="size">A size of a total texture</param>
     /// <param name="source">A quad source for the texture</param>
-    public TextureQuad(Point size, Rect source) 
+    public TextureQuad(Point size, Rectangle source) 
     {
         Source = source;
-        width = source.W;
-        height = source.H;
+        width = source.Width;
+        height = source.Height;
 
         var sx = source.X / (float)size.X;
         var sy = source.Y / (float)size.Y;
         
-        var sw = source.W / (float)size.X;
-        var sh = source.H / (float)size.Y;
+        var sw = source.Width / (float)size.X;
+        var sh = source.Height / (float)size.Y;
 
         UV = new UV(Position = new Vector2(sx, sy), Dimensions = new Vector2(sw, sh));
     }
@@ -80,17 +78,17 @@ public struct TextureQuad : IEquatable<TextureQuad>
     /// </summary>
     /// <param name="texture">A texture to based on dimensions</param>
     /// <param name="source">A quad source for the texture</param>
-    public TextureQuad(Texture texture, Rect source) 
+    public TextureQuad(Texture texture, Rectangle source) 
     {
         Source = source;
-        width = source.W;
-        height = source.H;
+        width = source.Width;
+        height = source.Height;
 
         var sx = source.X / (float)texture.Width;
         var sy = source.Y / (float)texture.Height;
         
-        var sw = source.W / (float)texture.Width;
-        var sh = source.H / (float)texture.Height;
+        var sw = source.Width / (float)texture.Width;
+        var sh = source.Height / (float)texture.Height;
 
         UV = new UV(Position = new Vector2(sx, sy), Dimensions = new Vector2(sw, sh));
     }
@@ -111,7 +109,7 @@ public struct TextureQuad : IEquatable<TextureQuad>
         int gw = (int)(Dimensions.X) * (int)texture.Width;
         int gh = (int)(Dimensions.Y) * (int)texture.Height;
 
-        Source = new Rect(gx, gy, gw, gh);
+        Source = new Rectangle(gx, gy, gw, gh);
     }
 
     /// <inheritdoc/>
@@ -119,8 +117,8 @@ public struct TextureQuad : IEquatable<TextureQuad>
     {
         return other.Source.X == Source.X &&
             other.Source.Y == Source.Y &&
-            other.Source.W == Source.W &&
-            other.Source.H == Source.H;
+            other.Source.Width == Source.Width &&
+            other.Source.Height == Source.Height;
     }
 
     /// <summary>

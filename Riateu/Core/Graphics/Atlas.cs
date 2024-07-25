@@ -2,10 +2,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using MoonWorks.Graphics;
 using TeuJson;
 using Riateu.Content;
-using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
@@ -77,7 +75,7 @@ public class Atlas : IAssets
         foreach (var item in items) 
         {
             image.CopyFrom(item.Data.Image, item.Rect.X, item.Rect.Y);
-            atlas.Add(item.Data.Name, new TextureQuad(size, new Rect(item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height)));
+            atlas.Add(item.Data.Name, new TextureQuad(size, new Rectangle(item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height)));
         }
 
         Texture texture = uploader.CreateTexture2D<Color>(image.Pixels, (uint)size.X, (uint)size.Y);
@@ -115,7 +113,7 @@ public class Atlas : IAssets
 
                 if (!value.Contains("nine_patch")) 
                 {
-                    var spriteTexture = new TextureQuad(texture, new Rect(x, y, w, h));
+                    var spriteTexture = new TextureQuad(texture, new Rectangle(x, y, w, h));
                     atlas.textures[key] = spriteTexture;
                     continue;
                 }
@@ -127,7 +125,7 @@ public class Atlas : IAssets
                 int nh = ninePatch["h"];
                 // TODO add nine patch
 
-                var ninePatchTexture = new TextureQuad(texture, new Rect(x, y, w, h));
+                var ninePatchTexture = new TextureQuad(texture, new Rectangle(x, y, w, h));
                 atlas.textures[key] = ninePatchTexture;
             }
             return atlas;
@@ -145,7 +143,7 @@ public class Atlas : IAssets
 
                 if (!atlas.ninePatchEnabled) 
                 {
-                    var spriteTexture = new TextureQuad(texture, new Rect(x, y, w, h));
+                    var spriteTexture = new TextureQuad(texture, new Rectangle(x, y, w, h));
                     atlas.textures[name] = spriteTexture;
                     continue;
                 }
@@ -153,7 +151,7 @@ public class Atlas : IAssets
                 TextureQuad ninePatchTexture;
                 if (!hasNinePatch) 
                 {
-                    ninePatchTexture = new TextureQuad(texture, new Rect(x, y, w, h));
+                    ninePatchTexture = new TextureQuad(texture, new Rectangle(x, y, w, h));
                 }
                 else 
                 {
@@ -162,7 +160,7 @@ public class Atlas : IAssets
                     var nw = (int)reader.ReadUInt32();
                     var nh = (int)reader.ReadUInt32();
                     // TODO add nine patch here
-                    ninePatchTexture = new TextureQuad(texture, new Rect(x, y, w, h));
+                    ninePatchTexture = new TextureQuad(texture, new Rectangle(x, y, w, h));
                 }
 
                 atlas.textures[name] = ninePatchTexture;

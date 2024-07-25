@@ -1,15 +1,13 @@
+using System.Numerics;
 using System.Runtime.InteropServices;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
 /// <summary>
-/// A vertex type to be used for the <see cref="GameContext.InstancedMaterial"/>.
-/// It can also be used elsewhere.
+/// A vertex type to be used for any instancing material.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct InstancedVertex(Vector3 position, Vector2 scale, UV uv, Color color) : IVertexType
+public struct InstancedVertex(Vector3 position, Vector2 scale, UV uv, Color color) : IVertexFormat
 {
     /// <summary>
     /// The position of the vertex.
@@ -48,35 +46,21 @@ public struct InstancedVertex(Vector3 position, Vector2 scale, UV uv, Color colo
     /// </summary>
     public Color Color = color;
 
-    /// <summary>
-    /// The element format used in the <see cref="GameContext.InstancedMaterial"/>. And also
-    /// for other pipeline.
-    /// </summary>
-    public static VertexElementFormat[] Formats => [
-        VertexElementFormat.Vector3,
 
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
+    public static VertexAttribute[] Attributes(uint binding)
+    {
+        return [
+            new VertexAttribute(binding, 0, VertexElementFormat.Vector3, 0),
 
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Float,
-        VertexElementFormat.Color,
-    ];
+            new VertexAttribute(binding, 1, VertexElementFormat.Vector2, 12),
+            new VertexAttribute(binding, 2, VertexElementFormat.Vector2, 20),
+            new VertexAttribute(binding, 3, VertexElementFormat.Vector2, 28),
+            new VertexAttribute(binding, 4, VertexElementFormat.Vector2, 36),
 
-    public static uint[] Offsets => [
-        0, // 4x3=12
-
-        12, // 2x4+12=20,
-        20, // 2x4+20=28,
-        28, // 2x4+28=36,
-        36, // 2x4+36=44,
-
-        44, // 2x4+44=52,
-        52, // 2x4+52=60,
-        60, // 4+60=64,
-        64, // 4+64=68
-    ];
+            new VertexAttribute(binding, 5, VertexElementFormat.Vector2, 44),
+            new VertexAttribute(binding, 6, VertexElementFormat.Vector2, 52),
+            new VertexAttribute(binding, 7, VertexElementFormat.Float, 60),
+            new VertexAttribute(binding, 8, VertexElementFormat.Color, 64),
+        ];
+    }
 }

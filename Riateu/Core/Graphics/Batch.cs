@@ -1,10 +1,7 @@
-using GpuBuffer = MoonWorks.Graphics.Buffer;
-using MoonWorks;
-using MoonWorks.Graphics;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using MoonWorks.Math.Float;
+using System.Numerics;
 
 namespace Riateu.Graphics;
 
@@ -23,9 +20,9 @@ public class Batch : System.IDisposable, IRenderable
 
     private bool rendered;
 
-    private GpuBuffer vertexBuffer;
-    private GpuBuffer indexBuffer;
-    private GpuBuffer computeBuffer;
+    private StructuredBuffer<PositionTextureColorVertex> vertexBuffer;
+    private StructuredBuffer<uint> indexBuffer;
+    private StructuredBuffer<ComputeData> computeBuffer;
     private TransferBuffer transferComputeBuffer;
     private BatchQueue[] queues = new BatchQueue[InitialMaxQueues];
     private uint onQueue = uint.MaxValue;
@@ -57,24 +54,24 @@ public class Batch : System.IDisposable, IRenderable
     {
         this.device = device;
 
-        vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(device, 
+        vertexBuffer = new StructuredBuffer<PositionTextureColorVertex>(device, 
             BufferUsageFlags.Vertex 
             | BufferUsageFlags.ComputeStorageRead
             | BufferUsageFlags.ComputeStorageWrite, MaxTextures * 4);
         indexBuffer = GenerateIndexArray(device, MaxTextures * 6);
 
         transferComputeBuffer = TransferBuffer.Create<ComputeData>(device, TransferBufferUsage.Upload, MaxTextures);
-        computeBuffer = GpuBuffer.Create<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, MaxTextures);
+        computeBuffer = new StructuredBuffer<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, MaxTextures);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
         Matrix = view * projection;
     }
 
-    private static unsafe GpuBuffer GenerateIndexArray(GraphicsDevice device, uint maxIndices)
+    private static unsafe StructuredBuffer<uint> GenerateIndexArray(GraphicsDevice device, uint maxIndices)
     {
         using TransferBuffer transferBuffer = TransferBuffer.Create<uint>(device, TransferBufferUsage.Upload, maxIndices);
-        GpuBuffer indexBuffer = GpuBuffer.Create<uint>(device, BufferUsageFlags.Index, maxIndices);
+        StructuredBuffer<uint> indexBuffer = new StructuredBuffer<uint>(device, BufferUsageFlags.Index, maxIndices);
 
         transferBuffer.Map(false, out byte* mapPtr);
         uint* indexPtr = (uint*)mapPtr;
@@ -202,7 +199,7 @@ public class Batch : System.IDisposable, IRenderable
     /// <inheritdoc/>
     private void BindUniformMatrix(in Matrix4x4 matrix)
     {
-        GraphicsExecutor.Executor.PushVertexUniformData<Matrix4x4>(matrix, 0);
+        device.DeviceCommandBuffer().PushVertexUniformData(matrix, 0);
     }
 
     public void Flush() 
@@ -210,11 +207,11 @@ public class Batch : System.IDisposable, IRenderable
 #if DEBUG
         if (DEBUG_isFlushed) 
         {
-            Logger.LogWarn("The state has been flushed, yet has been flushed again. Avoid doing this everytime as it cost performance.");
+            Console.WriteLine("The state has been flushed, yet has been flushed again. Avoid doing this everytime as it cost performance.");
         }
         DEBUG_isFlushed = true;
 #endif
-        CommandBuffer cmdBuf = GraphicsExecutor.Executor;
+        CommandBuffer cmdBuf = device.DeviceCommandBuffer();
 
         CopyPass copyPass = cmdBuf.BeginCopyPass();
         copyPass.UploadToBuffer(transferComputeBuffer, computeBuffer, true);
@@ -278,7 +275,7 @@ public class Batch : System.IDisposable, IRenderable
         indexBuffer = GenerateIndexArray(device, (uint)(maxTextures * 6));
 
         vertexBuffer.Dispose();
-        vertexBuffer = GpuBuffer.Create<PositionTextureColorVertex>(
+        vertexBuffer = new StructuredBuffer<PositionTextureColorVertex>(
             device, 
             BufferUsageFlags.Vertex 
             | BufferUsageFlags.ComputeStorageRead 
@@ -288,7 +285,7 @@ public class Batch : System.IDisposable, IRenderable
         transferComputeBuffer = TransferBuffer.Create<ComputeData>(device, TransferBufferUsage.Upload, maxTextures);
 
         computeBuffer.Dispose();
-        computeBuffer = GpuBuffer.Create<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
+        computeBuffer = new StructuredBuffer<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
         currentMaxTexture = maxTextures;
         unsafe {
             transferComputeBuffer.Map(true, out byte* data);
@@ -318,7 +315,7 @@ public class Batch : System.IDisposable, IRenderable
     ~Batch()
     {
 #if DEBUG
-        Logger.LogWarn($"The type {this.GetType()} has not been disposed properly.");
+        Console.WriteLine($"The type {this.GetType()} has not been disposed properly.");
 #endif
         Dispose(disposing: false);
     }
@@ -422,7 +419,7 @@ public class Batch : System.IDisposable, IRenderable
             Scale = scale,
             Origin = origin,
             UV = new UV(quad.UV[0], quad.UV[1], quad.UV[2], quad.UV[3]),
-            Dimension = new Vector2(quad.Source.W, quad.Source.H),
+            Dimension = new Vector2(quad.Source.Width, quad.Source.Height),
             Rotation = rotation,
             Depth = layerDepth,
             Color = color.ToVector4(),

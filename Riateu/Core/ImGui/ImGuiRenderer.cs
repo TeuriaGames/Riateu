@@ -1,12 +1,9 @@
-using GpuBuffer = MoonWorks.Graphics.Buffer;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using ImGuiNET;
-using MoonWorks;
-using MoonWorks.Graphics;
-using MoonWorks.Input;
-using MoonWorks.Math.Float;
 using Riateu.Graphics;
+using Riateu.Inputs;
 using Riateu.Misc;
 
 namespace Riateu.ImGuiRend;
@@ -23,8 +20,8 @@ public class ImGuiRenderer : IRenderable
     private GraphicsDevice device;
     private uint vertexCount;
     private uint indexCount;
-    private GpuBuffer imGuiVertexBuffer;
-    private GpuBuffer imGuiIndexBuffer;
+    private StructuredBuffer<Position2DTextureColorVertex> imGuiVertexBuffer;
+    private StructuredBuffer<ushort> imGuiIndexBuffer;
     private TransferBuffer transferBuffer;
 
     /// <summary>
@@ -56,33 +53,33 @@ public class ImGuiRenderer : IRenderable
             SamplerCount = 1
         });
 
-        imGuiPipeline = new GraphicsPipeline(
-            device,
-            new GraphicsPipelineCreateInfo
-            {
-                AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                    new ColorAttachmentDescription(
-                        window.SwapchainFormat,
-                        ColorAttachmentBlendState.NonPremultiplied
-                    )
-                ),
-                DepthStencilState = DepthStencilState.Disable,
-                PrimitiveType = PrimitiveType.TriangleList,
-                RasterizerState = RasterizerState.CCW_CullNone,
-                MultisampleState = MultisampleState.None,
-                VertexShader = imGuiShader,
-                FragmentShader = fragmentShader,
-                VertexInputState = VertexInputState.CreateSingleBinding<Position2DTextureColorVertex>()
-            }
-        );
+        // imGuiPipeline = new GraphicsPipeline(
+        //     device,
+        //     new GraphicsPipelineCreateInfo
+        //     {
+        //         AttachmentInfo = new GraphicsPipelineAttachmentInfo(
+        //             new ColorAttachmentDescription(
+        //                 window.SwapchainFormat,
+        //                 ColorAttachmentBlendState.NonPremultiplied
+        //             )
+        //         ),
+        //         DepthStencilState = DepthStencilState.Disable,
+        //         PrimitiveType = PrimitiveType.TriangleList,
+        //         RasterizerState = RasterizerState.CCW_CullNone,
+        //         MultisampleState = MultisampleState.None,
+        //         VertexShader = imGuiShader,
+        //         FragmentShader = fragmentShader,
+        //         VertexInputState = VertexInputState.CreateSingleBinding<Position2DTextureColorVertex>()
+        //     }
+        // );
 
-        window.RegisterSizeChangeCallback(HandleSizeChanged);
+        // window.RegisterSizeChangeCallback(HandleSizeChanged);
 
-        MoonWorks.Input.Inputs.TextInput += c =>
-        {
-            if (c == '\t') { return; }
-            io.AddInputCharacter(c);
-        };
+        // MoonWorks.Input.Inputs.TextInput += c =>
+        // {
+        //     if (c == '\t') { return; }
+        //     io.AddInputCharacter(c);
+        // };
 
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
 
@@ -108,7 +105,7 @@ public class ImGuiRenderer : IRenderable
     /// </summary>
     /// <param name="inputs">An application input device</param>
     /// <param name="imGuiCallback">A callback used for rendering</param>
-    public void Update(MoonWorks.Input.Inputs inputs, Action imGuiCallback)
+    public void Update(InputDevice inputs, Action imGuiCallback)
     {
         var io = ImGui.GetIO();
 
@@ -116,7 +113,7 @@ public class ImGuiRenderer : IRenderable
         io.MouseDown[0] = inputs.Mouse.LeftButton.IsDown;
         io.MouseDown[1] = inputs.Mouse.RightButton.IsDown;
         io.MouseDown[2] = inputs.Mouse.MiddleButton.IsDown;
-        io.MouseWheel = inputs.Mouse.Wheel;
+        io.MouseWheel = inputs.Mouse.WheelY;
 
         io.AddKeyEvent(ImGuiKey.A, inputs.Keyboard.IsDown(KeyCode.A));
         io.AddKeyEvent(ImGuiKey.Z, inputs.Keyboard.IsDown(KeyCode.Z));
@@ -177,7 +174,7 @@ public class ImGuiRenderer : IRenderable
             imGuiVertexBuffer?.Dispose();
 
             vertexCount = (uint)(drawDataPtr.TotalVtxCount * 1.5f);
-            imGuiVertexBuffer = GpuBuffer.Create<Position2DTextureColorVertex>(
+            imGuiVertexBuffer = new StructuredBuffer<Position2DTextureColorVertex>(
                 device,
                 BufferUsageFlags.Vertex,
                 vertexCount
@@ -190,7 +187,7 @@ public class ImGuiRenderer : IRenderable
             imGuiIndexBuffer?.Dispose();
 
             indexCount = (uint)(drawDataPtr.TotalIdxCount * 1.5f);
-            imGuiIndexBuffer = GpuBuffer.Create<ushort>(
+            imGuiIndexBuffer = new StructuredBuffer<ushort>(
                 device,
                 BufferUsageFlags.Index,
                 indexCount
@@ -215,13 +212,13 @@ public class ImGuiRenderer : IRenderable
             Span<Position2DTextureColorVertex> vertexSpan = new Span<Position2DTextureColorVertex>((void*)cmdList.VtxBuffer.Data, cmdList.VtxBuffer.Size);
             Span<ushort> indexSpan = new Span<ushort>((void*)cmdList.IdxBuffer.Data, cmdList.IdxBuffer.Size);
 
-            uint length = transferBuffer.SetData(vertexSpan, offset, false);
+            uint length = transferBuffer.SetTransferData(vertexSpan, offset, false);
             copyPass.UploadToBuffer(new TransferBufferLocation(transferBuffer, offset), new BufferRegion(imGuiVertexBuffer, vertexOffset, length), false);
 
             vertexOffset += (uint)length;
             offset += length;
 
-            length = transferBuffer.SetData(indexSpan, offset, false);
+            length = transferBuffer.SetTransferData(indexSpan, offset, false);
             copyPass.UploadToBuffer(new TransferBufferLocation(transferBuffer, offset), new BufferRegion(imGuiIndexBuffer, indexOffset, length), false);
 
             offset += length;
@@ -237,7 +234,7 @@ public class ImGuiRenderer : IRenderable
     {
         var io = ImGui.GetIO();
         var drawDataPtr = ImGui.GetDrawData();
-        CommandBuffer buffer = GraphicsExecutor.Executor;
+        CommandBuffer buffer = device.DeviceCommandBuffer();
         RenderCommandLists(buffer, renderPass, drawDataPtr, io);
     }
 
@@ -246,7 +243,7 @@ public class ImGuiRenderer : IRenderable
         var view = Matrix4x4.CreateLookAt(
             new Vector3(0, 0, 1),
             Vector3.Zero,
-            Vector3.Up
+            -Vector3.UnitY
         );
 
         var projection = Matrix4x4.CreateOrthographicOffCenter(
@@ -298,13 +295,13 @@ public class ImGuiRenderer : IRenderable
                 int x = drawCmd.ClipRect.X < 0 ? 0 : (int)drawCmd.ClipRect.X;
                 int y = drawCmd.ClipRect.Y < 0 ? 0 : (int)drawCmd.ClipRect.Y;
 
-                renderPass.SetScissor(
-                    new Rect(
-                        x, y,
-                        (int)width,
-                        (int)height
-                    )
-                );
+                // renderPass.SetScissor(
+                //     new Rectangle(
+                //         x, y,
+                //         (int)width,
+                //         (int)height
+                //     )
+                // );
 
                 renderPass.DrawIndexedPrimitives(
                     vertexOffset,

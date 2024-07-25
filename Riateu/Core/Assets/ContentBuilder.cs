@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using MoonWorks;
 
 namespace Riateu.Content;
 
@@ -55,7 +54,7 @@ public class ContentBuilder
             }
             return;
         }
-        Logger.LogError($"No content processor: '{typeof(T).Name}' was found");
+        Console.WriteLine($"No content processor: '{typeof(T).Name}' was found");
     }
 
     /// <summary>
@@ -70,7 +69,7 @@ public class ContentBuilder
             InternalProcess(path, contentProcessor);
             return;
         }
-        Logger.LogError($"No content processor: '{typeof(T).Name}' was found");
+        Console.WriteLine($"No content processor: '{typeof(T).Name}' was found");
     }
 
     internal void InternalProcess(string file, ContentProcessor contentProcessor) 
@@ -93,8 +92,8 @@ public class ContentBuilder
         }
         catch (Exception ex)
         {
-            Logger.LogError("Error while processing a content");
-            Logger.LogError(ex.ToString());
+            Console.WriteLine("Error while processing a content");
+            Console.WriteLine(ex.ToString());
         }
     }
 
@@ -173,7 +172,7 @@ public abstract class ContentProcessor : IDisposable
     public void Log(string message) 
     {
         var text = $"[{this.GetType().Name}] {message}";
-        Logger.LogInfo(text);
+        Console.WriteLine(text);
         logBuilder.AppendLine(text);
     }
 }

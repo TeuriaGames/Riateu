@@ -4,13 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>CS1591</NoWarn>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <NoWarn>CS1591;CS1573;CS1572</NoWarn>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../.sunpack-dep/MoonWorks/MoonWorks.csproj"/>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="TeuJson" Version="2.2.1" />
@@ -19,87 +14,91 @@
   </ItemGroup>
 
   <ItemGroup>
-		<Content Include="../runtimes/x64/**/*.*">
-			<Link>%(Filename)%(Extension)</Link>
-			<CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Windows'))">PreserveNewest</CopyToOutputDirectory>
-      <Pack>True</Pack>
-      <PackagePath>runtimes/win-x64/native</PackagePath>
-		</Content>
-    <Content Include="../runtimes/osx/**/*.*">
-			<Link>%(Filename)%(Extension)</Link>
-			<CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('OSX'))">PreserveNewest</CopyToOutputDirectory>
-      <Pack>True</Pack>
-      <PackagePath>runtimes/osx-x64/native</PackagePath>
-		</Content>
-    <Content Include="../runtimes/lib64/**/*.*">
-			<Link>%(Filename)%(Extension)</Link>
-			<CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Linux'))" >PreserveNewest</CopyToOutputDirectory>
-      <Pack>True</Pack>
-      <PackagePath>runtimes/linux-x64/native</PackagePath>
-		</Content>
+    <Compile Include="../lib/RefreshCS/RefreshCS.cs"/>
+    <Compile Include="../lib/SDL2-CS/src/SDL2.cs"/>
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="../runtimes/x64/**/*.*">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Windows'))">PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+    </Content>
+    <Content Include="../runtimes/osx/**/*.*">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('OSX'))">PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>runtimes/osx-x64/native</PackagePath>
+    </Content>
+    <Content Include="../runtimes/lib64/**/*.*">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Linux'))" >PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>runtimes/linux-x64/native</PackagePath>
+    </Content>
+  </ItemGroup>
 
+  <ItemGroup>
     <!-- Vulkan -->
 
-		<EmbeddedResource Include="Core\Misc\Vulkan\PositionTextureColor.vert.spv">
-			<LogicalName>Riateu.Misc.Vulkan.PositionTextureColor.vert.spv</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Vulkan\Texture.frag.spv">
-			<LogicalName>Riateu.Misc.Vulkan.Texture.frag.spv</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Vulkan\ImGuiShader.vert.spv">
-			<LogicalName>Riateu.Misc.Vulkan.ImGuiShader.vert.spv</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Vulkan\InstancedShader.vert.spv">
-			<LogicalName>Riateu.Misc.Vulkan.InstancedShader.vert.spv</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Vulkan\Spritebatch.comp.spv">
-			<LogicalName>Riateu.Misc.Vulkan.Spritebatch.comp.spv</LogicalName>
-		</EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Vulkan\PositionTextureColor.vert.spv">
+      <LogicalName>Riateu.Misc.Vulkan.PositionTextureColor.vert.spv</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Vulkan\Texture.frag.spv">
+      <LogicalName>Riateu.Misc.Vulkan.Texture.frag.spv</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Vulkan\ImGuiShader.vert.spv">
+      <LogicalName>Riateu.Misc.Vulkan.ImGuiShader.vert.spv</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Vulkan\InstancedShader.vert.spv">
+      <LogicalName>Riateu.Misc.Vulkan.InstancedShader.vert.spv</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Vulkan\Spritebatch.comp.spv">
+      <LogicalName>Riateu.Misc.Vulkan.Spritebatch.comp.spv</LogicalName>
+    </EmbeddedResource>
 
     <!-- Metal -->
 
-		<EmbeddedResource Include="Core\Misc\Metal\PositionTextureColor.vert.metal">
-			<LogicalName>Riateu.Misc.Metal.PositionTextureColor.vert.metal</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Metal\Texture.frag.metal">
-			<LogicalName>Riateu.Misc.Metal.Texture.frag.metal</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Metal\ImGuiShader.vert.metal">
-			<LogicalName>Riateu.Misc.Metal.ImGuiShader.vert.metal</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Metal\InstancedShader.vert.metal">
-			<LogicalName>Riateu.Misc.Metal.InstancedShader.vert.metal</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\Metal\Spritebatch.comp.metal">
-			<LogicalName>Riateu.Misc.Metal.Spritebatch.comp.metal</LogicalName>
-		</EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Metal\PositionTextureColor.vert.metal">
+      <LogicalName>Riateu.Misc.Metal.PositionTextureColor.vert.metal</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Metal\Texture.frag.metal">
+      <LogicalName>Riateu.Misc.Metal.Texture.frag.metal</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Metal\ImGuiShader.vert.metal">
+      <LogicalName>Riateu.Misc.Metal.ImGuiShader.vert.metal</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Metal\InstancedShader.vert.metal">
+      <LogicalName>Riateu.Misc.Metal.InstancedShader.vert.metal</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Metal\Spritebatch.comp.metal">
+      <LogicalName>Riateu.Misc.Metal.Spritebatch.comp.metal</LogicalName>
+    </EmbeddedResource>
 
     <!-- D3D11 -->
 
-		<EmbeddedResource Include="Core\Misc\D3D11\PositionTextureColor.vert.hlsl">
-			<LogicalName>Riateu.Misc.D3D11.PositionTextureColor.vert.hlsl</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\D3D11\Texture.frag.hlsl">
-			<LogicalName>Riateu.Misc.D3D11.Texture.frag.hlsl</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\D3D11\ImGuiShader.vert.hlsl">
-			<LogicalName>Riateu.Misc.D3D11.ImGuiShader.vert.hlsl</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\D3D11\InstancedShader.vert.hlsl">
-			<LogicalName>Riateu.Misc.D3D11.InstancedShader.vert.hlsl</LogicalName>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Core\Misc\D3D11\Spritebatch.comp.hlsl">
-			<LogicalName>Riateu.Misc.D3D11.Spritebatch.comp.hlsl</LogicalName>
-		</EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\D3D11\PositionTextureColor.vert.hlsl">
+      <LogicalName>Riateu.Misc.D3D11.PositionTextureColor.vert.hlsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\D3D11\Texture.frag.hlsl">
+      <LogicalName>Riateu.Misc.D3D11.Texture.frag.hlsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\D3D11\ImGuiShader.vert.hlsl">
+      <LogicalName>Riateu.Misc.D3D11.ImGuiShader.vert.hlsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\D3D11\InstancedShader.vert.hlsl">
+      <LogicalName>Riateu.Misc.D3D11.InstancedShader.vert.hlsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\D3D11\Spritebatch.comp.hlsl">
+      <LogicalName>Riateu.Misc.D3D11.Spritebatch.comp.hlsl</LogicalName>
+    </EmbeddedResource>
 
-	</ItemGroup>
+  </ItemGroup>
 
-	<Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
-		<ItemGroup>
-			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
-		</ItemGroup>
-	</Target>
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+    </ItemGroup>
+  </Target>
 </Project>

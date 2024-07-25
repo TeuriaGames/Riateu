@@ -1,6 +1,5 @@
+using System.Numerics;
 using System.Runtime.InteropServices;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
@@ -8,25 +7,23 @@ namespace Riateu.Graphics;
 /// A vertex type to be used for the shader info
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct PositionColorVertex(Vector3 position, Color color) : IVertexType
+public struct PositionColorVertex(Vector3 position, Color color) : IVertexFormat
 {
     /// <summary>
     /// The position of the vertex
     /// </summary>
-    public Vector3 Position = position;
+    public Vector4 Position = new Vector4(position.X, position.Y, position.Z, 1);
     /// <summary>
     /// A color that will be passed to the fragment shader
     /// </summary>
     public Color Color = color;
 
-    /// <summary>
-    /// The element format used for the graphics pipeline.
-    /// </summary>
-    public static VertexElementFormat[] Formats { get; } = new VertexElementFormat[2]
-    {
-        VertexElementFormat.Vector3,
-        VertexElementFormat.Color
-    };
 
-    public static uint[] Offsets => [0, 12];
+    public static VertexAttribute[] Attributes(uint binding)
+    {
+        return [
+            new VertexAttribute(binding, 0, VertexElementFormat.Vector3, 0),
+            new VertexAttribute(binding, 0, VertexElementFormat.Color, 16),
+        ];
+    }
 }
