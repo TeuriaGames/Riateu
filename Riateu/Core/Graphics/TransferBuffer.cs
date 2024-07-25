@@ -28,14 +28,16 @@ public class TransferBuffer : GraphicsResource
     {
 #if DEBUG
         AssertNotMapped();
-#endif
         IsMapped = true;
+#endif
         Refresh.Refresh_MapTransferBuffer(Device.Handle, Handle, cycle ? 1 : 0, out data);
     }
 
     public void Unmap() 
     {
+#if DEBUG
         IsMapped = false;
+#endif
         Refresh.Refresh_UnmapTransferBuffer(Device.Handle, Handle);
     }
 
