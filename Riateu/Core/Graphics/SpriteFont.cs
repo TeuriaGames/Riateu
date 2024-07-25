@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
+using System.Numerics;
 using Riateu.Content;
 using TeuJson;
 using TeuJson.Attributes;
@@ -59,7 +58,7 @@ public class SpriteFont : IAssets
         foreach (var character in fonts.Chars) 
         {
             char c = (char)character.ID;
-            TextureQuad newQuad = new TextureQuad(texture, new Rect(
+            TextureQuad newQuad = new TextureQuad(texture, new Rectangle(
                 quad.Source.X + character.X,
                 quad.Source.Y + character.Y,
                 character.Width,
@@ -85,7 +84,7 @@ public class SpriteFont : IAssets
         foreach (var character in fonts.Chars) 
         {
             char c = (char)character.ID;
-            TextureQuad newQuad = new TextureQuad(texture, new Rect(
+            TextureQuad newQuad = new TextureQuad(texture, new Rectangle(
                 character.X,
                 character.Y,
                 character.Width,
@@ -217,7 +216,7 @@ public class SpriteFont : IAssets
                     Scale = scale,
                     Origin = Vector2.Zero,
                     UV = new UV(c.Quad.UV[0], c.Quad.UV[1], c.Quad.UV[2], c.Quad.UV[3]),
-                    Dimension = new Vector2(c.Quad.Source.W, c.Quad.Source.H),
+                    Dimension = new Vector2(c.Quad.Source.Width, c.Quad.Source.Height),
                     Rotation = 0,
                     Color = color.ToVector4(),
                 };

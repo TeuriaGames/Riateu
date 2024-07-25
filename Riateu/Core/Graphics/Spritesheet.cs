@@ -1,6 +1,4 @@
 using System;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
@@ -56,7 +54,7 @@ public class Spritesheet
         {
             for (int x = 0; x < SpriteTexture.Width / tileWidth; x++) 
             {
-                tiles[x, y] = new TextureQuad(baseTexture, new Rect(
+                tiles[x, y] = new TextureQuad(baseTexture, new Rectangle(
                     texture.Source.X + (x * tileWidth),
                     texture.Source.Y + (y * tileHeight),
                     tileWidth,

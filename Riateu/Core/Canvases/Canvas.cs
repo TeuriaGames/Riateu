@@ -1,7 +1,4 @@
 using System;
-using MoonWorks;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 using Riateu.Graphics;
 
 namespace Riateu;
@@ -56,7 +53,7 @@ public class Canvas : IDisposable
     /// <param name="height">A height of a canvas</param>
     public Canvas(Scene scene, GraphicsDevice device, uint width, uint height)
     {
-        CanvasTexture = Texture.CreateTexture2D(device, width, height, TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
+        CanvasTexture = new Texture(device, width, height, TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
         this.width = width;
         this.height = height;
         this.Scene = scene;
@@ -107,7 +104,6 @@ public class Canvas : IDisposable
     ~Canvas()
     {
 #if DEBUG
-        Logger.LogWarn($"The type {this.GetType()} has not been disposed properly.");
 #endif
         Dispose(disposing: false);
     }
@@ -127,12 +123,12 @@ public class Canvas : IDisposable
 /// </summary>
 public class DefaultCanvas : Canvas
 {
-    private Rect scissorRect;
+    private Rectangle scissorRect;
 
     /// <inheritdoc/>
     public DefaultCanvas(Scene scene, GraphicsDevice device, int width, int height) : base(scene, device, width, height)
     {
-        scissorRect = new Rect(0, 0, width, height);
+        scissorRect = new Rectangle(0, 0, width, height);
     }
 
     /// <inheritdoc/>

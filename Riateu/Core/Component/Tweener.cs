@@ -1,8 +1,7 @@
 using System;
+using System.Numerics;
 using System.Threading.Tasks;
-using MoonWorks.Graphics;
-using MoonWorks.Math;
-using MoonWorks.Math.Float;
+using Riateu.Graphics;
 
 namespace Riateu.TWTween;
 
@@ -111,7 +110,7 @@ public static class TweenUtils
         var cachedRotation = entity.Rotation;
         ctx.AddToTween(t => 
         {
-            entity.Rotation = MathHelper.Lerp(cachedRotation, targetRotation, t.Value);
+            entity.Rotation = MathUtils.Lerp(cachedRotation, targetRotation, t.Value);
         }, duration);
         return ctx;
     }

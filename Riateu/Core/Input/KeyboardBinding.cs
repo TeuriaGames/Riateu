@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using MoonWorks.Input;
+using Riateu.Inputs;
 
 namespace Riateu;
 

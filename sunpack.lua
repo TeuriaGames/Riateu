@@ -3,13 +3,4 @@ Package "Riateu"
     Projects {
         "Riateu/Riateu.csproj"
     }
-    Dependencies {
-        MoonWorks = {
-            Repository "https://github.com/MoonsideGames",
-            Branch "refresh2",
-            Project "MoonWorks.csproj"
-        }
-    }
-    ResolvePackages {
-        MoonWorks = "MoonWorks/MoonWorks.sunpack.lua"
-    }
+    Dependencies {}

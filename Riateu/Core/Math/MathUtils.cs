@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.CompilerServices;
-using MoonWorks.Math;
-using MoonWorks.Math.Float;
 
 namespace Riateu;
 
 public static class MathUtils 
 {
-    public const float Radians = MathHelper.Pi / 180f;
-    public const float Degrees = 180f / MathHelper.Pi;
+    public const float PiOver2 = MathF.PI / 2;
+    public const float Radians = MathF.PI / 180f;
+    public const float Degrees = 180f / MathF.PI;
     public const float Epsilon = 0.00001f;
     public static Random Randomizer = new Random();
 
@@ -25,6 +25,11 @@ public static class MathUtils
         return a + (int)(((float)b - (float)a) * t);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float Lerp(float value1, float value2, float amount)
+    {
+        return value1 + (value2 - value1) * amount;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float MoveTowards(float current, float target, float maxDelta)
@@ -213,7 +218,7 @@ public static class MathUtils
         var v = lineB - lineA;
         var w = closestTo - lineA;
         var t = Vector2.Dot(w, v) / Vector2.Dot(v, v);
-        t = MathHelper.Clamp(t, 0, 1);
+        t = MathUtils.Clamp(t, 0, 1);
 
         return lineA + v * t;
     }
@@ -290,46 +295,4 @@ public static class MathUtils
         Randomizer = random.Pop();
     }
 #endregion
-
-    public static Vector2 Min(this Rectangle rectangle) 
-    {
-        return new Vector2(rectangle.X, rectangle.Y);
-    }
-
-    public static Vector2 Max(this Rectangle rectangle) 
-    {
-        return new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
-    }
-
-    public static Point Size(this Rectangle rectangle) 
-    {
-        return new Point(rectangle.Width, rectangle.Height);
-    }
-
-    public static Vector2 SizeF(this Rectangle rectangle) 
-    {
-        return new Vector2(rectangle.Width, rectangle.Height);
-    }
-
-    public static Rectangle Overlap(this Rectangle rectangle, in Rectangle other) 
-    {
-        bool overlapX = rectangle.Right > other.Left && rectangle.Left < other.Right;
-        bool overlapY = rectangle.Bottom > other.Top && rectangle.Top < other.Bottom;
-
-        Rectangle result = new Rectangle();
-
-        if (overlapX) 
-        {
-            result.X = Math.Max(rectangle.Left, other.Left);
-            result.Width = Math.Min(rectangle.Right, other.Right) - result.X;
-        }
-
-        if (overlapY) 
-        {
-            result.Y = Math.Max(rectangle.Top, other.Top);
-            result.Height = Math.Min(rectangle.Bottom, other.Bottom) - result.Y;
-        }
-
-        return result;
-    }
 }

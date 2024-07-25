@@ -1,6 +1,5 @@
 using System;
-using MoonWorks;
-using MoonWorks.Math.Float;
+using System.Numerics;
 
 namespace Riateu;
 
@@ -297,7 +296,6 @@ public class Transform
     public void PrintTree() 
     {
 #if DEBUG
-        Logger.LogInfo($"Transform \n L \t");
         OnTreePrinted?.Invoke();
 #endif
     }

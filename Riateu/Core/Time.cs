@@ -15,24 +15,18 @@ public static class Time
     /// <summary>
     /// A completion of time since the last frame.
     /// </summary>
-    public static double Delta { get; internal set; }
+    public static float Delta { get; internal set; }
     /// <summary>
     /// The frames per second of the update loop
     /// </summary>
     public static double FPS { get; internal set; }
+    public static int Frame { get; internal set; }
+    public static TimeSpan Duration { get; internal set; }
 
     private static int fpsCounter;
     private static Stopwatch sw = Stopwatch.StartNew();
 
-    /// <summary>
-    /// This method sync from the update loop.
-    /// </summary>
-    public static void Update(in TimeSpan delta) 
-    {
-        Delta = delta.TotalSeconds * DeltaScale;
-    }
-
-    public static void Draw(double alpha) 
+    public static void Draw() 
     {
         fpsCounter++;
         var elapsed = sw.Elapsed.TotalSeconds;

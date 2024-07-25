@@ -1,6 +1,5 @@
+using System.Numerics;
 using System.Runtime.InteropServices;
-using MoonWorks.Graphics;
-using MoonWorks.Math.Float;
 
 namespace Riateu.Graphics;
 
@@ -9,7 +8,7 @@ namespace Riateu.Graphics;
 /// be used elsewhere.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 48)]
-public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Color color) : IVertexType
+public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Color color) : IVertexFormat
 {
     /// <summary>
     /// The position of the vertex.
@@ -27,15 +26,12 @@ public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Col
     [FieldOffset(32)]
     public Vector4 Color = color.ToVector4();
 
-    /// <summary>
-    /// The element format used in the <see cref="GameContext.DefaultMaterial"/>. And also
-    /// for other pipeline.
-    /// </summary>
-    public static VertexElementFormat[] Formats { get; } = [
-        VertexElementFormat.Vector4,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector4,
-    ];
-
-    public static uint[] Offsets => [0, 16, 32];
+    public static VertexAttribute[] Attributes(uint binding)
+    {
+        return [
+            new VertexAttribute(binding, 0, VertexElementFormat.Vector4, 0),
+            new VertexAttribute(binding, 1, VertexElementFormat.Vector2, 16),
+            new VertexAttribute(binding, 2, VertexElementFormat.Vector4, 32),
+        ];
+    }
 }

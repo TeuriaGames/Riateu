@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MoonWorks.Math;
 
 namespace Riateu.TWTween;
 
@@ -148,9 +147,9 @@ public static class Ease
 
     public static readonly Easer Linear = (float t) => t;
 
-    public static readonly Easer SineIn = (float t) => -(float)Math.Cos(MathHelper.PiOver2 * t) + 1;
-    public static readonly Easer SineOut = (float t) => (float)Math.Sin(MathHelper.PiOver2 * t);
-    public static readonly Easer SineInOut = (float t) => -(float)Math.Cos(MathHelper.Pi * t) / 2f + .5f;
+    public static readonly Easer SineIn = (float t) => -(float)Math.Cos(MathUtils.PiOver2 * t) + 1;
+    public static readonly Easer SineOut = (float t) => (float)Math.Sin(MathUtils.PiOver2 * t);
+    public static readonly Easer SineInOut = (float t) => -(float)Math.Cos(MathF.PI * t) / 2f + .5f;
 
     public static readonly Easer QuadIn = (float t) => t * t;
     public static readonly Easer QuadOut = Invert(QuadIn);
@@ -178,12 +177,12 @@ public static class Ease
 
     public static readonly Easer ElasticIn = (float x) => {
         float x2 = x * x;
-        return x2 * x2 * (float)Math.Sin(x * MathHelper.Pi * 4.5f);
+        return x2 * x2 * (float)Math.Sin(x * MathF.PI * 4.5f);
     };
 
     public static readonly Easer ElasticOut = (float x) => {
         float x2 = (x - 1f) * (x - 1f);
-        return 1f - x2 * x2 * (float)Math.Cos(x * MathHelper.Pi * 4.5f);
+        return 1f - x2 * x2 * (float)Math.Cos(x * MathF.PI * 4.5f);
     };
 
     public static readonly Easer ElasticInOut = (float x) => {

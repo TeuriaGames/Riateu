@@ -1,5 +1,5 @@
 using System.IO;
-using MoonWorks.Graphics;
+using Riateu.Graphics;
 
 namespace Riateu.Misc;
 
@@ -72,7 +72,7 @@ public static class Resources
 
     private static string GetBackendName(GraphicsDevice device)
     {
-        return device.Backend switch 
+        return device.BackendFlags switch 
         {
             BackendFlags.Vulkan => "Vulkan",
             BackendFlags.D3D11 => "D3D11",

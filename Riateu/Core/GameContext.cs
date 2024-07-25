@@ -1,6 +1,4 @@
 using System.IO;
-using MoonWorks;
-using MoonWorks.Graphics;
 using Riateu.Graphics;
 using Riateu.Misc;
 
@@ -24,14 +22,6 @@ public static class GameContext
     /// A rendering material that uses R8G8B8A8 format.
     /// </summary>
     public static Material RGBMaterial;
-    /// <summary>
-    /// A rendering material designed specifically for text rendered in msdf format.
-    /// </summary>
-    public static Material MSDFMaterial;
-    /// <summary>
-    /// An instanced material use as an fast alternative for default pipeline.
-    /// </summary>
-    public static Material InstancedMaterial;
     /// <summary>
     /// A compute pipeline used for <see cref="Riateu.Graphics.Batch"/> to work.
     /// </summary>
@@ -68,10 +58,13 @@ public static class GameContext
             RasterizerState = RasterizerState.CCW_CullNone,
             VertexShader = vertexPSC,
             FragmentShader = fragmentPSC,
-            VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
+            VertexInputState = new VertexInputState(
+                VertexBinding.Create<PositionTextureColorVertex>(0),
+                PositionTextureColorVertex.Attributes(0)
+            )
         };
 
-        DefaultMaterial = new Material(new GraphicsPipeline(device, pipelineCreateInfo));
+        DefaultMaterial = new Material(device, new GraphicsPipeline(device, pipelineCreateInfo));
 
         GraphicsPipelineCreateInfo rgbCreateInfo = new GraphicsPipelineCreateInfo()
         {
@@ -85,58 +78,13 @@ public static class GameContext
             RasterizerState = RasterizerState.CCW_CullNone,
             VertexShader = vertexPSC,
             FragmentShader = fragmentPSC,
-            VertexInputState = VertexInputState.CreateSingleBinding<PositionTextureColorVertex>()
+            VertexInputState = new VertexInputState(
+                VertexBinding.Create<PositionTextureColorVertex>(0),
+                PositionTextureColorVertex.Attributes(0)
+            )
         };
 
-        RGBMaterial = new Material(new GraphicsPipeline(device, rgbCreateInfo));
-
-        GraphicsPipelineCreateInfo msdfPipelineCreateInfo = new GraphicsPipelineCreateInfo()
-        {
-            AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(mainWindow.SwapchainFormat,
-                ColorAttachmentBlendState.AlphaBlend)
-            ),
-            DepthStencilState = DepthStencilState.Disable,
-            MultisampleState = MultisampleState.None,
-            PrimitiveType = PrimitiveType.TriangleList,
-            RasterizerState = RasterizerState.CCW_CullNone,
-            VertexShader = device.TextVertexShader,
-            FragmentShader = device.TextFragmentShader,
-            VertexInputState = device.TextVertexInputState
-        };
-
-        MSDFMaterial = new Material(new GraphicsPipeline(device, msdfPipelineCreateInfo));
-
-        var vertexBufferDescription = VertexBindingAndAttributes.Create<PositionVertex>(0);
-        var instancedBufferDescription = VertexBindingAndAttributes.Create<InstancedVertex>(1, 1, VertexInputRate.Instance);
-
-        var tileMapBytes = Resources.InstancedShader;
-        using var ms3 = new MemoryStream(tileMapBytes);
-        Shader instancedPSC = new Shader(device, ms3, "main", new ShaderCreateInfo {
-            ShaderStage = ShaderStage.Vertex,
-            ShaderFormat = BackendShaderFormat,
-            UniformBufferCount = 1
-        });
-
-        GraphicsPipelineCreateInfo instancedPipelineCreateInfo = new GraphicsPipelineCreateInfo()
-        {
-            AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(TextureFormat.R8G8B8A8,
-                ColorAttachmentBlendState.AlphaBlend)
-            ),
-            DepthStencilState = DepthStencilState.Disable,
-            MultisampleState = MultisampleState.None,
-            PrimitiveType = PrimitiveType.TriangleList,
-            RasterizerState = RasterizerState.CCW_CullNone,
-            VertexShader = instancedPSC,
-            FragmentShader = fragmentPSC,
-            VertexInputState = new VertexInputState([
-                vertexBufferDescription,
-                instancedBufferDescription
-            ])
-        };
-
-        InstancedMaterial = new Material(new GraphicsPipeline(device, instancedPipelineCreateInfo));
+        RGBMaterial = new Material(device, new GraphicsPipeline(device, rgbCreateInfo));
 
         var spriteBatchShader = Resources.SpriteBatchShader;
         using var comp1 = new MemoryStream(spriteBatchShader);
@@ -154,7 +102,7 @@ public static class GameContext
     /// <summary>
     /// A shader format that is depend on the backend flags are selected.
     /// </summary>
-    public static ShaderFormat BackendShaderFormat => GraphicsDevice.Backend switch 
+    public static ShaderFormat BackendShaderFormat => GraphicsDevice.BackendFlags switch 
     {
         BackendFlags.Metal => ShaderFormat.MSL,
         BackendFlags.Vulkan => ShaderFormat.SPIRV,
