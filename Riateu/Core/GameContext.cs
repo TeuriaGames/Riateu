@@ -21,7 +21,7 @@ public static class GameContext
     /// <summary>
     /// A rendering material that uses R8G8B8A8 format.
     /// </summary>
-    public static Material RGBMaterial;
+    public static Material DepthMaterial;
     /// <summary>
     /// A compute pipeline used for <see cref="Riateu.Graphics.Batch"/> to work.
     /// </summary>
@@ -66,13 +66,14 @@ public static class GameContext
 
         DefaultMaterial = new Material(device, new GraphicsPipeline(device, pipelineCreateInfo));
 
-        GraphicsPipelineCreateInfo rgbCreateInfo = new GraphicsPipelineCreateInfo()
+        GraphicsPipelineCreateInfo depthCreateInfo = new GraphicsPipelineCreateInfo()
         {
             AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-                new ColorAttachmentDescription(TextureFormat.R8G8B8A8,
+                TextureFormat.D24_UNORM,
+                new ColorAttachmentDescription(mainWindow.SwapchainFormat,
                 ColorAttachmentBlendState.AlphaBlend)
             ),
-            DepthStencilState = DepthStencilState.Disable,
+            DepthStencilState = DepthStencilState.DepthReadWrite,
             MultisampleState = MultisampleState.None,
             PrimitiveType = PrimitiveType.TriangleList,
             RasterizerState = RasterizerState.CCW_CullNone,
@@ -84,7 +85,7 @@ public static class GameContext
             )
         };
 
-        RGBMaterial = new Material(device, new GraphicsPipeline(device, rgbCreateInfo));
+        DepthMaterial = new Material(device, new GraphicsPipeline(device, depthCreateInfo));
 
         var spriteBatchShader = Resources.SpriteBatchShader;
         using var comp1 = new MemoryStream(spriteBatchShader);

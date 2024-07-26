@@ -149,6 +149,14 @@ public class GraphicsDevice : IDisposable
         return deviceCmdBuffer.BeginRenderPass(new ColorAttachmentInfo(target, clearColor, cycle));
     }
 
+    public RenderPass BeginTarget(RenderTarget target, DepthTarget buffer, Color clearColor, bool cycle) 
+    {
+        return deviceCmdBuffer.BeginRenderPass(
+            new DepthStencilAttachmentInfo(buffer, new DepthStencilValue(buffer.Depth, 0), true, LoadOp.Clear, StoreOp.DontCare, LoadOp.Clear), 
+            new ColorAttachmentInfo(target, clearColor, cycle)
+        );
+    }
+
     public void EndTarget(RenderPass renderPass) 
     {
         deviceCmdBuffer.EndRenderPass(renderPass);
