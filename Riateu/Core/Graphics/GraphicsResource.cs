@@ -21,7 +21,7 @@ public abstract class GraphicsResource : IDisposable
     public GraphicsResource(GraphicsDevice device) 
     {
         Device = device;
-        selfReference = GCHandle.Alloc(Handle, GCHandleType.Weak);
+        selfReference = GCHandle.Alloc(this, GCHandleType.Weak);
         Device.AddReference(selfReference);
     }
 
@@ -33,14 +33,15 @@ public abstract class GraphicsResource : IDisposable
     {
         if (disposing) 
         {
-            IntPtr lockedHandlePtr = Interlocked.Exchange(ref handle, IntPtr.Zero);
+            Device.RemoveReference(selfReference);
+            selfReference.Free();
+        }
 
-            if (lockedHandlePtr != IntPtr.Zero) 
-            {
-                HandleDispose(lockedHandlePtr);
-                Device.RemoveReference(selfReference);
-                selfReference.Free();
-            }
+        IntPtr lockedHandlePtr = Interlocked.Exchange(ref handle, IntPtr.Zero);
+
+        if (lockedHandlePtr != IntPtr.Zero) 
+        {
+            HandleDispose(lockedHandlePtr);
         }
 
         Dispose(disposing);
@@ -52,6 +53,9 @@ public abstract class GraphicsResource : IDisposable
         {
             return;
         }
+#if DEBUG
+        Console.WriteLine($"Leaked Resources: {this.GetType().Name}. Make sure to dispose this properly.");
+#endif
         InternalDispose(disposing: false);
         IsDisposed = true;
     }
