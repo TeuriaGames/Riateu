@@ -36,19 +36,20 @@ void main()
     uint n = gl_GlobalInvocationID.x;
     ComputeData compData = computeData[n];
 
+    vec2 scaledOrigin = compData.origin * compData.scale;
+
     mat4 origin = mat4(
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
-        -compData.origin.x, -compData.origin.y, compData.depth, 1.
+        -scaledOrigin.x, -scaledOrigin.y, 0., 1.
     );
-
 
     float val1 = cos(compData.rotation);
     float val2 = sin(compData.rotation);
 
-    float x = compData.origin.x * (1. - val1) + compData.origin.y * val2;
-    float y = compData.origin.y * (1. - val1) - compData.origin.x * val2;
+    float x = (compData.position.x + scaledOrigin.x) * (1. - val1) + (compData.position.y + scaledOrigin.y) * val2;
+    float y = (compData.position.y + scaledOrigin.y) * (1. - val1) - (compData.position.x + scaledOrigin.x) * val2;
 
     mat4 rotation = mat4(
         val1, val2, 0., 0.,
@@ -67,30 +68,10 @@ void main()
     vec4 bottomLeft = vec4(compData.position.x, compData.position.y + height, compData.depth, 1.);
     vec4 bottomRight = vec4(compData.position.x + width, compData.position.y + height, compData.depth, 1.);
 
-    vertexData[n * 4u].position = vec4(
-        (topLeft.x * transform[0][0]) + (topLeft.y * transform[1][0]) + transform[3][0],
-        (topLeft.x * transform[0][1]) + (topLeft.y * transform[1][1]) + transform[3][1],
-        (topLeft.x * transform[0][2]) + (topLeft.y * transform[1][2]) + transform[3][2],
-        (topLeft.x * transform[0][3]) + (topLeft.y * transform[1][3]) + transform[3][3]
-    );
-    vertexData[n * 4u + 1u].position = vec4(
-        (topRight.x * transform[0][0]) + (topRight.y * transform[1][0]) + transform[3][0],
-        (topRight.x * transform[0][1]) + (topRight.y * transform[1][1]) + transform[3][1],
-        (topRight.x * transform[0][2]) + (topRight.y * transform[1][2]) + transform[3][2],
-        (topRight.x * transform[0][3]) + (topRight.y * transform[1][3]) + transform[3][3]
-    );
-    vertexData[n * 4u + 2u].position = vec4(
-        (bottomLeft.x * transform[0][0]) + (bottomLeft.y * transform[1][0]) + transform[3][0],
-        (bottomLeft.x * transform[0][1]) + (bottomLeft.y * transform[1][1]) + transform[3][1],
-        (bottomLeft.x * transform[0][2]) + (bottomLeft.y * transform[1][2]) + transform[3][2],
-        (bottomLeft.x * transform[0][3]) + (bottomLeft.y * transform[1][3]) + transform[3][3]
-    );
-    vertexData[n * 4u + 3u].position = vec4(
-        (bottomRight.x * transform[0][0]) + (bottomRight.y * transform[1][0]) + transform[3][0],
-        (bottomRight.x * transform[0][1]) + (bottomRight.y * transform[1][1]) + transform[3][1],
-        (bottomRight.x * transform[0][2]) + (bottomRight.y * transform[1][2]) + transform[3][2],
-        (bottomRight.x * transform[0][3]) + (bottomRight.y * transform[1][3]) + transform[3][3]
-    );
+    vertexData[n * 4u].position     = transform * topLeft;
+    vertexData[n * 4u + 1].position = transform * topRight;
+    vertexData[n * 4u + 2].position = transform * bottomLeft;
+    vertexData[n * 4u + 3].position = transform * bottomRight;
 
     vertexData[n * 4u].tex_coords      = compData.uv[0];
     vertexData[n * 4u + 1u].tex_coords = compData.uv[1]; 

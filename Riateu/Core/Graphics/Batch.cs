@@ -179,11 +179,18 @@ public class Batch : System.IDisposable, IRenderable
 #if DEBUG
         AssertDoesBegin();
         DEBUG_begin = false;
+
 #endif
         transferComputeBuffer.Unmap();
 
         if (vertexIndex == 0)
         {
+#if DEBUG
+            if (flush) 
+            {
+                DEBUG_isFlushed = true;
+            }
+#endif
             return;
         }
 
