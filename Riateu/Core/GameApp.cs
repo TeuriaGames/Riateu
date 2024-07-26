@@ -273,5 +273,8 @@ public abstract class GameApp
 
 public record struct GraphicsSettings(SwapchainComposition SwapchainComposition, PresentMode PresentMode, bool DebugMode = false, bool LowPowerMode = false) 
 {
-    public static GraphicsSettings Default = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.VSync, false, false);
+    public static GraphicsSettings Default = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Immediate, false, false);
+    public static GraphicsSettings Debug = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Immediate, true, false);
+    public static GraphicsSettings Vsync = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.VSync, false, false);
+    public static GraphicsSettings DebugVSync = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.VSync, true, false);
 }
