@@ -100,14 +100,8 @@ public static class GameContext
     }
 
     /// <summary>
-    /// A shader format that is depend on the backend flags are selected.
+    /// A globally set shader format. Can be changed if you had a different backend format.
     /// </summary>
-    public static ShaderFormat BackendShaderFormat => GraphicsDevice.BackendFlags switch 
-    {
-        BackendFlags.Metal => ShaderFormat.MSL,
-        BackendFlags.Vulkan => ShaderFormat.SPIRV,
-        BackendFlags.D3D11 => ShaderFormat.HLSL,
-        _ => ShaderFormat.Invalid
-    };
+    public static ShaderFormat BackendShaderFormat = ShaderFormat.SPIRV;
 
 }

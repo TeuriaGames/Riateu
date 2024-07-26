@@ -64,7 +64,7 @@ public class Batch : System.IDisposable, IRenderable
         computeBuffer = new StructuredBuffer<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, MaxTextures);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
-        var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
+        var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
         Matrix = view * projection;
     }
 

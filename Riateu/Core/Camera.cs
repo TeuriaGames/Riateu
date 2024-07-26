@@ -44,8 +44,8 @@ public struct Camera(int width, int height, bool flipped = false)
             Matrix4x4.CreateTranslation(orig);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 1);
-        var projection = !flipped ? Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1)
-            : Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
+        var projection = !flipped ? Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1)
+            : Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
 
         transform = model * view * projection;
 
