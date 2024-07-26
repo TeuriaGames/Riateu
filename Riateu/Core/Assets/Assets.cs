@@ -38,6 +38,11 @@ public class AssetStorage
         this.uploader = uploader;
     }
 
+    /// <summary>
+    /// Create an <see cref="Riateu.Graphics.Atlas"/> from a folder. This will look all of PNGs file recursively in this folder.
+    /// </summary>
+    /// <param name="basePath">A target folder to look for</param>
+    /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
     public Atlas CreateAtlas(string basePath) 
     {
         void Crawl(string path) 

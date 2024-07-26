@@ -9,7 +9,7 @@ layout (set = 2, binding = 0) uniform sampler2D texSampler;
 
 void main() 
 {
-    vec4 texture = texture(texSampler, texCoord);
+    vec4 texture = texture(texSampler, texCoord) * color;
     if (texture.a == 0.) {
         discard;
     }
