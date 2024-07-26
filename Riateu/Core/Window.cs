@@ -12,7 +12,11 @@ public class Window : IDisposable
     public uint Width { get; private set; }
     public uint Height { get; private set; }
 
-    public WindowMode WindowMode => windowMode;
+    public WindowMode WindowMode 
+    {
+        get => windowMode;
+        set => windowMode = value;
+    }
     private WindowMode windowMode;
 
     public SwapchainComposition SwapchainComposition { get; internal set; }
@@ -21,6 +25,8 @@ public class Window : IDisposable
 
     public bool Claimed { get; internal set; }
     private bool IsDisposed;
+
+    public Action<uint, uint> OnSizeChange = delegate {};
 
     public Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 
     {
@@ -62,9 +68,51 @@ public class Window : IDisposable
         Height = (uint)height;
     }
 
+    public void SetWindowSize(uint width, uint height) 
+    {
+        SDL.SDL_SetWindowSize(Handle, (int)width, (int)height);
+        Width = width;
+        Height = height;
+
+        if (WindowMode == WindowMode.Windowed) 
+        {
+            SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+        }
+    }
+    public void SetScreenMode(WindowMode windowMode)
+    {
+        SDL.SDL_WindowFlags windowFlag = 0;
+
+        if (windowMode == WindowMode.Fullscreen)
+        {
+            windowFlag = SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
+        }
+        else if (windowMode == WindowMode.BorderlessFullscreen)
+        {
+            windowFlag = SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
+        }
+
+        SDL.SDL_SetWindowFullscreen(Handle, (uint) windowFlag);
+
+        if (windowMode == WindowMode.Windowed)
+        {
+            SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+        }
+
+        WindowMode = windowMode;
+    }
+
     internal void Show() 
     {
         SDL.SDL_ShowWindow(Handle);
+    }
+
+    internal void HandleSizeChanged(uint width, uint height) 
+    {
+        Width = width;
+        Height = height;
+
+        OnSizeChange?.Invoke(width, height);
     }
 
     protected virtual void Dispose(bool disposing)

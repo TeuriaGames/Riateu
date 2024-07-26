@@ -50,6 +50,22 @@ public class RenderPass : IPassPool
         Refresh.Refresh_BindFragmentSamplers(Handle, firstSlot, &bind, 1);
     }
 
+    public void SetViewport(in Viewport viewport) 
+    {
+        Refresh.Refresh_SetViewport(Handle, new Refresh.Viewport
+        {
+            X = viewport.X, Y = viewport.Y, W = viewport.Width, H = viewport.Height
+        });
+    }
+
+    public void SetScissor(in Rectangle scissor) 
+    {
+        Refresh.Refresh_SetScissor(Handle, new Refresh.Rect 
+        {
+            X = scissor.X, Y = scissor.Y, W = scissor.Width, H = scissor.Height
+        });
+    }
+
     public void Obtain(IntPtr handle)
     {
         Handle = handle;

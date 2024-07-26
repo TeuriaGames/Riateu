@@ -43,6 +43,6 @@ public abstract class GameLoop
     /// <summary>
     /// A method that called during the draw loop. Do your draw calls here.
     /// </summary>
-    /// <param name="backbuffer">A backbuffer target that contains API for rendering to backbuffer</param>
-    public abstract void Render(RenderTarget backbuffer);
+    /// <param name="swapchainTarget">A swapchainTarget target to be used for drawing inside of a window</param>
+    public abstract void Render(RenderTarget swapchainTarget);
 }

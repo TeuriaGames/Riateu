@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using SDL2;
 
 namespace Riateu.Inputs;
@@ -8,9 +10,23 @@ public class Keyboard
     public bool AnyPressed { get; private set; }
     public KeyboardButton AnyPressedButton { get; private set; }
 
+
+    public static Action<char> TextInput = delegate { };
+
     public IntPtr State { get; private set; }
     public KeyCode[] KeyCodes { get; private set; }
     public KeyboardButton[] Buttons { get; private set; }
+
+    private static Dictionary<KeyCode, char> specialKeyCode = new Dictionary<KeyCode, char> 
+    {
+        {KeyCode.Home,      (char)2},
+        {KeyCode.End,       (char)3},
+        {KeyCode.Backspace, (char)8},
+        {KeyCode.Tab,       (char)9},
+        {KeyCode.Return,    (char)13},
+        {KeyCode.Delete,    (char)127},
+    };
+
     public Keyboard() 
     {
         SDL.SDL_GetKeyboardState(out int numKeys);
@@ -35,10 +51,30 @@ public class Keyboard
 
             if (button.Pressed) 
             {
+                HandleSpecialInput(keyCode);
                 AnyPressed = true;
                 AnyPressedButton = button;
             }
         }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void HandleSpecialInput(KeyCode keyCode) 
+    {
+        if (specialKeyCode.TryGetValue(keyCode, out char c)) 
+        {
+            WriteCharacter(c);
+            return;
+        }
+        if (IsDown(KeyCode.LeftControl) && keyCode == KeyCode.V) 
+        {
+            WriteCharacter((char)22);
+        }
+    }
+
+    internal void WriteCharacter(char c) 
+    {
+        TextInput?.Invoke(c);
     }
 
     public bool IsPressed(KeyCode keyCode) 

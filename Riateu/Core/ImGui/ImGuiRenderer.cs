@@ -53,33 +53,36 @@ public class ImGuiRenderer : IRenderable
             SamplerCount = 1
         });
 
-        // imGuiPipeline = new GraphicsPipeline(
-        //     device,
-        //     new GraphicsPipelineCreateInfo
-        //     {
-        //         AttachmentInfo = new GraphicsPipelineAttachmentInfo(
-        //             new ColorAttachmentDescription(
-        //                 window.SwapchainFormat,
-        //                 ColorAttachmentBlendState.NonPremultiplied
-        //             )
-        //         ),
-        //         DepthStencilState = DepthStencilState.Disable,
-        //         PrimitiveType = PrimitiveType.TriangleList,
-        //         RasterizerState = RasterizerState.CCW_CullNone,
-        //         MultisampleState = MultisampleState.None,
-        //         VertexShader = imGuiShader,
-        //         FragmentShader = fragmentShader,
-        //         VertexInputState = VertexInputState.CreateSingleBinding<Position2DTextureColorVertex>()
-        //     }
-        // );
+        imGuiPipeline = new GraphicsPipeline(
+            device,
+            new GraphicsPipelineCreateInfo
+            {
+                AttachmentInfo = new GraphicsPipelineAttachmentInfo(
+                    new ColorAttachmentDescription(
+                        window.SwapchainFormat,
+                        ColorAttachmentBlendState.NonPremultiplied
+                    )
+                ),
+                DepthStencilState = DepthStencilState.Disable,
+                PrimitiveType = PrimitiveType.TriangleList,
+                RasterizerState = RasterizerState.CCW_CullNone,
+                MultisampleState = MultisampleState.None,
+                VertexShader = imGuiShader,
+                FragmentShader = fragmentShader,
+                VertexInputState = new VertexInputState(
+                    VertexBinding.Create<Position2DTextureColorVertex>(0),
+                    Position2DTextureColorVertex.Attributes(0)
+                )
+            }
+        );
 
-        // window.RegisterSizeChangeCallback(HandleSizeChanged);
+        window.OnSizeChange += HandleSizeChanged;
 
-        // MoonWorks.Input.Inputs.TextInput += c =>
-        // {
-        //     if (c == '\t') { return; }
-        //     io.AddInputCharacter(c);
-        // };
+        Keyboard.TextInput += c =>
+        {
+            if (c == '\t') { return; }
+            io.AddInputCharacter(c);
+        };
 
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
 
@@ -295,13 +298,7 @@ public class ImGuiRenderer : IRenderable
                 int x = drawCmd.ClipRect.X < 0 ? 0 : (int)drawCmd.ClipRect.X;
                 int y = drawCmd.ClipRect.Y < 0 ? 0 : (int)drawCmd.ClipRect.Y;
 
-                // renderPass.SetScissor(
-                //     new Rectangle(
-                //         x, y,
-                //         (int)width,
-                //         (int)height
-                //     )
-                // );
+                renderPass.SetScissor(new Rectangle(x, y, (int)width, (int)height));
 
                 renderPass.DrawIndexedPrimitives(
                     vertexOffset,

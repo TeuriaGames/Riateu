@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using Riateu.Content;
 using Riateu.Graphics;
@@ -230,12 +231,41 @@ public abstract class GameApp
                 InputDevice.Mouse.WheelRawY += e.wheel.y;
                 break;
             case SDL.SDL_EventType.SDL_WINDOWEVENT:
-                if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE) 
+                if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED) 
+                {
+                    MainWindow.HandleSizeChanged((uint)e.window.data1, (uint)e.window.data2);
+                }
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE) 
                 {
                     GraphicsDevice.UnclaimWindow(MainWindow);
                     MainWindow.Dispose();
                 }
                 break;
+            case SDL.SDL_EventType.SDL_TEXTINPUT:
+                HandleTextInput(e);
+                break;
+            }
+        }
+    }
+
+    private unsafe void HandleTextInput(SDL.SDL_Event evt) 
+    {
+        byte *textPtr = evt.text.text;
+        int count = 0;
+        while (*textPtr != 0) 
+        {
+            textPtr++;
+            count++;
+        }
+
+        if (count > 0) 
+        {
+            char *charPtr = stackalloc char[count];
+            int chars = Encoding.UTF8.GetChars(evt.text.text, count, charPtr, count);
+
+            for (int i = 0; i < chars; i++) 
+            {
+                Input.Keyboard.WriteCharacter(charPtr[i]);
             }
         }
     }

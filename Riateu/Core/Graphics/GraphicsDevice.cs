@@ -28,6 +28,18 @@ public class GraphicsDevice : IDisposable
         DebugMode = settings.DebugMode;
     }
 
+    public void SetSwapchainParameters(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
+    {
+        if (!window.Claimed) 
+        {
+            throw new Exception("Cannto change the swapchain parameters when window has not been claimed yet.");
+        }
+        Refresh.Refresh_SetSwapchainParameters(
+            Handle, window.Handle, 
+            (Refresh.SwapchainComposition)swapchainComposition, 
+            (Refresh.PresentMode)presentMode);
+    }
+
     public bool ClaimWindow(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
     {
         if (window.Claimed) 
