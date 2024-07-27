@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -71,6 +70,20 @@ public class AssetStorage
         Crawl(basePath);
 
 
+        if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
+        {
+            return Atlas.LoadFromPacker(uploader, items, size);
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Create an <see cref="Riateu.Graphics.Atlas"/> from a packer.
+    /// </summary>
+    /// <param name="packer">A packer that contains all of the added images</param>
+    /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
+    public Atlas CreateAtlasFromPacker(Packer<AtlasItem> packer) 
+    {
         if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
         {
             return Atlas.LoadFromPacker(uploader, items, size);
