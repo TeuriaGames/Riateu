@@ -1,11 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Riateu.Graphics;
 
 namespace Riateu.Content;
 
 public class Packer<T> 
 {
+    [InlineArray(2)]
+    public struct NodeSplit 
+    {
+        private int _element0;
+    }
+
     public struct Node(int x, int y, int w, int h) 
     {
         public int X = x;
@@ -13,7 +20,7 @@ public class Packer<T>
         public int W = w;
         public int H = h;
         public bool IsSplit;
-        public int[] Splits = new int[2];
+        public NodeSplit Splits;
     }
 
     public struct Item(T data, int width, int height)
@@ -44,10 +51,12 @@ public class Packer<T>
     private Node root;
 
     public int MaxSize { get; set; }
+    public bool UsePowerOfTwo { get; set; }
 
-    public Packer(int maxSize = 2048) 
+    public Packer(int maxSize = 2048, bool usePowerOfTwo = true) 
     {
         MaxSize = maxSize;
+        UsePowerOfTwo = usePowerOfTwo;
     }
 
     public void Add(Item item) 
@@ -56,18 +65,22 @@ public class Packer<T>
         indices.Add(count++);
     }
 
-
-    public void SplitNode(ref Node node, int w, int h) 
-    {
-        node.IsSplit = true;
-        node.Splits[0] = AddNode(new Node(node.X, node.Y + h, node.W, node.H - h));
-        node.Splits[1] = AddNode(new Node(node.X + w, node.Y, node.W - w, node.H));
-    }
-
     public bool Pack(out List<PackedItem> packedItems, out Point size) 
     {
-        count = 0;
         packedItems = new List<PackedItem>();
+        if (count == 0) 
+        {
+            size = new Point(0, 0);
+            return false;
+        }
+
+        if (count == 1) 
+        {
+            Item item = items[(int)indices[0]];
+            packedItems.Add(new PackedItem(new Rectangle(0, 0, item.Width, item.Height), item.Data));
+            root = new Node(0, 0, item.Width, item.Height);
+            goto DONE;
+        }
 
         indices.Sort((x, y) => {
             uint a = items[(int)x].GetTotalSize();
@@ -98,8 +111,10 @@ public class Packer<T>
                 int growID = GrowNode(item.Width, item.Height);
                 if (growID == -1) 
                 {
+                    Console.WriteLine($"Max Size exceeded: {MaxSize}. Failing out everything you pack.");
                     // It won't fit anymore, and so we decided to break it out and fail all the attempts.
-                    break;
+                    size = new Point(0, 0);
+                    return false;
                 }
                 Node n = nodes[growID];
                 SplitNode(ref n, item.Width, item.Height);
@@ -109,15 +124,33 @@ public class Packer<T>
             }
         }
 
+        DONE:
+
         int pageWidth = 2, pageHeight = 2;
 
-        while (pageWidth < root.W)
-            pageWidth *= 2;
+        if (UsePowerOfTwo) 
+        {
+            while (pageWidth < root.W)
+                pageWidth *= 2;
 
-        while (pageHeight < root.H)
-            pageHeight *= 2;
+            while (pageHeight < root.H)
+                pageHeight *= 2;
+        }
+        else 
+        {
+            pageWidth = root.W;
+            pageHeight = root.H;
+        }
+
         
         size = new Point(pageWidth, pageHeight);
+
+        // clean things up
+
+        count = 0;
+        nodes.Clear();
+        items.Clear();
+        indices.Clear();
 
         return true;
     }
@@ -128,12 +161,19 @@ public class Packer<T>
         return nodeCount++;
     }
 
-    public int FindNode(int nodeID, int w, int h) 
+    private void SplitNode(ref Node node, int w, int h) 
+    {
+        node.IsSplit = true;
+        node.Splits[0] = AddNode(new Node(node.X, node.Y + h, node.W, node.H - h));
+        node.Splits[1] = AddNode(new Node(node.X + w, node.Y, node.W - w, node.H));
+    }
+
+    private int FindNode(int nodeID, int w, int h) 
     {
         Node node = nodes[nodeID];
         if (node.IsSplit) 
         {
-            for (int i = 0; i < node.Splits.Length; i++) 
+            for (int i = 0; i < 2; i++) 
             {
                 int splitID = node.Splits[i];
                 int foundID = FindNode(splitID, w, h);
@@ -179,9 +219,4 @@ public class Packer<T>
         nodes[0] = root;
         return root.Splits[0] = AddNode(new Node(0, oldRoot.H, oldRoot.W, height));
     }
-}
-
-public static class ExtensionMath 
-{
-
 }

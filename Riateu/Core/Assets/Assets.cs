@@ -51,14 +51,16 @@ public class AssetStorage
             foreach (var directory in directories) 
             {
                 Crawl(directory);
-                var files = Directory.GetFiles(directory).Where(x => x.EndsWith("png"));
-                foreach (var file in files) 
-                {
-                    string name = Path.Join(directory, Path.GetFileNameWithoutExtension(file)).Replace('\\', '/')
-                        .Substring(basePath.Length + 1);
-                    Image image = new Image(file);
-                    packer.Add(new Packer<AtlasItem>.Item(new AtlasItem(name, image), image.Width, image.Height));
-                }
+            }
+
+            var files = Directory.GetFiles(path).Where(x => x.EndsWith("png"));
+            foreach (var file in files) 
+            {
+                string name = Path.Join(path, Path.GetFileNameWithoutExtension(file)).Replace('\\', '/')
+                    .Substring(basePath.Length + 1);
+
+                Image image = new Image(file);
+                packer.Add(new Packer<AtlasItem>.Item(new AtlasItem(name, image), image.Width, image.Height));
             }
         }
         if (basePath.EndsWith(Path.DirectorySeparatorChar)) 
@@ -67,6 +69,8 @@ public class AssetStorage
         }
 
         Crawl(basePath);
+
+
         if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
         {
             return Atlas.LoadFromPacker(uploader, items, size);
