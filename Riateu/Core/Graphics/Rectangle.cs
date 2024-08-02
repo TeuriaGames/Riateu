@@ -5,12 +5,12 @@ using System.Numerics;
 
 namespace Riateu.Graphics;
 
-public struct Rectangle(int x, int y, int w, int h) : IEquatable<Rectangle>
+public struct Rectangle : IEquatable<Rectangle>
 {
-    public int X = x;
-    public int Y = y;
-    public int Width = w;
-    public int Height = h;
+    public int X;
+    public int Y;
+    public int Width;
+    public int Height;
 
     public int Left => X;
     public int Right => X + Width;
@@ -24,6 +24,22 @@ public struct Rectangle(int x, int y, int w, int h) : IEquatable<Rectangle>
     public Vector2 SizeF => new Vector2(Width, Height);
 
     public Point Center => new Point(X + (Width / 2), Y + (Height / 2));
+
+    public Rectangle(int x, int y, int width, int height) 
+    {
+        X = x;
+        Y = y;
+        Width = width;
+        Height = height;
+    }
+
+    public Rectangle(Point loc, Point size) 
+    {
+        X = loc.X;
+        Y = loc.Y;
+        Width = size.X;
+        Height = size.Y;
+    }
 
     public bool Contains(int x, int y) 
     {
