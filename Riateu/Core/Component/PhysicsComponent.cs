@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using Riateu.Graphics;
 using Riateu.Physics;
 
 namespace Riateu.Components;
@@ -28,7 +30,7 @@ public class PhysicsComponent : Component
     /// <summary>
     /// A physics scene tags to filter all the collisions in the scene tree.
     /// </summary>
-    public int Tags 
+    public ulong Tags 
     {
         get => tags;
         set 
@@ -37,7 +39,7 @@ public class PhysicsComponent : Component
         }
     }
 
-    private int tags = -1;
+    private ulong tags = ulong.MaxValue;
 
     /// <summary>
     /// Initialize the component with shapes.
@@ -111,9 +113,21 @@ public class PhysicsComponent : Component
         return false;
     }
 
-    private List<PhysicsComponent> GetAllNearbyComponents<T>() 
+    private HashSet<PhysicsComponent> GetAllNearbyComponents(Vector2 offset) 
     {
-        return Scene.PhysicsEngine.GetPhysicsComponents<T>(this);
+        Rectangle rectangle = new Rectangle(
+            (int)(Entity.PosX + offset.X),
+            (int)(Entity.PosY + offset.Y),
+            (int)(shape.BoundingBox.Width + (offset.X * 2)),
+            (int)(shape.BoundingBox.Width + (offset.Y * 2))
+        );
+        return Scene.SpatialHash.Retrieve(rectangle, this);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private bool CompareTag(ulong tag) 
+    {
+        return (tags & tag) == 1;
     }
 
     /// <summary>
@@ -122,11 +136,12 @@ public class PhysicsComponent : Component
     /// <param name="offset">A coordinate offset for collision</param>
     /// <param name="tags">A <see cref="Riateu.Tag"/> filter to only check with these tags</param>
     /// <returns>true if it collided, else false</returns>
-    public bool CheckAll(Vector2 offset, Tag tags)
+    public bool CheckAll(Vector2 offset, ulong tags)
     {
-        foreach (var other in Scene.GetPhysicsFromBit(tags)) 
+        var components = GetAllNearbyComponents(offset);
+        foreach (var other in components) 
         {
-            if (Check(other, offset)) 
+            if (CompareTag(tags) && Check(other, offset)) 
             {
                 return true;
             }
@@ -144,7 +159,7 @@ public class PhysicsComponent : Component
     public bool CheckAll<T>(Vector2 offset, out T entity)
     where T : Entity
     {
-        var components = GetAllNearbyComponents<T>();
+        var components = GetAllNearbyComponents(offset);
         foreach (var other in components) 
         {
             if (other.Entity is T && Check(other, offset)) 
@@ -164,7 +179,7 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool CheckAll<T>(Vector2 offset)
     {
-        var components = GetAllNearbyComponents<T>();
+        var components = GetAllNearbyComponents(offset);
         foreach (var other in components) 
         {
             if (other.Entity is T && Check(other, offset)) 
@@ -183,11 +198,12 @@ public class PhysicsComponent : Component
     /// <param name="entity">An output reference to an <see cref="Riateu.Entity"/> that has been collided with</param>
     /// <param name="component">An output reference to a <see cref="Riateu.Components.PhysicsComponent"/> that has been collided with</param>
     /// <returns>true if it collided, else false</returns>
-    public bool CheckAll(Vector2 offset, Tag tags, out Entity entity, out PhysicsComponent component)
+    public bool CheckAll(Vector2 offset, ulong tags, out Entity entity, out PhysicsComponent component)
     {
-        foreach (var other in Scene.GetPhysicsFromBit(tags)) 
+        var components = GetAllNearbyComponents(offset);
+        foreach (var other in components) 
         {
-            if (Check(other, offset)) 
+            if (CompareTag(tags) && Check(other, offset)) 
             {
                 component = other;
                 entity = other.Entity;
@@ -208,7 +224,7 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool CheckAll<T>(Vector2 offset, out Entity entity, out PhysicsComponent component)
     {
-        var components = GetAllNearbyComponents<T>();
+        var components = GetAllNearbyComponents(offset);
         foreach (var other in components) 
         {
             if (other.Entity is T && Check(other, offset)) 
@@ -231,7 +247,7 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll<T>(Vector2 at)
     {
-        var components = GetAllNearbyComponents<T>();
+        var components = GetAllNearbyComponents(at);
         foreach (var other in components) 
         {
             if (other.Entity is T && !Check(other, Vector2.Zero) && Check(other, at)) 
@@ -249,11 +265,12 @@ public class PhysicsComponent : Component
     /// <param name="at">A collision direction</param>
     /// <param name="tags">A <see cref="Riateu.Tag"/> filter to only check with these tags</param>
     /// <returns>true if it collided, else false</returns>
-    public bool OutsideCheckAll(Vector2 at, Tag tags)
+    public bool OutsideCheckAll(Vector2 at, ulong tags)
     {
-        foreach (var other in Scene.GetPhysicsFromBit(tags)) 
+        var components = GetAllNearbyComponents(at);
+        foreach (var other in components) 
         {
-            if (!Check(other, Vector2.Zero) && Check(other, at)) 
+            if (CompareTag(tags) && !Check(other, Vector2.Zero) && Check(other, at)) 
             {
                 return true;
             }
@@ -272,7 +289,7 @@ public class PhysicsComponent : Component
     public bool OutsideCheckAll<T>(Vector2 at, out T entity)
     where T : Entity
     {
-        var components = GetAllNearbyComponents<T>();
+        var components = GetAllNearbyComponents(at);
         foreach (var other in components) 
         {
             if (other.Entity is T && (!Check(other, Vector2.Zero) && Check(other, at))) 
@@ -295,7 +312,7 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll<T>(Vector2 at, out Entity entity, out PhysicsComponent component)
     {
-        var components = GetAllNearbyComponents<T>();
+        var components = GetAllNearbyComponents(at);
         foreach (var other in components) 
         {
             if (other.Entity is T && !Check(other, Vector2.Zero) && Check(other, at)) 
@@ -319,11 +336,12 @@ public class PhysicsComponent : Component
     /// <param name="entity">An output reference to an <see cref="Riateu.Entity"/> that has been collided with</param>
     /// <param name="component"></param>
     /// <returns>true if it collided, else false</returns>
-    public bool OutsideCheckAll(Vector2 at, Tag tags, out Entity entity, out PhysicsComponent component)
+    public bool OutsideCheckAll(Vector2 at, ulong tags, out Entity entity, out PhysicsComponent component)
     {
-        foreach (var other in Scene.GetPhysicsFromBit(tags)) 
+        var components = GetAllNearbyComponents(at);
+        foreach (var other in components) 
         {
-            if (!Check(other, Vector2.Zero) && Check(other, at)) 
+            if (CompareTag(tags) && !Check(other, Vector2.Zero) && Check(other, at)) 
             {
                 component = other;
                 entity = other.Entity;
@@ -344,7 +362,6 @@ public class PhysicsComponent : Component
         if (entity.Scene != null) 
         {
             entity.Scene.AddPhysics(this);
-            entity.Scene.AddBit(this);
         }
     }
 
@@ -355,7 +372,6 @@ public class PhysicsComponent : Component
         if (!physicsAdded) 
         {
             scene.AddPhysics(this);
-            Scene.AddBit(this);
             physicsAdded = true;
         }
     }
@@ -364,7 +380,6 @@ public class PhysicsComponent : Component
     public override void EntityExited(Scene scene)
     {
         scene.RemovePhysics(this);
-        scene.RemoveBit(this);
         base.EntityExited(scene);
     }
 

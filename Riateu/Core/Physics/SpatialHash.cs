@@ -1,97 +1,145 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
+using System.Runtime.InteropServices;
 using Riateu.Components;
+using Riateu.Graphics;
 
 namespace Riateu.Physics;
 
 public class SpatialHash 
 {
-    private int width;
-    private int height;
-    private int columns;
-    private int rows;
     private int cellSize;
-    private List<List<PhysicsComponent>> buckets = new List<List<PhysicsComponent>>();
-    private HashSet<int> idsLookup = new HashSet<int>();
+    private float inverseCellSize;
+    private SpatialBucket bucket = new SpatialBucket();
+    private HashSet<PhysicsComponent> temp = new HashSet<PhysicsComponent>();
 
-    public int Width => width;
-    public int Height => height;
-    public int Columns => columns;
-    public int Rows => rows;
     public int CellSize => cellSize;
 
-    public SpatialHash(int width, int height, int cellSize) 
+    public SpatialHash(int cellSize = 80) 
     {
         this.cellSize = cellSize;
-        columns = width / cellSize;
-        rows = height / cellSize;
-
-        for (int i = 0; i < columns * rows; i++) 
-        {
-            buckets.Add(new List<PhysicsComponent>());
-        }
-
-        this.width = width;
-        this.height = height;
+        inverseCellSize = 1f / cellSize;
     }
 
-    public void AddObject(PhysicsComponent shape) 
+    public void AddCollider(PhysicsComponent shape) 
     {
-        // TODO don't cast it
-        HashSet<int> ids = GetIDs(shape.Shape);
-        foreach (int id in ids) 
+        int left = (int)(Math.Floor(shape.Entity.PosX) * inverseCellSize);
+        int top = (int)(Math.Floor(shape.Entity.PosY) * inverseCellSize);
+        int right = (int)(Math.Floor(shape.Entity.PosX + shape.Shape.BoundingBox.Width) * inverseCellSize);
+        int bottom = (int)(Math.Floor(shape.Entity.PosY + shape.Shape.BoundingBox.Height) * inverseCellSize);
+
+        for (int x = left; x <= right; x++) 
         {
-            buckets[id].Add(shape);
+            for (int y = top; y <= bottom; y++) 
+            {
+                List<PhysicsComponent> cell = GetCell(x, y);
+                cell.Add(shape);
+            }
         }
     }
 
-    public List<PhysicsComponent> GetNearby(PhysicsComponent comp) 
+    public void RemoveCollider(PhysicsComponent shape) 
     {
-        List<PhysicsComponent> objects = new List<PhysicsComponent>();
-        // TODO don't cast it
-        HashSet<int> ids = GetIDs(comp.Shape);
-        foreach (int id in ids) 
-        {
-            objects.AddRange(buckets[id]);
-        }
-
-        return objects;
+        bucket.RemoveToBucket(shape);
     }
 
-    private HashSet<int> GetIDs(Shape shape) 
+    public List<PhysicsComponent> GetCell(int x, int y) 
     {
-        idsLookup.Clear();
-
-        Vector2 min = shape.Min;
-        Vector2 max = shape.Max;
-
-        float width = this.width / cellSize;
-        AddBucket(new Vector2(min.X - 4, min.Y - 4), width, idsLookup);
-        AddBucket(new Vector2(max.X + 4, min.Y - 4), width, idsLookup);
-        AddBucket(new Vector2(max.X + 4, max.Y + 4), width, idsLookup);
-        AddBucket(new Vector2(min.X - 4, max.Y + 4), width, idsLookup);
-
-        return idsLookup;
-    }
-
-    private void AddBucket(Vector2 pos, float width, HashSet<int> idLookup) 
-    {
-        int cellPosition = (int)((Math.Floor(pos.X / cellSize)) + (Math.Floor(pos.Y / cellSize)) * width);
-
-        if (cellPosition < 0 || cellPosition >= (columns * rows))
+        if (bucket.GetSome(x, y, out List<PhysicsComponent> colliders)) 
         {
-            return;
+            return colliders;
         }
 
-        idLookup.Add(cellPosition);
+        List<PhysicsComponent> newCell = new List<PhysicsComponent>();
+        bucket.AddToBucket(x, y, newCell);
+        return newCell;
+    }
+
+    public HashSet<PhysicsComponent> Retrieve(in Rectangle rectangle, PhysicsComponent self) 
+    {
+        temp.Clear();
+
+        int left = (int)(rectangle.Left * inverseCellSize);
+        int top = (int)(rectangle.Top * inverseCellSize);
+        int right = (int)(rectangle.Right * inverseCellSize);
+        int bottom = (int)(rectangle.Bottom * inverseCellSize);
+
+        for (int x = left; x <= right; x++) 
+        {
+            for (int y = top; y <= bottom; y++)  
+            {
+                List<PhysicsComponent> cell = GetCell(x, y);
+                if (cell == null || cell.Count <= 1) 
+                {
+                    continue;
+                }
+
+                Span<PhysicsComponent> cellSpan = CollectionsMarshal.AsSpan(cell);
+                for (int i = 0; i < cellSpan.Length; i++)
+                {
+                    PhysicsComponent component = cellSpan[i];
+                    if (component == self) 
+                    {
+                        continue;
+                    }
+                    
+                    temp.Add(component);
+                }
+            }
+        }
+
+
+        return temp;
     }
 
     public void Clear() 
     {
-        for (int i = 0; i < buckets.Count; i++) 
+        bucket.Clear();
+    }
+}
+
+public class SpatialBucket 
+{
+    private Dictionary<long, List<PhysicsComponent>> bucketColliders = new Dictionary<long, List<PhysicsComponent>>();
+
+    public void AddToBucket(int x, int y, List<PhysicsComponent> colliders) 
+    {
+        bucketColliders.Add(HashPos(x, y), colliders);
+    }
+
+    public void RemoveToBucket(PhysicsComponent collider) 
+    {
+        foreach (List<PhysicsComponent> components in bucketColliders.Values) 
         {
-            buckets[i].Clear();
+            if (components.Contains(collider)) 
+            {
+                components.Remove(collider);
+            }
         }
+    }
+
+    public bool GetSome(int x, int y, out List<PhysicsComponent> colliders) 
+    {
+        return bucketColliders.TryGetValue(HashPos(x, y), out colliders);
+    }
+
+    public HashSet<PhysicsComponent> GetAllColliders() 
+    {
+        HashSet<PhysicsComponent> set = new HashSet<PhysicsComponent>();
+        foreach (List<PhysicsComponent> colliders in bucketColliders.Values) 
+        {
+            set.UnionWith(colliders);
+        }
+        return set;
+    }
+
+    public void Clear() 
+    {
+        bucketColliders.Clear();
+    }
+
+    public long HashPos(int x, int y) 
+    {
+        return unchecked((long)x << 32 | (uint)y);
     }
 }

@@ -5,12 +5,12 @@ namespace Riateu;
 
 /// <summary>
 /// This class contains a tag value that can be used for filtering. The maximum limit of 
-/// the tags is 32.
+/// the tags is 64.
 /// </summary>
 public class Tag 
 {
-    internal static int TotalTags = 0;
-    internal static Tag[] id = new Tag[32];
+    internal static ulong TotalTags = 0;
+    internal static Tag[] id = new Tag[64];
     private static Dictionary<string, Tag> name = new Dictionary<string, Tag>(StringComparer.OrdinalIgnoreCase);
     /// <summary>
     /// An id of the <see cref="Riateu.Tag"/>.
@@ -19,7 +19,7 @@ public class Tag
     /// <summary>
     /// The bit value. 
     /// </summary>
-    public int Value;
+    public ulong Value;
     /// <summary>
     /// The name of the <see cref="Riateu.Tag"/>.
     /// </summary>
@@ -44,20 +44,18 @@ public class Tag
     public Tag(string outputName) 
     {
 #if DEBUG
-        if (TotalTags == 32) 
+        if (TotalTags == 64) 
         {
-            throw new Exception("Maximum tag limit of 32 exceeded!");
+            throw new Exception("Maximum tag limit of 64 exceeded!");
         }
         if (name.ContainsKey(outputName)) 
         {
             throw new Exception($"The tags with {outputName} has already existed!");
         }
 #endif
-        // SkyLog.Assert(TotalTags < 32, "Maximum tag limit of 32 exceeded");
-        // SkyLog.Assert(!name.ContainsKey(outputName), $"The tags with {outputName} has already existed!");   
 
-        ID = TotalTags;
-        Value = 1 << TotalTags;
+        ID = (int)TotalTags;
+        Value = (ulong)1 << (int)TotalTags;
         Name = outputName;
 
         id[ID] = this;
@@ -70,5 +68,5 @@ public class Tag
     /// Implicitly known tag as int.
     /// </summary>
     /// <param name="tag">A tag to access its <see cref="Riateu.Tag.Value"/></param>
-    public static implicit operator int(Tag tag) => tag.Value;
+    public static implicit operator ulong(Tag tag) => tag.Value;
 }

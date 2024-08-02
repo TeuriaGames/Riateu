@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Riateu.Components;
-using Riateu.Graphics;
 using Riateu.Physics;
 
 namespace Riateu;
@@ -14,11 +14,6 @@ namespace Riateu;
 /// </summary>
 public abstract class Scene : GameLoop
 {
-    /// <summary>
-    /// A storage for every physics components by tags. 
-    /// </summary>
-    public List<PhysicsComponent>[] SceneTags;
-
     /// <summary>
     /// A callback that is called when the entity is created.
     /// </summary>
@@ -38,12 +33,9 @@ public abstract class Scene : GameLoop
     /// </summary>
     public Entities EntityList { get; set; }
 
-    /// <summary>
-    /// A current physics engine that the scene is using.
-    /// </summary>
-    public IPhysicsEngine PhysicsEngine => physicsEngine;
-    
-    private IPhysicsEngine physicsEngine;
+    public SpatialHash SpatialHash { get; private set; }
+    private List<PhysicsComponent> physicsColliders = new List<PhysicsComponent>();
+
 
 
 
@@ -54,20 +46,8 @@ public abstract class Scene : GameLoop
     public Scene(GameApp game) : base(game)
     {
         EntityList = new Entities(this);
-        SceneTags = new List<PhysicsComponent>[Tag.TotalTags];
-        for (int i = 0; i < SceneTags.Length; i++)
-        {
-            SceneTags[i] = new List<PhysicsComponent>();
-        }
-
-        physicsEngine = CreatePhysicsEngine();
+        SpatialHash = new SpatialHash();
     }
-
-    /// <summary>
-    /// A method to construct the physics engine.
-    /// </summary>
-    /// <returns></returns>
-    public virtual IPhysicsEngine CreatePhysicsEngine() => new QueryBasePhysics();
 
     /// <summary>
     /// Add an <see cref="Riateu.Entity"/> to the scene.
@@ -86,7 +66,7 @@ public abstract class Scene : GameLoop
     /// </param>
     public void AddPhysics(PhysicsComponent component)
     {
-        physicsEngine.AddPhysics(component);
+        physicsColliders.Add(component);
     }
 
     /// <summary>
@@ -97,55 +77,7 @@ public abstract class Scene : GameLoop
     /// </param>
     public void RemovePhysics(PhysicsComponent component)
     {
-        physicsEngine.RemovePhysics(component);
-    }
-
-    /// <summary>
-    /// Add a physics bit and component into the <see cref="Riateu.Scene.SceneTags"/>.
-    /// </summary>
-    /// <param name="component">
-    /// A <see cref="Riateu.Components.PhysicsComponent"/> that will be added, alongside with
-    /// their physics bit
-    /// </param>
-    public void AddBit(PhysicsComponent component)
-    {
-        if (component.Tags == -1) return;
-        for (int i = 0; i < Tag.TotalTags; i++)
-        {
-            if ((component.Tags & (1 << i)) != 0)
-            {
-                SceneTags[i].Add(component);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Remove a physics bit and component into the <see cref="Riateu.Scene.SceneTags"/>.
-    /// </summary>
-    /// <param name="component">
-    /// A <see cref="Riateu.Components.PhysicsComponent"/> that will be added, alongside with
-    /// their physics bit
-    /// </param>
-    public void RemoveBit(PhysicsComponent component)
-    {
-        if (component.Tags == -1) return;
-        for (int i = 0; i < Tag.TotalTags; i++)
-        {
-            if ((component.Tags & (1 << i)) != 0)
-            {
-                SceneTags[i].Remove(component);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Get a list of <see cref="Riateu.Components.PhysicsComponent"/> from a physics bits.
-    /// </summary>
-    /// <param name="tag">The tag of the physics</param>
-    /// <returns>A list of <see cref="Riateu.Components.PhysicsComponent"/></returns>
-    public List<PhysicsComponent> GetPhysicsFromBit(Tag tag)
-    {
-        return SceneTags[tag.ID];
+        physicsColliders.Remove(component);
     }
 
     /// <summary>
@@ -171,11 +103,15 @@ public abstract class Scene : GameLoop
     /// <param name="delta"></param>
     public override sealed void Update(double delta) 
     {
-        physicsEngine.Update();
+        Span<PhysicsComponent> colliders = CollectionsMarshal.AsSpan(physicsColliders);
+        for (int i = 0; i < colliders.Length; i++) 
+        {
+            SpatialHash.AddCollider(colliders[i]);
+        }
         EntityList.UpdateSystem();
         Process(delta);
         EntityList.Update(delta);
-        physicsEngine.Finish();
+        SpatialHash.Clear();
     }
 
     /// <summary>

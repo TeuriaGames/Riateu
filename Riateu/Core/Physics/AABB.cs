@@ -10,18 +10,14 @@ public class AABB : Shape
 {
     public override Vector2 Min => new Vector2(Entity.PosX + BoundingBox.X, Entity.PosY + BoundingBox.Y);
     public override Vector2 Max => new Vector2(Entity.PosX + BoundingBox.X + BoundingBox.Width, Entity.PosY + BoundingBox.Y + BoundingBox.Height);
-    /// <summary>
-    /// A bounding hitbox of this shape.
-    /// </summary>
-    public Rectangle BoundingBox;
-    
+
 
     /// <summary>
     /// Initialization of this shape.
     /// </summary>
     /// <param name="entity">An <see cref="Riateu.Entity"/> to reference with</param>
     /// <param name="rectangle">A hitbox of this shape</param>
-    public AABB(Entity entity, Rectangle rectangle) : base(entity)
+    public AABB(Entity entity, Rectangle rectangle) : base(entity, rectangle)
     {
         BoundingBox = rectangle;
     }

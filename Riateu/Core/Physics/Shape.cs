@@ -13,12 +13,18 @@ public abstract class Shape
     public abstract Vector2 Max { get; }
 
     /// <summary>
+    /// A bounding hitbox of this shape.
+    /// </summary>
+    public Rectangle BoundingBox;
+
+    /// <summary>
     /// Base initialization for the collision shapes.
     /// </summary>
     /// <param name="entity">An <see cref="Riateu.Entity"/>. to hold</param>
-    public Shape(Entity entity)  
+    public Shape(Entity entity, Rectangle bound)  
     {
         Entity = entity;
+        BoundingBox = bound;
     }
 
     /// <summary>
