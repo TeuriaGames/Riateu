@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using Riateu.Audios;
 using Riateu.Content;
 using Riateu.Graphics;
 using Riateu.Inputs;
@@ -47,6 +48,7 @@ public abstract class GameApp
     public Window MainWindow { get; internal set; }
     public GraphicsDevice GraphicsDevice { get; internal set; }
     public InputDevice InputDevice { get; internal set; }
+    public AudioDevice AudioDevice { get; internal set; }
 
     public TimeSpan FixedStepTarget = TimeSpan.FromSeconds(1.0f/60.0f);
     public TimeSpan FixedStepMaxElapsed = TimeSpan.FromSeconds(5.0f/60.0f);
@@ -96,6 +98,8 @@ public abstract class GameApp
             throw new Exception("Cannot claim this window");
         }
 
+        AudioDevice = new AudioDevice();
+        Audio.Init(AudioDevice);
         InputDevice = new InputDevice();
         Input.Init(InputDevice);
 
@@ -103,7 +107,7 @@ public abstract class GameApp
         Height = (int)settings.Height;
 
         GameContext.Init(GraphicsDevice, MainWindow);
-        Assets = new AssetStorage(AssetPath);
+        Assets = new AssetStorage(AudioDevice, AssetPath);
         ResourceUploader uploader = new ResourceUploader(GraphicsDevice);
         Assets.StartContext(uploader);
         LoadContent(Assets);
@@ -162,6 +166,7 @@ public abstract class GameApp
         GraphicsDevice.UnclaimWindow(MainWindow);
 
         MainWindow.Dispose();
+        AudioDevice.Dispose();
         GraphicsDevice.Dispose();
 
         SDL.SDL_Quit();
@@ -202,6 +207,7 @@ public abstract class GameApp
             AdvanceDeltaTime(FixedStepTarget);
             InputDevice.Update();
             InternalUpdate(Time.Delta);
+            AudioDevice.Reset();
             if (Exiting) 
             {
                 return;

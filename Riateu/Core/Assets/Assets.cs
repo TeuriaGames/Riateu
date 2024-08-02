@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Riateu.Audios;
 using Riateu.Graphics;
 
 namespace Riateu.Content;
@@ -25,11 +27,13 @@ public class AssetStorage
     private string assetPath;
     private ResourceUploader uploader;
     private Packer<AtlasItem> packer;
+    private AudioDevice device;
 
-    public AssetStorage(string path) 
+    public AssetStorage(AudioDevice device, string path) 
     {
         assetPath = path;
         packer = new Packer<AtlasItem>(8192);
+        this.device = device;
     }
 
     public void StartContext(ResourceUploader uploader) 
@@ -98,6 +102,19 @@ public class AssetStorage
             return (Ref<Texture>)asset;
         }
         return new Ref<Texture>(uploader.CreateTexture2DFromCompressed(path));
+    }
+
+    public AudioTrack LoadAudioTrack(string path, TrackFormat format) 
+    {
+        switch (format) 
+        {
+        case TrackFormat.OGG:
+            return AudioTrackOGG.CreateOGG(device, path);
+        case TrackFormat.WAV:
+            throw new NotImplementedException("WAV format has not been implemented yet");
+        default:
+            throw new InvalidOperationException("Unknown format is passed.");
+        }
     }
 
     public Atlas LoadAtlas(string path, Texture texture, bool ninePatchEnabled = false, JsonType fileType = JsonType.Json) 
