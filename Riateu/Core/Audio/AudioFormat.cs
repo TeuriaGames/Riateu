@@ -1,6 +1,6 @@
 namespace Riateu.Audios;
 
-public enum TrackFormat 
+public enum AudioFormat 
 {
     OGG,
     WAV
