@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using Riateu.Graphics;
@@ -39,7 +38,7 @@ public class PhysicsComponent : Component
         }
     }
 
-    private ulong tags = ulong.MaxValue;
+    private ulong tags = 0;
 
     /// <summary>
     /// Initialize the component with shapes.
@@ -113,7 +112,7 @@ public class PhysicsComponent : Component
         return false;
     }
 
-    private HashSet<PhysicsComponent> GetAllNearbyComponents(Vector2 offset) 
+    public SpatialResult GetAllNearbyComponents(Vector2 offset) 
     {
         Rectangle rectangle = new Rectangle(
             (int)(Entity.PosX + offset.X),
@@ -125,9 +124,20 @@ public class PhysicsComponent : Component
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private bool CompareTag(ulong tag) 
+    private static bool CompareTag(ulong otherTag, ulong tag) 
     {
-        return (tags & tag) == 1;
+        return (otherTag & tag) != 0;
+    }
+
+    public SpatialResult GetAllNearbyComponents(Vector2 offset, ulong tags) 
+    {
+        Rectangle rectangle = new Rectangle(
+            (int)(Entity.PosX + offset.X),
+            (int)(Entity.PosY + offset.Y),
+            (int)(shape.BoundingBox.Width + (offset.X * 2)),
+            (int)(shape.BoundingBox.Width + (offset.Y * 2))
+        );
+        return Scene.SpatialHash.Retrieve(rectangle, this, tags);
     }
 
     /// <summary>
@@ -138,10 +148,10 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool CheckAll(Vector2 offset, ulong tags)
     {
-        var components = GetAllNearbyComponents(offset);
+        using var components = GetAllNearbyComponents(offset);
         foreach (var other in components) 
         {
-            if (CompareTag(tags) && Check(other, offset)) 
+            if (CompareTag(other.tags, tags) && Check(other, offset)) 
             {
                 return true;
             }
@@ -159,7 +169,7 @@ public class PhysicsComponent : Component
     public bool CheckAll<T>(Vector2 offset, out T entity)
     where T : Entity
     {
-        var components = GetAllNearbyComponents(offset);
+        using var components = GetAllNearbyComponents(offset);
         foreach (var other in components) 
         {
             if (other.Entity is T && Check(other, offset)) 
@@ -179,7 +189,7 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool CheckAll<T>(Vector2 offset)
     {
-        var components = GetAllNearbyComponents(offset);
+        using var components = GetAllNearbyComponents(offset);
         foreach (var other in components) 
         {
             if (other.Entity is T && Check(other, offset)) 
@@ -200,10 +210,10 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool CheckAll(Vector2 offset, ulong tags, out Entity entity, out PhysicsComponent component)
     {
-        var components = GetAllNearbyComponents(offset);
+        using var components = GetAllNearbyComponents(offset);
         foreach (var other in components) 
         {
-            if (CompareTag(tags) && Check(other, offset)) 
+            if (CompareTag(other.tags, tags) && Check(other, offset)) 
             {
                 component = other;
                 entity = other.Entity;
@@ -224,7 +234,7 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool CheckAll<T>(Vector2 offset, out Entity entity, out PhysicsComponent component)
     {
-        var components = GetAllNearbyComponents(offset);
+        using var components = GetAllNearbyComponents(offset);
         foreach (var other in components) 
         {
             if (other.Entity is T && Check(other, offset)) 
@@ -247,7 +257,7 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll<T>(Vector2 at)
     {
-        var components = GetAllNearbyComponents(at);
+        using var components = GetAllNearbyComponents(at);
         foreach (var other in components) 
         {
             if (other.Entity is T && !Check(other, Vector2.Zero) && Check(other, at)) 
@@ -267,10 +277,10 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll(Vector2 at, ulong tags)
     {
-        var components = GetAllNearbyComponents(at);
+        using var components = GetAllNearbyComponents(at);
         foreach (var other in components) 
         {
-            if (CompareTag(tags) && !Check(other, Vector2.Zero) && Check(other, at)) 
+            if (CompareTag(other.tags, tags) && !Check(other, Vector2.Zero) && Check(other, at)) 
             {
                 return true;
             }
@@ -289,7 +299,7 @@ public class PhysicsComponent : Component
     public bool OutsideCheckAll<T>(Vector2 at, out T entity)
     where T : Entity
     {
-        var components = GetAllNearbyComponents(at);
+        using var components = GetAllNearbyComponents(at);
         foreach (var other in components) 
         {
             if (other.Entity is T && (!Check(other, Vector2.Zero) && Check(other, at))) 
@@ -312,7 +322,7 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll<T>(Vector2 at, out Entity entity, out PhysicsComponent component)
     {
-        var components = GetAllNearbyComponents(at);
+        using var components = GetAllNearbyComponents(at);
         foreach (var other in components) 
         {
             if (other.Entity is T && !Check(other, Vector2.Zero) && Check(other, at)) 
@@ -338,10 +348,10 @@ public class PhysicsComponent : Component
     /// <returns>true if it collided, else false</returns>
     public bool OutsideCheckAll(Vector2 at, ulong tags, out Entity entity, out PhysicsComponent component)
     {
-        var components = GetAllNearbyComponents(at);
+        using var components = GetAllNearbyComponents(at);
         foreach (var other in components) 
         {
-            if (CompareTag(tags) && !Check(other, Vector2.Zero) && Check(other, at)) 
+            if (CompareTag(other.tags, tags) && !Check(other, Vector2.Zero) && Check(other, at)) 
             {
                 component = other;
                 entity = other.Entity;

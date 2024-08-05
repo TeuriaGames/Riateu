@@ -11,7 +11,7 @@ public class SpatialHash
     private int cellSize;
     private float inverseCellSize;
     private SpatialBucket bucket = new SpatialBucket();
-    private HashSet<PhysicsComponent> temp = new HashSet<PhysicsComponent>();
+    private SpatialResult result = new SpatialResult();
 
     public int CellSize => cellSize;
 
@@ -55,9 +55,44 @@ public class SpatialHash
         return newCell;
     }
 
-    public HashSet<PhysicsComponent> Retrieve(in Rectangle rectangle, PhysicsComponent self) 
+    public SpatialResult Retrieve(in Rectangle rectangle, PhysicsComponent self, ulong tags) 
     {
-        temp.Clear();
+        HashSet<PhysicsComponent> temp = result.Obtain();
+
+        int left = (int)(rectangle.Left * inverseCellSize);
+        int top = (int)(rectangle.Top * inverseCellSize);
+        int right = (int)(rectangle.Right * inverseCellSize);
+        int bottom = (int)(rectangle.Bottom * inverseCellSize);
+
+        for (int x = left; x <= right; x++) 
+        {
+            for (int y = top; y <= bottom; y++)  
+            {
+                List<PhysicsComponent> cell = GetCell(x, y);
+                if (cell == null || cell.Count <= 1) 
+                {
+                    continue;
+                }
+
+                for (int i = 0; i < cell.Count; i++)
+                {
+                    PhysicsComponent component = cell[i];
+                    if (component == self || (component.Tags & tags) == 0) 
+                    {
+                        continue;
+                    }
+                    
+                    temp.Add(component);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public SpatialResult Retrieve(in Rectangle rectangle, PhysicsComponent self) 
+    {
+        HashSet<PhysicsComponent> temp = result.Obtain();
 
         int left = (int)(rectangle.Left * inverseCellSize);
         int top = (int)(rectangle.Top * inverseCellSize);
@@ -88,13 +123,48 @@ public class SpatialHash
             }
         }
 
-
-        return temp;
+        return result;
     }
 
     public void Clear() 
     {
         bucket.Clear();
+    }
+}
+
+public class SpatialResult : IDisposable
+{
+    // this is not a pool
+    private Stack<HashSet<PhysicsComponent>> colliders = new Stack<HashSet<PhysicsComponent>>();
+    private HashSet<PhysicsComponent> current;
+    internal SpatialResult() {}
+
+    public HashSet<PhysicsComponent> Obtain() 
+    {
+        if (colliders.TryPop(out var res)) 
+        {
+            res.Clear();
+            return current = res;
+        }
+
+        return current = new HashSet<PhysicsComponent>();
+    }
+
+    public void Pop(HashSet<PhysicsComponent> components) 
+    {
+        colliders.Push(components);
+        current = colliders.Pop();
+    }
+
+    public IEnumerator<PhysicsComponent> GetEnumerator() 
+    {
+        return current.GetEnumerator();
+    }
+
+
+    public void Dispose()
+    {
+        Pop(current);
     }
 }
 
