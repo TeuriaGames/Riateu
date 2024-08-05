@@ -15,8 +15,13 @@ public class Shader : GraphicsResource
     public unsafe Shader(GraphicsDevice device, string filePath, string entryPoint, in ShaderCreateInfo info) : base(device)
     {
         using Stream stream = File.OpenRead(filePath);
+        void *byteCodeBuffer = NativeMemory.Alloc((nuint)stream.Length);
+        Span<byte> byteCodeSpan = new Span<byte>(byteCodeBuffer, (int)stream.Length);
+        stream.ReadExactly(byteCodeSpan);
 
-        Handle = Create(device, stream, entryPoint, info);
+        Handle = Create(device, byteCodeSpan, entryPoint, info);
+
+        NativeMemory.Free(byteCodeBuffer);
 
         SamplerCount = info.SamplerCount;
         StorageBufferCount = info.StorageBufferCount;
@@ -26,7 +31,13 @@ public class Shader : GraphicsResource
 
     public unsafe Shader(GraphicsDevice device, Stream stream, string entryPoint, in ShaderCreateInfo info) : base(device)
     {
-        Handle = Create(device, stream, entryPoint, info);
+        void *byteCodeBuffer = NativeMemory.Alloc((nuint)stream.Length);
+        Span<byte> byteCodeSpan = new Span<byte>(byteCodeBuffer, (int)stream.Length);
+        stream.ReadExactly(byteCodeSpan);
+
+        Handle = Create(device, byteCodeSpan, entryPoint, info);
+
+        NativeMemory.Free(byteCodeBuffer);
 
         SamplerCount = info.SamplerCount;
         StorageBufferCount = info.StorageBufferCount;
@@ -34,34 +45,42 @@ public class Shader : GraphicsResource
         UniformBufferCount = info.UniformBufferCount;
     }
 
-    private static unsafe IntPtr Create(GraphicsDevice device, Stream stream, string entryPoint, in ShaderCreateInfo info) 
+    public unsafe Shader(GraphicsDevice device, Span<byte> bytes, string entryPoint, in ShaderCreateInfo info) : base(device)
     {
-        void *byteCodeBuffer = NativeMemory.Alloc((nuint)stream.Length);
-        Span<byte> byteCodeSpan = new Span<byte>(byteCodeBuffer, (int)stream.Length);
-        stream.ReadExactly(byteCodeSpan);
+        Handle = Create(device, bytes, entryPoint, info);
 
-        Refresh.ShaderCreateInfo refreshShaderCreateInfo = new Refresh.ShaderCreateInfo 
+        SamplerCount = info.SamplerCount;
+        StorageBufferCount = info.StorageBufferCount;
+        StorageTextureCount = info.StorageTextureCount;
+        UniformBufferCount = info.UniformBufferCount;
+    }
+
+    private static unsafe IntPtr Create(GraphicsDevice device, in Span<byte> bytes, string entryPoint, in ShaderCreateInfo info) 
+    {
+        fixed (byte* b = bytes) 
         {
-            CodeSize = (nuint)stream.Length,
-            Code = (byte*)byteCodeBuffer,
-            EntryPointName = entryPoint,
-            Stage = (Refresh.ShaderStage)info.ShaderStage,
-            Format = (Refresh.ShaderFormat)info.ShaderFormat,
-            SamplerCount = info.SamplerCount,
-            StorageBufferCount = info.StorageBufferCount,
-            StorageTextureCount = info.StorageTextureCount,
-            UniformBufferCount = info.UniformBufferCount
-        };
+            Refresh.ShaderCreateInfo refreshShaderCreateInfo = new Refresh.ShaderCreateInfo 
+            {
+                CodeSize = (nuint)bytes.Length,
+                Code = (byte*)b,
+                EntryPointName = entryPoint,
+                Stage = (Refresh.ShaderStage)info.ShaderStage,
+                Format = (Refresh.ShaderFormat)info.ShaderFormat,
+                SamplerCount = info.SamplerCount,
+                StorageBufferCount = info.StorageBufferCount,
+                StorageTextureCount = info.StorageTextureCount,
+                UniformBufferCount = info.UniformBufferCount
+            };
 
-        IntPtr shaderPtr = Refresh.Refresh_CreateShader(device.Handle, refreshShaderCreateInfo);
+            IntPtr shaderPtr = Refresh.Refresh_CreateShader(device.Handle, refreshShaderCreateInfo);
 
-        if (shaderPtr == IntPtr.Zero) 
-        {
-            throw new InvalidOperationException("Shader compilation failed!");
+            if (shaderPtr == IntPtr.Zero) 
+            {
+                throw new InvalidOperationException("Shader compilation failed!");
+            }
+
+            return shaderPtr;
         }
-
-        NativeMemory.Free(byteCodeBuffer);
-        return shaderPtr;
     }
 
     protected override void Dispose(bool disposing)
