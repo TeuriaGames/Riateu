@@ -8,6 +8,8 @@ public struct Point(int x, int y) : IEquatable<Point>
     public int X = x;
     public int Y = y;
 
+    public static readonly Point Zero = new Point(0, 0);
+
     public override bool Equals(object obj) 
     {
         return (obj is Point) && Equals((Point)obj);
