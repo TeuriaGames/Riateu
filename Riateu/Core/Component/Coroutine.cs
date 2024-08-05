@@ -17,8 +17,16 @@ public class Coroutine : Component
 
     private async Task WrapCoroutine(Func<Task> coroutine)
     {
-        await Task.Yield();
-        await coroutine();
+        try 
+        {
+            await Task.Yield();
+            await coroutine();
+        }
+        catch (Exception e) 
+        {
+            Console.WriteLine(e.ToString());
+            throw;
+        }
     }
 
     /// <summary>
