@@ -2,8 +2,9 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TeuJson;
 using Riateu.Content;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Riateu.Graphics;
 
@@ -99,30 +100,29 @@ public class Atlas : IAssets
         switch (fileType) 
         {
         default:
-            var val = JsonTextReader.FromStream(stream);
-            var frames = val["frames"].AsJsonObject;
-            var count = frames.Count;
-            foreach (var kv in frames.Pairs) 
+            ClutteredAtlasData atlasData = JsonSerializer.Deserialize<ClutteredAtlasData>(stream, ClutteredAtlasDataContext.Default.ClutteredAtlasData);
+            var frames = atlasData.Frames;
+            var count = atlasData.Frames.Count;
+            foreach (var kv in frames)
             {
                 var key = kv.Key;
                 var value = kv.Value;
-                int x = value["x"];
-                int y = value["y"];
-                int w = value["width"];
-                int h = value["height"];
+                int x = value.X;
+                int y = value.Y;
+                int w = value.Width;
+                int h = value.Height;
 
-                if (!value.Contains("nine_patch")) 
+                if (value.NinePatch is not ClutteredNinePatch ninePatch) 
                 {
                     var spriteTexture = new TextureQuad(texture, new Rectangle(x, y, w, h));
                     atlas.textures[key] = spriteTexture;
                     continue;
                 }
 
-                JsonObject ninePatch = kv.Value["nine_patch"].AsJsonObject;
-                int nx = ninePatch["x"];
-                int ny = ninePatch["y"];
-                int nw = ninePatch["w"];
-                int nh = ninePatch["h"];
+                int nx = ninePatch.X;
+                int ny = ninePatch.Y;
+                int nw = ninePatch.W;
+                int nh = ninePatch.H;
                 // TODO add nine patch
 
                 var ninePatchTexture = new TextureQuad(texture, new Rectangle(x, y, w, h));
@@ -209,4 +209,45 @@ public class Atlas : IAssets
     }
 
     public static implicit operator Texture(Atlas atlas) => atlas.BaseTexture;
+}
+
+
+[JsonSerializable(typeof(ClutteredAtlasData))]
+[JsonSerializable(typeof(ClutteredFrames))]
+[JsonSerializable(typeof(ClutteredNinePatch))]
+internal partial class ClutteredAtlasDataContext : JsonSerializerContext
+{
+
+}
+
+internal struct ClutteredAtlasData 
+{
+    [JsonPropertyName("frames")]
+    public Dictionary<string, ClutteredFrames> Frames { get; set; }
+}
+
+internal struct ClutteredFrames 
+{
+    [JsonPropertyName("x")]
+    public int X { get; set; }
+    [JsonPropertyName("y")]
+    public int Y { get; set; }
+    [JsonPropertyName("width")]
+    public int Width { get; set; }
+    [JsonPropertyName("height")]
+    public int Height { get; set; }
+    [JsonPropertyName("nine_patch")]
+    public ClutteredNinePatch? NinePatch { get; set; }
+}
+
+internal struct ClutteredNinePatch 
+{
+    [JsonPropertyName("x")]
+    public int X { get; set; }
+    [JsonPropertyName("y")]
+    public int Y { get; set; }
+    [JsonPropertyName("w")]
+    public int W { get; set; }
+    [JsonPropertyName("h")]
+    public int H { get; set; }
 }
