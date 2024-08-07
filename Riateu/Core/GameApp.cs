@@ -217,6 +217,11 @@ public abstract class GameApp
         InternalRender();
     }
 
+    public void Quit() 
+    {
+        Exiting = true;
+    }
+
     private void AdvanceDeltaTime(TimeSpan delta) 
     {
         Time.Delta = (float)delta.TotalSeconds;
