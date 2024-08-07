@@ -104,6 +104,19 @@ public class AssetStorage
         return new Ref<Texture>(uploader.CreateTexture2DFromCompressed(path));
     }
 
+    public AudioStreamOGG LoadAudioStream(string path, AudioFormat format) 
+    {
+        switch (format) 
+        {
+        case AudioFormat.OGG:
+            return new AudioStreamOGG(device, path);
+        case AudioFormat.WAV:
+            throw new NotImplementedException("WAV format has not been implemented yet");
+        default:
+            throw new InvalidOperationException("Unknown format is passed.");
+        }
+    }
+
     public AudioTrack LoadAudioTrack(string path, AudioFormat format) 
     {
         switch (format) 

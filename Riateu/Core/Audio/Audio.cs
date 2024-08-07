@@ -29,14 +29,14 @@ public static class Audio
 
     public static void PlaySound(AudioTrack track) 
     {
-        SourceVoice voice = Device.VoiceMaker.MakeSourceVoice(track.Format);
+        SourceVoice voice = Device.VoiceMaker.MakeSourceVoice<SoundVoice>(track.Format);
         voice.Submit(track);
         voice.Play();
     }
 
     public static void PlaySound(AudioTrack track, float volume = 1f, float pitch = 0f, float pan = 0f) 
     {
-        SourceVoice voice = Device.VoiceMaker.MakeSourceVoice(track.Format);
+        SourceVoice voice = Device.VoiceMaker.MakeSourceVoice<SoundVoice>(track.Format);
         voice.Volume = volume;
         voice.Pitch = pitch;
         voice.Pan = pan;

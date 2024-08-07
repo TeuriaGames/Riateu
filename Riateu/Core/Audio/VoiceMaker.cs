@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 
 namespace Riateu.Audios;
 
 public class VoiceMaker
 {
-    private Dictionary<(int, Format), Queue<SourceVoice>> voicePool = new();
+    private Dictionary<(Type, Format), Queue<SourceVoice>> voicePool = new();
     private List<SourceVoice> trackedSourceVoices = new List<SourceVoice>();
     private List<SourceVoice> removingSourceVoices = new List<SourceVoice>();
     private AudioDevice device;
+    private object StateLock = new object();
 
     public VoiceMaker(AudioDevice device) 
     {
@@ -25,7 +27,7 @@ public class VoiceMaker
         {
             trackedSourceVoices.Remove(voice);
             voice.Reset();
-            Queue<SourceVoice> queue = voicePool[(voice.AudioTypeID, voice.Format)];
+            Queue<SourceVoice> queue = voicePool[(voice.GetType(), voice.Format)];
             queue.Enqueue(voice);
         }
 
@@ -37,26 +39,30 @@ public class VoiceMaker
         removingSourceVoices.Add(voice);
     }
 
-    public SourceVoice MakeSourceVoice(Format format) 
+    public SourceVoice MakeSourceVoice<T>(Format format) 
+    where T : IVoice
     {
-        CreateQueueIfNothing(0, format);
+        CreateQueueIfNothing(typeof(T), format);
 
-        Queue<SourceVoice> queue = voicePool[(0, format)];
+        Queue<SourceVoice> queue = voicePool[(typeof(T), format)];
         if (queue.Count == 0) 
         {
-            queue.Enqueue(SourceVoice.Create(this, device, format));
+            queue.Enqueue(T.Create(this, device, format));
         }
         
         SourceVoice voice = queue.Dequeue();
-        trackedSourceVoices.Add(voice);
+        lock (StateLock) 
+        {
+            trackedSourceVoices.Add(voice);
+        }
         return voice;
     }
 
-    internal void CreateQueueIfNothing(int id, Format format) 
+    internal void CreateQueueIfNothing(Type type, Format format) 
     {
-        if (!voicePool.ContainsKey((id, format))) 
+        if (!voicePool.ContainsKey((type, format))) 
         {
-            voicePool.Add((id, format), new Queue<SourceVoice>());
+            voicePool.Add((type, format), new Queue<SourceVoice>());
         }
     }
 }

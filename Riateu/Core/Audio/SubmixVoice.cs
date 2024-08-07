@@ -2,9 +2,8 @@ using System;
 
 namespace Riateu.Audios;
 
-public class SubmixVoice : BaseVoice, IVoice
+public class SubmixVoice : BaseVoice
 {
-    public int AudioTypeID => IVoice.SubmixVoice;
     public SubmixVoice(AudioDevice device, uint srcChannelCount, uint sampleRate, uint processingStage) 
         : base(device, srcChannelCount, device.DeviceDetails.OutputFormat.Format.nChannels)
     {

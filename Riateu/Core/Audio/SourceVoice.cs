@@ -2,9 +2,9 @@ using System;
 
 namespace Riateu.Audios;
 
-public class SourceVoice : BaseVoice, IVoice
+public abstract class SourceVoice : BaseVoice
 {
-    public int AudioTypeID => IVoice.SourceVoice;
+    public bool Looping { get; set; }
     public SoundState State
     {
         get 
@@ -18,6 +18,7 @@ public class SourceVoice : BaseVoice, IVoice
     }
     private SoundState state;
 
+    public VoiceMaker Maker => maker;
     private VoiceMaker maker;
 
     public Format Format { get; }
@@ -42,22 +43,8 @@ public class SourceVoice : BaseVoice, IVoice
         this.maker = maker;
     }
 
-    public static SourceVoice Create(VoiceMaker player, AudioDevice device, Format format) 
-    {
-        return new SourceVoice(player, device, format);
-    }
-
-    public void Update() 
-    {
-        lock (StateLock) 
-        {
-            if (Initiated && BuffersQueued == 0) 
-            {
-                Stop();
-                maker.Destroy(this);
-            }
-        }
-    }
+    public abstract void Update();
+    
 
     public void Play() 
     {
@@ -72,10 +59,15 @@ public class SourceVoice : BaseVoice, IVoice
 
     public void Submit(AudioTrack buffer) 
     {
+        Submit(buffer.ToFAudioBuffer());
+    }
+
+    protected void Submit(in FAudio.FAudioBuffer fbuffer) 
+    {
         lock (StateLock) 
         {
-            FAudio.FAudioBuffer fAudioBuffer = buffer.ToFAudioBuffer();
-            FAudio.FAudioSourceVoice_SubmitSourceBuffer(Handle, ref fAudioBuffer, IntPtr.Zero);
+            FAudio.FAudioBuffer buffer = fbuffer;
+            FAudio.FAudioSourceVoice_SubmitSourceBuffer(Handle, ref buffer, IntPtr.Zero);
         }
     }
 

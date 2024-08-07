@@ -1,8 +1,6 @@
 namespace Riateu.Audios;
 
-public interface IVoice 
+public interface IVoice
 {
-    int AudioTypeID { get; }
-    const int SourceVoice = 0;
-    const int SubmixVoice = 1;
+    abstract static SourceVoice Create(VoiceMaker player, AudioDevice device, Format format);
 }
