@@ -1,29 +1,30 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 
 namespace Riateu.Graphics;
 
-public struct Rectangle : IEquatable<Rectangle>
+public struct RectangleF : IEquatable<RectangleF>
 {
-    public int X;
-    public int Y;
-    public int Width;
-    public int Height;
+    public float X;
+    public float Y;
+    public float Width;
+    public float Height;
 
-    public int Left => X;
-    public int Right => X + Width;
-    public int Top => Y;
-    public int Bottom => Y + Height;
+    public float Left => X;
+    public float Right => X + Width;
+    public float Top => Y;
+    public float Bottom => Y + Height;
 
-    public Point Min => new Point(X, Y);
-    public Point Max => new Point(X + Width, Y + Height);
+    public Vector2 Min => new Vector2(X, Y);
+    public Vector2 Max => new Vector2(X + Width, Y + Height);
 
-    public Point Size => new Point(Width, Height);
+    public Vector2 SizeF => new Vector2(Width, Height);
 
-    public Point Center => new Point(X + (Width / 2), Y + (Height / 2));
+    public Vector2 Center => new Vector2(X + (Width / 2), Y + (Height / 2));
 
-    public Rectangle(int x, int y, int width, int height) 
+    public RectangleF(float x, float y, float width, float height) 
     {
         X = x;
         Y = y;
@@ -31,7 +32,7 @@ public struct Rectangle : IEquatable<Rectangle>
         Height = height;
     }
 
-    public Rectangle(Point loc, Point size) 
+    public RectangleF(Point loc, Point size) 
     {
         X = loc.X;
         Y = loc.Y;
@@ -63,12 +64,12 @@ public struct Rectangle : IEquatable<Rectangle>
             Top < other.Bottom;
     }
 
-    public Rectangle Overlap(in Rectangle other) 
+    public RectangleF Overlap(in RectangleF other) 
     {
         bool overlapX = Right > other.Left && Left < other.Right;
         bool overlapY = Bottom > other.Top && Top < other.Bottom;
 
-        Rectangle result = new Rectangle();
+        RectangleF result = new RectangleF();
 
         if (overlapX) 
         {
@@ -85,11 +86,11 @@ public struct Rectangle : IEquatable<Rectangle>
         return result;
     }
 
-    public Rectangle Union(in Rectangle other) 
+    public RectangleF Union(in RectangleF other) 
     {
-        int x = Math.Min(this.X, other.X);
-        int y = Math.Min(this.Y, other.Y);
-        return new Rectangle(
+        float x = Math.Min(this.X, other.X);
+        float y = Math.Min(this.Y, other.Y);
+        return new RectangleF(
             x, y,
             Math.Max(this.Right, other.Right) - x,
             Math.Max(this.Bottom, other.Bottom) - y
@@ -97,22 +98,22 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
 
-    public bool Equals(Rectangle other) 
+    public bool Equals(RectangleF other) 
     {
         return this == other;
     }
 
     public override bool Equals([NotNullWhen(true)] object obj)
     {
-        return (obj is Rectangle) && this == ((Rectangle)obj);
+        return (obj is RectangleF) && this == ((RectangleF)obj);
     }
 
     public override int GetHashCode()
     {
-        return (X ^ Y ^ Width ^ Height);
+        return ((int)X ^ (int)Y ^ (int)Width ^ (int)Height);
     }
 
-    public static bool operator ==(Rectangle a, Rectangle b) 
+    public static bool operator ==(RectangleF a, RectangleF b) 
     {
         return a.X == b.X &&
             a.Y == b.Y &&
@@ -120,7 +121,7 @@ public struct Rectangle : IEquatable<Rectangle>
             a.Height == b.Height;
     }
 
-    public static bool operator !=(Rectangle a, Rectangle b) 
+    public static bool operator !=(RectangleF a, RectangleF b) 
     {
         return a.X != b.X &&
             a.Y != b.Y &&
