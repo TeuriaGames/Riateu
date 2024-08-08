@@ -59,18 +59,18 @@ jobs:
   macos-build:
     name: MacOS
     runs-on: macos-latest
+    env:
+      CXXFLAGS: -I/usr/local/include/SDL2
+      LDFLAGS: -L/usr/local/lib
     steps:
-      env:
-        CXXFLAGS: -I/usr/local/include/SDL2
-        LDFLAGS: -L/usr/local/lib
-      - uses: actions/checkout@v3
-      - uses: goto-bus-stop/setup-zig@v2
+    - uses: actions/checkout@v3
+    - uses: goto-bus-stop/setup-zig@v2
 
-      - run: cd Native && zig build --release=fast
+    - run: cd Native && zig build --release=fast
 
-      - name: Upload Artifact (Mac OS)
-        uses: actions/upload-artifact@v1
-        with:
-          name: macOS
-          path: ./Native/zig-out/lib
-          retention-days: 2
+    - name: Upload Artifact (Mac OS)
+      uses: actions/upload-artifact@v1
+      with:
+        name: macOS
+        path: ./Native/zig-out/lib
+        retention-days: 2
