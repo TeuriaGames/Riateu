@@ -1,21 +1,22 @@
-﻿using MoonWorks;
-using Riateu;
+﻿using Riateu;
 
 public class Program : GameApp
 {
-    public Program(string title, uint width, uint height, ScreenMode screenMode, bool debugMode = false) :
-        base(title, width, height, screenMode, debugMode)
+    public Program(WindowSettings settings, GraphicsSettings graphicsSettings) : base(settings, graphicsSettings)
     {
     }
 
-    public override void Initialize()
+    public override GameLoop Initialize()
     {
-        Scene = new ContentWindow(this);
+        return new ContentWindow(this);
     }
     
     public static void Main(string[] args) 
     {
-        Program program = new Program("Content Manager", 1024, 640, ScreenMode.Windowed);
+        Program program = new Program(
+            new WindowSettings("Content Manager", 1024, 640, WindowMode.Windowed),
+            GraphicsSettings.Vsync
+        );
         program.Run();
     }
 }

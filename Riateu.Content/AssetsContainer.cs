@@ -1,10 +1,12 @@
 using System;
 using System.IO;
 using ImGuiNET;
+using NativeFileDialogSharp;
 
 public class AssetsContainer 
 {
     public Action<string> OnAssetSelected;
+    private string pathSelected;
 
     public AssetsContainer(Action<string> assetSelected) 
     {
@@ -14,9 +16,22 @@ public class AssetsContainer
     public void Draw() 
     {
         ImGui.Begin("Assets");
-        ImGui.LabelText("##Notice", "No Project selected");
-        ImGui.Button("Select a Project");
-        FileSystem("./");
+        if (pathSelected == null) 
+        {
+            ImGui.LabelText("##Notice", "No Project selected");
+            if (ImGui.Button("Select a Project")) 
+            {
+                DialogResult dialog = Dialog.FolderPicker("./");
+                if (dialog.IsOk) 
+                {
+                    pathSelected = dialog.Path;
+                }
+            }
+        }
+        else 
+        {
+            FileSystem(pathSelected);
+        }
 
         ImGui.End();
     }

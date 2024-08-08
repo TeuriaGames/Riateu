@@ -1,9 +1,9 @@
 using System;
 using ImGuiNET;
-using MoonWorks.Graphics;
 using Riateu;
 using Riateu.Graphics;
 using Riateu.ImGuiRend;
+using Riateu.Inputs;
 
 public class ContentWindow : GameLoop
 {
@@ -30,16 +30,14 @@ public class ContentWindow : GameLoop
 
     public override void Update(double delta)
     {
-        renderer.Update(Input.InputSystem, UIBuild);
+        renderer.Update(Input.Device, UIBuild);
     }
 
-    public override void Render(BackbufferTarget backbuffer)
+    public override void Render(RenderTarget backbuffer)
     {
-        renderer.Draw();
-
-        backbuffer.BeginRendering(Color.Black);
-        backbuffer.Render(renderer);
-        backbuffer.EndRendering();
+        RenderPass renderPass = GraphicsDevice.BeginTarget(backbuffer, Color.Black, true);
+        renderer.Render(renderPass);
+        GraphicsDevice.EndTarget(renderPass);
     }
 
     private void UIBuild() 

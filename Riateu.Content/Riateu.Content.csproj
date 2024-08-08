@@ -7,18 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Riateu/Riateu.Vulkan.csproj" />
+    <ProjectReference Include="../Riateu/Riateu.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0" />
     <PackageReference Include="TeuJson" Version="3.2.0" />
     <PackageReference Include="TeuJson.Generator" Version="3.2.0" />
-  </ItemGroup>
-
- <ItemGroup>
-    <Content Include="../runtimes/lib64/**/*.*">
-      <Link>%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>
