@@ -157,7 +157,6 @@ export fn Riateu_FontGetPixels(font: RiateuFont, dest: [*c]u8, glyph: c_int, wid
         dest[idx + 1] = dest[point];
         dest[idx + 2] = dest[point];
         dest[idx + 3] = dest[point];
-        sdl2.SDL_Log("R: %d G: %d B: %d A: %d", dest[idx], dest[idx + 1], dest[idx + 2], dest[idx + 3]);
 
         if (point > 0) 
         {
