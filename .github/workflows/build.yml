@@ -1,0 +1,36 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goto-bus-stop/setup-zig@v2
+      - run: cd Native && zig build --release=fast
+      - name: Upload Artifact (Windows)
+        uses: actions/upload-artifact@v1
+        with:
+          name: windows
+          path: ./Native/zig-out/lib
+          retention-days: 2
+        if: matrix.os == 'windows-latest'
+      - name: Upload Artifact (Linux)
+        uses: actions/upload-artifact@v1
+        with:
+          name: linux
+          path: ./Native/zig-out/lib
+          retention-days: 2
+        if: matrix.os == 'ubuntu-latest'
+      - name: Upload Artifact (Mac OS)
+        uses: actions/upload-artifact@v1
+        with:
+          name: macOS
+          path: ./Native/zig-out/lib
+          retention-days: 2
+        if: matrix.os == 'macOS-latest'
