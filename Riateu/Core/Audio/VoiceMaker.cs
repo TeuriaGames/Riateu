@@ -36,26 +36,31 @@ public class VoiceMaker
 
     public void Destroy(SourceVoice voice) 
     {
-        removingSourceVoices.Add(voice);
+        lock (StateLock) 
+        {
+            removingSourceVoices.Add(voice);
+        }
     }
 
     public SourceVoice MakeSourceVoice<T>(Format format) 
     where T : IVoice
     {
-        CreateQueueIfNothing(typeof(T), format);
-
-        Queue<SourceVoice> queue = voicePool[(typeof(T), format)];
-        if (queue.Count == 0) 
-        {
-            queue.Enqueue(T.Create(this, device, format));
-        }
-        
-        SourceVoice voice = queue.Dequeue();
         lock (StateLock) 
         {
+            CreateQueueIfNothing(typeof(T), format);
+
+
+            Queue<SourceVoice> queue = voicePool[(typeof(T), format)];
+            if (queue.Count == 0) 
+            {
+                queue.Enqueue(T.Create(this, device, format));
+            }
+            
+            SourceVoice voice = queue.Dequeue();
+
             trackedSourceVoices.Add(voice);
+            return voice;
         }
-        return voice;
     }
 
     internal void CreateQueueIfNothing(Type type, Format format) 

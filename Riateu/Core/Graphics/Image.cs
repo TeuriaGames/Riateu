@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using RefreshCS;
 
 namespace Riateu.Graphics;
 
@@ -16,7 +15,7 @@ public class Image : IDisposable
         {
             if (Width <= 0 || Height <= 0)
                 return Span<Color>.Empty;
-            return new Span<Color>(data.ToPointer(), Width * Height);
+            return new Span<Color>((void*)data, Width * Height);
         }
     }
 
@@ -27,12 +26,15 @@ public class Image : IDisposable
     private bool disposedValue;
 
     public unsafe Image(int width, int height) 
+        :this(width, height, Color.Transparent) {}
+
+    public unsafe Image(int width, int height, Color fill) 
         :this(new Color[width * height], width, height)
     {
         Color* pixels = (Color*)data.ToPointer();
         for (int i = 0, n = width * height; i < n; i++) 
         {
-            pixels[i] = Color.Transparent;
+            pixels[i] = fill;
         }
     }
 
@@ -68,7 +70,7 @@ public class Image : IDisposable
 
         fixed (byte* ptr = span) 
         {
-			var pixelData = Refresh.Refresh_Image_Load(ptr, span.Length, out var w, out var h, out var len);
+            var pixelData = RiateuNative.Riateu_LoadImage(ptr, span.Length, out var w, out var h, out var _);
 
 			Width = w;
 			Height = h;
@@ -117,11 +119,19 @@ public class Image : IDisposable
         CopyFrom(image.Pixels, x, y, image.Width, image.Height);
     }
 
-    public void WritePNG(string path) 
+    public int WriteQOI(string path) 
     {
         unsafe 
         {
-            Refresh.Refresh_Image_SavePNG(path, (byte*)data, Width, Height);
+            return RiateuNative.Riateu_WriteQOI(path, (byte*)data, Width, Height);
+        }
+    }
+
+    public int WritePNG(string path) 
+    {
+        unsafe 
+        {
+            return RiateuNative.Riateu_WritePNG(path, (byte*)data, Width, Height);
         }
     }
 
@@ -133,11 +143,12 @@ public class Image : IDisposable
         {
             if (loadFromRefresh) 
             {
-                Refresh.Refresh_Image_Free((byte*)data);
+                RiateuNative.Riateu_FreeImage((byte*)data);
             }
+            
             else 
             {
-                NativeMemory.Free((byte*)data);
+                NativeMemory.Free((void*)data);
             }
 
             data = IntPtr.Zero;

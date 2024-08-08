@@ -74,12 +74,9 @@ public class AudioStreamOGG : AudioStream
             return;
         }
         using var fs = File.OpenRead(filePath);
+        fileDataPtr = fs.AllocToPointer(out int length);
 
-        fileDataPtr = (IntPtr)NativeMemory.Alloc((nuint)fs.Length);
-        Span<byte> fileDataSpan = new Span<byte>((void*)fileDataPtr, (int)fs.Length);
-        fs.ReadExactly(fileDataSpan);
-
-        actualHandle = FAudio.stb_vorbis_open_memory(fileDataPtr, fileDataSpan.Length, out int error, IntPtr.Zero);
+        actualHandle = FAudio.stb_vorbis_open_memory(fileDataPtr, length, out int error, IntPtr.Zero);
 
         if (error != 0) 
         {

@@ -1,18 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Riateu.Graphics;
 
 namespace Riateu.Content;
 
 public class Packer<T> 
 {
-    [InlineArray(2)]
-    public struct NodeSplit 
-    {
-        private int _element0;
-    }
-
     public struct Node(int x, int y, int w, int h) 
     {
         public int X = x;
@@ -20,7 +13,7 @@ public class Packer<T>
         public int W = w;
         public int H = h;
         public bool IsSplit;
-        public NodeSplit Splits;
+        public int[] Splits = new int[2];
     }
 
     public struct Item(T data, int width, int height)

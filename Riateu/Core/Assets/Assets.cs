@@ -142,26 +142,26 @@ public class AssetStorage
         return atlas;
     }
 
-    public SpriteFont LoadFont(string path, Texture texture) 
+    public SpriteFont LoadFont(string path, float size) 
     {
         if (assetsCache.TryGetValue(path, out IAssets asset)) 
         {
             return (SpriteFont)asset;
         }
 
-        SpriteFont spriteFont = new SpriteFont(texture, path);
+        SpriteFont spriteFont = new SpriteFont(uploader, path, size, SpriteFont.DefaultCharset);
         assetsCache.Add(path, spriteFont);
         return spriteFont;
     }
 
-    public SpriteFont LoadFont(string path, Texture texture, TextureQuad quad) 
+    public SpriteFont LoadFont(string path, float size, ReadOnlySpan<int> charset) 
     {
         if (assetsCache.TryGetValue(path, out IAssets asset)) 
         {
             return (SpriteFont)asset;
         }
 
-        SpriteFont spriteFont = new SpriteFont(texture, quad, path);
+        SpriteFont spriteFont = new SpriteFont(uploader, path, size, charset);
         assetsCache.Add(path, spriteFont);
         return spriteFont;
     }

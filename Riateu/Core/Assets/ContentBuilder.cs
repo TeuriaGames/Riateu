@@ -121,27 +121,17 @@ public class ContentBuilder
 /// <summary>
 /// A base class for the content processor.
 /// </summary>
-public abstract class ContentProcessor : IDisposable
+public abstract class ContentProcessor 
 {
     /// <summary>
     /// Ensure these directory does exists.
     /// </summary>
     public virtual string[] DirectoriesToEnsure { get; }
-    private Process process;
     private StringBuilder logBuilder;
 
     internal void Init(StringBuilder logBuilder) 
     {
-        process = new Process();
         this.logBuilder = logBuilder;
-    }
-
-    /// <summary>
-    /// Dispose a process.
-    /// </summary>
-    public void Dispose()
-    {
-        process.Dispose();
     }
 
     /// <summary>
@@ -159,8 +149,11 @@ public abstract class ContentProcessor : IDisposable
     /// <param name="args">Arguments to a command or process</param>
     public int RunCommand(string command, string[] args) 
     {
-        process.StartInfo = new ProcessStartInfo(command, args);
-        var success = process.Start();
+        var process = System.Diagnostics.Process.Start(new ProcessStartInfo(command, args) 
+        {
+            RedirectStandardOutput = true
+        });
+        
         process.WaitForExit();
         return process.ExitCode;
     }

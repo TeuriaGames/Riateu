@@ -8,3 +8,4 @@ zig-out/
 .sunpack-dep/
 .vscode/
 artifacts/
+imgui.ini
