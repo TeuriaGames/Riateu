@@ -9,3 +9,5 @@ zig-out/
 .vscode/
 artifacts/
 imgui.ini
+Native/SDL2.dll
+Native/lib/include/SDL2/*

@@ -24,7 +24,6 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-
     const sourceFiles = &[_][]const u8 { "./lib/src/zig_includes.c" };
     const sourceFlags = &[_][]const u8 { "-g", "-O3" };
 
@@ -33,7 +32,14 @@ pub fn build(b: *std.Build) void {
         .flags = sourceFlags
     });
     lib.addIncludePath(b.path("lib/include"));
-    lib.linkSystemLibrary("SDL2");
+    if (target.result.isMinGW()) {
+        lib.addObjectFile(b.path("../runtimes/x64/SDL2.dll"));
+    } else if (target.result.isDarwin()) {
+        lib.addObjectFile(b.path("../runtimes/osx/libSDL2-2.0.0.dylib"));
+    } else {
+        lib.linkSystemLibrary("SDL2");
+    }
+
     lib.linkLibC();
 
 
