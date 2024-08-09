@@ -37,10 +37,9 @@ public class Packer<T>
     }
 
     private List<Item> items = new List<Item>();
-    private List<uint> indices = new List<uint>();
     private List<Node> nodes = new List<Node>();
-    private uint count = 0;
     private int nodeCount = 0;
+    private int currentRootIndex = 0;
     private Node root;
 
     public int MaxSize { get; set; }
@@ -55,41 +54,41 @@ public class Packer<T>
     public void Add(Item item) 
     {
         items.Add(item);
-        indices.Add(count++);
     }
 
     public bool Pack(out List<PackedItem> packedItems, out Point size) 
     {
         packedItems = new List<PackedItem>();
-        if (count == 0) 
+        if (items.Count == 0) 
         {
             size = new Point(0, 0);
             return false;
         }
 
-        if (count == 1) 
+        if (items.Count == 1) 
         {
-            Item item = items[(int)indices[0]];
+            Item item = items[0];
             packedItems.Add(new PackedItem(new Rectangle(0, 0, item.Width, item.Height), item.Data));
             root = new Node(0, 0, item.Width, item.Height);
             goto DONE;
         }
 
-        indices.Sort((x, y) => {
-            uint a = items[(int)x].GetTotalSize();
-            uint b = items[(int)y].GetTotalSize();
+        items.Sort((x, y) => {
+            uint a = x.GetTotalSize();
+            uint b = y.GetTotalSize();
             
             return a < b ? 1 : a > b ? -1 : 0;
         });
 
-        root = new Node(0, 0, items[(int)indices[0]].Width, items[(int)indices[0]].Height);
+
+        root = new Node(0, 0, items[0].Width, items[0].Height);
         AddNode(root);
 
-        for (int i = 0; i < indices.Count; i++) 
+        for (int i = 0; i < items.Count; i++) 
         {
-            Item item = items[(int)indices[i]];
+            Item item = items[i];
 
-            int nodeID = FindNode(0, item.Width, item.Height);
+            int nodeID = FindNode(currentRootIndex, item.Width, item.Height);
 
             if (nodeID != -1) 
             {
@@ -140,10 +139,9 @@ public class Packer<T>
 
         // clean things up
 
-        count = 0;
+        currentRootIndex = 0;
         nodes.Clear();
         items.Clear();
-        indices.Clear();
 
         return true;
     }
@@ -199,17 +197,23 @@ public class Packer<T>
         Node oldRoot = root;
         if (shouldGrowRight || (!shouldGrowDown && canGrowRight)) 
         {
-            root = new Node(0, 0, root.W + width, root.H);
+            var next = AddNode(oldRoot);
+            root = new Node(0, 0, oldRoot.W + width, oldRoot.H);
             root.IsSplit = true;
-            root.Splits[0] = AddNode(oldRoot);
-            nodes[0] = root;
+            root.Splits[0] = currentRootIndex;
+            currentRootIndex = next;
+            nodes[next] = root;
             return root.Splits[1] = AddNode(new Node(oldRoot.W, 0, width, oldRoot.H));
         }
-
-        root = new Node(0, 0, root.W, root.H + height);
-        root.IsSplit = true;
-        root.Splits[1] = AddNode(oldRoot);
-        nodes[0] = root;
-        return root.Splits[0] = AddNode(new Node(0, oldRoot.H, oldRoot.W, height));
+        else 
+        {
+            var next = AddNode(oldRoot);
+            root = new Node(0, 0, oldRoot.W, oldRoot.H + height);
+            root.IsSplit = true;
+            root.Splits[1] = currentRootIndex;
+            currentRootIndex = next;
+            nodes[next] = root;
+            return root.Splits[0] = AddNode(new Node(0, oldRoot.H, oldRoot.W, height));
+        }
     }
 }
