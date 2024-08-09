@@ -80,11 +80,15 @@ public class Font : IDisposable
         return GetCharacter((int)codepoint, scale);
     }
 
-    public Character GetCharacter(int codepoint, float scale) 
+    public Character GetCharacter(int codepoint, float size) 
     {
+        float scale = GetScale(size);
         int glyphIndex = FindGlyphIndex(codepoint);
         RiateuNative.Riateu_FontGetCharacter(fontPtr, glyphIndex, scale, 
             out int width, out int height, out float advance, out float offsetX, out float offsetY, out int visible);
+
+
+        float actualOffsetY = offsetY + size;
         
         return new Character() 
         {
@@ -93,8 +97,8 @@ public class Font : IDisposable
             Width = width,
             Height = height,
             Advance = advance,
-            OffsetX = -offsetX,
-            OffsetY = -offsetY,
+            OffsetX = offsetX,
+            OffsetY = actualOffsetY,
             Visible = visible == 1
         };
     }

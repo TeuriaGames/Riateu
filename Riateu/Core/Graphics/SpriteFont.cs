@@ -110,8 +110,7 @@ public class SpriteFont : IAssets
         Packer<FontItem> packer = new Packer<FontItem>(8192);
         for (int i = 0; i < charset.Length; i++) 
         {
-            float scale = Font.GetScale(Size);
-            Font.Character character = Font.GetCharacter(charset[i], scale);
+            Font.Character character = Font.GetCharacter(charset[i], Size);
             packer.Add(
                 new Packer<FontItem>.Item(
                     new FontItem(charset[i], character),
@@ -131,13 +130,13 @@ public class SpriteFont : IAssets
                     image.CopyFrom(color, item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height);
                 }
 
-                availableCharacters[item.Data.Index] = new SpriteFontCharacter(
+                availableCharacters.Add(item.Data.Index, new SpriteFontCharacter(
                     item.Data.Character.Width, item.Data.Character.Height, item.Data.Character.Advance,
                     item.Data.Character.OffsetX, item.Data.Character.OffsetY, new TextureQuad(
                         size, item.Rect
                     ),
                     item.Data.Character.Visible
-                );
+                ));
             }
             return uploader.CreateTexture2D<Color>(image.Pixels, (uint)image.Width, (uint)image.Height);
         }
