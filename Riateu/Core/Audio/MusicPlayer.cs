@@ -19,7 +19,7 @@ public class MusicPlayer
     public float Pan
     {
         get => streamVoice.Pan;
-        set => streamVoice.Pan= value;
+        set => streamVoice.Pan = value;
     }
 
     private StreamVoice streamVoice;

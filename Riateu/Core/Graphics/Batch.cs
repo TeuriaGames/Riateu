@@ -19,13 +19,13 @@ public class Batch : System.IDisposable, IRenderable
     private unsafe ComputeData* computes;
 
     private bool rendered;
+    private uint onQueue;
 
     private StructuredBuffer<PositionTextureColorVertex> vertexBuffer;
     private StructuredBuffer<uint> indexBuffer;
     private StructuredBuffer<ComputeData> computeBuffer;
     private TransferBuffer transferComputeBuffer;
     private BatchQueue[] queues = new BatchQueue[InitialMaxQueues];
-    private uint onQueue = uint.MaxValue;
 
 #if DEBUG
     private bool DEBUG_begin;
@@ -144,11 +144,9 @@ public class Batch : System.IDisposable, IRenderable
         if (rendered)
         {
             vertexIndex = 0;
-            onQueue = uint.MaxValue;
+            onQueue = 0;
             rendered = false;
         }
-
-        unchecked { onQueue++; }
 
         if (queues.Length == onQueue) 
         {
@@ -196,6 +194,8 @@ public class Batch : System.IDisposable, IRenderable
 
         var offset = queues[onQueue].Offset;
         queues[onQueue].Count = vertexIndex - offset;
+
+        onQueue++;
 
         if (flush) 
         {
@@ -269,8 +269,6 @@ public class Batch : System.IDisposable, IRenderable
 
             start = ref Unsafe.Add(ref start, 1);
         }
-
-        vertexIndex = 0;
     }
 
     internal void ResizeBuffer()
