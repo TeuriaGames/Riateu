@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using Riateu.Content;
 using TeuJson;
 using TeuJson.Attributes;
@@ -28,7 +27,8 @@ public enum FontAlignment
 }
 
 /// <summary>
-/// A SpriteFont class used for rendering the text.
+/// A SpriteFont class used for rendering the text. Unlike <see cref="Riateu.Graphics.Font"/> this can be sent down to the GPU.
+/// Which is actually intended to be used for rendering.
 /// </summary>
 public class SpriteFont : IAssets
 {
@@ -156,10 +156,12 @@ public class SpriteFont : IAssets
 
         Vector2 size = new Vector2(0, LineHeight);
         float lineWidth = 0f;
+        int lastCodePoint = 0;
 
         for (int i = 0; i < text.Length; i++) 
         {
-            if (text[i] == '\n') 
+            char ch = text[i];
+            if (ch == '\n') 
             {
                 size.Y += LineHeight;
                 if (lineWidth > size.X) 
@@ -170,9 +172,14 @@ public class SpriteFont : IAssets
                 continue;
             }
 
-            SpriteFontCharacter c = GetCharacter(text[i]);
+            SpriteFontCharacter c = GetCharacter(ch);
 
             lineWidth += c.Advance;
+            if (lastCodePoint != 0) 
+            {
+                lineWidth += Font.GetKerning(lastCodePoint, ch, fontScale);
+            }
+            lastCodePoint = ch;
         }
 
         if (lineWidth > size.X) 
@@ -191,14 +198,21 @@ public class SpriteFont : IAssets
     public float GetLineWidth(ReadOnlySpan<char> text) 
     {
         float curr = 0f;
+        int lastCodePoint = 0;
 
         for (int i = 0; i < text.Length; i++) 
         {
-            if (text[i] == '\n')
+            char ch = text[i];
+            if (ch == '\n')
                 break;
             
-            SpriteFontCharacter c = GetCharacter(text[i]);
+            SpriteFontCharacter c = GetCharacter(ch);
             curr += c.Advance;
+            if (lastCodePoint != 0) 
+            {
+                curr += Font.GetKerning(lastCodePoint, ch, fontScale);
+            }
+            lastCodePoint = ch;
         }
 
         return curr;
@@ -246,20 +260,22 @@ public class SpriteFont : IAssets
         if (text.IsEmpty)
             return;
         
+        var lastCodePoint = 0;
         var offset = Vector2.Zero;
         var lineWidth = GetLineWidth(text);
         var justified = new Vector2(lineWidth * justify.X, GetHeight(text) * justify.Y);
 
         for (int i = 0; i < text.Length; i++) 
         {
-            if (text[i] == '\n') 
+            char ch = text[i];
+            if (ch == '\n') 
             {
                 offset.X = 0;
                 offset.Y += LineHeight;
                 continue;
             }
 
-            SpriteFontCharacter c = GetCharacter(text[i]);
+            SpriteFontCharacter c = GetCharacter(ch);
             if (!c.Visible)
             {
                 offset.X += c.Advance;
@@ -267,6 +283,12 @@ public class SpriteFont : IAssets
             }
 
             Vector2 pos = (position + (offset + new Vector2(c.OffsetX, c.OffsetY) - justified) * scale);
+            if (lastCodePoint != 0) 
+            {
+                pos.X += Font.GetKerning(lastCodePoint, ch, fontScale);
+            }
+
+            lastCodePoint = ch;
 
             computeData[vertexIndex] = new Batch.ComputeData 
             {

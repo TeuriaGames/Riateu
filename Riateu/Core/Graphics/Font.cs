@@ -5,6 +5,9 @@ using System.Runtime.InteropServices;
 
 namespace Riateu.Graphics;
 
+/// <summary>
+/// A Font class loaded from a CPU meant for loading .ttf files. Used for creating a <see cref="Riateu.Graphics.SpriteFont"/>.
+/// </summary>
 public class Font : IDisposable
 {
     public struct Character 
@@ -31,12 +34,20 @@ public class Font : IDisposable
     public int Descent { get; private set; }
     public int LineGap { get; private set; }
 
+    /// <summary>
+    /// Load a .ttf font from a file path.
+    /// </summary>
+    /// <param name="filepath">A file to the .ttf font file</param>
     public Font(string filepath) 
     {
         using var fs = File.OpenRead(filepath);
         Load(fs);
     }
 
+    /// <summary>
+    /// Load a .ttf font from a stream.
+    /// </summary>
+    /// <param name="stream">A stream containing the .ttf font file</param>
     public Font(Stream stream) 
     {
         Load(stream);
@@ -58,16 +69,35 @@ public class Font : IDisposable
         LineGap = lineGap;
     }
 
+    /// <summary>
+    /// Get a total scaling from a size.
+    /// </summary>
+    /// <param name="size">A size to convert into a scale</param>
+    /// <returns>A scale from a size</returns>
     public float GetScale(float size) 
     {
         return RiateuNative.Riateu_FontGetPixelScale(fontPtr, size);
     }
 
+    /// <summary>
+    /// Get kerning between the two characters.
+    /// </summary>
+    /// <param name="c1">The current character</param>
+    /// <param name="c2">The next character</param>
+    /// <param name="scale">The scale of these characters</param>
+    /// <returns>A kerning value between these two characters</returns>
     public float GetKerning(char c1, char c2, float scale) 
     {
         return GetKerning((int)c1, (int)c2, scale);
     }
 
+    /// <summary>
+    /// Get kerning between the two characters.
+    /// </summary>
+    /// <param name="c1">The current character index</param>
+    /// <param name="c2">The next character index</param>
+    /// <param name="scale">The scale of these characters</param>
+    /// <returns>A kerning value between these two characters</returns>
     public float GetKerning(int c1, int c2, float scale) 
     {
         int firstGlyph = FindGlyphIndex(c1);
@@ -75,11 +105,23 @@ public class Font : IDisposable
         return RiateuNative.Riateu_FontGetKerning(fontPtr, firstGlyph, secondGlyph, scale);
     }
 
-    public Character GetCharacter(char codepoint, float scale) 
+    /// <summary>
+    /// Get a <see cref="Riateu.Graphics.Font.Character"/> from a font with codepoint.
+    /// </summary>
+    /// <param name="codepoint">A character represents a font character</param>
+    /// <param name="size">A size of the character</param>
+    /// <returns>A <see cref="Riateu.Graphics.Font.Character"/></returns>
+    public Character GetCharacter(char codepoint, float size) 
     {
-        return GetCharacter((int)codepoint, scale);
+        return GetCharacter((int)codepoint, size);
     }
 
+    /// <summary>
+    /// Get a <see cref="Riateu.Graphics.Font.Character"/> from a font with codepoint.
+    /// </summary>
+    /// <param name="codepoint">A character index from a char value</param>
+    /// <param name="size">A size of the character</param>
+    /// <returns>A <see cref="Riateu.Graphics.Font.Character"/></returns>
     public Character GetCharacter(int codepoint, float size) 
     {
         float scale = GetScale(size);
@@ -103,11 +145,21 @@ public class Font : IDisposable
         };
     }
 
+    /// <summary>
+    /// Find a character glyph from a character.
+    /// </summary>
+    /// <param name="codepoint">A character</param>
+    /// <returns>A glyph index from this character</returns>
     public int FindGlyphIndex(char codepoint) 
     {
         return FindGlyphIndex((int)codepoint);
     }
 
+    /// <summary>
+    /// Find a character glyph from a character.
+    /// </summary>
+    /// <param name="codepoint">A character index</param>
+    /// <returns>A glyph index from this character</returns>
     public int FindGlyphIndex(int codepoint) 
     {
         if (cachedCodePoints.TryGetValue(codepoint, out int glyphIndex)) 
@@ -119,7 +171,15 @@ public class Font : IDisposable
         return newGlyphIndex;
     }
 
-    public Image GetImage(in Character character) 
+    /// <summary>
+    /// Generate an <see cref="Riateu.Graphics.Image"/> from a character.
+    /// </summary>
+    /// <param name="character">
+    /// A character to generate an <see cref="Riateu.Graphics.Image"/>. Use <see cref="Riateu.Graphics.Font.GetCharacter(char, float)"/>
+    /// to get a character.
+    /// </param>
+    /// <returns>A generated character <see cref="Riateu.Graphics.Image"/> from a font bitmap</returns>
+    public Image GetImageByCharacter(in Character character) 
     {
         Image image = new Image(character.Width, character.Height);
         GetPixelsByCharacter(character, image.Pixels);
@@ -127,6 +187,12 @@ public class Font : IDisposable
         return image;
     }
 
+    /// <summary>
+    /// Generate a pixels from a <see cref="Riateu.Graphics.Font.Character"/>.
+    /// </summary>
+    /// <param name="character">A <see cref="Riateu.Graphics.Font.Character"/> to generate with</param>
+    /// <param name="dest">The destination of a pixels to written with. It must be an array of <see cref="Riateu.Graphics.Color"/></param>
+    /// <returns>Whether it suceeed to generate the pixels (true) or it failed (false)</returns>
     public unsafe bool GetPixelsByCharacter(in Character character, Span<Color> dest) 
     {
         if (!character.Visible) 
@@ -149,6 +215,10 @@ public class Font : IDisposable
         return true;
     }
 
+    /// <summary>
+    /// Dispose all of the <see cref="Riateu.Graphics.Font"/> resources.
+    /// </summary>
+    /// <param name="disposing">Whether to dispose the managed resources</param>
     protected virtual unsafe void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -161,12 +231,16 @@ public class Font : IDisposable
         }
     }
 
+    ///
     ~Font()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: false);
     }
 
+    /// <summary>
+    /// Dispose all of the <see cref="Riateu.Graphics.Font"/> resources.
+    /// </summary>
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
