@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using RefreshCS;
+using SDL2;
 
 namespace Riateu.Graphics;
 
@@ -26,6 +27,8 @@ public class GraphicsDevice : IDisposable
 
         BackendFlags = (BackendFlags)RefreshCS.Refresh.Refresh_GetBackend(Handle);
         DebugMode = settings.DebugMode;
+
+        SDL.SDL_LogInfo(0, "Graphics Device Created successfully!");
     }
 
     public void SetSwapchainParameters(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 

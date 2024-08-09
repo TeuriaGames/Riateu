@@ -95,8 +95,10 @@ public abstract class GameApp
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
         {
-            throw new Exception("Cannot claim this window");
+            throw new Exception("Cannot claim this window.");
         }
+
+        SDL.SDL_LogInfo(0, "Successfully claimed a window.");
 
         AudioDevice = new AudioDevice();
         Audio.Init(AudioDevice);
@@ -154,22 +156,30 @@ public abstract class GameApp
 
     public void Run() 
     {
+        SDL.SDL_LogInfo(0, "Showing the Main Window.");
         MainWindow.Show();
+        
+        SDL.SDL_LogInfo(0, "Recalibrating Input Device.");
 
         InputDevice.Update();
         timer.Restart();
 
+        SDL.SDL_LogInfo(0, "Game Started...");
         while (!Exiting) 
         {
             Tick();
         }
         GraphicsDevice.UnclaimWindow(MainWindow);
 
+        SDL.SDL_LogInfo(0, "Closing Window.");
         MainWindow.Dispose();
+        SDL.SDL_LogInfo(0, "Destroying Audio Thread/Device.");
         AudioDevice.Dispose();
+        SDL.SDL_LogInfo(0, "Destroying Graphics Device.");
         GraphicsDevice.Dispose();
 
         SDL.SDL_Quit();
+        SDL.SDL_LogInfo(0, "Game Exited...");
     }
 
     public void Tick() 

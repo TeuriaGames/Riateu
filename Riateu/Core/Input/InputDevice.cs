@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SDL2;
 
 namespace Riateu.Inputs;
 
@@ -15,6 +16,8 @@ public class InputDevice
         BindableInputs = new List<BindableInput>();
         Keyboard = new Keyboard();
         Mouse = new Mouse();
+
+        SDL.SDL_LogInfo(0, "Input Device Created successfully!");
     }
 
     public void Update() 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using SDL2;
 
 namespace Riateu.Audios;
 
@@ -88,6 +89,8 @@ public class AudioDevice : IDisposable
 
         tickWatch.Start();
         previousTickTime = 0;
+
+        SDL.SDL_LogInfo(0, "Audio Device Created successfully!");
     }
 
     private void Update() 
