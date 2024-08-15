@@ -5,7 +5,7 @@ const stb_truetype = @cImport(
 const sdl2 = @cImport(
     @cInclude("SDL2/SDL.h")
 );
-const log = @import("./log.zig");
+const log = @import("log.zig");
 
 const RiateuFont = [*c]stb_truetype.stbtt_fontinfo;
 

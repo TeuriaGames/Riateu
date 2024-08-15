@@ -1,10 +1,10 @@
 const std = @import("std");
 const fs = std.fs;
 
+const log = @import("log.zig");
 const qoi = @cImport(
     @cInclude("qoi.h")
 );
-
 const sdl2 = @cImport(
     @cInclude("SDL2/SDL.h")
 );
@@ -23,7 +23,7 @@ export fn Riateu_LoadImage(data: [*c]const u8, length: c_int, width: [*c]c_int, 
         if (option_result) |opt| {
             result = opt;
         } else {
-            sdl2.SDL_LogError(sdl2.SDL_LOG_CATEGORY_ERROR, "Unable to load QOI image", .{});
+            log.log_error("Unable to load QOI Image.", .{});
             return null;
         }
     } else {
@@ -65,6 +65,7 @@ export fn Riateu_WriteQOI(filename: [*c]const u8, data: [*c]const u8, width: c_i
     const allocator = std.heap.c_allocator;
 
     var desc = allocator.create(qoi.qoi_desc) catch {
+        log.log_error("Unable to allocate more memory to write on disk.", .{});
         return 1;
     };
     defer allocator.destroy(desc);
@@ -80,15 +81,18 @@ export fn Riateu_WriteQOI(filename: [*c]const u8, data: [*c]const u8, width: c_i
         const dataRes: []const u8 = @as([*]u8, @ptrCast(res))[0..@intCast(length)];
         const fname: []const u8 = std.mem.span(filename);
         var file = fs.cwd().createFile(fname, .{}) catch {
+            log.log_error("Directory not found.", .{});
             return 1;
         };
         defer file.close();
         file.writeAll(dataRes) catch {
+            log.log_error("Could not write QOI to this file.", .{});
             return 1;
         };
 
         return 0;
     }
+    log.log_error("Invalid data given.", .{});
     return 1;
 }
 
