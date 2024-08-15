@@ -19,6 +19,7 @@ public class Batch : System.IDisposable, IRenderable
     private unsafe ComputeData* computes;
 
     private bool rendered;
+    private bool flushed;
     private uint onQueue;
 
     private StructuredBuffer<PositionTextureColorVertex> vertexBuffer;
@@ -146,6 +147,7 @@ public class Batch : System.IDisposable, IRenderable
             vertexIndex = 0;
             onQueue = 0;
             rendered = false;
+            flushed = false;
         }
 
         if (queues.Length == onQueue) 
@@ -170,9 +172,8 @@ public class Batch : System.IDisposable, IRenderable
 
     /// <summary>
     /// End the existing batch, must render before starting a new one.
-    /// <param name="flush">Whether to flush it already and decide not go further on.</param>
     /// </summary>
-    public void End(bool flush)
+    public void End()
     {
 #if DEBUG
         AssertDoesBegin();
@@ -183,12 +184,6 @@ public class Batch : System.IDisposable, IRenderable
 
         if (vertexIndex == 0)
         {
-#if DEBUG
-            if (flush) 
-            {
-                DEBUG_isFlushed = true;
-            }
-#endif
             return;
         }
 
@@ -196,11 +191,6 @@ public class Batch : System.IDisposable, IRenderable
         queues[onQueue].Count = vertexIndex - offset;
 
         onQueue++;
-
-        if (flush) 
-        {
-            Flush();
-        }
     }
 
     /// <inheritdoc/>
@@ -218,7 +208,8 @@ public class Batch : System.IDisposable, IRenderable
         }
         DEBUG_isFlushed = true;
 #endif
-        CommandBuffer cmdBuf = device.DeviceCommandBuffer();
+        flushed = true;
+        CommandBuffer cmdBuf = device.AcquireCommandBuffer();
 
         CopyPass copyPass = cmdBuf.BeginCopyPass();
         copyPass.UploadToBuffer(transferComputeBuffer, computeBuffer, true);
@@ -235,13 +226,13 @@ public class Batch : System.IDisposable, IRenderable
         computePass.Dispatch(currentMaxTexture / 64, 1, 1);
 
         cmdBuf.EndComputePass(computePass);
+        device.Submit(cmdBuf);
     }
 
     /// <inheritdoc/>
     public void Render(RenderPass renderPass)
     {
 #if DEBUG
-        AssertIsFlushed();
         AssertRender();
         DEBUG_isFlushed = false;
         DEBUG_begin = false;
@@ -252,9 +243,13 @@ public class Batch : System.IDisposable, IRenderable
         {
             return;
         }
+        if (!flushed) 
+        {
+            Flush();
+        }
 
         ref var start = ref MemoryMarshal.GetArrayDataReference(queues);
-        ref var end = ref Unsafe.Add(ref start, onQueue + 1);
+        ref var end = ref Unsafe.Add(ref start, onQueue);
 
         while (Unsafe.IsAddressLessThan(ref start, ref end)) 
         {
