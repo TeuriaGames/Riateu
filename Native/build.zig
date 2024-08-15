@@ -35,13 +35,13 @@ pub fn build(b: *std.Build) void {
     lib.addIncludePath(b.path("lib/include"));
     if (target.result.isMinGW()) {
         lib.addObjectFile(b.path("../runtimes/x64/SDL2.dll"));
-        addInstallPath(b, lib, "../runtimes/x64");
+        addInstallPath(b, lib, "../../runtimes/x64");
     } else if (target.result.isDarwin()) {
         lib.addObjectFile(b.path("../runtimes/osx/libSDL2-2.0.0.dylib"));
-        addInstallPath(b, lib, "../runtimes/osx");
+        addInstallPath(b, lib, "../../runtimes/osx");
     } else {
         lib.linkSystemLibrary("SDL2");
-        addInstallPath(b, lib, "../runtimes/lib64");
+        addInstallPath(b, lib, "../../runtimes/lib64");
     }
 
     lib.linkLibC();
