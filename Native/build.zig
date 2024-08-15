@@ -22,6 +22,7 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
+        .strip = true
     });
 
     const sourceFiles = &[_][]const u8 { "./lib/src/zig_includes.c" };
@@ -34,10 +35,13 @@ pub fn build(b: *std.Build) void {
     lib.addIncludePath(b.path("lib/include"));
     if (target.result.isMinGW()) {
         lib.addObjectFile(b.path("../runtimes/x64/SDL2.dll"));
+        addInstallPath(b, lib, "../runtimes/x64");
     } else if (target.result.isDarwin()) {
         lib.addObjectFile(b.path("../runtimes/osx/libSDL2-2.0.0.dylib"));
+        addInstallPath(b, lib, "../runtimes/osx");
     } else {
         lib.linkSystemLibrary("SDL2");
+        addInstallPath(b, lib, "../runtimes/lib64");
     }
 
     lib.linkLibC();
@@ -72,4 +76,15 @@ pub fn build(b: *std.Build) void {
     // running the unit tests.
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
+}
+
+fn addInstallPath(b: *std.Build, compile: *std.Build.Step.Compile, path: []const u8) void {
+    const output_step = b.addInstallArtifact(compile, .{ 
+        .dest_dir = .{ 
+            .override = .{ 
+                .custom = path
+            }
+        }
+    });
+    b.getInstallStep().dependOn(&output_step.step);
 }

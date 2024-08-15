@@ -9,3 +9,11 @@ This engine is much more low level and cut some of the Teuria stuffs.
 
 It is still heavily inspired from [Monocle](https://github.com/JamesMcMahon/monocle-engine)
 but with a lot more changes for performance and ease of use.
+
+## Supported Platforms:
++ [x] Windows
++ [x] Linux
++ [ ] Web
++ [ ] Android
++ [ ] iOS
++ [ ] MacOS
