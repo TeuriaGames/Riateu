@@ -28,7 +28,7 @@ public class GraphicsDevice : IDisposable
         BackendFlags = (BackendFlags)RefreshCS.Refresh.Refresh_GetBackend(Handle);
         DebugMode = settings.DebugMode;
 
-        SDL.SDL_LogInfo(0, "Graphics Device Created successfully!");
+        Logger.Info("Graphics Device Created successfully!");
     }
 
     public void SetSwapchainParameters(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
@@ -47,7 +47,7 @@ public class GraphicsDevice : IDisposable
     {
         if (window.Claimed) 
         {
-            Console.WriteLine("Window has already been claimed");
+            Logger.Error("Window has already been claimed");
             return false;
         }
         bool result = RefreshCS.Refresh.Refresh_ClaimWindow(

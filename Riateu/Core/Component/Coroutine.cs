@@ -24,7 +24,7 @@ public class Coroutine : Component
         }
         catch (Exception e) 
         {
-            Console.WriteLine(e.ToString());
+            Logger.Error(e.ToString());
             throw;
         }
     }

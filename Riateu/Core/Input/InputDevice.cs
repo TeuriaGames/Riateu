@@ -17,7 +17,7 @@ public class InputDevice
         Keyboard = new Keyboard();
         Mouse = new Mouse();
 
-        SDL.SDL_LogInfo(0, "Input Device Created successfully!");
+        Logger.Info("Input Device Created successfully!");
     }
 
     public void Update() 

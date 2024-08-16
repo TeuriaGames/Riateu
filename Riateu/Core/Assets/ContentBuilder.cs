@@ -54,7 +54,7 @@ public class ContentBuilder
             }
             return;
         }
-        Console.WriteLine($"No content processor: '{typeof(T).Name}' was found");
+        Logger.Error($"No content processor: '{typeof(T).Name}' was found");
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public class ContentBuilder
             InternalProcess(path, contentProcessor);
             return;
         }
-        Console.WriteLine($"No content processor: '{typeof(T).Name}' was found");
+        Logger.Error($"No content processor: '{typeof(T).Name}' was found");
     }
 
     internal void InternalProcess(string file, ContentProcessor contentProcessor) 
@@ -92,8 +92,8 @@ public class ContentBuilder
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error while processing a content");
-            Console.WriteLine(ex.ToString());
+            Logger.Error("Error while processing a content");
+            Logger.Error(ex.ToString());
         }
     }
 
@@ -165,7 +165,7 @@ public abstract class ContentProcessor
     public void Log(string message) 
     {
         var text = $"[{this.GetType().Name}] {message}";
-        Console.WriteLine(text);
+        Logger.Log(text);
         logBuilder.AppendLine(text);
     }
 }

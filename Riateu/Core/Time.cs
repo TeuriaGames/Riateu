@@ -11,9 +11,13 @@ public static class Time
     /// <summary>
     /// An update rate for the delta time. Commonly used for time speed.
     /// </summary>
-    public static double DeltaScale = 1.0;
+    public static float DeltaScale = 1.0f;
     /// <summary>
     /// A completion of time since the last frame.
+    /// </summary>
+    public static float RawDelta { get; internal set; }
+    /// <summary>
+    /// A completion of time since the last frame within the update rate.
     /// </summary>
     public static float Delta { get; internal set; }
     /// <summary>

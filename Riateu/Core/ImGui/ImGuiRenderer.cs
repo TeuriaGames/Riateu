@@ -11,7 +11,7 @@ namespace Riateu.ImGuiRend;
 /// <summary>
 /// A canvas renderer to render ImGui library.
 /// </summary>
-public class ImGuiRenderer : IRenderable
+public class ImGuiRenderer 
 {
     private Dictionary<nint, Texture> PtrMap = new();
     private GraphicsPipeline imGuiPipeline;

@@ -38,7 +38,7 @@ public class AudioDevice : IDisposable
 
         if (deviceCount == 0) 
         {
-            Console.WriteLine("No Audio devices found in this machine. Won't enabling AudioDevice");
+            Logger.Warn("No Audio devices found in this machine. Won't enabling AudioDevice");
             FAudio.FAudio_Release(Handle);
             Handle = IntPtr.Zero;
             return;
@@ -69,7 +69,7 @@ public class AudioDevice : IDisposable
 
         if (result != 0) 
         {
-            Console.WriteLine("Audio device failed to create a mastering voice. Disabling Audio device.");
+            Logger.Warn("Audio device failed to create a mastering voice. Disabling Audio device.");
             FAudio.FAudio_Release(Handle);
             Handle = IntPtr.Zero;
             return;
@@ -90,7 +90,7 @@ public class AudioDevice : IDisposable
         tickWatch.Start();
         previousTickTime = 0;
 
-        SDL.SDL_LogInfo(0, "Audio Device Created successfully!");
+        Logger.Info("Audio Device Created successfully!");
     }
 
     private void Update() 
@@ -109,7 +109,7 @@ public class AudioDevice : IDisposable
                 }
                 catch (Exception e) 
                 {
-                    Console.WriteLine("[ERROR] " + e.ToString());
+                    Logger.Error("[ERROR] " + e.ToString());
                 }
             }
             resetEvent.WaitOne(updateInterval);

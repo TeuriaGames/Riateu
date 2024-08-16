@@ -54,7 +54,7 @@ public abstract class AudioResource : IDisposable
             return;
         }
 #if DEBUG
-        Console.WriteLine($"Leaked Resources: {this.GetType().Name}. Make sure to dispose this properly.");
+        Logger.Warn($"Leaked Resources: {this.GetType().Name}. Make sure to dispose this properly.");
 #endif
         InternalDispose(disposing: false);
         IsDisposed = true;

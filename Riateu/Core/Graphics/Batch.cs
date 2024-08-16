@@ -11,7 +11,7 @@ namespace Riateu.Graphics;
 /// This also utilizes a texture swapping which would add additional sub batches to be
 /// able to draw multiple textures.
 /// </summary>
-public class Batch : System.IDisposable, IRenderable
+public class Batch : System.IDisposable
 {
     private const uint MaxTextures = 4096;
     private const uint InitialMaxQueues = 4;
@@ -204,7 +204,7 @@ public class Batch : System.IDisposable, IRenderable
 #if DEBUG
         if (DEBUG_isFlushed) 
         {
-            Console.WriteLine("The state has been flushed, yet has been flushed again. Avoid doing this everytime as it cost performance.");
+            Logger.Warn("The state has been flushed, yet has been flushed again. Avoid doing this everytime as it cost performance.");
         }
         DEBUG_isFlushed = true;
 #endif
@@ -315,7 +315,7 @@ public class Batch : System.IDisposable, IRenderable
     ~Batch()
     {
 #if DEBUG
-        Console.WriteLine($"The type {this.GetType()} has not been disposed properly.");
+        Logger.Warn($"The type {this.GetType()} has not been disposed properly.");
 #endif
         Dispose(disposing: false);
     }
