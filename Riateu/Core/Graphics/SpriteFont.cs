@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Riateu.Content;
-using TeuJson;
-using TeuJson.Attributes;
 
 namespace Riateu.Graphics;
 
@@ -122,22 +122,29 @@ public class SpriteFont : IAssets
         if (packer.Pack(out List<Packer<FontItem>.PackedItem> packedItems, out Point size)) 
         {
             Image image = new Image(size.X, size.Y);
-            foreach (var item in packedItems) 
-            {
+            ConcurrentDictionary<int, SpriteFontCharacter> concurrentAvailableCharacters = new ConcurrentDictionary<int, SpriteFontCharacter>();
+
+            new Workload((i, id) => {
+                Packer<FontItem>.PackedItem item = packedItems[i]; 
                 Color[] color = new Color[item.Rect.Width * item.Rect.Height];
                 if (Font.GetPixelsByCharacter(item.Data.Character, color)) 
                 {
                     image.CopyFrom(color, item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height);
                 }
 
-                availableCharacters.Add(item.Data.Index, new SpriteFontCharacter(
+                concurrentAvailableCharacters.GetOrAdd(item.Data.Index, new SpriteFontCharacter(
                     item.Data.Character.Width, item.Data.Character.Height, item.Data.Character.Advance,
                     item.Data.Character.OffsetX, item.Data.Character.OffsetY, new TextureQuad(
                         size, item.Rect
                     ),
                     item.Data.Character.Visible
                 ));
-            }
+                return true;
+            }, packedItems.Count).Finish(4);
+
+            // ConcurrentDictionary is pretty slow that we had to fallback to Dictionary
+            availableCharacters = concurrentAvailableCharacters.ToDictionary<int, SpriteFontCharacter>();
+
             return uploader.CreateTexture2D<Color>(image.Pixels, (uint)image.Width, (uint)image.Height);
         }
 
@@ -306,82 +313,4 @@ public class SpriteFont : IAssets
             vertexIndex++;
         }
     }
-}
-
-/// <summary>
-/// A character struct that holds the offset, advance and the texture coordinates.
-/// </summary>
-public record struct Character(int XOffset, int YOffset, int XAdvance, TextureQuad Quad);
-
-
-internal partial struct FontStruct : IDeserialize 
-{
-    [TeuObject]
-    [Name("chars")]
-    public JsonCharacter[] Chars;
-
-    [TeuObject]
-    [Name("info")]
-    public FontInfo Info;
-
-    [TeuObject]
-    [Name("common")]
-    public FontCommon Common;
-}
-
-internal partial struct FontCommon : IDeserialize 
-{
-    [TeuObject]
-    [Name("lineHeight")]
-    public int LineHeight;
-}
-
-internal partial struct FontInfo : IDeserialize 
-{
-    [TeuObject]
-    [Name("size")]
-    public int Size;
-}
-
-internal partial struct JsonCharacter : IDeserialize
-{
-    [TeuObject]
-    [Name("id")]
-    public int ID;
-
-    [TeuObject]
-    [Name("chnl")]
-    public int Channel;
-
-    [TeuObject]
-    [Name("height")]
-    public int Height;
-
-    [TeuObject]
-    [Name("width")]
-    public int Width;
-
-    [TeuObject]
-    [Name("page")]
-    public int Page;
-
-    [TeuObject]
-    [Name("x")]
-    public int X;
-
-    [TeuObject]
-    [Name("y")]
-    public int Y;
-
-    [TeuObject]
-    [Name("xoffset")]
-    public int XOffset;
-
-    [TeuObject]
-    [Name("yoffset")]
-    public int YOffset;
-
-    [TeuObject]
-    [Name("xadvance")]
-    public int XAdvance;
 }

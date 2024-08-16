@@ -1,10 +1,10 @@
 using System.IO;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Riateu.Content;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Collections.Concurrent;
+using System.Linq;
 
 namespace Riateu.Graphics;
 
@@ -55,7 +55,7 @@ public class Atlas : IAssets
     }
 
     /// <summary>
-    /// A method that load and create an atlas from a file.
+    /// A method that load and create an <see cref="Riateu.Graphics.Atlas"/> from a file.
     /// </summary>
     /// <param name="path">A path to the atlas file</param>
     /// <param name="texture">A texture to use for an atlas</param>
@@ -68,16 +68,30 @@ public class Atlas : IAssets
         return LoadFromStream(fs, texture, fileType, ninePatchEnabled);
     }
 
-    public static Atlas LoadFromPacker(ResourceUploader uploader, List<Packer<AtlasItem>.PackedItem> items, in Point size) 
+    /// <summary>
+    /// A method that load and create an <see cref="Riateu.Graphics.Atlas"/> from a <see cref="Riateu.Content.Packer{T}"/>.
+    /// </summary>
+    /// <param name="uploader">
+    /// A <see cref="Riateu.Graphics.ResourceUploader"/> that creates and uploads a <see cref="Riateu.Graphics.Texture"/> to GPU.
+    /// </param>
+    /// <param name="items">A list of packed items that has been packed by <see cref="Riateu.Content.Packer{T}"/> already</param>
+    /// <param name="size">A size of a result packed from a <see cref="Riateu.Content.Packer{T}"/></param>
+    /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
+    public static Atlas LoadFromPacker(ResourceUploader uploader, List<Packer<AtlasItem>.PackedItem> items, Point size) 
     {
         var atlas = new Atlas();
         Image image = new Image(size.X, size.Y);
+        ConcurrentDictionary<string, TextureQuad> concurrentTextures = new ConcurrentDictionary<string, TextureQuad>();
 
-        foreach (var item in items) 
-        {
+        new Workload((i, id) => {
+            Packer<AtlasItem>.PackedItem item = items[i];
             image.CopyFrom(item.Data.Image, item.Rect.X, item.Rect.Y);
-            atlas.Add(item.Data.Name, new TextureQuad(size, new Rectangle(item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height)));
-        }
+            concurrentTextures.GetOrAdd(item.Data.Name, new TextureQuad(size, new Rectangle(item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height)));
+            return true;
+        }, items.Count).Finish(4);
+
+        // ConcurrentDictionary is pretty slow that we had to fallback to Dictionary
+        atlas.textures = concurrentTextures.ToDictionary<string, TextureQuad>();
 
         Texture texture = uploader.CreateTexture2D<Color>(image.Pixels, (uint)size.X, (uint)size.Y);
         atlas.BaseTexture = texture;
@@ -85,11 +99,11 @@ public class Atlas : IAssets
     }
 
     /// <summary>
-    /// A method that load and create an atlas from a file.
+    /// A method that load and create an <see cref="Riateu.Graphics.Atlas"/> from a file.
     /// </summary>
-    /// <param name="stream">A stream containing the atlas file</param>
-    /// <param name="texture">A texture to use for an atlas</param>
-    /// <param name="fileType">A file type that the atlas used</param>
+    /// <param name="stream">A stream containing the <see cref="Riateu.Graphics.Atlas"/> file</param>
+    /// <param name="texture">A <see cref="Riateu.Graphics.Texture"/> to use for an atlas</param>
+    /// <param name="fileType">A file type that the <see cref="Riateu.Graphics.Atlas"/> used</param>
     /// <param name="ninePatchEnabled">Whether the nine patch feature is enabled</param>
     /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
     public static Atlas LoadFromStream(Stream stream, Texture texture, JsonType fileType = JsonType.Json, bool ninePatchEnabled = false) 
@@ -189,23 +203,6 @@ public class Atlas : IAssets
     public TextureQuad Get(string name) 
     {
         return textures[name];
-    }
-
-    /// <summary>
-    /// Get a refrence to a quad by a name.
-    /// </summary>
-    /// <param name="name">A name of the quad from the packed texture</param>
-    /// <returns>
-    /// A reference to a <see cref="Riateu.Graphics.TextureQuad"/>.
-    /// </returns>
-    public ref TextureQuad GetRef(string name) 
-    {
-        ref var texture = ref CollectionsMarshal.GetValueRefOrNullRef(textures, name);
-        if (Unsafe.IsNullRef(in texture)) 
-        {
-            throw new System.Exception($"'{name}' is not found!");
-        }
-        return ref texture;
     }
 
     public static implicit operator Texture(Atlas atlas) => atlas.BaseTexture;
