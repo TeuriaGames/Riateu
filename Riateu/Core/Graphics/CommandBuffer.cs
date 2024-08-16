@@ -152,6 +152,62 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
+    public unsafe RenderPass BeginRenderPass(Span<ColorAttachmentInfo> infoSpan) 
+    {
+        int length = infoSpan.Length;
+#if DEBUG
+        AssertNotSubmitted();
+        AssertNoAnyPassActive();
+
+        for (int i = 0; i < length; i++) 
+        {
+            ColorAttachmentInfo info = infoSpan[i];
+            AssertTextureIsNotNull(info);
+            AssertColorIsRenderTarget(info);
+        }
+
+        renderPassActive = true;
+#endif
+        RefreshCS.Refresh.ColorAttachmentInfo* infos = stackalloc RefreshCS.Refresh.ColorAttachmentInfo[length];
+        for (int i = 0; i < length; i++) 
+        {
+            infos[i] = infoSpan[i].ToSDLGpu();
+        }
+
+        IntPtr pass = RefreshCS.Refresh.Refresh_BeginRenderPass(Handle, infos, (uint)length, (RefreshCS.Refresh.DepthStencilAttachmentInfo*)IntPtr.Zero);
+        RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        return renderPass;
+    }
+
+    public unsafe RenderPass BeginRenderPass(in DepthStencilAttachmentInfo depthStencilAttachment, in Span<ColorAttachmentInfo> infoSpan) 
+    {
+        int length = infoSpan.Length;
+#if DEBUG
+        AssertNotSubmitted();
+        AssertNoAnyPassActive();
+
+
+        for (int i = 0; i < length; i++) 
+        {
+            ColorAttachmentInfo info = infoSpan[i];
+            AssertTextureIsNotNull(info);
+            AssertColorIsRenderTarget(info);
+        }
+        renderPassActive = true;
+#endif
+        RefreshCS.Refresh.ColorAttachmentInfo* infos = stackalloc RefreshCS.Refresh.ColorAttachmentInfo[1];
+        for (int i = 0; i < length; i++) 
+        {
+            infos[i] = infoSpan[i].ToSDLGpu();
+        }
+
+        Refresh.DepthStencilAttachmentInfo dsa = depthStencilAttachment.ToSDLGpu();
+
+        IntPtr pass = RefreshCS.Refresh.Refresh_BeginRenderPass(Handle, infos, 1, &dsa);
+        RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        return renderPass;
+    }
+
     public unsafe RenderPass BeginRenderPass(in DepthStencilAttachmentInfo depthStencilAttachment, in ColorAttachmentInfo info) 
     {
 #if DEBUG
