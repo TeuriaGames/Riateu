@@ -103,7 +103,7 @@ public class Packer<T>
                 int growID = GrowNode(item.Width, item.Height);
                 if (growID == -1) 
                 {
-                    Console.WriteLine($"Max Size exceeded: {MaxSize}. Failing out everything you pack.");
+                    Logger.Warn($"Max Size exceeded: {MaxSize}. Failing out everything you pack.");
                     // It won't fit anymore, and so we decided to break it out and fail all the attempts.
                     size = new Point(0, 0);
                     return false;
