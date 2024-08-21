@@ -64,6 +64,14 @@ public struct RectangleF : IEquatable<RectangleF>
             Top < other.Bottom;
     }
 
+    public bool Intersects(RectangleF other) 
+    {
+        return other.Left < Right &&
+            Left < other.Right &&
+            other.Top < Bottom &&
+            Top < other.Bottom;
+    }
+
     public RectangleF Overlap(in RectangleF other) 
     {
         bool overlapX = Right > other.Left && Left < other.Right;
@@ -95,6 +103,11 @@ public struct RectangleF : IEquatable<RectangleF>
             Math.Max(this.Right, other.Right) - x,
             Math.Max(this.Bottom, other.Bottom) - y
         );
+    }
+
+    public Rectangle ToInt() 
+    {
+        return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
     }
 
 

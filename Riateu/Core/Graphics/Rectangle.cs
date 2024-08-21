@@ -96,6 +96,10 @@ public struct Rectangle : IEquatable<Rectangle>
         );
     }
 
+    public RectangleF ToFloat() 
+    {
+        return new RectangleF(X, Y, Width, Height);
+    }
 
     public bool Equals(Rectangle other) 
     {
