@@ -86,7 +86,9 @@ public class Atlas : IAssets
         new Workload((i, id) => {
             Packer<AtlasItem>.PackedItem item = items[i];
             image.CopyFrom(item.Data.Image, item.Rect.X, item.Rect.Y);
-            concurrentTextures.GetOrAdd(item.Data.Name, new TextureQuad(size, new Rectangle(item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height)));
+            concurrentTextures.GetOrAdd(item.Data.Name, new TextureQuad(
+                size, new Rectangle(item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height)));
+            item.Data.Image.Dispose();
             return true;
         }, items.Count).Finish(4);
 
