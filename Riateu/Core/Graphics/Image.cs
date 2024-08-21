@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Riateu.Graphics;
 
@@ -22,8 +23,9 @@ public class Image : IDisposable
     public IntPtr Data => data;
     private IntPtr data;
 
-    private bool loadFromRefresh;
     private bool disposedValue;
+
+    internal Image() {}
 
     public unsafe Image(int width, int height) 
         :this(width, height, Color.Transparent) {}
@@ -61,6 +63,46 @@ public class Image : IDisposable
         Load(stream);
     }
 
+    public static unsafe Image[] LoadGif(string path) 
+    {
+        using var fs = File.OpenRead(path);
+        Image[] gif = LoadGif(fs);
+        if (gif == null) 
+        {
+            throw new Exception($"Failed to load GIF file from path: '{path}'");
+        }
+        return gif;
+    }
+
+    public static unsafe Image[] LoadGif(Stream stream) 
+    {
+        IntPtr buffer = stream.AllocToPointer(out int len, out Span<byte> span);
+        fixed (byte *ptr = span) 
+        {
+            IntPtr gif = Native.Riateu_LoadGif((byte*)ptr, len);
+            if (gif == IntPtr.Zero) 
+            {
+                return null;
+            }
+            Native.Riateu_GetGifFrames(gif, out int f);
+            Native.Riateu_GetGifSize(gif, out int w, out int h, out _);
+            Image[] images = new Image[f];
+            for (int i = 0; i < f; i++) 
+            {
+                IntPtr p = Native.Riateu_CopyGifFrames(gif, i);
+                Image image = new Image();
+                image.data = p;
+                image.Width = w;
+                image.Height = h;
+                images[i] = image;
+            }
+
+            Native.Riateu_FreeGif(gif);
+            NativeMemory.Free((void*)buffer);
+            return images;
+        }
+    }
+
     private unsafe void Load(Stream stream) 
     {
 		var length = stream.Length;
@@ -70,7 +112,7 @@ public class Image : IDisposable
 
         fixed (byte* ptr = span) 
         {
-            var pixelData = RiateuNative.Riateu_LoadImage(ptr, span.Length, out var w, out var h, out var _);
+            var pixelData = Native.Riateu_LoadImage(ptr, span.Length, out var w, out var h, out var _);
 
 			Width = w;
 			Height = h;
@@ -83,8 +125,6 @@ public class Image : IDisposable
         {
             throw new Exception("Failed to load an image.");
         }
-
-        loadFromRefresh = true;
     }
 
     public unsafe void CopyFrom(ReadOnlySpan<Color> pixels, int x, int y, int srcWidth, int srcHeight)
@@ -123,7 +163,7 @@ public class Image : IDisposable
     {
         unsafe 
         {
-            return RiateuNative.Riateu_WriteQOI(path, (byte*)data, Width, Height);
+            return Native.Riateu_WriteQOI(path, (byte*)data, Width, Height);
         }
     }
 
@@ -131,7 +171,7 @@ public class Image : IDisposable
     {
         unsafe 
         {
-            return RiateuNative.Riateu_WritePNG(path, (byte*)data, Width, Height);
+            return Native.Riateu_WritePNG(path, (byte*)data, Width, Height);
         }
     }
 
@@ -141,17 +181,14 @@ public class Image : IDisposable
     {
         if (!disposedValue)
         {
-            if (loadFromRefresh) 
+            IntPtr lockedPtr = Interlocked.Exchange(ref data, IntPtr.Zero);
+            if (lockedPtr != IntPtr.Zero) 
             {
-                RiateuNative.Riateu_FreeImage((byte*)data);
-            }
-            
-            else 
-            {
-                NativeMemory.Free((void*)data);
+                Native.Riateu_FreeImage(lockedPtr);
+
+                data = IntPtr.Zero;
             }
 
-            data = IntPtr.Zero;
             GC.SuppressFinalize(this);
             disposedValue = true;
         }

@@ -56,14 +56,28 @@ public class AssetStorage
                 Crawl(directory);
             }
 
-            var files = Directory.GetFiles(path).Where(x => x.EndsWith("png"));
+            var files = Directory.GetFiles(path).Where(x => x.EndsWith("png") || x.EndsWith("gif"));
             foreach (var file in files) 
             {
                 string name = Path.Join(path, Path.GetFileNameWithoutExtension(file)).Replace('\\', '/')
                     .Substring(basePath.Length + 1);
 
-                Image image = new Image(file);
-                packer.Add(new Packer<AtlasItem>.Item(new AtlasItem(name, image), image.Width, image.Height));
+                if (Path.GetExtension(file) == ".gif") 
+                {
+                    Image[] images = Image.LoadGif(file);
+                    for (int i = 0; i < images.Length; i++) 
+                    {
+                        Image image = images[i];
+                        packer.Add(new Packer<AtlasItem>.Item(
+                            new AtlasItem($"{name}/{i}", image), image.Width, image.Height));
+                    }
+                }
+                else 
+                {
+                    Image image = new Image(file);
+                    packer.Add(new Packer<AtlasItem>.Item(new AtlasItem(name, image), image.Width, image.Height));
+                }
+
             }
         }
         if (basePath.EndsWith(Path.DirectorySeparatorChar)) 

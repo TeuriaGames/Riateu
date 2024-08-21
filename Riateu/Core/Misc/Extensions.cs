@@ -22,4 +22,14 @@ public static class StreamUtils
         length = fileDataSpan.Length;
         return ptr;
     }
+
+    public static unsafe IntPtr AllocToPointer(this Stream stream, out int length, scoped out Span<byte> span) 
+    {
+        IntPtr ptr = (IntPtr)NativeMemory.Alloc((nuint)stream.Length);
+        Span<byte> fileDataSpan = new Span<byte>((void*)ptr, (int)stream.Length);
+        stream.ReadExactly(fileDataSpan);
+        length = fileDataSpan.Length;
+        span = fileDataSpan;
+        return ptr;
+    }
 }

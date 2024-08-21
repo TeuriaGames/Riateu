@@ -9,7 +9,7 @@ const log = @import("log.zig");
 
 const RiateuFont = [*c]stb_truetype.stbtt_fontinfo;
 
-export fn Riateu_FontInit(data: [*c]const u8) RiateuFont {
+export fn Riateu_LoadFont(data: [*c]const u8) RiateuFont {
     if (stb_truetype.stbtt_GetNumberOfFonts(data) <= 0) 
     {
         log.log_error("Number of fonts were below 0.", .{});
@@ -33,7 +33,7 @@ export fn Riateu_FontInit(data: [*c]const u8) RiateuFont {
     return null;
 }
 
-export fn Riateu_FontGetCharacter(
+export fn Riateu_GetFontCharacter(
     font: RiateuFont, glyph: c_int, scale: f32,
     width: [*c]c_int, height: [*c]c_int, advance: [*c]f32,
     offsetX: [*c]f32, offsetY: [*c]f32, visible: [*c]c_int
@@ -60,7 +60,7 @@ export fn Riateu_FontGetCharacter(
     }
 }
 
-export fn Riateu_FontGetPixels(font: RiateuFont, dest: [*c]u8, glyph: c_int, width: c_int, height: c_int, scale: f32) void {
+export fn Riateu_GetFontPixels(font: RiateuFont, dest: [*c]u8, glyph: c_int, width: c_int, height: c_int, scale: f32) void {
     stb_truetype.stbtt_MakeGlyphBitmap(font, dest, width, height, width, scale, scale, glyph);
 
     const len: c_int = width * height;
@@ -83,24 +83,24 @@ export fn Riateu_FontGetPixels(font: RiateuFont, dest: [*c]u8, glyph: c_int, wid
     }
 }
 
-export fn Riateu_FontGetMetrics(font: RiateuFont, ascent: [*c]c_int, descent: [*c]c_int, line_gap: [*c]c_int) void {
+export fn Riateu_GetFontMetrics(font: RiateuFont, ascent: [*c]c_int, descent: [*c]c_int, line_gap: [*c]c_int) void {
     stb_truetype.stbtt_GetFontVMetrics(font, ascent, descent, line_gap);
 }
 
-export fn Riateu_FontFindGlyphIndex(font: RiateuFont, codepoint: c_int) c_int {
+export fn Riateu_FindFontGlyphIndex(font: RiateuFont, codepoint: c_int) c_int {
     return stb_truetype.stbtt_FindGlyphIndex(font, codepoint);
 }
 
-export fn Riateu_FontGetPixelScale(font: RiateuFont, scale: f32) f32 {
+export fn Riateu_GetFontPixelScale(font: RiateuFont, scale: f32) f32 {
     return stb_truetype.stbtt_ScaleForMappingEmToPixels(font, scale);
 }
 
-export fn Riateu_FontGetKerning(font: RiateuFont, glyph1: c_int, glyph2: c_int, scale: f32) f32 {
+export fn Riateu_GetFontKerning(font: RiateuFont, glyph1: c_int, glyph2: c_int, scale: f32) f32 {
     const kerning = stb_truetype.stbtt_GetGlyphKernAdvance(font, glyph1, glyph2);
     return @as(f32, @floatFromInt(kerning)) * scale;
 }
 
-export fn Riateu_FontFree(font: RiateuFont) void {
+export fn Riateu_FreeFont(font: RiateuFont) void {
     sdl2.SDL_free(font);
 }
 
@@ -118,21 +118,21 @@ test {
     defer allocator.free(buffer);
 
     _ = try file.readAll(buffer);
-    const font = Riateu_FontInit(buffer.ptr);
-    defer Riateu_FontFree(font);
+    const font = Riateu_LoadFont(buffer.ptr);
+    defer Riateu_FreeFont(font);
 
-    const glyph = Riateu_FontFindGlyphIndex(font, 40);
-    const scale = Riateu_FontGetPixelScale(font, 32);
+    const glyph = Riateu_FindFontGlyphIndex(font, 40);
+    const scale = Riateu_GetFontPixels(font, 32);
     var width: c_int = 0;
     var height: c_int = 0;
     var advance: f32 = 0;
     var offsetX: f32 = 0;
     var offsetY: f32 = 0;
     var visible: bool = false;
-    Riateu_FontGetCharacter(font, glyph, scale, &width, &height, &advance, &offsetX, &offsetY, &visible);
+    Riateu_GetFontCharacter(font, glyph, scale, &width, &height, &advance, &offsetX, &offsetY, &visible);
 
     const bytes = try allocator.alloc(u8, @intCast(width * height));
     defer allocator.free(bytes);
 
-    Riateu_FontGetPixels(font, bytes.ptr, glyph, width, height, scale);
+    Riateu_GetFontPixelScale(font, bytes.ptr, glyph, width, height, scale);
 }

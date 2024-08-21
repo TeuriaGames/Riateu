@@ -46,15 +46,15 @@ public class SpriteFont : IAssets
     /// <summary>
     /// A line height of the font.
     /// </summary>
-    public int LineHeight => Ascent - Descent + LineGap;
+    public float LineHeight => Ascent - Descent + LineGap;
     public float Height => Ascent - Descent;
 
     public readonly Font Font;
     public readonly float Size;
 
-    public int Ascent;
-    public int Descent;
-    public int LineGap;
+    public float Ascent;
+    public float Descent;
+    public float LineGap;
     public Texture Texture => fontTexture;
 
     private float fontScale;
@@ -87,9 +87,9 @@ public class SpriteFont : IAssets
         Font = font;
         Size = size;
         fontScale = font.GetScale(size);
-        Ascent = font.Ascent;
-        Descent = font.Descent;
-        LineGap = font.LineGap;
+        Ascent = font.Ascent * fontScale;
+        Descent = font.Descent * fontScale;
+        LineGap = font.LineGap * fontScale;
 
         fontTexture = CreateTexture(uploader, charset);
     }
@@ -121,7 +121,7 @@ public class SpriteFont : IAssets
 
         if (packer.Pack(out List<Packer<FontItem>.PackedItem> packedItems, out Point size)) 
         {
-            Image image = new Image(size.X, size.Y);
+            using Image image = new Image(size.X, size.Y);
             ConcurrentDictionary<int, SpriteFontCharacter> concurrentAvailableCharacters = new ConcurrentDictionary<int, SpriteFontCharacter>();
 
             new Workload((i, id) => {

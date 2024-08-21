@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -55,15 +56,18 @@ public class Font : IDisposable
 
     private unsafe void Load(Stream stream) 
     {
-        dataPtr = stream.AllocToPointer(out int length);
-        fontPtr = RiateuNative.Riateu_FontInit((byte*)dataPtr);
+        dataPtr = stream.AllocToPointer(out int length, out Span<byte> b);
+        fixed (byte *ptr = b) 
+        {
+            fontPtr = Native.Riateu_LoadFont(ptr);
+        }
 
         if (fontPtr == IntPtr.Zero) 
         {
             throw new Exception("Failed to create the font.");
         }
 
-        RiateuNative.Riateu_FontGetMetrics(fontPtr, out int ascent, out int descent, out int lineGap);
+        Native.Riateu_GetFontMetrics(fontPtr, out int ascent, out int descent, out int lineGap);
         Ascent = ascent;
         Descent = descent;
         LineGap = lineGap;
@@ -76,7 +80,7 @@ public class Font : IDisposable
     /// <returns>A scale from a size</returns>
     public float GetScale(float size) 
     {
-        return RiateuNative.Riateu_FontGetPixelScale(fontPtr, size);
+        return Native.Riateu_GetFontPixelScale(fontPtr, size);
     }
 
     /// <summary>
@@ -102,7 +106,7 @@ public class Font : IDisposable
     {
         int firstGlyph = FindGlyphIndex(c1);
         int secondGlyph = FindGlyphIndex(c2);
-        return RiateuNative.Riateu_FontGetKerning(fontPtr, firstGlyph, secondGlyph, scale);
+        return Native.Riateu_GetFontKerning(fontPtr, firstGlyph, secondGlyph, scale);
     }
 
     /// <summary>
@@ -126,7 +130,7 @@ public class Font : IDisposable
     {
         float scale = GetScale(size);
         int glyphIndex = FindGlyphIndex(codepoint);
-        RiateuNative.Riateu_FontGetCharacter(fontPtr, glyphIndex, scale, 
+        Native.Riateu_GetFontCharacter(fontPtr, glyphIndex, scale, 
             out int width, out int height, out float advance, out float offsetX, out float offsetY, out int visible);
 
 
@@ -166,7 +170,7 @@ public class Font : IDisposable
         {
             return glyphIndex;
         }
-        int newGlyphIndex = RiateuNative.Riateu_FontFindGlyphIndex(fontPtr, codepoint);
+        int newGlyphIndex = Native.Riateu_FindFontGlyphIndex(fontPtr, codepoint);
         cachedCodePoints[codepoint] = newGlyphIndex;
         return newGlyphIndex;
     }
@@ -193,7 +197,7 @@ public class Font : IDisposable
     /// <param name="character">A <see cref="Riateu.Graphics.Font.Character"/> to generate with</param>
     /// <param name="dest">The destination of a pixels to written with. It must be an array of <see cref="Riateu.Graphics.Color"/></param>
     /// <returns>Whether it suceeed to generate the pixels (true) or it failed (false)</returns>
-    public unsafe bool GetPixelsByCharacter(in Character character, Span<Color> dest) 
+    public virtual unsafe bool GetPixelsByCharacter(in Character character, Span<Color> dest) 
     {
         if (!character.Visible) 
         {
@@ -209,7 +213,7 @@ public class Font : IDisposable
 
         fixed (Color *destPtr = dest) 
         {
-            RiateuNative.Riateu_FontGetPixels(fontPtr, (IntPtr)destPtr, character.GlyphIndex, character.Width, character.Height, character.Scale);
+            Native.Riateu_GetFontPixels(fontPtr, (IntPtr)destPtr, character.GlyphIndex, character.Width, character.Height, character.Scale);
         }
 
         return true;
@@ -246,5 +250,23 @@ public class Font : IDisposable
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
+    }
+}
+
+[Experimental("RIE002")]
+public class MSDFFont : Font
+{
+    public MSDFFont(string filepath) : base(filepath)
+    {
+    }
+
+    public MSDFFont(Stream stream) : base(stream)
+    {
+    }
+
+    public override bool GetPixelsByCharacter(in Character character, Span<Color> dest)
+    {
+        // TODO generate MSDF font instead
+        return base.GetPixelsByCharacter(character, dest);
     }
 }
