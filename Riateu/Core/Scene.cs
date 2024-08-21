@@ -34,7 +34,7 @@ public abstract class Scene : GameLoop
     public Entities EntityList { get; set; }
 
     public SpatialHash SpatialHash { get; private set; }
-    private List<PhysicsComponent> physicsColliders = new List<PhysicsComponent>();
+    private List<Collision> physicsColliders = new List<Collision>();
 
 
 
@@ -59,23 +59,23 @@ public abstract class Scene : GameLoop
     }
 
     /// <summary>
-    /// Add the <see cref="Riateu.Components.PhysicsComponent"/> into the physics world.
+    /// Add the <see cref="Riateu.Components.Collision"/> into the physics world.
     /// </summary>
     /// <param name="component">
-    /// A <see cref="Riateu.Components.PhysicsComponent"/> will be added into the physics world
+    /// A <see cref="Riateu.Components.Collision"/> will be added into the physics world
     /// </param>
-    public void AddPhysics(PhysicsComponent component)
+    public void AddPhysics(Collision component)
     {
         physicsColliders.Add(component);
     }
 
     /// <summary>
-    /// Remove the <see cref="Riateu.Components.PhysicsComponent"/> into the physics world.
+    /// Remove the <see cref="Riateu.Components.Collision"/> into the physics world.
     /// </summary>
     /// <param name="component">
-    /// A <see cref="Riateu.Components.PhysicsComponent"/> will be removed into the physics world
+    /// A <see cref="Riateu.Components.Collision"/> will be removed into the physics world
     /// </param>
-    public void RemovePhysics(PhysicsComponent component)
+    public void RemovePhysics(Collision component)
     {
         physicsColliders.Remove(component);
     }
@@ -103,7 +103,7 @@ public abstract class Scene : GameLoop
     /// <param name="delta"></param>
     public override sealed void Update(double delta) 
     {
-        Span<PhysicsComponent> colliders = CollectionsMarshal.AsSpan(physicsColliders);
+        Span<Collision> colliders = CollectionsMarshal.AsSpan(physicsColliders);
         for (int i = 0; i < colliders.Length; i++) 
         {
             SpatialHash.AddCollider(colliders[i]);

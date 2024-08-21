@@ -21,7 +21,7 @@ public class SpatialHash
         inverseCellSize = 1f / cellSize;
     }
 
-    public void AddCollider(PhysicsComponent shape) 
+    public void AddCollider(Collision shape) 
     {
         int left = (int)(Math.Floor(shape.Entity.PosX) * inverseCellSize);
         int top = (int)(Math.Floor(shape.Entity.PosY) * inverseCellSize);
@@ -32,32 +32,32 @@ public class SpatialHash
         {
             for (int y = top; y <= bottom; y++) 
             {
-                List<PhysicsComponent> cell = GetCell(x, y);
+                List<Collision> cell = GetCell(x, y);
                 cell.Add(shape);
             }
         }
     }
 
-    public void RemoveCollider(PhysicsComponent shape) 
+    public void RemoveCollider(Collision shape) 
     {
         bucket.RemoveToBucket(shape);
     }
 
-    public List<PhysicsComponent> GetCell(int x, int y) 
+    public List<Collision> GetCell(int x, int y) 
     {
-        if (bucket.GetSome(x, y, out List<PhysicsComponent> colliders)) 
+        if (bucket.GetSome(x, y, out List<Collision> colliders)) 
         {
             return colliders;
         }
 
-        List<PhysicsComponent> newCell = new List<PhysicsComponent>();
+        List<Collision> newCell = new List<Collision>();
         bucket.AddToBucket(x, y, newCell);
         return newCell;
     }
 
-    public SpatialResult Retrieve(in Rectangle rectangle, PhysicsComponent self, ulong tags) 
+    public SpatialResult Retrieve(in Rectangle rectangle, Collision self, ulong tags) 
     {
-        HashSet<PhysicsComponent> temp = result.Obtain();
+        HashSet<Collision> temp = result.Obtain();
 
         int left = (int)(rectangle.Left * inverseCellSize);
         int top = (int)(rectangle.Top * inverseCellSize);
@@ -68,7 +68,7 @@ public class SpatialHash
         {
             for (int y = top; y <= bottom; y++)  
             {
-                List<PhysicsComponent> cell = GetCell(x, y);
+                List<Collision> cell = GetCell(x, y);
                 if (cell == null || cell.Count <= 1) 
                 {
                     continue;
@@ -76,7 +76,7 @@ public class SpatialHash
 
                 for (int i = 0; i < cell.Count; i++)
                 {
-                    PhysicsComponent component = cell[i];
+                    Collision component = cell[i];
                     if (component == self || (component.Tags & tags) == 0) 
                     {
                         continue;
@@ -90,9 +90,9 @@ public class SpatialHash
         return result;
     }
 
-    public SpatialResult Retrieve(in Rectangle rectangle, PhysicsComponent self) 
+    public SpatialResult Retrieve(in Rectangle rectangle, Collision self) 
     {
-        HashSet<PhysicsComponent> temp = result.Obtain();
+        HashSet<Collision> temp = result.Obtain();
 
         int left = (int)(rectangle.Left * inverseCellSize);
         int top = (int)(rectangle.Top * inverseCellSize);
@@ -103,16 +103,16 @@ public class SpatialHash
         {
             for (int y = top; y <= bottom; y++)  
             {
-                List<PhysicsComponent> cell = GetCell(x, y);
+                List<Collision> cell = GetCell(x, y);
                 if (cell == null || cell.Count <= 1) 
                 {
                     continue;
                 }
 
-                Span<PhysicsComponent> cellSpan = CollectionsMarshal.AsSpan(cell);
+                Span<Collision> cellSpan = CollectionsMarshal.AsSpan(cell);
                 for (int i = 0; i < cellSpan.Length; i++)
                 {
-                    PhysicsComponent component = cellSpan[i];
+                    Collision component = cellSpan[i];
                     if (component == self) 
                     {
                         continue;
@@ -135,11 +135,11 @@ public class SpatialHash
 public class SpatialResult : IDisposable
 {
     // this is not a pool
-    private Stack<HashSet<PhysicsComponent>> colliders = new Stack<HashSet<PhysicsComponent>>();
-    private HashSet<PhysicsComponent> current;
+    private Stack<HashSet<Collision>> colliders = new Stack<HashSet<Collision>>();
+    private HashSet<Collision> current;
     internal SpatialResult() {}
 
-    public HashSet<PhysicsComponent> Obtain() 
+    public HashSet<Collision> Obtain() 
     {
         if (colliders.TryPop(out var res)) 
         {
@@ -147,16 +147,16 @@ public class SpatialResult : IDisposable
             return current = res;
         }
 
-        return current = new HashSet<PhysicsComponent>();
+        return current = new HashSet<Collision>();
     }
 
-    public void Pop(HashSet<PhysicsComponent> components) 
+    public void Pop(HashSet<Collision> components) 
     {
         colliders.Push(components);
         current = colliders.Pop();
     }
 
-    public IEnumerator<PhysicsComponent> GetEnumerator() 
+    public IEnumerator<Collision> GetEnumerator() 
     {
         return current.GetEnumerator();
     }
@@ -170,16 +170,16 @@ public class SpatialResult : IDisposable
 
 public class SpatialBucket 
 {
-    private Dictionary<long, List<PhysicsComponent>> bucketColliders = new Dictionary<long, List<PhysicsComponent>>();
+    private Dictionary<long, List<Collision>> bucketColliders = new Dictionary<long, List<Collision>>();
 
-    public void AddToBucket(int x, int y, List<PhysicsComponent> colliders) 
+    public void AddToBucket(int x, int y, List<Collision> colliders) 
     {
         bucketColliders.Add(HashPos(x, y), colliders);
     }
 
-    public void RemoveToBucket(PhysicsComponent collider) 
+    public void RemoveToBucket(Collision collider) 
     {
-        foreach (List<PhysicsComponent> components in bucketColliders.Values) 
+        foreach (List<Collision> components in bucketColliders.Values) 
         {
             if (components.Contains(collider)) 
             {
@@ -188,15 +188,15 @@ public class SpatialBucket
         }
     }
 
-    public bool GetSome(int x, int y, out List<PhysicsComponent> colliders) 
+    public bool GetSome(int x, int y, out List<Collision> colliders) 
     {
         return bucketColliders.TryGetValue(HashPos(x, y), out colliders);
     }
 
-    public HashSet<PhysicsComponent> GetAllColliders() 
+    public HashSet<Collision> GetAllColliders() 
     {
-        HashSet<PhysicsComponent> set = new HashSet<PhysicsComponent>();
-        foreach (List<PhysicsComponent> colliders in bucketColliders.Values) 
+        HashSet<Collision> set = new HashSet<Collision>();
+        foreach (List<Collision> colliders in bucketColliders.Values) 
         {
             set.UnionWith(colliders);
         }
