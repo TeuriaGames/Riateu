@@ -77,6 +77,11 @@ public class Keyboard
         TextInput?.Invoke(c);
     }
 
+    public KeyboardButton Button(KeyCode keyCode) 
+    {
+        return Buttons[(int)keyCode];
+    }
+
     public bool IsPressed(KeyCode keyCode) 
     {
         return Buttons[(int)keyCode].Pressed;
