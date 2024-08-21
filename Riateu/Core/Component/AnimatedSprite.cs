@@ -50,10 +50,9 @@ public class AnimatedSprite : GraphicsComponent
     
     /// <summary>
     /// Initialize an empty <see cref="Riateu.Components.AnimatedSprite"/>. You might want to use 
-    /// <see cref="Riateu.Components.AnimatedSprite.Create(Texture, AnimationIndex)"/> instead.
+    /// <see cref="Riateu.Components.AnimatedSprite.Create(AnimationIndex)"/> instead.
     /// </summary>
-    /// <param name="texture">A texture to base on</param>
-    public AnimatedSprite(Texture texture) : base(texture) {}
+    public AnimatedSprite() : base() {}
 
     /// <summary>
     /// Create an <see cref="Riateu.Components.AnimatedSprite"/> from a json path.
@@ -62,10 +61,10 @@ public class AnimatedSprite : GraphicsComponent
     /// <param name="atlas">An atlas contaning the id texture of the sprite</param>
     /// <param name="jsonPath">A path to json file</param>
     /// <returns>An <see cref="Riateu.Components.AnimatedSprite"/></returns>
-    public static AnimatedSprite Create(Texture atlasTexture, Atlas atlas, string jsonPath)  
+    public static AnimatedSprite Create(Atlas atlas, string jsonPath)  
     {
         using var fs = File.OpenRead(jsonPath);
-        return Create(atlasTexture, atlas, fs);
+        return Create(atlas, fs);
     }
 
     /// <summary>
@@ -75,9 +74,9 @@ public class AnimatedSprite : GraphicsComponent
     /// <param name="atlas">An atlas contaning the id texture of the sprite</param>
     /// <param name="stream">A stream containing the json file</param>
     /// <returns>An <see cref="Riateu.Components.AnimatedSprite"/></returns>
-    public static AnimatedSprite Create(Texture atlasTexture, Atlas atlas, Stream stream) 
+    public static AnimatedSprite Create(Atlas atlas, Stream stream) 
     {
-        var animSprite = new AnimatedSprite(atlasTexture);
+        var animSprite = new AnimatedSprite();
         var json = JsonTextReader.FromStream(stream);
         var texture = json["texture"];
         var cycles = json["cycles"];
@@ -120,9 +119,9 @@ public class AnimatedSprite : GraphicsComponent
     /// <param name="atlasTexture">A texture for the sprite</param>
     /// <param name="animationIndex">A map of frames</param>
     /// <returns>An <see cref="Riateu.Components.AnimatedSprite"/></returns>
-    public static AnimatedSprite Create(Texture atlasTexture, AnimationIndex animationIndex) 
+    public static AnimatedSprite Create(AnimationIndex animationIndex) 
     {
-        var animSprite = new AnimatedSprite(atlasTexture);
+        var animSprite = new AnimatedSprite();
         animSprite.frames = animationIndex;
         return animSprite;
     }

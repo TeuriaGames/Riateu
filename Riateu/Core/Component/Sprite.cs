@@ -6,7 +6,7 @@ namespace Riateu.Components;
 /// <summary>
 /// A component used to render a sprite from a texture and quad.
 /// </summary>
-public class SpriteRenderer : GraphicsComponent
+public class Sprite : GraphicsComponent
 {
     /// <summary>
     /// Flip a quad horizontally
@@ -58,10 +58,9 @@ public class SpriteRenderer : GraphicsComponent
     /// <summary>
     /// An initilization for this component.
     /// </summary>
-    /// <param name="baseTexture">A texture for the sprite</param>
     /// <param name="texture">A quad for the sprite</param>
     /// <returns></returns>
-    public SpriteRenderer(Texture baseTexture, TextureQuad texture) : base(texture, baseTexture)
+    public Sprite(TextureQuad texture) : base(texture)
     {
     }
 
