@@ -121,6 +121,10 @@ public abstract class GameApp
     /// A method for loading content. 
     /// </summary>
     public virtual void LoadContent(AssetStorage storage) {}
+    /// <summary>
+    /// Called when the application exited.
+    /// </summary>
+    public virtual void Destroy() {}
 
 
     /// <summary>
@@ -169,6 +173,8 @@ public abstract class GameApp
         {
             Tick();
         }
+
+        Destroy();
         GraphicsDevice.UnclaimWindow(MainWindow);
 
         Logger.Info("Closing Window.");
