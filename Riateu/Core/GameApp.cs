@@ -305,4 +305,6 @@ public record struct GraphicsSettings(SwapchainComposition SwapchainComposition,
     public static GraphicsSettings Debug = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Immediate, true, false);
     public static GraphicsSettings Vsync = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.VSync, false, false);
     public static GraphicsSettings DebugVSync = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.VSync, true, false);
+    public static GraphicsSettings Fast = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Mailbox, false, false);
+    public static GraphicsSettings DebugFast = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Mailbox, true, false);
 }
