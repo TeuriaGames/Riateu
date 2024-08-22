@@ -11,13 +11,13 @@ public sealed class CollisionGrid : Shape
     public int CellX => Grid.Columns;
     public int CellY => Grid.Rows;
 
-    public override Vector2 Min => new Vector2(Entity.PosX + BoundingBox.X, Entity.PosY + BoundingBox.Y);
-    public override Vector2 Max => new Vector2(Entity.PosX + BoundingBox.X + BoundingBox.Width, Entity.PosY + BoundingBox.Y + BoundingBox.Height);
+    public override Vector2 AbsoluteMin => new Vector2(Entity.PosX + BoundingBox.X, Entity.PosY + BoundingBox.Y);
+    public override Vector2 AbsoluteMax => new Vector2(Entity.PosX + BoundingBox.X + BoundingBox.Width, Entity.PosY + BoundingBox.Y + BoundingBox.Height);
 
 
     public CollisionGrid(
         Entity entity, 
-        int cellsX, int cellsY, int cellWidth, int cellHeight) : base(entity, new Rectangle(0, 0, cellsX * cellWidth, cellsY * cellHeight))
+        int cellsX, int cellsY, int cellWidth, int cellHeight) : base(entity, new RectangleF(0, 0, cellsX * cellWidth, cellsY * cellHeight))
     {
         Grid = new Array2D<bool>(cellsX, cellsY);
 
@@ -26,14 +26,14 @@ public sealed class CollisionGrid : Shape
     }
 
 
-    public CollisionGrid(Entity entity, int cellWidth, int cellHeight, Array2D<bool> grid) : base(entity, new Rectangle(0, 0, grid.Rows * cellWidth, grid.Columns * cellHeight))
+    public CollisionGrid(Entity entity, int cellWidth, int cellHeight, Array2D<bool> grid) : base(entity, new RectangleF(0, 0, grid.Rows * cellWidth, grid.Columns * cellHeight))
     {
         Grid = grid;
         CellWidth = cellWidth;
         CellHeight = cellHeight;
     }
     public CollisionGrid(Entity entity, int cellWidth, int cellHeight, string[,] characters) : base(
-        entity, new Rectangle(0, 0, characters.GetLength(1) * cellWidth, characters.GetLength(0) * cellHeight))
+        entity, new RectangleF(0, 0, characters.GetLength(1) * cellWidth, characters.GetLength(0) * cellHeight))
     {
         var columns = characters.GetLength(0);
         var rows = characters.GetLength(1);
@@ -53,7 +53,7 @@ public sealed class CollisionGrid : Shape
     }
 
     public CollisionGrid(Entity entity, int cellWidth, int cellHeight, Array2D<string> characters) 
-        : base(entity, new Rectangle(0, 0, characters.Rows * cellWidth, characters.Columns * cellHeight))
+        : base(entity, new RectangleF(0, 0, characters.Rows * cellWidth, characters.Columns * cellHeight))
     {
         var columns = characters.Columns;
         var rows = characters.Rows;
@@ -75,7 +75,7 @@ public sealed class CollisionGrid : Shape
     }
 
     public CollisionGrid(Entity entity, int cellWidth, int cellHeight, int columns, int rows, string[] characters) 
-        : base(entity, new Rectangle(0, 0, rows * cellWidth, columns * cellHeight))
+        : base(entity, new RectangleF(0, 0, rows * cellWidth, columns * cellHeight))
     {
         var characters2D = StackArray2D<string>.FromArray(rows, columns, characters);
         Grid = new Array2D<bool>(rows, columns);
@@ -96,17 +96,32 @@ public sealed class CollisionGrid : Shape
     public void ChangeGrid(Array2D<bool> grid) 
     {
         Grid = grid;
-        BoundingBox = new Rectangle(0, 0, grid.Rows * CellWidth, grid.Columns * CellHeight);
+        BoundingBox = new RectangleF(0, 0, grid.Rows * CellWidth, grid.Columns * CellHeight);
     }
 
-    public Rectangle GetAbsoluteBounds() 
+    public RectangleF GetAbsoluteBounds() 
     {
-        return new Rectangle(
-            (int)Entity.Position.X + BoundingBox.X,
-            (int)Entity.Position.Y + BoundingBox.Y,
+        return new RectangleF(
+            Entity.Position.X + BoundingBox.X,
+            Entity.Position.Y + BoundingBox.Y,
             BoundingBox.Width,
             BoundingBox.Height
         );
+    }
+
+    public override bool Collide(Vector2 position, Shape shape)
+    {
+        switch (shape) 
+        {
+        case AABB:
+            RectangleF rect = shape.AbsoluteBoundingBox;
+            return Collide(position, rect);
+        case CollisionGrid grid:
+            return grid.Collide(position, AbsoluteBoundingBox);
+        default:
+            return Unsupported(shape);
+        }
+
     }
 
     public override bool Collide(Vector2 position, Rectangle rect)
@@ -131,18 +146,32 @@ public sealed class CollisionGrid : Shape
         if (y + height > CellX) { height = CellX - y; }
 
         for (int xa = 0; xa < width; xa++) 
+        {
             for (int ya = 0; ya < height; ya++) 
             {
                 if (Grid[x + xa, y + ya]) { return true; }
             }
+        }
 
         return false;
     }
 
-    public override bool Collide(Vector2 position, AABB aabb)
+    public override bool Collide(Vector2 position, RectangleF rect)
     {
-        if (!aabb.Collide(Vector2.Zero, BoundingBox)) { return false; }
-        return Collide(position, aabb.GetAbsoluteBounds(position));
+        // We cannot for sure trust the floating point to index the array lol.
+        return Collide(position, rect.ToInt());
+    }
+
+    public override bool Collide(Vector2 position, Point value)
+    {
+        if (value.X >= Entity.PosX && value.Y >= Entity.PosY && 
+            value.X < Entity.PosX + BoundingBox.Width && value.Y < Entity.PosY + BoundingBox.Height) 
+        {
+            int indexX = value.X - (int)Entity.PosX / CellWidth;
+            int indexY = value.Y - (int)Entity.PosY / CellHeight;
+            return Grid[indexX, indexY];
+        }
+        return false;
     }
 
     public override bool Collide(Vector2 position, Vector2 value)
@@ -150,8 +179,8 @@ public sealed class CollisionGrid : Shape
         if (value.X >= Entity.PosX && value.Y >= Entity.PosY && 
             value.X < Entity.PosX + BoundingBox.Width && value.Y < Entity.PosY + BoundingBox.Height) 
         {
-            var indexX = (int)((value.X - Entity.PosX) / CellWidth);
-            var indexY = (int)((value.Y - Entity.PosY) / CellHeight);
+            int indexX = (int)(value.X - Entity.PosX) / CellWidth;
+            int indexY = (int)(value.Y - Entity.PosY) / CellHeight;
             return Grid[indexX, indexY];
         }
         return false;
@@ -179,15 +208,5 @@ public sealed class CollisionGrid : Shape
     public void UpdateTile(Point pixel, bool collidable) 
     {
         Grid[pixel.X, pixel.Y] = collidable;
-    }
-
-    public override bool Collide(Vector2 position, Point point)
-    {
-        return false;
-    }
-
-    public override bool Collide(Vector2 position, CollisionGrid grid)
-    {
-        return false;
     }
 }

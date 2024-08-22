@@ -1,5 +1,5 @@
-using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Riateu.Graphics;
 
 namespace Riateu.Physics;
@@ -9,19 +9,26 @@ namespace Riateu.Physics;
 /// </summary>
 public abstract class Shape 
 {
-    public abstract Vector2 Min { get; }
-    public abstract Vector2 Max { get; }
+    public abstract Vector2 AbsoluteMin { get; }
+    public abstract Vector2 AbsoluteMax { get; }
 
     /// <summary>
     /// A bounding hitbox of this shape.
     /// </summary>
-    public Rectangle BoundingBox;
+    public RectangleF BoundingBox;
+    /// <summary>
+    /// An absolute bounding hitbox of this shape.
+    /// </summary>
+    public RectangleF AbsoluteBoundingBox 
+    {
+        get => new RectangleF(Entity.PosX + BoundingBox.X, Entity.PosY + BoundingBox.Y, BoundingBox.Width, BoundingBox.Height);
+    }
 
     /// <summary>
     /// Base initialization for the collision shapes.
     /// </summary>
     /// <param name="entity">An <see cref="Riateu.Entity"/>. to hold</param>
-    public Shape(Entity entity, Rectangle bound)  
+    public Shape(Entity entity, RectangleF bound)  
     {
         Entity = entity;
         BoundingBox = bound;
@@ -37,6 +44,14 @@ public abstract class Shape
     /// </summary>
     /// <returns>A exact same shape that is cloned</returns>
     public abstract Shape Clone();
+
+    /// <summary>
+    /// Collide with a Rectangle.
+    /// </summary>
+    /// <param name="position">An offset to adjust the collision</param>
+    /// <param name="rect">A Rectangle to collide with</param>
+    /// <returns>true if it collided, false if it not collided</returns>
+    public abstract bool Collide(Vector2 position, RectangleF rect);
     
     /// <summary>
     /// Collide with a Rectangle.
@@ -59,20 +74,6 @@ public abstract class Shape
     /// <param name="point">A Point to collide with</param>
     /// <returns>true if it collided, false if it not collided</returns>
     public abstract bool Collide(Vector2 position, Point point);
-    /// <summary>
-    /// Collide with an <see cref="Riateu.Physics.AABB"/>.
-    /// </summary>
-    /// <param name="position">An offset to adjust the collision</param>
-    /// <param name="aabb">An <see cref="Riateu.Physics.AABB"/> to collide with</param>
-    /// <returns>true if it collided, false if it not collided</returns>
-    public abstract bool Collide(Vector2 position, AABB aabb);
-    /// <summary>
-    /// Collide with an <see cref="Riateu.Physics.CollisionGrid"/>.
-    /// </summary>
-    /// <param name="position">An offset to adjust the collision</param>
-    /// <param name="grid">A <see cref="Riateu.Physics.CollisionGrid"/> to collide with</param>
-    /// <returns>true if it collided, false if it not collided</returns>
-    public abstract bool Collide(Vector2 position, CollisionGrid grid);
 
     /// <summary>
     /// Collide with any derived <see cref="Riateu.Physics.Shape"/>.
@@ -80,15 +81,7 @@ public abstract class Shape
     /// <param name="position">An offset to adjust the collision</param>
     /// <param name="shape">A <see cref="Riateu.Physics.Shape"/> to collide with</param>
     /// <returns>true if it collided, false if it not collided</returns>
-    public bool Collide(Vector2 position, Shape shape) 
-    {
-        return shape switch 
-        {
-            AABB aabb => Collide(position, aabb),
-            CollisionGrid grid => Collide(position, grid),
-            _ => throw new NotImplementedException()
-        };
-    }
+    public abstract bool Collide(Vector2 position, Shape shape);
 
     /// <summary>
     /// Draw a debug lines to show the hidden lines from this shape.
@@ -97,5 +90,12 @@ public abstract class Shape
     /// <param name="draw">An <see cref="Riateu.Graphics.Batch"/></param>
     public virtual void DebugDraw(CommandBuffer buffer, Batch draw) 
     {
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected bool Unsupported(Shape shape) 
+    {
+        Logger.Error($"Unsupported shape: '{shape.GetType().Name}'");
+        return false;
     }
 }

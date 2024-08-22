@@ -8,8 +8,8 @@ namespace Riateu.Physics;
 /// </summary>
 public class AABB : Shape
 {
-    public override Vector2 Min => new Vector2(Entity.PosX + BoundingBox.X, Entity.PosY + BoundingBox.Y);
-    public override Vector2 Max => new Vector2(Entity.PosX + BoundingBox.X + BoundingBox.Width, Entity.PosY + BoundingBox.Y + BoundingBox.Height);
+    public override Vector2 AbsoluteMin => new Vector2(Entity.PosX + BoundingBox.X, Entity.PosY + BoundingBox.Y);
+    public override Vector2 AbsoluteMax => new Vector2(Entity.PosX + BoundingBox.X + BoundingBox.Width, Entity.PosY + BoundingBox.Y + BoundingBox.Height);
 
 
     /// <summary>
@@ -17,10 +17,15 @@ public class AABB : Shape
     /// </summary>
     /// <param name="entity">An <see cref="Riateu.Entity"/> to reference with</param>
     /// <param name="rectangle">A hitbox of this shape</param>
-    public AABB(Entity entity, Rectangle rectangle) : base(entity, rectangle)
-    {
-        BoundingBox = rectangle;
-    }
+    public AABB(Entity entity, RectangleF rectangle) : base(entity, rectangle) {}
+
+    /// <summary>
+    /// Initialization of this shape.
+    /// </summary>
+    /// <param name="entity">An <see cref="Riateu.Entity"/> to reference with</param>
+    /// <param name="rectangle">A hitbox of this shape</param>
+    public AABB(Entity entity, Rectangle rectangle) : base(entity, rectangle.ToFloat()) {}
+    
 
     /// <summary>
     /// Initialization of this shape.
@@ -31,7 +36,8 @@ public class AABB : Shape
     /// <param name="width">A width of the hitbox</param>
     /// <param name="height">A height of the hitbox</param>
     public AABB(Entity entity, int x, int y, int width, int height) 
-        : this(entity, new Rectangle(x, y, width, height)) {}
+        : this(entity, new RectangleF(x, y, width, height)) {}
+
 
     /// <inheritdoc/>
     public override Shape Clone()
@@ -42,7 +48,7 @@ public class AABB : Shape
     /// <inheritdoc/>
     public override bool Collide(Vector2 position, Rectangle rect) 
     {
-        var offsetRect = new Rectangle(rect.X + (int)position.X, rect.Y + (int)position.Y, rect.Width, rect.Height);
+        var offsetRect = new RectangleF(rect.X + position.X, rect.Y + position.Y, rect.Width, rect.Height);
         return GetAbsoluteBounds().Intersects(offsetRect);
     }
 
@@ -56,15 +62,19 @@ public class AABB : Shape
         return GetAbsoluteBounds().Contains(offsetPoint);
     } 
     /// <inheritdoc/>
-    public override bool Collide(Vector2 position, AABB aabb) {
-        var absoluteBounds = aabb.GetAbsoluteBounds();
-        return absoluteBounds.Intersects(GetAbsoluteBounds(position));
-    }
-
-    /// <inheritdoc/>
-    public override bool Collide(Vector2 position, CollisionGrid grid)
-    {
-        return grid.Collide(position, this);
+    public override bool Collide(Vector2 position, Shape shape) {
+        switch (shape) 
+        {
+        case AABB:
+            var absoluteBounds = shape.AbsoluteBoundingBox;
+            return absoluteBounds.Intersects(GetAbsoluteBounds(position));
+        case CollisionGrid grid:
+            return grid.Collide(position, AbsoluteBoundingBox);
+        case Circle circle:
+            return circle.Collide(position, AbsoluteBoundingBox);
+        default:
+            return Unsupported(shape);
+        }
     }
 
     /// <summary>
@@ -75,13 +85,19 @@ public class AABB : Shape
     /// A Rectangle based on both <see cref="Riateu.Entity"/>'s position 
     /// and this shape's position
     /// </returns>
-    public Rectangle GetAbsoluteBounds(Vector2 offset = default) 
+    public RectangleF GetAbsoluteBounds(Vector2 offset = default) 
     {
-        return new Rectangle(
+        return new RectangleF(
             (int)Entity.Position.X + BoundingBox.X + (int)offset.X,
             (int)Entity.Position.Y + BoundingBox.Y + (int)offset.Y,
             BoundingBox.Width,
             BoundingBox.Height
         );
+    }
+
+    public override bool Collide(Vector2 position, RectangleF rect)
+    {
+        var offsetRect = new RectangleF(rect.X + position.X, rect.Y + position.Y, rect.Width, rect.Height);
+        return GetAbsoluteBounds().Intersects(offsetRect);
     }
 }
