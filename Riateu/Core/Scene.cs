@@ -37,6 +37,7 @@ public abstract class Scene : GameLoop
     private List<Collision> physicsColliders = new List<Collision>();
 
 
+    public virtual int SpatialHashCellSize => 80;
 
 
     /// <summary>
@@ -46,7 +47,7 @@ public abstract class Scene : GameLoop
     public Scene(GameApp game) : base(game)
     {
         EntityList = new Entities(this);
-        SpatialHash = new SpatialHash();
+        SpatialHash = new SpatialHash(SpatialHashCellSize);
     }
 
     /// <summary>
