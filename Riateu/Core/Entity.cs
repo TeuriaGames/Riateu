@@ -267,6 +267,22 @@ public class Entity : IEnumerable<Component>
     }
 
     /// <summary>
+    /// Try to get a component from a type.
+    /// </summary>
+    /// <param name="output">A first occurrence of a component from this entity</param>
+    /// <typeparam name="T">A type filter of the component to get with</typeparam>
+    /// <returns>Whether a component exists or not</returns>
+    public bool TryGetComponent<T>(out T output) where T : Component
+    {
+        output = GetComponent<T>();
+        if (output == null) 
+        {
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
     /// Get a component from a type.
     /// </summary>
     /// <typeparam name="T">A type of the component to get with</typeparam>
