@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Riateu.Components;
@@ -135,7 +136,7 @@ public class SpatialHash
 public class SpatialResult : IDisposable
 {
     // this is not a pool
-    private Stack<HashSet<Collision>> colliders = new Stack<HashSet<Collision>>();
+    private ConcurrentStack<HashSet<Collision>> colliders = new ConcurrentStack<HashSet<Collision>>();
     private HashSet<Collision> current;
     internal SpatialResult() {}
 
@@ -152,8 +153,11 @@ public class SpatialResult : IDisposable
 
     public void Pop(HashSet<Collision> components) 
     {
-        colliders.Push(components);
-        current = colliders.Pop();
+        if (colliders.TryPop(out var current)) 
+        {
+            this.current = current;
+            colliders.Push(components);
+        }
     }
 
     public IEnumerator<Collision> GetEnumerator() 
