@@ -20,6 +20,15 @@ public abstract class GraphicsResource : IDisposable
 
     public GraphicsResource(GraphicsDevice device) 
     {
+        if (device == null) 
+        {
+            return;
+        }
+        Reinit(device);
+    }
+
+    protected void Reinit(GraphicsDevice device) 
+    {
         Device = device;
         selfReference = GCHandle.Alloc(this, GCHandleType.Weak);
         Device.AddReference(selfReference);

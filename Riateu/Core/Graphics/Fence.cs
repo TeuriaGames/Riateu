@@ -9,7 +9,7 @@ public class Fence : GraphicsResource, IGraphicsPool
 
     public void Obtain(GraphicsDevice device)
     {
-        Device = device;
+        Reinit(device);
     }
 
     public void Reset()
