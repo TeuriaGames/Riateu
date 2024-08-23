@@ -10,24 +10,26 @@ namespace Riateu.Physics;
 public class SpatialHash 
 {
     private int cellSize;
+    private int offset;
     private float inverseCellSize;
     private SpatialBucket bucket = new SpatialBucket();
     private SpatialResult result = new SpatialResult();
 
     public int CellSize => cellSize;
 
-    public SpatialHash(int cellSize = 80) 
+    public SpatialHash(int cellSize = 80, int offset = 0) 
     {
+        this.offset = offset;
         this.cellSize = cellSize;
         inverseCellSize = 1f / cellSize;
     }
 
     public void AddCollider(Collision shape) 
     {
-        int left = (int)(Math.Floor(shape.Entity.PosX) * inverseCellSize);
-        int top = (int)(Math.Floor(shape.Entity.PosY) * inverseCellSize);
-        int right = (int)(Math.Floor(shape.Entity.PosX + shape.Shape.BoundingBox.Width) * inverseCellSize);
-        int bottom = (int)(Math.Floor(shape.Entity.PosY + shape.Shape.BoundingBox.Height) * inverseCellSize);
+        int left = (int)(Math.Floor(shape.Entity.PosX + offset) * inverseCellSize);
+        int top = (int)(Math.Floor(shape.Entity.PosY + offset) * inverseCellSize);
+        int right = (int)(Math.Floor(shape.Entity.PosX + shape.Shape.BoundingBox.Width + offset) * inverseCellSize);
+        int bottom = (int)(Math.Floor(shape.Entity.PosY + shape.Shape.BoundingBox.Height + offset) * inverseCellSize);
 
         for (int x = left; x <= right; x++) 
         {
@@ -60,10 +62,10 @@ public class SpatialHash
     {
         HashSet<Collision> temp = result.Obtain();
 
-        int left = (int)(rectangle.Left * inverseCellSize);
-        int top = (int)(rectangle.Top * inverseCellSize);
-        int right = (int)(rectangle.Right * inverseCellSize);
-        int bottom = (int)(rectangle.Bottom * inverseCellSize);
+        int left = (int)((rectangle.Left + offset) * inverseCellSize);
+        int top = (int)((rectangle.Top + offset) * inverseCellSize);
+        int right = (int)((rectangle.Right + offset) * inverseCellSize);
+        int bottom = (int)((rectangle.Bottom + offset) * inverseCellSize);
 
         for (int x = left; x <= right; x++) 
         {
@@ -95,10 +97,10 @@ public class SpatialHash
     {
         HashSet<Collision> temp = result.Obtain();
 
-        int left = (int)(rectangle.Left * inverseCellSize);
-        int top = (int)(rectangle.Top * inverseCellSize);
-        int right = (int)(rectangle.Right * inverseCellSize);
-        int bottom = (int)(rectangle.Bottom * inverseCellSize);
+        int left = (int)((rectangle.Left + offset) * inverseCellSize);
+        int top = (int)((rectangle.Top + offset) * inverseCellSize);
+        int right = (int)((rectangle.Right + offset) * inverseCellSize);
+        int bottom = (int)((rectangle.Bottom + offset) * inverseCellSize);
 
         for (int x = left; x <= right; x++) 
         {

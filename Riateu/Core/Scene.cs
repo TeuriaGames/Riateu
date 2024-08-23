@@ -38,6 +38,7 @@ public abstract class Scene : GameLoop
 
 
     public virtual int SpatialHashCellSize => 80;
+    public virtual int SpatialHashOffset => 0;
 
 
     /// <summary>
@@ -47,7 +48,7 @@ public abstract class Scene : GameLoop
     public Scene(GameApp game) : base(game)
     {
         EntityList = new Entities(this);
-        SpatialHash = new SpatialHash(SpatialHashCellSize);
+        SpatialHash = new SpatialHash(SpatialHashCellSize, SpatialHashOffset);
     }
 
     /// <summary>
@@ -97,7 +98,7 @@ public abstract class Scene : GameLoop
     {
         EntityList.SortEntities();
     }
-
+    
     /// <summary>
     /// A method that runs on every update frame and its sealed by default. Override the Process instead.
     /// </summary>

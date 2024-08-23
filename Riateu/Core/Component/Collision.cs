@@ -123,12 +123,6 @@ public class Collision : Component
         return Scene.SpatialHash.Retrieve(rectangle, this);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool CompareTag(ulong otherTag, ulong tag) 
-    {
-        return (otherTag & tag) != 0;
-    }
-
     public SpatialResult GetAllNearbyComponents(Vector2 offset, ulong tags) 
     {
         Rectangle rectangle = new Rectangle(
@@ -138,6 +132,12 @@ public class Collision : Component
             (int)(shape.BoundingBox.Width + (offset.Y * 2))
         );
         return Scene.SpatialHash.Retrieve(rectangle, this, tags);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool CompareTag(ulong otherTag, ulong tag) 
+    {
+        return (otherTag & tag) != 0;
     }
 
     /// <summary>
