@@ -35,7 +35,7 @@ public class ImGuiRenderer
     public ImGuiRenderer(GraphicsDevice device, Window window, int width, int height, Action<ImGuiIOPtr> onInit = null)
     {
         this.device = device;
-        ImGui.CreateContext();
+        IntPtr context = ImGui.CreateContext();
 
         var io = ImGui.GetIO();
         io.DisplaySize = new System.Numerics.Vector2(width, height);
@@ -92,6 +92,8 @@ public class ImGuiRenderer
             io.GetClipboardTextFn = Clipboard.GetFnPtr;
         }
 
+        ImGui.SetCurrentContext(context);
+        io.Fonts.AddFontDefault();
         onInit?.Invoke(io);
 
         BuildFontAtlas();
