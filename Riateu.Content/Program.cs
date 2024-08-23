@@ -1,4 +1,5 @@
 ﻿using Riateu;
+using Riateu.Content.App;
 
 public class Program : GameApp
 {

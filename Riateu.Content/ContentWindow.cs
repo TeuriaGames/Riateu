@@ -1,32 +1,74 @@
 using System;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using ImGuiNET;
-using Riateu;
 using Riateu.Graphics;
 using Riateu.ImGuiRend;
 using Riateu.Inputs;
+
+namespace Riateu.Content.App;
 
 public class ContentWindow : GameLoop
 {
     private ImGuiRenderer renderer;
     private AssetsContainer assetsContainer;
+    private ImageRenderer imageRenderer;
+    private ImageCache imageCache;
+    private Batch batch;
 
 
     public ContentWindow(GameApp gameApp) : base(gameApp)
     {
         renderer = new ImGuiRenderer(gameApp.GraphicsDevice, gameApp.MainWindow, 1024, 640, Init);
-
+        batch = new Batch(gameApp.GraphicsDevice, 1024, 768);
         assetsContainer = new AssetsContainer(OnAssetSelected);
+        imageRenderer = new ImageRenderer(gameApp.GraphicsDevice, batch, renderer);
+        imageCache = new ImageCache(gameApp.GraphicsDevice);
     }
 
-    private void Init(ImGuiIOPtr ptr) 
+    private unsafe void Init(ImGuiIOPtr ptr) 
     {
         ptr.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+
+
+        ImFontConfig* config = ImGuiNative.ImFontConfig_ImFontConfig();
+        config->MergeMode = 1;
+        config->PixelSnapH = 1;
+        config->FontDataOwnedByAtlas = 0;
+
+        config->GlyphMaxAdvanceX = float.MaxValue;
+        config->RasterizerMultiply = 1.0f;
+        config->OversampleH = 2;
+        config->OversampleV = 1;
+
+        ushort* ranges = stackalloc ushort[3];
+        ranges[0] = FA6.IconMin;
+        ranges[1] = FA6.IconMax;
+        ranges[2] = 0;
+
+
+        byte *iconFontRange = (byte*)NativeMemory.Alloc(6);
+        NativeMemory.Copy(ranges, iconFontRange, 6);
+        config->GlyphRanges = (ushort*)iconFontRange;
+        FA6.IconFontRanges = (IntPtr)iconFontRange;
+
+        byte[] fontDataBuffer = Convert.FromBase64String(FA6.IconFontData);
+
+        fixed (byte *buffer = &fontDataBuffer[0])
+        {
+            var fontPtr = ImGui.GetIO().Fonts.AddFontFromMemoryTTF(new IntPtr(buffer), fontDataBuffer.Length, 11, config, FA6.IconFontRanges);
+        }
+
+        ImGuiNative.ImFontConfig_destroy(config);
     }
 
 
     public override void Begin() {}
 
-    public override void End() {}
+    public override unsafe void End() 
+    {
+        NativeMemory.Free((void*)FA6.IconFontRanges);
+    }
 
     public override void Update(double delta)
     {
@@ -35,6 +77,8 @@ public class ContentWindow : GameLoop
 
     public override void Render(RenderTarget backbuffer)
     {
+        imageRenderer.Render();
+
         RenderPass renderPass = GraphicsDevice.BeginTarget(backbuffer, Color.Black, true);
         renderer.Render(renderPass);
         GraphicsDevice.EndTarget(renderPass);
@@ -58,8 +102,8 @@ public class ContentWindow : GameLoop
 
         assetsContainer.Draw();
 
-        ImGui.Begin("Metadata");
-
+        ImGui.Begin($"{FA6.Table} Metadata");
+        imageRenderer.Draw();
         ImGui.End();
 
         ImGui.End(); // Dockspace
@@ -67,10 +111,14 @@ public class ContentWindow : GameLoop
 
     private void OnAssetSelected(string path) 
     {
-        Console.WriteLine(path);
+        if (path.EndsWith("png")) 
+        {
+            imageRenderer.SetActiveTexture(imageCache.LoadImage(path));
+        }
     }
 
 
+    private bool firstLoop = true;
     private void SetupDockspace() 
     {
         var windowFlags = 
@@ -99,6 +147,30 @@ public class ContentWindow : GameLoop
         {
             var dockspaceID = ImGui.GetID("MyDockSpace");
             ImGui.DockSpace(dockspaceID, System.Numerics.Vector2.Zero);
+        }
+
+        if (firstLoop) 
+        {
+            Vector2 workCenter = ImGui.GetMainViewport().GetWorkCenter();
+            uint id = ImGui.GetID("MyDockSpace");
+            DockNative.igDockBuilderRemoveNode(id);
+            DockNative.igDockBuilderAddNode(id);
+
+            Vector2 size = new Vector2(600, 300);
+            Vector2 nodePos = new Vector2(workCenter.X - size.X * 0.5f, workCenter.Y - size.Y * 0.5f);
+
+            // Set the size and position:
+            DockNative.igDockBuilderSetNodeSize(id, size);
+            DockNative.igDockBuilderSetNodePos(id, nodePos);
+
+            uint dock1 = DockNative.igDockBuilderSplitNode(id, ImGuiDir.Left, 0.5f, out _, out id);
+            uint dock2 = DockNative.igDockBuilderSplitNode(id, ImGuiDir.Right, 0.5f, out _, out id);
+
+            DockNative.igDockBuilderDockWindow($"{FA6.Box} Assets", dock1);
+            DockNative.igDockBuilderDockWindow($"{FA6.Table} Metadata", dock2);
+
+            DockNative.igDockBuilderFinish(id);
+            firstLoop = false;
         }
     }
 }
