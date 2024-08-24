@@ -1,38 +1,34 @@
 using System;
 using System.IO;
 using ImGuiNET;
-using NativeFileDialogSharp;
 
 namespace Riateu.Content.App;
 
 public class AssetsContainer 
 {
     public Action<string> OnAssetSelected;
-    private string pathSelected;
+    public Action OnSelectProject;
+    private ContentWindow window;
 
-    public AssetsContainer(Action<string> assetSelected) 
+    public AssetsContainer(ContentWindow window) 
     {
-        OnAssetSelected = assetSelected;
+        this.window = window;
     }
 
     public void Draw() 
     {
         ImGui.Begin($"{FA6.Box} Assets");
-        if (pathSelected == null) 
+        if (string.IsNullOrEmpty(window.SelectedProject)) 
         {
             ImGui.LabelText("##Notice", "No Project selected");
             if (ImGui.Button($"{FA6.FileImport} Select a Project")) 
             {
-                DialogResult dialog = Dialog.FolderPicker("./");
-                if (dialog.IsOk) 
-                {
-                    pathSelected = dialog.Path;
-                }
+                OnSelectProject?.Invoke();
             }
         }
         else 
         {
-            FileSystem(pathSelected);
+            FileSystem(window.SelectedProject);
         }
 
         ImGui.End();
@@ -72,6 +68,6 @@ public class AssetsContainer
         {
             return $"{FA6.Font} {spanFile}";
         }
-        return new string(spanFile);
+        return new string($"{FA6.File} {spanFile}");
     }
 }

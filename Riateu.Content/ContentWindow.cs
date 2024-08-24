@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
+using NativeFileDialogSharp;
 using Riateu.Graphics;
 using Riateu.ImGuiRend;
 using Riateu.Inputs;
@@ -16,12 +17,16 @@ public class ContentWindow : GameLoop
     private ImageCache imageCache;
     private Batch batch;
 
+    public string SelectedProject { get; private set; }
+
 
     public ContentWindow(GameApp gameApp) : base(gameApp)
     {
         renderer = new ImGuiRenderer(gameApp.GraphicsDevice, gameApp.MainWindow, 1024, 640, Init);
         batch = new Batch(gameApp.GraphicsDevice, 1024, 768);
-        assetsContainer = new AssetsContainer(OnAssetSelected);
+        assetsContainer = new AssetsContainer(this);
+        assetsContainer.OnAssetSelected = OnAssetSelected;
+        assetsContainer.OnSelectProject = OnOpenProject;
         imageRenderer = new ImageRenderer(gameApp.GraphicsDevice, batch, renderer);
         imageCache = new ImageCache(gameApp.GraphicsDevice);
     }
@@ -73,6 +78,7 @@ public class ContentWindow : GameLoop
     public override void Update(double delta)
     {
         renderer.Update(Input.Device, UIBuild);
+        imageRenderer.Update();
     }
 
     public override void Render(RenderTarget backbuffer)
@@ -92,6 +98,10 @@ public class ContentWindow : GameLoop
         ImGui.BeginMainMenuBar();
         if (ImGui.BeginMenu("File")) 
         {
+            if (ImGui.MenuItem("Open")) 
+            {
+                OnOpenProject();
+            }
             if (ImGui.MenuItem("Exit")) 
             {
                 GameInstance.Quit();
@@ -102,11 +112,20 @@ public class ContentWindow : GameLoop
 
         assetsContainer.Draw();
 
-        ImGui.Begin($"{FA6.Table} Metadata");
+        ImGui.Begin($"{FA6.Table} Importer");
         imageRenderer.Draw();
         ImGui.End();
 
         ImGui.End(); // Dockspace
+    }
+
+    private void OnOpenProject() 
+    {
+        DialogResult dialog = Dialog.FolderPicker("./");
+        if (dialog.IsOk) 
+        {
+            SelectedProject = dialog.Path;
+        }
     }
 
     private void OnAssetSelected(string path) 
@@ -167,7 +186,7 @@ public class ContentWindow : GameLoop
             uint dock2 = DockNative.igDockBuilderSplitNode(id, ImGuiDir.Right, 0.5f, out _, out id);
 
             DockNative.igDockBuilderDockWindow($"{FA6.Box} Assets", dock1);
-            DockNative.igDockBuilderDockWindow($"{FA6.Table} Metadata", dock2);
+            DockNative.igDockBuilderDockWindow($"{FA6.Table} Importer", dock2);
 
             DockNative.igDockBuilderFinish(id);
             firstLoop = false;
