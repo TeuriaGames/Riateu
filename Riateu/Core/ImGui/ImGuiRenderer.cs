@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using ImGuiNET;
 using Riateu.Graphics;
 using Riateu.Inputs;
@@ -204,31 +205,31 @@ public class ImGuiRenderer
             transferBuffer?.Dispose();
             transferBuffer = new TransferBuffer(device, TransferBufferUsage.Upload, imGuiVertexBuffer.Size + imGuiIndexBuffer.Size);
         }
-        uint vertexOffset = 0;
-        uint indexOffset = 0;
-        uint offset = 0;
 
-        CopyPass copyPass = commandBuffer.BeginCopyPass();
+        int vertexSize = 0;
+        int indexSize = 0;
+        int indexOffset = drawDataPtr.TotalVtxCount * sizeof(Position2DTextureColorVertex);
+
+        transferBuffer.Map(true, out byte *vertexIndexData);
         for (var n = 0; n < drawDataPtr.CmdListsCount; n += 1)
         {
             var cmdList = drawDataPtr.CmdLists[n];
+            int size = cmdList.VtxBuffer.Size * sizeof(Position2DTextureColorVertex);
+            NativeMemory.Copy((void*)cmdList.VtxBuffer.Data, &vertexIndexData[vertexSize], (nuint)size);
+            vertexSize += size;
 
-            Span<Position2DTextureColorVertex> vertexSpan = new Span<Position2DTextureColorVertex>((void*)cmdList.VtxBuffer.Data, cmdList.VtxBuffer.Size);
-            Span<ushort> indexSpan = new Span<ushort>((void*)cmdList.IdxBuffer.Data, cmdList.IdxBuffer.Size);
-
-            uint length = transferBuffer.SetTransferData(vertexSpan, offset, false);
-            copyPass.UploadToBuffer(new TransferBufferLocation(transferBuffer, offset), new BufferRegion(imGuiVertexBuffer, vertexOffset, length), false);
-
-            vertexOffset += (uint)length;
-            offset += length;
-
-            length = transferBuffer.SetTransferData(indexSpan, offset, false);
-            copyPass.UploadToBuffer(new TransferBufferLocation(transferBuffer, offset), new BufferRegion(imGuiIndexBuffer, indexOffset, length), false);
-
-            offset += length;
-            indexOffset += (uint)length;
+            size = cmdList.IdxBuffer.Size * sizeof(ushort);
+            NativeMemory.Copy((void*)cmdList.IdxBuffer.Data, &vertexIndexData[
+                indexOffset + indexSize], 
+                (nuint)size
+            );
+            indexSize += size;
         }
+        transferBuffer.Unmap();
 
+        CopyPass copyPass = commandBuffer.BeginCopyPass();
+        copyPass.UploadToBuffer(new TransferBufferLocation(transferBuffer, 0), new BufferRegion(imGuiVertexBuffer, 0, (uint)vertexSize), true);
+        copyPass.UploadToBuffer(new TransferBufferLocation(transferBuffer, (uint)vertexSize), new BufferRegion(imGuiIndexBuffer, 0, (uint)indexSize), true);
         commandBuffer.EndCopyPass(copyPass);
 
         device.Submit(commandBuffer);
