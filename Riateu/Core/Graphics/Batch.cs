@@ -59,10 +59,13 @@ public class Batch : System.IDisposable
             BufferUsageFlags.Vertex 
             | BufferUsageFlags.ComputeStorageRead
             | BufferUsageFlags.ComputeStorageWrite, MaxTextures * 4);
+        vertexBuffer.Name = "BatchVertexBuffer";
         indexBuffer = GenerateIndexArray(device, MaxTextures * 6);
+        indexBuffer.Name = "BatchIndexBuffer";
 
         transferComputeBuffer = TransferBuffer.Create<ComputeData>(device, TransferBufferUsage.Upload, MaxTextures);
         computeBuffer = new StructuredBuffer<ComputeData>(device, BufferUsageFlags.ComputeStorageRead, MaxTextures);
+        computeBuffer.Name = "BatchComputeBuffer";
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
@@ -253,10 +256,9 @@ public class Batch : System.IDisposable
 
         while (Unsafe.IsAddressLessThan(ref start, ref end)) 
         {
-            VertexUniformBinder binder = new VertexUniformBinder();
             BindUniformMatrix(start.Matrix);
             renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
-            start.Material.BindUniforms(binder);
+            start.Material.BindUniforms(new UniformBinder());
             renderPass.BindVertexBuffer(vertexBuffer);
             renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
             renderPass.BindFragmentSampler(start.Binding);

@@ -14,14 +14,12 @@ public class Material
     }
 
 
-    public virtual void BindUniforms(VertexUniformBinder uniformBinder) {}
+    public virtual void BindUniforms(UniformBinder uniformBinder) {}
 }
 
-public struct VertexUniformBinder 
+public struct UniformBinder()
 {
     private uint slotManaged = 1;
-
-    public VertexUniformBinder() {}
 
     public void BindVertex<T>(GraphicsDevice device, T uniform) 
     where T : unmanaged
