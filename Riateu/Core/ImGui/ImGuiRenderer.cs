@@ -219,8 +219,9 @@ public class ImGuiRenderer
             vertexSize += size;
 
             size = cmdList.IdxBuffer.Size * sizeof(ushort);
-            NativeMemory.Copy((void*)cmdList.IdxBuffer.Data, &vertexIndexData[
-                indexOffset + indexSize], 
+            NativeMemory.Copy(
+                (void*)cmdList.IdxBuffer.Data, 
+                &vertexIndexData[indexOffset + indexSize], 
                 (nuint)size
             );
             indexSize += size;
