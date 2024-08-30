@@ -5,12 +5,11 @@ using Riateu.Graphics;
 namespace Riateu;
 
 /// <summary>
-/// A struct that holds the matrix, view, projection, and a viewport of the world space.
+/// A class that holds the matrix, view, projection, and a viewport of the world space.
 /// </summary>
 /// <param name="width">A viewport width</param>
 /// <param name="height">A viewport height</param>
-/// <param name="flipped">Flip a view of the camera</param>
-public struct Camera(int width, int height, bool flipped = false) 
+public class Camera(int width, int height) 
 {
     private Matrix4x4 transform = Matrix4x4.Identity;
     private Matrix4x4 inverse = Matrix4x4.Identity;
@@ -34,7 +33,7 @@ public struct Camera(int width, int height, bool flipped = false)
         var zooming = new Vector3(zoom, -1);
         // Origin
         var origXy = new Vector2((int)Math.Floor(origin.X), (int)Math.Floor(origin.Y));
-        var orig = new Vector3(origXy, -1);
+        var orig = new Vector3(origXy, 0);
 
         var model = 
             Matrix4x4.Identity               *
@@ -44,13 +43,27 @@ public struct Camera(int width, int height, bool flipped = false)
             Matrix4x4.CreateTranslation(orig);
 
         var view = Matrix4x4.CreateTranslation(0, 0, 1);
-        var projection = !flipped ? Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1)
-            : Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
+        var projection = Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1, 1);
 
         transform = model * view * projection;
 
-        Matrix4x4.Invert(transform, out inverse);
+        Matrix4x4.Invert(model, out inverse);
         dirty = false;
+    }
+
+    public Vector2 ScreenToViewport(Vector2 position) 
+    {
+        int windowWidth = GameApp.Instance.Width;
+        int windowHeight = GameApp.Instance.Height;
+        float currentX = position.X - viewport.X;
+        float currentY = position.Y - viewport.Y;
+
+        return new Vector2(currentX / windowWidth * viewport.Width, currentY / windowHeight * viewport.Height);
+    }
+
+    public Vector2 ScreenToWorld(Vector2 position) 
+    {
+        return ScreenToCamera(ScreenToViewport(position));
     }
 
     /// <summary>
@@ -58,7 +71,7 @@ public struct Camera(int width, int height, bool flipped = false)
     /// </summary>
     /// <param name="position">A screen position</param>
     /// <returns>A world position from the screen position</returns>
-    public readonly Vector2 ScreenToCamera(Vector2 position) 
+    public Vector2 ScreenToCamera(Vector2 position) 
     {
         return Vector2.Transform(position, inverse);
     }
@@ -68,7 +81,7 @@ public struct Camera(int width, int height, bool flipped = false)
     /// </summary>
     /// /// <param name="position">A world position</param>
     /// <returns>A screen position from the world position</returns>
-    public readonly Vector2 CameraToScreen(Vector2 position) 
+    public Vector2 CameraToScreen(Vector2 position) 
     {
         return Vector2.Transform(position, transform);
     }
@@ -105,6 +118,54 @@ public struct Camera(int width, int height, bool flipped = false)
         {
             dirty = true;
             position.Y = value;
+        }
+    }
+
+    public float Left 
+    {
+        get 
+        {
+            if (dirty) 
+            {
+                UpdateMatrix();
+            }
+            return Vector2.Transform(Vector2.Zero, inverse).X;
+        }
+    }
+
+    public float Right
+    {
+        get 
+        {
+            if (dirty) 
+            {
+                UpdateMatrix();
+            }
+            return Vector2.Transform(Vector2.UnitX * viewport.Width, inverse).X;
+        }
+    }
+
+    public float Top
+    {
+        get 
+        {
+            if (dirty) 
+            {
+                UpdateMatrix();
+            }
+            return Vector2.Transform(Vector2.Zero, inverse).Y;
+        }
+    }
+
+    public float Bottom
+    {
+        get 
+        {
+            if (dirty) 
+            {
+                UpdateMatrix();
+            }
+            return Vector2.Transform(-Vector2.UnitY * viewport.Height, inverse).Y;
         }
     }
 
@@ -186,7 +247,7 @@ public struct Camera(int width, int height, bool flipped = false)
         }
     }
 
-    public static implicit operator Matrix4x4(in Camera camera) 
+    public static implicit operator Matrix4x4(Camera camera) 
     {
         return camera.Transform;
     }
