@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Riateu.Graphics;
 
@@ -10,37 +11,43 @@ namespace Riateu.Components;
 public class Tilemap : Component
 {
     private Array2D<TextureQuad?> tiles;
-    private Texture tilemapTexture;
-    private Matrix4x4 Matrix;
     private int gridSize;
+    private Camera cullingCamera;
     /// <summary>
     /// A size of a grid in tiles.
     /// </summary>
     public int GridSize => gridSize;
 
+    public int Rows => rows;
+    public int Columns => columns;
+
+    private int rows;
+    private int columns;
+
+
+
     /// <summary>
     /// An initialization of a tilemap.
     /// </summary>
-    /// <param name="texture">A texture used for tilemap</param>
     /// <param name="tiles">A tiles containing the map of the tiles</param>
     /// <param name="gridSize">A size of a grid in tiles</param>
-    public Tilemap(Texture texture, Array2D<TextureQuad?> tiles, int gridSize)
+    /// <param name="cullingCamera">A camera for culling</param>
+    public Tilemap(Array2D<TextureQuad?> tiles, int gridSize, Camera cullingCamera)
     {
-        int rows = tiles.Rows;
-        int columns = tiles.Columns;
-
-        var model = Matrix4x4.CreateScale(1) *
-            Matrix4x4.CreateRotationZ(0) *
-            Matrix4x4.CreateTranslation(0, 0, 0);
-        var view = Matrix4x4.CreateTranslation(0, 0, 0);
-        var projection = Matrix4x4.CreateOrthographicOffCenter(0, rows * gridSize, 0, columns * gridSize, -1, 1);
-
-        Matrix = model * view * projection;
+        rows = tiles.Rows;
+        columns = tiles.Columns;
 
         this.tiles = tiles;
-        this.tilemapTexture = texture;
         this.gridSize = gridSize;
+        this.cullingCamera = cullingCamera;
     }
+
+    /// <summary>
+    /// An initialization of a tilemap.
+    /// </summary>
+    /// <param name="tiles">A tiles containing the map of the tiles</param>
+    /// <param name="gridSize">A size of a grid in tiles</param>
+    public Tilemap(Array2D<TextureQuad?> tiles, int gridSize) : this(tiles, gridSize, null) {}
 
     /// <summary>
     /// Set a tile to a specific grid location.
@@ -54,6 +61,31 @@ public class Tilemap : Component
             tiles[x, y] = texture;
     }
 
+    public void SetCullingCamera(Camera camera) 
+    {
+        this.cullingCamera = camera;
+    }
+
+    public Rectangle GetCulledRectangle() 
+    {
+        int x = 0, y = 0, w = rows, h = columns;
+
+        if (cullingCamera != null) 
+        {
+            x = (int)Math.Max(0f, Math.Floor((-cullingCamera.Position.X - Entity.PosX) / gridSize));
+            y = (int)Math.Max(0f, Math.Floor((-cullingCamera.Position.Y - Entity.PosY) / gridSize));
+            w = (int)Math.Min(rows,    Math.Ceiling((-cullingCamera.Position.X + cullingCamera.Viewport.Width - Entity.PosX) / gridSize));
+            h = (int)Math.Min(columns, Math.Ceiling((-cullingCamera.Position.Y + cullingCamera.Viewport.Height - Entity.PosY) / gridSize));
+        }
+
+        x = Math.Max(x, 0);
+        y = Math.Max(y, 0);
+        w = Math.Min(w, rows);
+        h = Math.Min(h, columns);
+
+        return new Rectangle(x, y, w + x, h + y);
+    }
+
     /// <summary>
     /// Clear all tiles in this map.
     /// </summary>
@@ -64,15 +96,20 @@ public class Tilemap : Component
 
     private void AddToBatch(Batch draw)
     {
-        for (int x = 0; x < tiles.Rows; x++)
+        Rectangle culledRect = GetCulledRectangle();
+        for (int x = culledRect.X; x < culledRect.Width; x++)
         {
-            for (int y = 0; y < tiles.Columns; y++)
+            for (int y = culledRect.Y; y < culledRect.Height; y++)
             {
+                if (x >= rows || y >= columns)
+                {
+                    continue;
+                }
                 var sTexture = tiles[x, y];
                 if (sTexture is null)
                     continue;
 
-                draw.Draw(sTexture.Value, Entity.Transform.Position + new Vector2(x * gridSize, y * gridSize), Color.White, layerDepth: 1f);
+                draw.Draw(sTexture.Value, Entity.Position + new Vector2(x * gridSize, y * gridSize), Color.White, layerDepth: 1f);
             }
         }
     }
