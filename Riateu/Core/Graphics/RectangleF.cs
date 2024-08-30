@@ -40,12 +40,28 @@ public struct RectangleF : IEquatable<RectangleF>
         Height = size.Y;
     }
 
+    public bool Contains(float x, float y) 
+    {
+        return Left <= x &&
+            x < Right &&
+            Top <= y &&
+            y < Bottom;
+    }
+
     public bool Contains(int x, int y) 
     {
         return Left <= x &&
             x < Right &&
             Top <= y &&
             y < Bottom;
+    }
+
+    public bool Contains(Vector2 point) 
+    {
+        return Left <= point.X &&
+            point.X < Right &&
+            Top <= point.Y &&
+            point.Y < Bottom;
     }
 
     public bool Contains(Point point) 
