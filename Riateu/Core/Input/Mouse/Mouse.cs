@@ -1,3 +1,5 @@
+using System.Drawing;
+using System.Numerics;
 using SDL2;
 
 namespace Riateu.Inputs;
@@ -16,6 +18,9 @@ public class Mouse
     public int Y { get; private set; }
     public int DeltaX { get; private set; }
     public int DeltaY { get; private set; }
+
+    public Point Position => new Point(X, Y);
+    public Vector2 PositionF => new Vector2(X, Y);
 
     public int WheelX { get; private set; }
     internal int WheelRawX;
