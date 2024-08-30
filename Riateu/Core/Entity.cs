@@ -162,7 +162,10 @@ public class Entity : IEnumerable<Component>
         Active = true;
         Scene = scene;
         foreach (var comp in componentList) 
+        {
+            Scene.EntityStorage.Add(comp.GetType(), this);
             comp.EntityEntered(scene);
+        }
         NodeID = InternalIDCount++;
     }
 
@@ -180,7 +183,7 @@ public class Entity : IEnumerable<Component>
         }
         foreach (var targetComponent in removing) 
         {
-            RemoveComponent(targetComponent);
+            RemoveComponent(targetComponent.GetType(), targetComponent);
         }
         OnRemoved?.Invoke();
         Scene = null;
@@ -246,8 +249,13 @@ public class Entity : IEnumerable<Component>
     /// Add a component to the entity.
     /// </summary>
     /// <param name="comp">A component to be added in this entity</param>
-    public void AddComponent(Component comp) 
+    public void AddComponent<T>(T comp) 
+    where T : Component
     {
+        if (Scene != null) 
+        {
+            Scene.EntityStorage.Add<T>(this);
+        }
         componentList.Add(comp);
         comp.Added(this);
     }
@@ -318,12 +326,20 @@ public class Entity : IEnumerable<Component>
     /// Removes a component from this entity
     /// </summary>
     /// <param name="comp">A component to be removed in this entity</param>
-    public void RemoveComponent(Component comp) 
+    public void RemoveComponent<T>(T comp) 
+    where T : Component
+    {
+        Type type = typeof(T);
+        RemoveComponent(type, comp);
+    }
+
+    public void RemoveComponent(Type type, Component comp) 
     {
         if (comp == null)
             return;
         comp.Removed();
         componentList.Remove(comp);
+        Scene.EntityStorage.Remove(type, this);
     }
 
     /// <summary>

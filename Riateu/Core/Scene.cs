@@ -32,6 +32,7 @@ public abstract class Scene : GameLoop
     /// A collection of entities that are added.
     /// </summary>
     public Entities EntityList { get; set; }
+    public EntityStorage EntityStorage { get; set; }
 
     public SpatialHash SpatialHash { get; private set; }
     private List<Collision> physicsColliders = new List<Collision>();
@@ -48,6 +49,7 @@ public abstract class Scene : GameLoop
     public Scene(GameApp game) : base(game)
     {
         EntityList = new Entities(this);
+        EntityStorage = new EntityStorage();
         SpatialHash = new SpatialHash(SpatialHashCellSize, SpatialHashOffset);
     }
 
