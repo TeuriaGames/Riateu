@@ -258,10 +258,10 @@ public class Batch : System.IDisposable
         {
             BindUniformMatrix(start.Matrix);
             renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
-            start.Material.BindUniforms(new UniformBinder());
             renderPass.BindVertexBuffer(vertexBuffer);
             renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
             renderPass.BindFragmentSampler(start.Binding);
+            start.Material.BindUniforms(new UniformBinder());
             renderPass.DrawIndexedPrimitives(start.Offset * 4u, 0u, start.Count * 2u, 1);
 
             start = ref Unsafe.Add(ref start, 1);
