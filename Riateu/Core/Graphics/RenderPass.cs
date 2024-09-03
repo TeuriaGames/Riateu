@@ -50,6 +50,15 @@ public class RenderPass : IPassPool
         Refresh.Refresh_BindFragmentSamplers(Handle, firstSlot, &bind, 1);
     }
 
+    public unsafe void BindFragmentSamplers(in TextureSamplerBinding firstTexture, in TextureSamplerBinding secondTexture, uint firstSlot = 0) 
+    {
+        Refresh.TextureSamplerBinding bind = firstTexture.ToSDLGpu();
+        Refresh.TextureSamplerBinding bind2 = secondTexture.ToSDLGpu();
+
+        Refresh.TextureSamplerBinding* binds = stackalloc Refresh.TextureSamplerBinding[2] { bind, bind2 };
+        Refresh.Refresh_BindFragmentSamplers(Handle, firstSlot, binds, 2);
+    }
+
     public void SetViewport(in Viewport viewport) 
     {
         Refresh.Refresh_SetViewport(Handle, new Refresh.Viewport
