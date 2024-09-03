@@ -56,46 +56,31 @@ public static class GameContext
             SamplerCount = 1
         });
 
-        GraphicsPipelineCreateInfo pipelineCreateInfo = new GraphicsPipelineCreateInfo()
-        {
-            AttachmentInfo = new GraphicsPipelineAttachmentInfo(
+        DefaultMaterial = Material.CreateBuilder(vertexPSC, fragmentPSC)
+            .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(
                 new ColorAttachmentDescription(mainWindow.SwapchainFormat,
                 ColorAttachmentBlendState.AlphaBlend)
-            ),
-            DepthStencilState = DepthStencilState.Disable,
-            MultisampleState = MultisampleState.None,
-            PrimitiveType = PrimitiveType.TriangleList,
-            RasterizerState = RasterizerState.CCW_CullNone,
-            VertexShader = vertexPSC,
-            FragmentShader = fragmentPSC,
-            VertexInputState = new VertexInputState(
-                VertexBinding.Create<PositionTextureColorVertex>(0),
-                PositionTextureColorVertex.Attributes(0)
-            )
-        };
+            ))
+            .SetDepthStenctilState(DepthStencilState.DepthReadWrite)
+            .SetMultisampleState(MultisampleState.None)
+            .SetPrimitiveType(PrimitiveType.TriangleList)
+            .SetRasterizerState(RasterizerState.CCW_CullNone)
 
-        DefaultMaterial = new Material(device, new GraphicsPipeline(device, pipelineCreateInfo));
+            .AddVertexInputState<PositionTextureColorVertex>()
+            .Build(device);
 
-        GraphicsPipelineCreateInfo depthCreateInfo = new GraphicsPipelineCreateInfo()
-        {
-            AttachmentInfo = new GraphicsPipelineAttachmentInfo(
+        DepthMaterial = Material.CreateBuilder(vertexPSC, fragmentPSC)
+            .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(
                 TextureFormat.D24_UNORM,
-                new ColorAttachmentDescription(mainWindow.SwapchainFormat,
-                ColorAttachmentBlendState.AlphaBlend)
-            ),
-            DepthStencilState = DepthStencilState.DepthReadWrite,
-            MultisampleState = MultisampleState.None,
-            PrimitiveType = PrimitiveType.TriangleList,
-            RasterizerState = RasterizerState.CCW_CullNone,
-            VertexShader = vertexPSC,
-            FragmentShader = fragmentPSC,
-            VertexInputState = new VertexInputState(
-                VertexBinding.Create<PositionTextureColorVertex>(0),
-                PositionTextureColorVertex.Attributes(0)
-            )
-        };
+                new ColorAttachmentDescription(mainWindow.SwapchainFormat, ColorAttachmentBlendState.AlphaBlend)
+            ))
+            .SetDepthStenctilState(DepthStencilState.DepthReadWrite)
+            .SetMultisampleState(MultisampleState.None)
+            .SetPrimitiveType(PrimitiveType.TriangleList)
+            .SetRasterizerState(RasterizerState.CCW_CullNone)
 
-        DepthMaterial = new Material(device, new GraphicsPipeline(device, depthCreateInfo));
+            .AddVertexInputState<PositionTextureColorVertex>()
+            .Build(device);
 
         var spriteBatchShader = Resources.SpriteBatchShader;
         using var comp1 = new MemoryStream(spriteBatchShader);
@@ -114,5 +99,4 @@ public static class GameContext
     /// A globally set shader format. Can be changed if you had a different backend format.
     /// </summary>
     public static ShaderFormat BackendShaderFormat = ShaderFormat.SPIRV;
-
 }
