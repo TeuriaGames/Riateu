@@ -56,6 +56,9 @@
     <EmbeddedResource Include="Core\Misc\Compiled\Spritebatch.comp.spv">
       <LogicalName>Riateu.Misc.Spritebatch.comp.spv</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Compiled\MSDFFont.frag.spv">
+      <LogicalName>Riateu.Misc.MSDFFont.frag.spv</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">

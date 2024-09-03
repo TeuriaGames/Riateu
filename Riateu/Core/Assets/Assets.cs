@@ -27,13 +27,14 @@ public class AssetStorage
     private string assetPath;
     private ResourceUploader uploader;
     private Packer<AtlasItem> packer;
-    private AudioDevice device;
+    private AudioDevice audioDevice;
+    private GraphicsDevice graphicsDevice;
 
-    public AssetStorage(AudioDevice device, string path) 
+    public AssetStorage(GraphicsDevice graphicsDevice, AudioDevice audioDevice, string path) 
     {
         assetPath = path;
         packer = new Packer<AtlasItem>(8192);
-        this.device = device;
+        this.audioDevice = audioDevice;
     }
 
     public void StartContext(ResourceUploader uploader) 
@@ -109,6 +110,11 @@ public class AssetStorage
         return null;
     }
 
+    public Shader LoadShader(string path, in ShaderCreateInfo info) 
+    {
+        return new Shader(graphicsDevice, path, "main", info);
+    }
+
     public Ref<Texture> LoadTexture(string path) 
     {
         if (assetsCache.TryGetValue(path, out IAssets asset)) 
@@ -123,7 +129,7 @@ public class AssetStorage
         switch (format) 
         {
         case AudioFormat.OGG:
-            return new AudioStreamOGG(device, path);
+            return new AudioStreamOGG(audioDevice, path);
         case AudioFormat.WAV:
             throw new NotImplementedException("WAV format has not been implemented yet");
         default:
@@ -136,7 +142,7 @@ public class AssetStorage
         switch (format) 
         {
         case AudioFormat.OGG:
-            return AudioTrackOGG.CreateOGG(device, path);
+            return AudioTrackOGG.CreateOGG(audioDevice, path);
         case AudioFormat.WAV:
             throw new NotImplementedException("WAV format has not been implemented yet");
         default:

@@ -109,7 +109,7 @@ public abstract class GameApp
         Height = (int)settings.Height;
 
         GameContext.Init(GraphicsDevice, MainWindow);
-        Assets = new AssetStorage(AudioDevice, AssetPath);
+        Assets = new AssetStorage(GraphicsDevice, AudioDevice, AssetPath);
         ResourceUploader uploader = new ResourceUploader(GraphicsDevice);
         Assets.StartContext(uploader);
         LoadContent(Assets);
