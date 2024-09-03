@@ -40,6 +40,21 @@ public class Image : IDisposable
         }
     }
 
+    public unsafe Image(Span<byte> color, int width, int height) 
+    {
+        Width = width;
+        Height = height;
+        byte* ptr = (byte*)NativeMemory.Alloc((uint)color.Length * 4);
+        for (int i = 0; i < color.Length; i += 4) 
+        {
+            ptr[i] = color[i];
+            ptr[i + 1] = color[i + 1];
+            ptr[i + 2] = color[i + 2];
+            ptr[i + 3] = color[i + 3];
+        }
+        data = (IntPtr)ptr;
+    }
+
     public unsafe Image(Span<Color> color, int width, int height) 
     {
         Width = width;
