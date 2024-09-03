@@ -22,6 +22,8 @@ public static class GameContext
     /// A rendering material that uses R8G8B8A8 format.
     /// </summary>
     public static Material DepthMaterial;
+
+    public static Shader MSDFShader;
     /// <summary>
     /// A compute pipeline used for <see cref="Riateu.Graphics.Batch"/> to work.
     /// </summary>
@@ -30,6 +32,14 @@ public static class GameContext
     internal static void Init(GraphicsDevice device, Window mainWindow)
     {
         GraphicsDevice = device;
+        using var msdf = new MemoryStream(Resources.MSDF);
+        MSDFShader = new Shader(device, msdf, "main", new ShaderCreateInfo {
+            ShaderStage = ShaderStage.Fragment,
+            ShaderFormat = BackendShaderFormat,
+            UniformBufferCount = 1,
+            SamplerCount = 1
+        });
+
         var positionTextureColor = Resources.PositionTextureColor;
         using var ms1 = new MemoryStream(positionTextureColor);
         Shader vertexPSC = new Shader(device, ms1, "main", new ShaderCreateInfo {

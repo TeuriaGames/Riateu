@@ -70,6 +70,19 @@ public static class Resources
         }
     }
 
+    private static byte[] msdfFont;
+    public static byte[] MSDF
+    {
+        get
+        {
+            if (msdfFont == null)
+            {
+                msdfFont = GetShaderByte("MSDFFont.frag");
+            }
+            return msdfFont;
+        }
+    }
+
     private static byte[] GetShaderByte(string name)
     {
         Stream stream = typeof(Resources).Assembly.GetManifestResourceStream(

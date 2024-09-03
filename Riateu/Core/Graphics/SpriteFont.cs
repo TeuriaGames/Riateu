@@ -127,6 +127,7 @@ public class SpriteFont : IAssets
             new Workload((i, id) => {
                 Packer<FontItem>.PackedItem item = packedItems[i]; 
                 Color[] color = new Color[item.Rect.Width * item.Rect.Height];
+
                 if (Font.GetPixelsByCharacter(item.Data.Character, color)) 
                 {
                     image.CopyFrom(color, item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height);
@@ -139,6 +140,7 @@ public class SpriteFont : IAssets
                     ),
                     item.Data.Character.Visible
                 ));
+                
                 return true;
             }, packedItems.Count).Finish(4);
 

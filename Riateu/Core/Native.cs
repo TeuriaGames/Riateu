@@ -57,6 +57,15 @@ internal static partial class Native
     internal static extern void Riateu_FreeFont(IntPtr font);
 
     [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern int Riateu_GetMSDFFontPixels(IntPtr font, IntPtr dest, int glyph, int borderSize, float size, float range);
+
+    [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern int Riateu_GetMSDFFontGlyphBox(IntPtr font, int glyphIndex, out int x0, out int y0, out int x1, out int y1);
+
+    [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern void Riateu_FreeMSDFFont(IntPtr font);
+
+    [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
     internal static extern unsafe IntPtr Riateu_LoadGif(byte *data, int length);
 
     [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]

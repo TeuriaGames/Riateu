@@ -20,10 +20,11 @@ public class Font : IDisposable
         public float OffsetX;
         public float OffsetY;
         public float Scale;
+        public float Size;
         public bool Visible;
     }
 
-    private IntPtr fontPtr;
+    protected IntPtr fontPtr;
     private IntPtr dataPtr;
     private bool disposedValue;
     private Dictionary<int, int> cachedCodePoints = new Dictionary<int, int>();
@@ -126,7 +127,7 @@ public class Font : IDisposable
     /// <param name="codepoint">A character index from a char value</param>
     /// <param name="size">A size of the character</param>
     /// <returns>A <see cref="Riateu.Graphics.Font.Character"/></returns>
-    public Character GetCharacter(int codepoint, float size) 
+    public virtual Character GetCharacter(int codepoint, float size) 
     {
         float scale = GetScale(size);
         int glyphIndex = FindGlyphIndex(codepoint);
@@ -140,6 +141,7 @@ public class Font : IDisposable
         {
             GlyphIndex = glyphIndex,
             Scale = scale,
+            Size = size,
             Width = width,
             Height = height,
             Advance = advance,
@@ -256,17 +258,66 @@ public class Font : IDisposable
 [Experimental("RIE002")]
 public class MSDFFont : Font
 {
-    public MSDFFont(string filepath) : base(filepath)
+    public int BorderSize;
+    public float Range;
+
+    public MSDFFont(string filepath, int borderWidth, float range) : base(filepath)
     {
+        BorderSize = borderWidth;
+        Range = range;
     }
 
-    public MSDFFont(Stream stream) : base(stream)
+    public MSDFFont(Stream stream, int borderWidth, float range) : base(stream)
     {
+        BorderSize = borderWidth;
+        Range = range;
     }
 
-    public override bool GetPixelsByCharacter(in Character character, Span<Color> dest)
+
+    public sealed override Character GetCharacter(int codepoint, float size)
     {
-        // TODO generate MSDF font instead
-        return base.GetPixelsByCharacter(character, dest);
+        Character character = base.GetCharacter(codepoint, size);
+        Native.Riateu_GetMSDFFontGlyphBox(fontPtr, character.GlyphIndex, out int x, out int y, out int w, out int h);
+
+        float glyphWidth = w - x;
+        float glyphHeight = h - y;
+
+        float wC = (float)Math.Ceiling(glyphWidth * character.Scale);
+        float hC = (float)Math.Ceiling(glyphHeight * character.Scale);
+
+        wC += 2.0f * BorderSize;
+        hC += 2.0f * BorderSize;
+
+        character.Width = (int)wC;
+        character.Height = (int)hC;
+
+        return character;
+    }
+
+    public override unsafe bool GetPixelsByCharacter(in Character character, Span<Color> dest)
+    {
+        if (!character.Visible) 
+        {
+            return false;
+        }
+#if DEBUG
+        if (dest.Length < character.Width * character.Height) 
+        {
+            throw new Exception($"Destination length '{dest.Length}' is lower than the Character size: '{character.Width * character.Height}'");
+        }
+#endif
+
+        fixed (Color *ptr = dest) 
+        {
+            int success = Native.Riateu_GetMSDFFontPixels(
+                fontPtr, 
+                (IntPtr)ptr, 
+                character.GlyphIndex, 
+                BorderSize, 
+                character.Size, 
+                Range
+            );
+            return success == 0;
+        }
     }
 }
