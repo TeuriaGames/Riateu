@@ -1,3 +1,4 @@
+using System;
 using RefreshCS;
 
 namespace Riateu.Graphics;
@@ -47,6 +48,29 @@ public class Texture : GraphicsResource
     
     protected override void Dispose(bool disposing)
     {
+    }
+
+    public uint Download(in Span<byte> destination) 
+    {
+        uint size = Width * Height * BytesPerPixel(Format);
+
+#if DEBUG
+        if (size > destination.Length) 
+        {
+            throw new Exception($"Size of a texture: '{size}' is greater than the size of a destination: '{destination.Length}'");
+        }
+#endif
+        using TransferBuffer transferBuffer = new TransferBuffer(Device, TransferBufferUsage.Download, size);
+        CommandBuffer downloadBuffer = Device.AcquireCommandBuffer();
+
+        CopyPass pass = downloadBuffer.BeginCopyPass();
+        pass.DownloadFromTexture(this, new TextureTransferInfo(transferBuffer));
+        downloadBuffer.EndCopyPass(pass);
+
+        using Fence fence = Device.SubmitAndAcquireFence(downloadBuffer);
+        Device.WaitForFence(fence);
+
+        return transferBuffer.GetTransferData(destination, 0);
     }
 
     public static implicit operator TextureRegion(Texture texture) 
