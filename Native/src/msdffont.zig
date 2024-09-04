@@ -89,8 +89,7 @@ export fn Riateu_GetMSDFFontPixels(font: RiateuFont, dest: [*c]u8, glyph: c_int,
     return 0;
 }
 
-export fn Riateu_FreeMSDFFont(msdf: [*c]u8) void 
-{
+export fn Riateu_FreeMSDFFont(msdf: [*c]u8) void {
     sdl2.free(msdf);
 }
 
