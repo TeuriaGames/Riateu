@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <Compile Include="../lib/RefreshCS/RefreshCS.cs"/>
-    <Compile Include="../lib/SDL2-CS/src/SDL2.cs"/>
+    <Compile Include="../lib/SDL3-CS/SDL3/generated/SDL3.cs"/>
     <Compile Include="../lib/FAudio/csharp/FAudio.cs"/>
   </ItemGroup>
 

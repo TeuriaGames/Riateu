@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Riateu.Graphics;
-using SDL2;
+using SDL3;
 
 namespace Riateu;
 
@@ -58,18 +58,19 @@ public class Window : IDisposable
 
         this.windowMode = settings.WindowMode;
 
-        SDL.SDL_GetDesktopDisplayMode(0, out var mode);
+        IntPtr mode = SDL.SDL_GetDesktopDisplayMode(0);
 
-        Handle = SDL.SDL_CreateWindow(
-            settings.Title,
-            SDL.SDL_WINDOWPOS_CENTERED,
-            SDL.SDL_WINDOWPOS_CENTERED,
-            settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : mode.w,
-            settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : mode.h,
-            flags
-        );
-
-        SDL.SDL_GetWindowSize(Handle, out int width, out int height);
+        unsafe {
+            SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)mode;
+            Handle = SDL.SDL_CreateWindow(
+                settings.Title,
+                settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
+                settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
+                flags
+            );
+        }
+        int width = 0, height = 0;
+        SDL.SDL_GetWindowSize(Handle, ref width, ref height);
 
         Width = (uint)width;
         Height = (uint)height;
@@ -113,6 +114,7 @@ public class Window : IDisposable
 
         if (WindowMode == WindowMode.Windowed) 
         {
+            SDL.SDL_Windo
             SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
         }
     }
@@ -182,6 +184,5 @@ public record struct Flags(bool Resizable = false, bool StartMaximized = false);
 public enum WindowMode 
 {
     Windowed,
-    Fullscreen,
-    BorderlessFullscreen
+    Fullscreen
 }

@@ -1,10 +1,6 @@
-[submodule "lib/SDL2-CS"]
-	path = lib/SDL2-CS
-	url = https://github.com/flibitijibibo/SDL2-CS.git
-[submodule "lib/RefreshCS"]
-	path = lib/RefreshCS
-	url = https://github.com/MoonsideGames/RefreshCS.git
-	branch = refresh2
 [submodule "lib/FAudio"]
 	path = lib/FAudio
 	url = https://github.com/FNA-XNA/FAudio.git
+[submodule "lib/SDL3-CS"]
+	path = lib/SDL3-CS
+	url = https://github.com/flibitijibibo/SDL3-CS
