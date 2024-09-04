@@ -12,6 +12,8 @@ public abstract class GraphicsComponent : Component
     /// </summary>
     public TextureQuad SpriteTexture;
 
+    public float LayerDepth = 1f;
+
     /// <summary>
     /// An initilization for this component.
     /// </summary>
