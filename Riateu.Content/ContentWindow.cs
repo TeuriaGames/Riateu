@@ -93,7 +93,6 @@ public class ContentWindow : GameLoop
     private void UIBuild() 
     {
         SetupDockspace();
-        // ImGui.ShowDemoWindow();
 
         ImGui.BeginMainMenuBar();
         if (ImGui.BeginMenu("File")) 

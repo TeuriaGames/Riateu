@@ -5,6 +5,6 @@ for filename in Shaders/*.{vert,comp,frag}; do
     name=$(basename $filename)
     vk_out="Compiled/$name.spv"
 
-    echo "Compiling Shaderes..."
+    echo "Compiling Shaders..."
     glslang $filename -V -o $vk_out
 done
