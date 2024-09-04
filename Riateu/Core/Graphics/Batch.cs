@@ -224,9 +224,10 @@ public class Batch : System.IDisposable
             Buffer = vertexBuffer,
             Cycle = true
         });
+        uint workgroupSize = (vertexIndex + 64 - 1) / 64;
         computePass.BindComputePipeline(GameContext.SpriteBatchPipeline);
         computePass.BindStorageBuffer(computeBuffer);
-        computePass.Dispatch(currentMaxTexture / 64, 1, 1);
+        computePass.Dispatch(workgroupSize, 1, 1);
 
         cmdBuf.EndComputePass(computePass);
         device.Submit(cmdBuf);
