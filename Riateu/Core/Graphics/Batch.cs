@@ -438,7 +438,7 @@ public class Batch : System.IDisposable
     /// <param name="position">A position of the text</param>
     /// <param name="color">A color of the text</param>
     /// <param name="hAlignment">A horizontal alignment of the text</param>
-    public void Draw(SpriteFont font, string text, Vector2 position, Color color, FontAlignment hAlignment = FontAlignment.Baseline) 
+    public void Draw(SpriteFont font, string text, Vector2 position, Color color, FontAlignment hAlignment = FontAlignment.Baseline, float layerDepth = 1f) 
     {
         Draw(font, text, position, color, Vector2.One, hAlignment);
     }
@@ -452,7 +452,7 @@ public class Batch : System.IDisposable
     /// <param name="color">A color of the text</param>
     /// <param name="scale">A scale of the text when drawn</param>
     /// <param name="hAlignment">A horizontal alignment of the text</param>
-    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Vector2 scale, FontAlignment hAlignment = FontAlignment.Baseline) 
+    public void Draw(SpriteFont font, string text, Vector2 position, Color color, Vector2 scale, FontAlignment hAlignment = FontAlignment.Baseline, float layerDepth = 1f) 
     {
 #if DEBUG
         AssertDoesBegin();
@@ -470,7 +470,7 @@ public class Batch : System.IDisposable
         };
 
         unsafe {
-            font.Draw(computes, ref vertexIndex, text, position, justify, color, scale);
+            font.Draw(computes, ref vertexIndex, text, position, justify, color, scale, layerDepth);
         }
     }
 

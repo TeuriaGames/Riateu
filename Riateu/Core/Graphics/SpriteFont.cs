@@ -264,7 +264,7 @@ public class SpriteFont : IAssets
         throw new Exception($"A character: '{(char)c}' is not available");
     }
 
-    internal unsafe void Draw(Batch.ComputeData* computeData, ref uint vertexIndex, ReadOnlySpan<char> text, Vector2 position, Vector2 justify, Color color, Vector2 scale)
+    internal unsafe void Draw(Batch.ComputeData* computeData, ref uint vertexIndex, ReadOnlySpan<char> text, Vector2 position, Vector2 justify, Color color, Vector2 scale, float layerDepth = 1f)
     {
         if (text.IsEmpty)
             return;
@@ -308,6 +308,7 @@ public class SpriteFont : IAssets
                 Dimension = new Vector2(c.Quad.Source.Width, c.Quad.Source.Height),
                 Rotation = 0,
                 Color = color.ToVector4(),
+                Depth = layerDepth
             };
 
             offset.X += c.Advance;
