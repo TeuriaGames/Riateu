@@ -290,6 +290,7 @@ public class MSDFFont : Font
 
         character.Width = (int)wC;
         character.Height = (int)hC;
+        character.OffsetY = character.OffsetY - BorderSize;
 
         return character;
     }
