@@ -190,6 +190,20 @@ public class Image : IDisposable
         }
     }
 
+    public Texture UploadAsTexture(GraphicsDevice device) 
+    {
+        Texture texture = new Texture(device);
+        using TransferBuffer transferBuffer = new TransferBuffer(device, TransferBufferUsage.Upload, (uint)(Width * Height * 4));
+        transferBuffer.SetTransferData(Pixels, 0, false);
+        CommandBuffer buffer = device.AcquireCommandBuffer();
+
+        CopyPass pass = buffer.BeginCopyPass();
+        pass.UploadToTexture(transferBuffer, texture, false);
+        buffer.EndCopyPass(pass);
+        device.Submit(buffer);
+        return texture;
+    }
+
     public enum Format { PNG, QOI }
 
     protected virtual unsafe void Dispose(bool disposing)
