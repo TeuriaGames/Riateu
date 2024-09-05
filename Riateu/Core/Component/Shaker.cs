@@ -1,20 +1,31 @@
 using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Riateu;
 
 public sealed class Shaker : Component 
 {
+    [InlineArray(5)]
+    private struct ShakeOffset 
+    {
+        private int _element0;
+    }
     public float Timer { get; private set; }
     public Vector2 Value { get; private set; }
     public float Intensity { get; set; }
 
     private static Random random = new Random();
-    private static int[] offsets = new int[5] { -1, -1, 0, 1, 1 };
+    private static ShakeOffset offsets = new ShakeOffset();
 
     public Shaker() 
     {
         Active = false;
+        offsets[0] = -1;
+        offsets[1] = -1;
+        offsets[2] = 0;
+        offsets[3] = 1;
+        offsets[4] = 1;
     }
 
 
@@ -31,7 +42,7 @@ public sealed class Shaker : Component
             Value = Vector2.Zero;
             return;
         }
-        Value = new Vector2(offsets[random.Next(offsets.Length)], offsets[random.Next(offsets.Length)]) * Intensity;
+        Value = new Vector2(offsets[random.Next(5)], offsets[random.Next(5)]) * Intensity;
 
         base.Update(delta);
     }
