@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using RefreshCS;
 
 namespace Riateu.Graphics;
 
@@ -18,19 +17,19 @@ namespace Riateu.Graphics;
 /// </summary>
 public unsafe class ResourceUploader : GraphicsResource
 {
-	TransferBuffer BufferTransferBuffer;
-	TransferBuffer TextureTransferBuffer;
+	private TransferBuffer bufferTransferBuffer;
+	private TransferBuffer textureTransferBuffer;
 
-	byte* bufferData;
-	uint bufferDataOffset = 0;
-	uint bufferDataSize = 1024;
+	private byte* bufferData;
+	private uint bufferDataOffset = 0;
+	private uint bufferDataSize = 1024;
 
-	byte* textureData;
-	uint textureDataOffset = 0;
-	uint textureDataSize = 1024;
+	private byte* textureData;
+	private uint textureDataOffset = 0;
+	private uint textureDataSize = 1024;
 
-	List<(uint, BufferRegion, bool)> BufferUploads = new List<(uint, BufferRegion, bool)>();
-	List<(uint, TextureRegion, bool)> TextureUploads = new List<(uint, TextureRegion, bool)>();
+	private List<(uint, BufferRegion, bool)> bufferUploads = new List<(uint, BufferRegion, bool)>();
+	private List<(uint, TextureRegion, bool)> textureUploads = new List<(uint, TextureRegion, bool)>();
 
 	public ResourceUploader(GraphicsDevice device) : base(device)
 	{
@@ -68,7 +67,7 @@ public unsafe class ResourceUploader : GraphicsResource
 		}
 
 		var bufferRegion = new BufferRegion(buffer, offsetInBytes, lengthInBytes);
-		BufferUploads.Add((resourceOffset, bufferRegion, cycle));
+		bufferUploads.Add((resourceOffset, bufferRegion, cycle));
 	}
 
 	// Textures
@@ -87,9 +86,13 @@ public unsafe class ResourceUploader : GraphicsResource
 	{
         fixed (byte *ptr = compressedImageData) 
         {
-            Refresh.Refresh_Image_Info(ptr, compressedImageData.Length, out int width, out int height, out _);
+			IntPtr image = Native.Riateu_LoadImage(ptr, compressedImageData.Length, out int width, out int height, out int len);
             Texture texture = new Texture(Device, (uint)width, (uint)height, TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler);
-            SetTextureDataFromCompressed(texture, compressedImageData);
+			Span<byte> span = new Span<byte>((void*)image, len);
+
+			SetTextureData(texture, span, false);
+
+			Native.Riateu_FreeImage(image);
             return texture;
         }
 	}
@@ -98,12 +101,12 @@ public unsafe class ResourceUploader : GraphicsResource
 	{
         fixed (byte *ptr = compressedImageData) 
         {
-            var pixelData = Refresh.Refresh_Image_Load(ptr, compressedImageData.Length, out _, out _, out int sizeInBytes);
-            var pixelSpan = new Span<byte>((void*) pixelData, (int) sizeInBytes);
+			IntPtr image = Native.Riateu_LoadImage(ptr, compressedImageData.Length, out int width, out int height, out int len);
+            var span = new Span<byte>((void*) image, len);
 
-            SetTextureData(textureRegion, pixelSpan, false);
+            SetTextureData(textureRegion, span, false);
 
-            Refresh.Refresh_Image_Free(pixelData);
+            Native.Riateu_FreeImage(image);
         }
 	}
 
@@ -148,7 +151,7 @@ public unsafe class ResourceUploader : GraphicsResource
 			resourceOffset = CopyTextureData(dataPtr, dataLengthInBytes, Texture.BytesPerPixel(textureRegion.TextureSlice.Texture.Format));
 		}
 
-		TextureUploads.Add((resourceOffset, textureRegion, cycle));
+		textureUploads.Add((resourceOffset, textureRegion, cycle));
 	}
 
 	// Upload
@@ -184,29 +187,31 @@ public unsafe class ResourceUploader : GraphicsResource
 
 	private void CopyToTransferBuffer()
 	{
-		if (BufferUploads.Count > 0)
+		if (bufferUploads.Count > 0)
 		{
-			if (BufferTransferBuffer == null || BufferTransferBuffer.Size < bufferDataSize)
+			if (bufferTransferBuffer == null || bufferTransferBuffer.Size < bufferDataSize)
 			{
-				BufferTransferBuffer?.Dispose();
-				BufferTransferBuffer = new TransferBuffer(Device, TransferBufferUsage.Upload, bufferDataSize);
+				bufferTransferBuffer?.Dispose();
+				bufferTransferBuffer = new TransferBuffer(Device, TransferBufferUsage.Upload, bufferDataSize);
 			}
 
-			var dataSpan = new Span<byte>(bufferData, (int) bufferDataSize);
-			BufferTransferBuffer.SetTransferData(dataSpan, 0, true);
+			bufferTransferBuffer.Map(true, out byte* ptr);
+			NativeMemory.Copy(bufferData, ptr, bufferDataSize);
+			bufferTransferBuffer.Unmap();
 		}
 
 
-		if (TextureUploads.Count > 0)
+		if (textureUploads.Count > 0)
 		{
-			if (TextureTransferBuffer == null || TextureTransferBuffer.Size < textureDataSize)
+			if (textureTransferBuffer == null || textureTransferBuffer.Size < textureDataSize)
 			{
-				TextureTransferBuffer?.Dispose();
-				TextureTransferBuffer = new TransferBuffer(Device, TransferBufferUsage.Upload, textureDataSize);
+				textureTransferBuffer?.Dispose();
+				textureTransferBuffer = new TransferBuffer(Device, TransferBufferUsage.Upload, textureDataSize);
 			}
 
-			var dataSpan = new Span<byte>(textureData, (int) textureDataSize);
-			TextureTransferBuffer.SetTransferData(dataSpan, 0, true);
+			textureTransferBuffer.Map(true, out byte* ptr);
+			NativeMemory.Copy(textureData, ptr, textureDataSize);
+			textureTransferBuffer.Unmap();
 		}
 	}
 
@@ -214,19 +219,19 @@ public unsafe class ResourceUploader : GraphicsResource
 	{
 		var copyPass = commandBuffer.BeginCopyPass();
 
-		foreach (var (transferOffset, bufferRegion, option) in BufferUploads)
+		foreach (var (transferOffset, bufferRegion, option) in bufferUploads)
 		{
 			copyPass.UploadToBuffer(
-				new TransferBufferLocation(BufferTransferBuffer, transferOffset),
+				new TransferBufferLocation(bufferTransferBuffer, transferOffset),
 				bufferRegion,
 				option
 			);
 		}
 
-		foreach (var (transferOffset, textureRegion, option) in TextureUploads)
+		foreach (var (transferOffset, textureRegion, option) in textureUploads)
 		{
 			copyPass.UploadToTexture(
-				new TextureTransferInfo(TextureTransferBuffer, transferOffset),
+				new TextureTransferInfo(textureTransferBuffer, transferOffset),
 				textureRegion,
 				option
 			);
@@ -234,8 +239,8 @@ public unsafe class ResourceUploader : GraphicsResource
 
 		commandBuffer.EndCopyPass(copyPass);
 
-		BufferUploads.Clear();
-		TextureUploads.Clear();
+		bufferUploads.Clear();
+		textureUploads.Clear();
 		bufferDataOffset = 0;
 	}
 
@@ -287,10 +292,11 @@ public unsafe class ResourceUploader : GraphicsResource
 	{
 		if (disposing) 
 		{
-			BufferTransferBuffer?.Dispose();
-			TextureTransferBuffer?.Dispose();
+			bufferTransferBuffer?.Dispose();
+			textureTransferBuffer?.Dispose();
 		}
         NativeMemory.Free(bufferData);
+		NativeMemory.Free(textureData);
 	}
 
     protected override void HandleDispose(nint handle) {}
