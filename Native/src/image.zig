@@ -97,7 +97,7 @@ export fn Riateu_WriteQOI(filename: [*c]const u8, data: [*c]const u8, width: c_i
 }
 
 const QOI_HEADER_SIZE = 14;
-const QOI_MAGIC: comptime_int = 'q' << 24 | '0' << 16 | 'i' << 8 | 'f';
+const QOI_MAGIC: u32 = 'q' << 24 | 'o' << 16 | 'i' << 8 | 'f';
 
 inline fn read_qoi_magic(data: [*c]const u8) u32 {
     const q: u32 = data[0];
@@ -113,6 +113,7 @@ inline fn valid_qoi_image(data: [*c]const u8, length: c_int) bool {
     {
         return false;
     }
+
     const magic = read_qoi_magic(data);
     if (magic == QOI_MAGIC) 
     {
@@ -122,13 +123,14 @@ inline fn valid_qoi_image(data: [*c]const u8, length: c_int) bool {
 }
 
 fn load_qoi_image(data: [*c]const u8, length: c_int, width: [*c]c_int, height: [*c]c_int) ?[*c] u8 {
-    const desc: [*c]qoi.qoi_desc = null;
-    const result = qoi.qoi_decode(data, length, desc, 4);
+    var desc: qoi.qoi_desc = undefined;
+    const result = qoi.qoi_decode(data, length, &desc, 4);
 
     if (result) |res| {
-        width.* = @intCast(desc.*.width);
-        height.* = @intCast(desc.*.height);
-        return @ptrCast(res);
+        const dataRes = @as([*]u8, @ptrCast(res));
+        width.* = @intCast(desc.width);
+        height.* = @intCast(desc.height);
+        return dataRes;
     } else {
         width.* = 0;
         height.* = 0;
