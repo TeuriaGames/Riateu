@@ -6,8 +6,8 @@ namespace Riateu.Audios;
 public class VoiceMaker
 {
     private Dictionary<(Type, Format), Queue<SourceVoice>> voicePool = new();
-    private List<SourceVoice> trackedSourceVoices = new List<SourceVoice>();
-    private List<SourceVoice> removingSourceVoices = new List<SourceVoice>();
+    private List<SoundVoice> trackedSoundVoices = new List<SoundVoice>();
+    private List<SoundVoice> removingSoundVoices = new List<SoundVoice>();
     private AudioDevice device;
     private object StateLock = new object();
 
@@ -18,27 +18,27 @@ public class VoiceMaker
 
     public void Update() 
     {
-        foreach (var voice in trackedSourceVoices) 
+        foreach (var voice in trackedSoundVoices) 
         {
             voice.Update();
         }
 
-        foreach (var voice in removingSourceVoices) 
+        foreach (var voice in removingSoundVoices) 
         {
-            trackedSourceVoices.Remove(voice);
+            trackedSoundVoices.Remove(voice);
             voice.Reset();
             Queue<SourceVoice> queue = voicePool[(voice.GetType(), voice.Format)];
             queue.Enqueue(voice);
         }
 
-        removingSourceVoices.Clear();
+        removingSoundVoices.Clear();
     }
 
-    public void Destroy(SourceVoice voice) 
+    public void Destroy(SoundVoice voice) 
     {
         lock (StateLock) 
         {
-            removingSourceVoices.Add(voice);
+            removingSoundVoices.Add(voice);
         }
     }
 
@@ -49,7 +49,6 @@ public class VoiceMaker
         {
             CreateQueueIfNothing(typeof(T), format);
 
-
             Queue<SourceVoice> queue = voicePool[(typeof(T), format)];
             if (queue.Count == 0) 
             {
@@ -58,7 +57,11 @@ public class VoiceMaker
             
             SourceVoice voice = queue.Dequeue();
 
-            trackedSourceVoices.Add(voice);
+            if (voice is SoundVoice soundVoice) 
+            {
+                trackedSoundVoices.Add(soundVoice);
+            }
+
             return voice;
         }
     }

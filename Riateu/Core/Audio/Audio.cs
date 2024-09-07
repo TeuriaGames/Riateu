@@ -43,4 +43,11 @@ public static class Audio
         voice.Submit(track);
         voice.Play();
     }
+
+    public static StaticVoice AcquireStaticVoice(AudioTrack track) 
+    {
+        StaticVoice voice = (StaticVoice)Device.VoiceMaker.MakeSourceVoice<StaticVoice>(track.Format);
+        voice.Submit(track);
+        return voice;
+    }
 }
