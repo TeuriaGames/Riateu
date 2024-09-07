@@ -65,7 +65,7 @@ public class AssetStorage
 
                 if (Path.GetExtension(file) == ".gif") 
                 {
-                    Image[] images = Image.LoadGif(file);
+                    Span<Image> images = Image.LoadGif(file);
                     for (int i = 0; i < images.Length; i++) 
                     {
                         Image image = images[i];
@@ -144,7 +144,7 @@ public class AssetStorage
         case AudioFormat.OGG:
             return AudioTrackOGG.CreateOGG(audioDevice, path);
         case AudioFormat.WAV:
-            throw new NotImplementedException("WAV format has not been implemented yet");
+            return AudioTrackWAV.CreateWAV(audioDevice, path);
         default:
             throw new InvalidOperationException("Unknown format is passed.");
         }
