@@ -149,6 +149,11 @@ public class Entity : IEnumerable<Component>
     public int Depth;
 
     /// <summary>
+    /// The Z Layer Depth of the entity.
+    /// </summary>
+    public float LayerDepth = 1f;
+
+    /// <summary>
     /// An entity state whether it should draw on the draw loop.
     /// </summary>
     public bool Visible = true;

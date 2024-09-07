@@ -67,6 +67,6 @@ public class Sprite : GraphicsComponent
     /// <inheritdoc/>
     public override void Draw(Batch draw) 
     {
-        draw.Draw(SpriteTexture, Entity.Transform.Position, Color.White, Vector2.One, Entity.Transform.PivotOffset + Origin, LayerDepth);
+        draw.Draw(SpriteTexture, Entity.Transform.Position, Color.White, Vector2.One, Entity.Transform.PivotOffset + Origin, Entity.LayerDepth);
     }
 }
