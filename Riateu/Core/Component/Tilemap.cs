@@ -10,6 +10,8 @@ namespace Riateu.Components;
 /// </summary>
 public class Tilemap : Component
 {
+    private int rows;
+    private int columns;
     private Array2D<TextureQuad?> tiles;
     private int gridSize;
     private Camera cullingCamera;
@@ -20,10 +22,6 @@ public class Tilemap : Component
 
     public int Rows => rows;
     public int Columns => columns;
-
-    private int rows;
-    private int columns;
-
 
 
     /// <summary>
@@ -94,7 +92,8 @@ public class Tilemap : Component
         tiles.Fill(null);
     }
 
-    private void AddToBatch(Batch draw)
+    /// <inheritdoc/>
+    public override void Draw(Batch draw)
     {
         Rectangle culledRect = GetCulledRectangle();
         for (int x = culledRect.X; x < culledRect.Width; x++)
@@ -109,14 +108,8 @@ public class Tilemap : Component
                 if (sTexture is null)
                     continue;
 
-                draw.Draw(sTexture.Value, Entity.Position + new Vector2(x * gridSize, y * gridSize), Color.White, layerDepth: 1f);
+                draw.Draw(sTexture.Value, Entity.Position + new Vector2(x * gridSize, y * gridSize), Color.White, Entity.LayerDepth);
             }
         }
-    }
-
-    /// <inheritdoc/>
-    public override void Draw(Batch draw)
-    {
-        AddToBatch(draw);
     }
 }

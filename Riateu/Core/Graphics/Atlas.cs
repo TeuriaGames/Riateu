@@ -95,7 +95,7 @@ public class Atlas : IAssets
         // ConcurrentDictionary is pretty slow that we had to fallback to Dictionary
         atlas.textures = concurrentTextures.ToDictionary<string, TextureQuad>();
 
-        Texture texture = uploader.CreateTexture2D<Color>(image.Pixels, (uint)size.X, (uint)size.Y);
+        Texture texture = uploader.CreateTexture2D(image.Pixels, (uint)image.Width, (uint)image.Height);
         atlas.BaseTexture = texture;
         return atlas;
     }
