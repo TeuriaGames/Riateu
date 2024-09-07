@@ -64,6 +64,11 @@ public class Spritesheet
         }
     }
 
+    public int GetID(int x, int y) 
+    {
+        return x * tiles.Columns + y;
+    }
+
     /// <summary>
     /// Get a quad based on the xy-grid in Point.
     /// </summary>
