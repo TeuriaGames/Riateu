@@ -59,7 +59,7 @@ public abstract class SourceVoice : BaseVoice
 
     public void Submit(AudioTrack buffer) 
     {
-        Submit(buffer.ToFAudioBuffer());
+        Submit(buffer.ToFAudioBuffer(Looping));
     }
 
     protected void Submit(in FAudio.FAudioBuffer fbuffer) 
