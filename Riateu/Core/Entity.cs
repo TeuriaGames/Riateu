@@ -121,6 +121,12 @@ public class Entity : IEnumerable<Component>
         set => Transform.LocalPosY = value;
     }
 
+    public Vector2 PivotOffset 
+    {
+        get => Transform.PivotOffset;
+        set => Transform.PivotOffset = value;
+    }
+
     /// <summary>
     /// The rotation radians of the entity.
     /// </summary>

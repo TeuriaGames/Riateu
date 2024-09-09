@@ -189,7 +189,7 @@ public class AnimatedSprite : GraphicsComponent
     /// <inheritdoc/>
     public override void Draw(Batch draw)
     {
-        draw.Draw(SpriteTexture, Entity.Transform.Position, Color.White, Entity.LayerDepth);
+        draw.Draw(SpriteTexture, Entity.Transform.Position, Color.White, Entity.Scale, Entity.PivotOffset, Entity.LayerDepth);
     }
 
     /// <summary>
