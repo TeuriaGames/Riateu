@@ -99,6 +99,7 @@ public abstract class GameApp
         }
 
         Logger.Info("Successfully claimed a window.");
+        SaveIO.Init(settings.Title.Replace(" ", "_"));
 
         AudioDevice = new AudioDevice();
         Audio.Init(AudioDevice);
