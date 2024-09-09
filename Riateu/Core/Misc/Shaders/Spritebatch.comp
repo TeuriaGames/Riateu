@@ -64,7 +64,7 @@ void main()
     float height = compData.dimension.y * compData.scale.y;
 
     vec4 topLeft = vec4(compData.position.x, compData.position.y, compData.depth, 1.);
-    vec4 topRight= vec4(compData.position.x + width, compData.position.y, compData.depth, 1.);
+    vec4 topRight = vec4(compData.position.x + width, compData.position.y, compData.depth, 1.);
     vec4 bottomLeft = vec4(compData.position.x, compData.position.y + height, compData.depth, 1.);
     vec4 bottomRight = vec4(compData.position.x + width, compData.position.y + height, compData.depth, 1.);
 
