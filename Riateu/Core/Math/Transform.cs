@@ -95,7 +95,7 @@ public class Transform
         {
             if (parent == null) 
             {
-                localScale = value;
+                LocalScale = value;
                 return;
             }
             if (parent.Scale.X == 0)
