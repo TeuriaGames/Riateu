@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using SDL3;
 
 namespace Riateu.ImGuiRend;
 
@@ -14,7 +16,10 @@ internal static unsafe class Clipboard
 	{
 		var len = 0; while (text[len] != 0) len++;
 		var str = Encoding.UTF8.GetString(text, len);
-		SDL2.SDL.SDL_SetClipboardText(str);
+		fixed (char *ptr = str) 
+		{
+			SDL.SDL_SetClipboardText(ref Unsafe.AsRef<char>(ptr));
+		}
 	}
 
 	private static unsafe byte* Get(void* userdata)
@@ -25,7 +30,7 @@ internal static unsafe class Clipboard
 			clipboard = IntPtr.Zero;
 		}
 
-		var str = SDL2.SDL.SDL_GetClipboardText();
+		var str = new string((char*)SDL.SDL_GetClipboardText());
 		var length = Encoding.UTF8.GetByteCount(str);
 		var bytes = (byte*)(clipboard = (nint)NativeMemory.Alloc((nuint)(length + 1)));
 

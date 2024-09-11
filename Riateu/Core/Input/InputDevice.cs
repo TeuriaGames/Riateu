@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SDL2;
 
 namespace Riateu.Inputs;
 

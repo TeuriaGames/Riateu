@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using Riateu.Graphics;
 using SDL3;
@@ -35,25 +37,26 @@ public class Window : IDisposable
 
     public Action<uint, uint> OnSizeChange = delegate {};
 
-    private Window(WindowSettings settings, SDL.SDL_WindowFlags flags, uint id) 
+    public Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 
     {
         if (settings.WindowMode == WindowMode.Fullscreen) 
         {
-            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
+            flags |= SDL.SDL_WindowFlags.Fullscreen;
         }
         else if (settings.WindowMode == WindowMode.BorderlessFullscreen) 
         {
-            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
+            flags |= SDL.SDL_WindowFlags.Borderless;
+            flags |= SDL.SDL_WindowFlags.Fullscreen;
         }
 
         if (settings.Flags.Resizable) 
         {
-            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+            flags |= SDL.SDL_WindowFlags.Resizable;
         }
 
         if (settings.Flags.StartMaximized) 
         {
-            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_MAXIMIZED;
+            flags |= SDL.SDL_WindowFlags.Maximized;
         }
 
         this.windowMode = settings.WindowMode;
@@ -62,12 +65,16 @@ public class Window : IDisposable
 
         unsafe {
             SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)mode;
-            Handle = SDL.SDL_CreateWindow(
-                settings.Title,
-                settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
-                settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
-                flags
-            );
+
+            fixed (char *ptr = settings.Title) 
+            {
+                Handle = SDL.SDL_CreateWindow(
+                    ref Unsafe.AsRef<char>(ptr),
+                    settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
+                    settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
+                    (ulong)flags
+                );
+            }
         }
         int width = 0, height = 0;
         SDL.SDL_GetWindowSize(Handle, ref width, ref height);
@@ -114,28 +121,32 @@ public class Window : IDisposable
 
         if (WindowMode == WindowMode.Windowed) 
         {
-            SDL.SDL_Windo
-            SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+            // SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
         }
     }
     public void SetScreenMode(WindowMode windowMode)
     {
         SDL.SDL_WindowFlags windowFlag = 0;
+        bool fullscreen = false;
 
         if (windowMode == WindowMode.Fullscreen)
         {
-            windowFlag = SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
+            windowFlag = SDL.SDL_WindowFlags.Fullscreen;
+            fullscreen = true;
         }
         else if (windowMode == WindowMode.BorderlessFullscreen)
         {
-            windowFlag = SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
+            windowFlag |= SDL.SDL_WindowFlags.Borderless;
+            windowFlag |= SDL.SDL_WindowFlags.Fullscreen;
+            fullscreen = true;
         }
 
-        SDL.SDL_SetWindowFullscreen(Handle, (uint) windowFlag);
+        // FIXME the flags
+        SDL.SDL_SetWindowFullscreen(Handle, fullscreen);
 
         if (windowMode == WindowMode.Windowed)
         {
-            SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+            // SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
         }
 
         WindowMode = windowMode;

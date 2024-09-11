@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using SDL2;
+using SDL3;
 
 namespace Riateu.Inputs;
 
@@ -29,7 +29,8 @@ public class Keyboard
 
     public Keyboard() 
     {
-        SDL.SDL_GetKeyboardState(out int numKeys);
+        int numKeys = 0;
+        SDL.SDL_GetKeyboardState(ref numKeys);
 
         KeyCodes = Enum.GetValues<KeyCode>();
         Buttons = new KeyboardButton[numKeys];
@@ -43,7 +44,8 @@ public class Keyboard
     {
         AnyPressed = false;
 
-        State = SDL.SDL_GetKeyboardState(out _);
+        int numKeys = 0;
+        State = SDL.SDL_GetKeyboardState(ref numKeys);
         foreach (KeyCode keyCode in KeyCodes) 
         {
             KeyboardButton button = Buttons[(int)keyCode];

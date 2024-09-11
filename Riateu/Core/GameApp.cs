@@ -6,7 +6,7 @@ using Riateu.Audios;
 using Riateu.Content;
 using Riateu.Graphics;
 using Riateu.Inputs;
-using SDL2;
+using SDL3;
 
 namespace Riateu;
 
@@ -78,9 +78,19 @@ public abstract class GameApp
             backendFlags = BackendFlags.Metal;
         }
 
+        SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.Hidden;
 
+        if (backendFlags != BackendFlags.D3D11) 
+        {
+            windowFlags |= backendFlags switch 
+            {
+                BackendFlags.Vulkan => SDL.SDL_WindowFlags.Vulkan,
+                BackendFlags.Metal => SDL.SDL_WindowFlags.Metal,
+                _ => throw new Exception("Not Supported")
+            };
+        }
 
-        MainWindow = Window.CreateWindow(settings, backendFlags);
+        MainWindow = new Window(settings, windowFlags);
         GraphicsDevice = new GraphicsDevice(graphicsSettings, backendFlags);
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
@@ -238,29 +248,26 @@ public abstract class GameApp
 
     private void PollEvents() 
     {
-        while (SDL.SDL_PollEvent(out SDL.SDL_Event e) == 1) 
+        SDL.SDL_Event e = default;
+        while (SDL.SDL_PollEvent(ref e)) 
         {
             switch (e.type) 
             {
-            case SDL.SDL_EventType.SDL_QUIT:
+            case (uint)SDL.SDL_EventType.SDL_EVENT_QUIT:
                 Exiting = true;
                 break;
-            case SDL.SDL_EventType.SDL_MOUSEWHEEL:
-                InputDevice.Mouse.WheelRawX += e.wheel.x;
-                InputDevice.Mouse.WheelRawY += e.wheel.y;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_MOUSE_WHEEL:
+                InputDevice.Mouse.WheelRawX += (int)e.wheel.x;
+                InputDevice.Mouse.WheelRawY += (int)e.wheel.y;
                 break;
-            case SDL.SDL_EventType.SDL_WINDOWEVENT:
-                if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED) 
-                {
-                    MainWindow.HandleSizeChanged((uint)e.window.data1, (uint)e.window.data2);
-                }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE) 
-                {
-                    GraphicsDevice.UnclaimWindow(MainWindow);
-                    MainWindow.Dispose();
-                }
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
+                MainWindow.HandleSizeChanged((uint)e.window.data1, (uint)e.window.data2);
                 break;
-            case SDL.SDL_EventType.SDL_TEXTINPUT:
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                GraphicsDevice.UnclaimWindow(MainWindow);
+                MainWindow.Dispose();
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_TEXT_INPUT:
                 HandleTextInput(e);
                 break;
             }
@@ -269,7 +276,7 @@ public abstract class GameApp
 
     private unsafe void HandleTextInput(SDL.SDL_Event evt) 
     {
-        byte *textPtr = evt.text.text;
+        char *textPtr = evt.text.text;
         int count = 0;
         while (*textPtr != 0) 
         {
@@ -280,7 +287,7 @@ public abstract class GameApp
         if (count > 0) 
         {
             char *charPtr = stackalloc char[count];
-            int chars = Encoding.UTF8.GetChars(evt.text.text, count, charPtr, count);
+            int chars = Encoding.UTF8.GetChars((byte*)evt.text.text, count, charPtr, count);
 
             for (int i = 0; i < chars; i++) 
             {

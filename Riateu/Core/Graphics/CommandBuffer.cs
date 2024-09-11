@@ -1,5 +1,6 @@
 using System;
-using RefreshCS;
+using System.Runtime.CompilerServices;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -31,8 +32,8 @@ public class CommandBuffer : IGraphicsPool
         }
         acquiredSwapChainTarget = true;
 #endif
-
-        IntPtr texPtr = RefreshCS.Refresh.Refresh_AcquireSwapchainTexture(Handle, window.Handle, out uint w, out uint h);
+        uint w = 0, h = 0;
+        IntPtr texPtr = SDL.SDL_AcquireGPUSwapchainTexture(Handle, window.Handle, ref w, ref h);
 
         if (texPtr == IntPtr.Zero) 
         {
@@ -53,7 +54,14 @@ public class CommandBuffer : IGraphicsPool
         AssertNotSubmitted();
         AssertNoAnyPassActive();
 #endif
-        RefreshCS.Refresh.Refresh_Blit(Handle, source.ToSDLGpu(), destination.ToSDLGpu(), (RefreshCS.Refresh.Filter)filter, cycle ? 1 : 0);
+        SDL.SDL_GPUBlitInfo info = new SDL.SDL_GPUBlitInfo 
+        {
+            source = source.ToSDLGpu(),
+            destination = source.ToSDLGpu(),
+            filter = (SDL.SDL_GPUFilter)filter,
+            cycle = cycle
+        };
+        SDL.SDL_BlitGPUTexture(Handle, ref info);
     }
 
     public unsafe RenderPass BeginRenderPass(in ColorAttachmentInfo info) 
@@ -66,7 +74,7 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info);
         renderPassActive = true;
 #endif
-        RefreshCS.Refresh.ColorAttachmentInfo* infos = stackalloc RefreshCS.Refresh.ColorAttachmentInfo[1];
+        SDL.SDL_GPUColorTargetInfo *infos = stackalloc SDL.SDL_GPUColorTargetInfo[1];
         infos[0] = info.ToSDLGpu();
 
         IntPtr pass = RefreshCS.Refresh.Refresh_BeginRenderPass(Handle, infos, 1, (RefreshCS.Refresh.DepthStencilAttachmentInfo*)IntPtr.Zero);
