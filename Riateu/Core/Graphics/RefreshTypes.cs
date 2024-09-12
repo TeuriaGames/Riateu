@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-using RefreshCS;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -93,13 +93,6 @@ public enum TextureUsageFlags
     GraphicsStorage = 0x8,
     ComputeStorageRead = 0x20,
     ComputeStorageWrite = 0x40
-}
-
-public enum TextureType
-{
-    TwoD,
-    ThreeD,
-    Cube
 }
 
 public enum SampleCount
@@ -303,6 +296,14 @@ public enum BackendFlags
     All = Vulkan | D3D11 | Metal
 }
 
+public enum TextureType
+{
+    Texture2D = 0,
+    Texture2DArray = 1,
+    Texture3D = 2,
+    Cube = 3
+}
+
 #endregion
 
 
@@ -317,16 +318,16 @@ public struct Viewport(float Width, float Height)
     public float MaxDepth;
 
 
-    public Refresh.Viewport ToSDLGpu() 
+    public SDL.SDL_GPUViewport ToSDLGpu() 
     {
-        return new Refresh.Viewport() 
+        return new SDL.SDL_GPUViewport() 
         {
-            X = X,
-            Y = Y,
-            W = Width,
-            H = Height,
-            MinDepth = MinDepth,
-            MaxDepth = MaxDepth
+            x = X,
+            y = Y,
+            w = Width,
+            h = Height,
+            min_depth = MinDepth,
+            max_depth = MaxDepth
         };
     }
 }
@@ -336,26 +337,25 @@ public struct TextureCreateInfo
     public uint Width;
     public uint Height;
     public uint Depth;
-    public bool IsCube; 
+    public TextureType TextureType;
     public uint LayerCount;
     public uint LevelCount;
     public SampleCount SampleCount;
     public TextureFormat Format;
     public TextureUsageFlags UsageFlags;
 
-    public RefreshCS.Refresh.TextureCreateInfo ToSDLGpu() 
+    public SDL.SDL_GPUTextureCreateInfo ToSDLGpu() 
     {
-        return new RefreshCS.Refresh.TextureCreateInfo() 
+        return new SDL.SDL_GPUTextureCreateInfo() 
         {
-            Width = Width,
-            Height = Height,
-            Depth = Depth,
-            IsCube = IsCube ? 1 : 0,
-            LayerCount = LayerCount,
-            LevelCount = LayerCount,
-            SampleCount = (RefreshCS.Refresh.SampleCount)SampleCount,
-            Format = (RefreshCS.Refresh.TextureFormat)Format,
-            UsageFlags = (RefreshCS.Refresh.TextureUsageFlags)UsageFlags
+            type = (SDL.SDL_GPUTextureType)TextureType,
+            format = (SDL.SDL_GPUTextureFormat)Format,
+            width = Width,
+            height = Height,
+            layer_count_or_depth = LayerCount,
+            num_levels = LayerCount,
+            sample_count = (SDL.SDL_GPUSampleCount)SampleCount,
+            usage = (uint)UsageFlags
         };
     }
 }
@@ -368,15 +368,15 @@ public struct ColorAttachmentInfo(TextureSlice slice, Color clearColor, bool cyc
     public StoreOp StoreOp = storeOp;
     public bool Cycle = cycle; 
 
-    public RefreshCS.Refresh.ColorAttachmentInfo ToSDLGpu() 
+    public SDL.SDL_GPUColorTargetInfo ToSDLGpu() 
     {
-        return new RefreshCS.Refresh.ColorAttachmentInfo() 
+        return new SDL.SDL_GPUColorTargetInfo() 
         {
-            TextureSlice = TextureSlice.ToSDLGpu(),
-            ClearColor = ClearColor.ToSDLGpu(),
-            LoadOp = (RefreshCS.Refresh.LoadOp)LoadOp,
-            StoreOp = (RefreshCS.Refresh.StoreOp)StoreOp,
-            Cycle = Cycle ? 1 : 0
+            texture = TextureSlice.ToSDLGpu(),
+            clear_color = ClearColor.ToSDLGpu(),
+            load_op = (SDL.SDL_GPULoadOp)LoadOp,
+            store_op = (SDL.SDL_GPUStoreOp)StoreOp,
+            cycle = Cycle
         };
     }
 }
@@ -478,9 +478,9 @@ public struct TextureSlice(Texture texture, uint mipLevel = 0, uint layer = 0)
     public uint MipLevel = mipLevel;
     public uint Layer = layer;
 
-    public RefreshCS.Refresh.TextureSlice ToSDLGpu() 
+    public SDL.SDL_GPUTextureSlice ToSDLGpu() 
     {
-        return new RefreshCS.Refresh.TextureSlice() 
+        return new SDL.SDL_GPUTextureSlice() 
         {
             Texture = Texture.Handle,
             MipLevel = MipLevel,
@@ -496,9 +496,9 @@ public struct TextureLocation(TextureSlice slice, uint x, uint y, uint z)
     public uint Y = y;
     public uint Z = z;
 
-    public RefreshCS.Refresh.TextureLocation ToSDLGpu() 
+    public SDL.SDL_GPUTextureLocation ToSDLGpu() 
     {
-        return new RefreshCS.Refresh.TextureLocation() 
+        return new SDL.SDL_GPUTextureLocation() 
         {
             TextureSlice = TextureSlice.ToSDLGpu(),
             X = X,
@@ -540,9 +540,9 @@ public struct TextureRegion
         D = texture.Depth;
     }
 
-    public RefreshCS.Refresh.TextureRegion ToSDLGpu() 
+    public SDL.SDL_GPUTextureRegion ToSDLGpu() 
     {
-        return new RefreshCS.Refresh.TextureRegion() 
+        return new SDL.SDL_GPUTextureRegion() 
         {
             TextureSlice = TextureSlice.ToSDLGpu(),
             X = X,
@@ -1057,23 +1057,23 @@ public struct SamplerCreateInfo
 		MaxLod = 1000
 	};
 
-    public RefreshCS.Refresh.SamplerCreateInfo ToSDLGpu() 
+    public SDL.SDL_GPUSamplerCreateInfo ToSDLGpu() 
     {
-        return new RefreshCS.Refresh.SamplerCreateInfo() 
+        return new SDL.SDL_GPUSamplerCreateInfo() 
         {
-            MinFilter = (RefreshCS.Refresh.Filter)MinFilter,
-            MagFilter = (RefreshCS.Refresh.Filter)MagFilter,
-            MipmapMode = (RefreshCS.Refresh.SamplerMipmapMode)MipmapMode,
-            AddressModeU = (RefreshCS.Refresh.SamplerAddressMode)AddressModeU,
-            AddressModeV = (RefreshCS.Refresh.SamplerAddressMode)AddressModeV,
-            AddressModeW = (RefreshCS.Refresh.SamplerAddressMode)AddressModeW,
-            MipLodBias = MipLodBias,
-            AnisotropyEnable = AnisotropyEnable ? 1 : 0,
-            MaxAnisotropy = MaxAnisotropy,
-            CompareEnable = CompareEnable ? 1 : 0,
-            CompareOp = (RefreshCS.Refresh.CompareOp)CompareOp,
-            MinLod = MinLod,
-            MaxLod = MaxLod
+            min_filter = (SDL.SDL_GPUFilter)MinFilter,
+            mag_filter = (SDL.SDL_GPUFilter)MagFilter,
+            mipmap_mode = (SDL.SDL_GPUSamplerMipmapMode)MipmapMode,
+            address_mode_u = (SDL.SDL_GPUSamplerAddressMode)AddressModeU,
+            address_mode_v = (SDL.SDL_GPUSamplerAddressMode)AddressModeV,
+            address_mode_w = (SDL.SDL_GPUSamplerAddressMode)AddressModeW,
+            mip_lod_bias = MipLodBias,
+            enable_anisotropy = AnisotropyEnable,
+            max_anisotropy = MaxAnisotropy,
+            enable_compare = CompareEnable,
+            compare_op = (SDL.SDL_GPUCompareOp)CompareOp,
+            min_lod = MinLod,
+            max_lod = MaxLod
         };
     }
 }
@@ -1085,14 +1085,14 @@ public struct StencilOpState
     public StencilOp DepthFailOp;
     public CompareOp CompareOp;
 
-    public Refresh.StencilOpState ToSDLGpu() 
+    public SDL.SDL_GPUStencilOpState ToSDLGpu() 
     {
-        return new Refresh.StencilOpState() 
+        return new SDL.SDL_GPUStencilOpState() 
         {
-            FailOp = (Refresh.StencilOp)FailOp,
-            PassOp = (Refresh.StencilOp)PassOp,
-            DepthFailOp = (Refresh.StencilOp)DepthFailOp,
-            CompareOp = (Refresh.CompareOp)CompareOp
+            fail_op = (SDL.SDL_GPUStencilOp)FailOp,
+            pass_op = (SDL.SDL_GPUStencilOp)PassOp,
+            depth_fail_op = (SDL.SDL_GPUStencilOp)DepthFailOp,
+            compare_op = (SDL.SDL_GPUCompareOp)CompareOp
         };
     }
 }
@@ -1102,9 +1102,8 @@ public struct DepthStencilState
     public bool DepthTestEnable;
     public StencilOpState BackStencilState;
     public StencilOpState FrontStencilState;
-    public uint CompareMask;
-    public uint WriteMask;
-    public uint Reference;
+    public byte CompareMask;
+    public byte WriteMask;
     public CompareOp CompareOp;
     public bool DepthWriteEnable;
     public bool StencilTestEnable;
@@ -1132,19 +1131,18 @@ public struct DepthStencilState
 		StencilTestEnable = false
 	};
 
-    public Refresh.DepthStencilState ToSDLGpu() 
+    public SDL.SDL_GPUDepthStencilState ToSDLGpu() 
     {
-        return new Refresh.DepthStencilState() 
+        return new SDL.SDL_GPUDepthStencilState() 
         {
-            DepthTestEnable = DepthTestEnable ? 1 : 0,
-            BackStencilState = BackStencilState.ToSDLGpu(),
-            FrontStencilState = FrontStencilState.ToSDLGpu(),
-            CompareMask = CompareMask,
-            WriteMask = WriteMask,
-            Reference = Reference,
-            CompareOp = (Refresh.CompareOp)CompareOp,
-            DepthWriteEnable = DepthWriteEnable ? 1 : 0,
-            StencilTestEnable = StencilTestEnable ? 1 : 0
+            enable_depth_test = DepthTestEnable,
+            back_stencil_state = BackStencilState.ToSDLGpu(),
+            front_stencil_state = FrontStencilState.ToSDLGpu(),
+            compare_mask = CompareMask,
+            write_mask = WriteMask,
+            compare_op = (SDL.SDL_GPUCompareOp)CompareOp,
+            enable_depth_write = DepthWriteEnable,
+            enable_stencil_test = StencilTestEnable
         };
     }
 }
@@ -1154,12 +1152,12 @@ public struct BufferBinding(RawBuffer buffer, uint offset)
     public RawBuffer Buffer = buffer;
     public uint Offset = offset;
 
-    public Refresh.BufferBinding ToSDLGpu() 
+    public SDL.SDL_GPUBufferBinding ToSDLGpu() 
     {
-        return new Refresh.BufferBinding() 
+        return new SDL.SDL_GPUBufferBinding() 
         {
-            Buffer = Buffer.Handle,
-            Offset = Offset
+            buffer = Buffer.Handle,
+            offset = Offset
         };
     }
 }
@@ -1169,12 +1167,12 @@ public struct TextureSamplerBinding(Texture texture, Sampler sampler)
     public Texture Texture = texture;
     public Sampler Sampler = sampler;
 
-    public Refresh.TextureSamplerBinding ToSDLGpu() 
+    public SDL.SDL_GPUTextureSamplerBinding ToSDLGpu() 
     {
-        return new Refresh.TextureSamplerBinding() 
+        return new SDL.SDL_GPUTextureSamplerBinding() 
         {
-            Texture = Texture.Handle,
-            Sampler = Sampler.Handle
+            texture = Texture.Handle,
+            sampler = Sampler.Handle
         };
     }
 }
@@ -1186,14 +1184,14 @@ public struct TextureTransferInfo(TransferBuffer transferBuffer, uint offset = 0
 	public uint ImagePitch = imagePitch;
 	public uint ImageHeight = imageHeight;
 
-	public Refresh.TextureTransferInfo ToSDLGpu()
+	public SDL.SDL_GPUTextureTransferInfo ToSDLGpu()
 	{
-		return new Refresh.TextureTransferInfo
+		return new SDL.SDL_GPUTextureTransferInfo
 		{
-			TransferBuffer = TransferBuffer.Handle,
-			Offset = Offset,
-			ImagePitch = ImagePitch,
-			ImageHeight = ImageHeight
+			transfer_buffer = TransferBuffer.Handle,
+			offset = Offset,
+			pixels_per_row = ImagePitch,
+			rows_per_layer = ImageHeight
 		};
 	}
 }

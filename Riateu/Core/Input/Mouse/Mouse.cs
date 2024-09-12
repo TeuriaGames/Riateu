@@ -65,11 +65,11 @@ public class Mouse
 
     internal Mouse()
     {
-        LeftButton = new MouseButton(this, MouseButtonCode.Left, (uint)SDL.SDL_MouseButtonFlags.LMask);
-        MiddleButton = new MouseButton(this, MouseButtonCode.Middle, (uint)SDL.SDL_MouseButtonFlags.MMask);
-        RightButton = new MouseButton(this, MouseButtonCode.Right, (uint)SDL.SDL_MouseButtonFlags.RMask);
-        X1Button = new MouseButton(this, MouseButtonCode.X1, (uint)SDL.SDL_MouseButtonFlags.X1Mask);
-        X2Button = new MouseButton(this, MouseButtonCode.X2, (uint)SDL.SDL_MouseButtonFlags.X2Mask);
+        LeftButton = new MouseButton(this, MouseButtonCode.Left, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_LMASK);
+        MiddleButton = new MouseButton(this, MouseButtonCode.Middle, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_MMASK);
+        RightButton = new MouseButton(this, MouseButtonCode.Right, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_RMASK);
+        X1Button = new MouseButton(this, MouseButtonCode.X1, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_X1MASK);
+        X2Button = new MouseButton(this, MouseButtonCode.X2, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_X2MASK);
 
         MouseButtons[0] = LeftButton;
         MouseButtons[1] = RightButton;

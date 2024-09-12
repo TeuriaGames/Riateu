@@ -41,22 +41,22 @@ public class Window : IDisposable
     {
         if (settings.WindowMode == WindowMode.Fullscreen) 
         {
-            flags |= SDL.SDL_WindowFlags.Fullscreen;
+            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
         }
         else if (settings.WindowMode == WindowMode.BorderlessFullscreen) 
         {
-            flags |= SDL.SDL_WindowFlags.Borderless;
-            flags |= SDL.SDL_WindowFlags.Fullscreen;
+            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
+            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
         }
 
         if (settings.Flags.Resizable) 
         {
-            flags |= SDL.SDL_WindowFlags.Resizable;
+            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
         }
 
         if (settings.Flags.StartMaximized) 
         {
-            flags |= SDL.SDL_WindowFlags.Maximized;
+            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_MAXIMIZED;
         }
 
         this.windowMode = settings.WindowMode;
@@ -66,15 +66,12 @@ public class Window : IDisposable
         unsafe {
             SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)mode;
 
-            fixed (char *ptr = settings.Title) 
-            {
-                Handle = SDL.SDL_CreateWindow(
-                    ref Unsafe.AsRef<char>(ptr),
-                    settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
-                    settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
-                    (ulong)flags
-                );
-            }
+            Handle = SDL.SDL_CreateWindow(
+                settings.Title,
+                settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
+                settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
+                (ulong)flags
+            );
         }
         int width = 0, height = 0;
         SDL.SDL_GetWindowSize(Handle, ref width, ref height);
@@ -131,13 +128,13 @@ public class Window : IDisposable
 
         if (windowMode == WindowMode.Fullscreen)
         {
-            windowFlag = SDL.SDL_WindowFlags.Fullscreen;
+            windowFlag = SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
             fullscreen = true;
         }
         else if (windowMode == WindowMode.BorderlessFullscreen)
         {
-            windowFlag |= SDL.SDL_WindowFlags.Borderless;
-            windowFlag |= SDL.SDL_WindowFlags.Fullscreen;
+            windowFlag |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
+            windowFlag |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
             fullscreen = true;
         }
 

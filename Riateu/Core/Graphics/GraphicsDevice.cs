@@ -20,8 +20,7 @@ public class GraphicsDevice : IDisposable
 
     public GraphicsDevice(GraphicsSettings settings, BackendFlags flags) 
     {
-        char c = 'c';
-        Handle = SDL.SDL_CreateGPUDevice((uint)flags, settings.DebugMode, ref c);
+        Handle = SDL.SDL_CreateGPUDevice((uint)flags, settings.DebugMode, "GAME DEVICE");
 
 
         BackendFlags = flags;
@@ -74,7 +73,7 @@ public class GraphicsDevice : IDisposable
         if (window.Claimed) 
         {
             // FIXME unclaim
-            // RefreshCS.Refresh.Refresh_UnclaimWindow(Handle, window.Handle);
+            // SDL.SDL_GPURefresh_UnclaimWindow(Handle, window.Handle);
             window.Claimed = false;
             window.SwapchainTarget.Handle = IntPtr.Zero;
         }

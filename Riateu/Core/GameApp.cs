@@ -78,14 +78,14 @@ public abstract class GameApp
             backendFlags = BackendFlags.Metal;
         }
 
-        SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.Hidden;
+        SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN;
 
         if (backendFlags != BackendFlags.D3D11) 
         {
             windowFlags |= backendFlags switch 
             {
-                BackendFlags.Vulkan => SDL.SDL_WindowFlags.Vulkan,
-                BackendFlags.Metal => SDL.SDL_WindowFlags.Metal,
+                BackendFlags.Vulkan => SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN,
+                BackendFlags.Metal => SDL.SDL_WindowFlags.SDL_WINDOW_METAL,
                 _ => throw new Exception("Not Supported")
             };
         }

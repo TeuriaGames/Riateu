@@ -16,10 +16,7 @@ internal static unsafe class Clipboard
 	{
 		var len = 0; while (text[len] != 0) len++;
 		var str = Encoding.UTF8.GetString(text, len);
-		fixed (char *ptr = str) 
-		{
-			SDL.SDL_SetClipboardText(ref Unsafe.AsRef<char>(ptr));
-		}
+		SDL.SDL_SetClipboardText(str);
 	}
 
 	private static unsafe byte* Get(void* userdata)
