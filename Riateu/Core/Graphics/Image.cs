@@ -169,6 +169,23 @@ public class Image : IDisposable
         }
     }
 
+    public unsafe void Premultiply() 
+    {
+        fixed (Color *ptr = Pixels) 
+        {
+            byte alpha;
+            for (int i = 0; i < Width * Height; i++) 
+            {
+                Color col = ptr[i];
+
+                alpha = col.A;
+                ptr[i].R *= alpha;
+                ptr[i].G *= alpha;
+                ptr[i].B *= alpha;
+            }
+        }
+    }
+
     public unsafe void CopyFrom(Image image, int x, int y) 
     {
         CopyFrom(image.Pixels, x, y, image.Width, image.Height);
