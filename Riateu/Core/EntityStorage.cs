@@ -16,7 +16,7 @@ public class EntityStorage
         }
         WeakList<Entity> entities = new WeakList<Entity>();
         entities.Add(entity);
-        Storages.Add(type, entities);       
+        Storages.Add(type, entities);
     }
 
     public void Add<T>(Entity entity) 
