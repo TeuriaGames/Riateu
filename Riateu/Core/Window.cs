@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Riateu.Graphics;
 using SDL2;
 
@@ -18,17 +19,23 @@ public class Window : IDisposable
         set => windowMode = value;
     }
     private WindowMode windowMode;
+    private uint id;
 
     public SwapchainComposition SwapchainComposition { get; internal set; }
     public RenderTarget SwapchainTarget { get; internal set; }
     public TextureFormat SwapchainFormat { get; internal set; }
 
     public bool Claimed { get; internal set; }
+    public static int TotalWindowCount => windows.Count;
     private bool IsDisposed;
+
+    private static Dictionary<uint, Window> windows = new Dictionary<uint, Window>();
+    private static uint totalWindows;
+    private static Stack<uint> freedWindowID = new Stack<uint>();
 
     public Action<uint, uint> OnSizeChange = delegate {};
 
-    public Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 
+    private Window(WindowSettings settings, SDL.SDL_WindowFlags flags, uint id) 
     {
         if (settings.WindowMode == WindowMode.Fullscreen) 
         {
@@ -66,6 +73,24 @@ public class Window : IDisposable
 
         Width = (uint)width;
         Height = (uint)height;
+        this.id = id;
+    }
+
+    public static Window CreateWindow(WindowSettings settings, SDL.SDL_WindowFlags flags) 
+    {
+        Window window;
+        if (freedWindowID.TryPop(out uint freedID)) 
+        {
+            window = new Window(settings, flags, freedID);
+            windows.Add(window.id, window);
+        }
+        else 
+        {
+            window = new Window(settings, flags, totalWindows);
+            windows.Add(window.id, window);
+            totalWindows += 1;            
+        }
+        return window;
     }
 
     public void SetWindowSize(uint width, uint height) 
@@ -102,7 +127,7 @@ public class Window : IDisposable
         WindowMode = windowMode;
     }
 
-    internal void Show() 
+    public void Show() 
     {
         SDL.SDL_ShowWindow(Handle);
     }

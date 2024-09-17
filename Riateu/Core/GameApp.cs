@@ -90,7 +90,7 @@ public abstract class GameApp
             };
         }
 
-        MainWindow = new Window(settings, windowFlags);
+        MainWindow = Window.CreateWindow(settings, windowFlags);
         GraphicsDevice = new GraphicsDevice(graphicsSettings, backendFlags);
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
