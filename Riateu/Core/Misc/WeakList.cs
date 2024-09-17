@@ -36,8 +36,10 @@ public class WeakList<T>
 
     public void Add(T item) 
     {
-        if (Count == buffer.Length)
+        if (Count == buffer.Length) 
+        {
             Array.Resize(ref buffer, Math.Max(buffer.Length << 1, 10));
+        }
         buffer[Count++] = item;
     }
 
@@ -122,7 +124,9 @@ public class WeakList<T>
 
     public T[] ToArray() 
     {
-        return buffer;
+        T[] newBuff = new T[Count];
+        Array.Copy(buffer, newBuff, Count);
+        return newBuff;
     }
 
     public List<T> ToList() 
@@ -130,6 +134,11 @@ public class WeakList<T>
         var list = new List<T>(buffer);
         list.RemoveAll(t => t is null);
         return list;
+    }
+
+    public Span<T> AsSpan() 
+    {
+        return new Span<T>(buffer, 0, Count);
     }
 
     public WeakEnumerator<T> GetEnumerator()
