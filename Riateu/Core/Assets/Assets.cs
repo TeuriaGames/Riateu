@@ -35,6 +35,7 @@ public class AssetStorage
         assetPath = path;
         packer = new Packer<AtlasItem>(8192);
         this.audioDevice = audioDevice;
+        this.graphicsDevice = graphicsDevice;
     }
 
     public void StartContext(ResourceUploader uploader) 
@@ -110,9 +111,25 @@ public class AssetStorage
         return null;
     }
 
-    public Shader LoadShader(string path, in ShaderCreateInfo info) 
+    public Shader LoadSPIRVVertexShader(string path, uint uniformBufferCount = 0) 
     {
-        return new Shader(graphicsDevice, path, "main", info);
+        return new Shader(graphicsDevice, path, "main", new ShaderCreateInfo() 
+        {
+            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderStage = ShaderStage.Vertex,
+            UniformBufferCount = uniformBufferCount
+        });
+    }
+
+    public Shader LoadSPIRVFragmentShader(string path, uint samplerCount, uint uniformBufferCount = 0) 
+    {
+        return new Shader(graphicsDevice, path, "main", new ShaderCreateInfo() 
+        {
+            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderStage = ShaderStage.Fragment,
+            SamplerCount = samplerCount,
+            UniformBufferCount = uniformBufferCount
+        });
     }
 
     public Ref<Texture> LoadTexture(string path) 
