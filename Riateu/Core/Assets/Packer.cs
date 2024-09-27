@@ -6,7 +6,7 @@ namespace Riateu.Content;
 
 public class Packer<T> 
 {
-    public struct Node(int x, int y, int w, int h) 
+    private struct Node(int x, int y, int w, int h) 
     {
         public int X = x;
         public int Y = y;
