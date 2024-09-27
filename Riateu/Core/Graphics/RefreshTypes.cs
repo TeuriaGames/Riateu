@@ -355,7 +355,7 @@ public struct TextureCreateInfo
             layer_count_or_depth = LayerCount,
             num_levels = LayerCount,
             sample_count = (SDL.SDL_GPUSampleCount)SampleCount,
-            usage = (uint)UsageFlags
+            usage = (SDL.SDL_GPUTextureUsageFlags)UsageFlags
         };
     }
 }
@@ -560,12 +560,12 @@ public struct TransferBufferLocation(TransferBuffer buffer, uint offset = 0)
     public TransferBuffer TransferBuffer = buffer;
     public uint Offset = offset;
 
-    public Refresh.TransferBufferLocation ToSDLGpu() 
+    public SDL.SDL_GPUTransferBufferLocation ToSDLGpu() 
     {
-        return new Refresh.TransferBufferLocation() 
+        return new SDL.SDL_GPUTransferBufferLocation() 
         {
-            TransferBuffer= TransferBuffer.Handle,
-            Offset = Offset,
+            transfer_buffer = TransferBuffer.Handle,
+            offset = Offset
         };
     }
 }

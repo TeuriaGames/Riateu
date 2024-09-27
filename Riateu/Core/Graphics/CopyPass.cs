@@ -1,5 +1,5 @@
 using System;
-using RefreshCS;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -9,7 +9,7 @@ public class CopyPass : IPassPool
 
     public void UploadToBuffer(in TransferBufferLocation source, in BufferRegion destination, bool cycle) 
     {
-        Refresh.Refresh_UploadToBuffer(Handle, source.ToSDLGpu(), destination.ToSDLGpu(), cycle ? 1 : 0);
+        SDL.SDL_UploadToGPUBuffer(Handle, source.ToSDLGpu(), destination.ToSDLGpu(), cycle);
     }
 
     public void UploadToBuffer(TransferBuffer source, RawBuffer destination, bool cycle) 

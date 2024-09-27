@@ -1,5 +1,5 @@
 using System;
-using RefreshCS;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -23,6 +23,6 @@ public class Fence : GraphicsResource, IGraphicsPool
 
     protected override void HandleDispose(nint handle)
     {
-        Refresh.Refresh_ReleaseFence(Device.Handle, handle);
+        SDL.SDL_ReleaseGPUFence(Device.Handle, handle);
     }
 }

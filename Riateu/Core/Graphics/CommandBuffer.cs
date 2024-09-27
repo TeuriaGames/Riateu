@@ -77,7 +77,7 @@ public class CommandBuffer : IGraphicsPool
         SDL.SDL_GPUColorTargetInfo *infos = stackalloc SDL.SDL_GPUColorTargetInfo[1];
         infos[0] = info.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 1, (SDL.SDL_GPUDepthStencilAttachmentInfo*)IntPtr.Zero);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, ref infos[0], 1, (SDL.SDL_GPUDepthStencilTargetInfo*)IntPtr.Zero);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }

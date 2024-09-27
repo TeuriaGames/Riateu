@@ -1,5 +1,5 @@
 using System;
-using RefreshCS;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -21,7 +21,8 @@ public class Texture : GraphicsResource
 
     public Texture(GraphicsDevice device, TextureCreateInfo info) : base(device)
     {
-        Handle = Refresh.Refresh_CreateTexture(device.Handle, info.ToSDLGpu());
+        var sdlGPUInfo = info.ToSDLGpu();
+        Handle = SDL.SDL_CreateGPUTexture(device.Handle, ref sdlGPUInfo);
         Width = info.Width;
         Height = info.Height;
         Depth = info.Depth;
@@ -33,10 +34,10 @@ public class Texture : GraphicsResource
     public Texture(GraphicsDevice device, uint width, uint height, TextureFormat format, TextureUsageFlags usageFlags = TextureUsageFlags.Sampler) 
         :this(device, new TextureCreateInfo 
         {
+            TextureType = TextureType.Texture2D,
             Width = width,
             Height = height,
             Format = format,
-            IsCube = false,
             Depth = 1,
             LayerCount = 1,
             LevelCount = 1,
@@ -132,6 +133,6 @@ public class Texture : GraphicsResource
 
     protected override void HandleDispose(nint handle)
     {
-        Refresh.Refresh_ReleaseTexture(Device.Handle, handle);
+        SDL.SDL_ReleaseGPUTexture(Device.Handle, handle);
     }
 }

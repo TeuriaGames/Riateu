@@ -70,7 +70,7 @@ public class Window : IDisposable
                 settings.Title,
                 settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
                 settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
-                (ulong)flags
+                flags
             );
         }
         int width = 0, height = 0;

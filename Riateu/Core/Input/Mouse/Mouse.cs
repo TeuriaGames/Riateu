@@ -30,7 +30,7 @@ public class Mouse
     private int previousWheelRawY = 0;
     private MouseButton[] MouseButtons = new MouseButton[5];
 
-    internal uint ButtonMask { get; private set; }
+    internal SDL.SDL_MouseButtonFlags ButtonMask { get; private set; }
 
     private bool relativeMode;
 
@@ -65,11 +65,11 @@ public class Mouse
 
     internal Mouse()
     {
-        LeftButton = new MouseButton(this, MouseButtonCode.Left, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_LMASK);
-        MiddleButton = new MouseButton(this, MouseButtonCode.Middle, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_MMASK);
-        RightButton = new MouseButton(this, MouseButtonCode.Right, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_RMASK);
-        X1Button = new MouseButton(this, MouseButtonCode.X1, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_X1MASK);
-        X2Button = new MouseButton(this, MouseButtonCode.X2, (uint)SDL.SDL_MouseButtonFlags.SDL_BUTTON_X2MASK);
+        LeftButton = new MouseButton(this, MouseButtonCode.Left, SDL.SDL_MouseButtonFlags.SDL_BUTTON_LMASK);
+        MiddleButton = new MouseButton(this, MouseButtonCode.Middle, SDL.SDL_MouseButtonFlags.SDL_BUTTON_MMASK);
+        RightButton = new MouseButton(this, MouseButtonCode.Right, SDL.SDL_MouseButtonFlags.SDL_BUTTON_RMASK);
+        X1Button = new MouseButton(this, MouseButtonCode.X1, SDL.SDL_MouseButtonFlags.SDL_BUTTON_X1MASK);
+        X2Button = new MouseButton(this, MouseButtonCode.X2, SDL.SDL_MouseButtonFlags.SDL_BUTTON_X2MASK);
 
         MouseButtons[0] = LeftButton;
         MouseButtons[1] = RightButton;

@@ -27,7 +27,7 @@ internal static unsafe class Clipboard
 			clipboard = IntPtr.Zero;
 		}
 
-		var str = new string((char*)SDL.SDL_GetClipboardText());
+		var str = SDL.SDL_GetClipboardText();
 		var length = Encoding.UTF8.GetByteCount(str);
 		var bytes = (byte*)(clipboard = (nint)NativeMemory.Alloc((nuint)(length + 1)));
 
