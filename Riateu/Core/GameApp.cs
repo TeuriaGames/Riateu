@@ -67,7 +67,7 @@ public abstract class GameApp
         BackendFlags backendFlags = 0;
         if (Environment.OSVersion.Platform == PlatformID.Win32NT) 
         {
-            backendFlags = BackendFlags.D3D11;
+            backendFlags = BackendFlags.Vulkan;
         }
         else if (Environment.OSVersion.Platform == PlatformID.Unix) 
         {
@@ -78,19 +78,9 @@ public abstract class GameApp
             backendFlags = BackendFlags.Metal;
         }
 
-        SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN;
 
-        if (backendFlags != BackendFlags.D3D11) 
-        {
-            windowFlags |= backendFlags switch 
-            {
-                BackendFlags.Vulkan => SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN,
-                BackendFlags.Metal => SDL.SDL_WindowFlags.SDL_WINDOW_METAL,
-                _ => throw new Exception("Not Supported")
-            };
-        }
 
-        MainWindow = Window.CreateWindow(settings, windowFlags);
+        MainWindow = Window.CreateWindow(settings, backendFlags);
         GraphicsDevice = new GraphicsDevice(graphicsSettings, backendFlags);
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
@@ -298,14 +288,4 @@ public abstract class GameApp
             }
         }
     }
-}
-
-public record struct GraphicsSettings(SwapchainComposition SwapchainComposition, PresentMode PresentMode, bool DebugMode = false, bool LowPowerMode = false) 
-{
-    public static readonly GraphicsSettings Default = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Immediate, false, false);
-    public static readonly GraphicsSettings Debug = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Immediate, true, false);
-    public static readonly GraphicsSettings Vsync = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.VSync, false, false);
-    public static readonly GraphicsSettings DebugVSync = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.VSync, true, false);
-    public static readonly GraphicsSettings Fast = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Mailbox, false, false);
-    public static readonly GraphicsSettings DebugFast = new GraphicsSettings(SwapchainComposition.SDR, PresentMode.Mailbox, true, false);
 }

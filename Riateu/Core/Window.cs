@@ -76,8 +76,20 @@ public class Window : IDisposable
         this.id = id;
     }
 
-    public static Window CreateWindow(WindowSettings settings, SDL.SDL_WindowFlags flags) 
+    public static Window CreateWindow(WindowSettings settings, BackendFlags backendFlags) 
     {
+        SDL.SDL_WindowFlags flags = SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN;
+
+        if (backendFlags != BackendFlags.D3D11) 
+        {
+            flags |= backendFlags switch 
+            {
+                BackendFlags.Vulkan => SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN,
+                BackendFlags.Metal => SDL.SDL_WindowFlags.SDL_WINDOW_METAL,
+                _ => throw new Exception("Not Supported")
+            };
+        }
+
         Window window;
         if (freedWindowID.TryPop(out uint freedID)) 
         {
