@@ -47,6 +47,13 @@ public class Tilemap : Component
     /// <param name="gridSize">A size of a grid in tiles</param>
     public Tilemap(Array2D<TextureQuad?> tiles, int gridSize) : this(tiles, gridSize, null) {}
 
+    public void ChangeTiles(Array2D<TextureQuad?> tiles) 
+    {
+        rows = tiles.Rows;
+        columns = tiles.Columns;
+        this.tiles = tiles;
+    }
+
     /// <summary>
     /// Set a tile to a specific grid location.
     /// </summary>
