@@ -179,9 +179,9 @@ public class Image : IDisposable
                 Color col = ptr[i];
 
                 alpha = col.A;
-                ptr[i].R *= alpha;
-                ptr[i].G *= alpha;
-                ptr[i].B *= alpha;
+                ptr[i].R = (byte)(ptr[i].R * alpha / 255);
+                ptr[i].G = (byte)(ptr[i].G * alpha / 255);
+                ptr[i].B = (byte)(ptr[i].B * alpha / 255);
             }
         }
     }
