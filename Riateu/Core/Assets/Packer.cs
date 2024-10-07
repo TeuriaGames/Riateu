@@ -13,8 +13,7 @@ public class Packer<T>
         public int W = w;
         public int H = h;
         public bool IsSplit;
-        public int TopSplit;
-        public int BotSplit;
+        public int[] Splits = new int[2];
     }
 
     public struct Item(T data, int width, int height)
@@ -45,13 +44,11 @@ public class Packer<T>
 
     public int MaxSize { get; set; }
     public bool UsePowerOfTwo { get; set; }
-    public bool UseTrimming { get; set; }
 
-    public Packer(int maxSize = 2048, bool usePowerOfTwo = true, bool useTrimming = false) 
+    public Packer(int maxSize = 2048, bool usePowerOfTwo = true) 
     {
         MaxSize = maxSize;
         UsePowerOfTwo = usePowerOfTwo;
-        UseTrimming = useTrimming;
     }
 
     public void Add(Item item) 
@@ -158,8 +155,8 @@ public class Packer<T>
     private void SplitNode(ref Node node, int w, int h) 
     {
         node.IsSplit = true;
-        node.TopSplit = AddNode(new Node(node.X, node.Y + h, node.W, node.H - h));
-        node.BotSplit = AddNode(new Node(node.X + w, node.Y, node.W - w, node.H));
+        node.Splits[0] = AddNode(new Node(node.X, node.Y + h, node.W, node.H - h));
+        node.Splits[1] = AddNode(new Node(node.X + w, node.Y, node.W - w, node.H));
     }
 
     private int FindNode(int nodeID, int w, int h) 
@@ -167,18 +164,14 @@ public class Packer<T>
         Node node = nodes[nodeID];
         if (node.IsSplit) 
         {
-            int splitID = node.TopSplit;
-            int foundID = FindNode(splitID, w, h);
-            if (foundID != -1) 
+            for (int i = 0; i < 2; i++) 
             {
-                return foundID;
-            }
-
-            splitID = node.BotSplit;
-            foundID = FindNode(splitID, w, h);
-            if (foundID != -1) 
-            {
-                return foundID;
+                int splitID = node.Splits[i];
+                int foundID = FindNode(splitID, w, h);
+                if (foundID != -1) 
+                {
+                    return foundID;
+                }
             }
         }
         else if ((w <= node.W) && (h <= node.H)) 
@@ -207,20 +200,20 @@ public class Packer<T>
             var next = AddNode(oldRoot);
             root = new Node(0, 0, oldRoot.W + width, oldRoot.H);
             root.IsSplit = true;
-            root.TopSplit = currentRootIndex;
+            root.Splits[0] = currentRootIndex;
             currentRootIndex = next;
             nodes[next] = root;
-            return root.BotSplit = AddNode(new Node(oldRoot.W, 0, width, oldRoot.H));
+            return root.Splits[1] = AddNode(new Node(oldRoot.W, 0, width, oldRoot.H));
         }
         else 
         {
             var next = AddNode(oldRoot);
             root = new Node(0, 0, oldRoot.W, oldRoot.H + height);
             root.IsSplit = true;
-            root.BotSplit = currentRootIndex;
+            root.Splits[1] = currentRootIndex;
             currentRootIndex = next;
             nodes[next] = root;
-            return root.TopSplit = AddNode(new Node(0, oldRoot.H, oldRoot.W, height));
+            return root.Splits[0] = AddNode(new Node(0, oldRoot.H, oldRoot.W, height));
         }
     }
 }
