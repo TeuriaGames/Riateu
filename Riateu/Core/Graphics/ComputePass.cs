@@ -12,10 +12,10 @@ public class ComputePass : IPassPool
         SDL.SDL_BindGPUComputePipeline(Handle, computePipeline.Handle);
     }
 
-    public unsafe void BindStorageTexture(Texture textureSlice, uint slot = 0) 
+    public unsafe void BindStorageTexture(Texture texture, uint slot = 0) 
     {
         Span<nint> textureStorages = stackalloc nint[1];
-        textureStorages[0] = textureSlice.Handle;
+        textureStorages[0] = texture.Handle;
 
         SDL.SDL_BindGPUComputeStorageTextures(Handle, slot, textureStorages, 1);
     }

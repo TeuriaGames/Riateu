@@ -138,7 +138,7 @@ public unsafe class ResourceUploader : GraphicsResource
 	}
 
 	/// <summary>
-	/// Prepares upload of pixel data into a TextureSlice.
+	/// Prepares upload of pixel data into a Texture.
 	/// </summary>
 	public void SetTextureData<T>(TextureRegion textureRegion, Span<T> data, bool cycle) where T : unmanaged
 	{

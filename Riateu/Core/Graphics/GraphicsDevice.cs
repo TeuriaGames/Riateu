@@ -170,14 +170,14 @@ public class GraphicsDevice : IDisposable
 
     public RenderPass BeginTarget(RenderTarget target, Color clearColor, bool cycle) 
     {
-        return deviceCmdBuffer.BeginRenderPass(new ColorAttachmentInfo(target, clearColor, cycle));
+        return deviceCmdBuffer.BeginRenderPass(new ColorTargetInfo(target, clearColor, cycle));
     }
 
     public RenderPass BeginTarget(RenderTarget target, DepthTarget buffer, Color clearColor, bool cycle) 
     {
         return deviceCmdBuffer.BeginRenderPass(
-            new DepthStencilAttachmentInfo(buffer, buffer.LayerCountOrDepth, 0, true, LoadOp.Clear, StoreOp.DontCare, LoadOp.Clear), 
-            new ColorAttachmentInfo(target, clearColor, cycle)
+            new DepthStencilTargetInfo(buffer, buffer.LayerCountOrDepth, 0, true, LoadOp.Clear, StoreOp.DontCare, LoadOp.Clear), 
+            new ColorTargetInfo(target, clearColor, cycle)
         );
     }
 

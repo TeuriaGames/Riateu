@@ -390,9 +390,9 @@ public struct TextureCreateInfo
     }
 }
 
-public struct ColorAttachmentInfo(Texture texture, Color clearColor, bool cycle, LoadOp loadOp = LoadOp.Clear, StoreOp storeOp = StoreOp.Store)
+public struct ColorTargetInfo(Texture texture, Color clearColor, bool cycle, LoadOp loadOp = LoadOp.Clear, StoreOp storeOp = StoreOp.Store)
 {
-    public Texture TextureSlice = texture;
+    public Texture Texture = texture;
     public Color ClearColor = clearColor;
     public LoadOp LoadOp = loadOp;
     public StoreOp StoreOp = storeOp;
@@ -402,7 +402,7 @@ public struct ColorAttachmentInfo(Texture texture, Color clearColor, bool cycle,
     {
         return new SDL.SDL_GPUColorTargetInfo() 
         {
-            texture = TextureSlice.Handle,
+            texture = Texture.Handle,
             clear_color = ClearColor.ToSDLGpu(),
             load_op = (SDL.SDL_GPULoadOp)LoadOp,
             store_op = (SDL.SDL_GPUStoreOp)StoreOp,
@@ -411,7 +411,7 @@ public struct ColorAttachmentInfo(Texture texture, Color clearColor, bool cycle,
     }
 }
 
-public struct DepthStencilAttachmentInfo(
+public struct DepthStencilTargetInfo(
     Texture texture, 
     float depth,
     byte stencil,
@@ -422,7 +422,7 @@ public struct DepthStencilAttachmentInfo(
     StoreOp stencilStoreOp = StoreOp.DontCare
 )
 {
-    public Texture TextureSlice = texture;
+    public Texture Texture = texture;
     public float Depth = depth;
     public LoadOp LoadOp = loadOp;
     public StoreOp StoreOp = storeOp;
@@ -435,7 +435,7 @@ public struct DepthStencilAttachmentInfo(
     {
         return new SDL.SDL_GPUDepthStencilTargetInfo() 
         {
-            texture = TextureSlice.Handle,
+            texture = Texture.Handle,
             clear_depth = Depth,
             clear_stencil = Stencil,
             load_op = (SDL.SDL_GPULoadOp)LoadOp,
@@ -464,14 +464,14 @@ public struct StorageBufferReadWriteBinding(RawBuffer buffer, bool cycle)
 
 public struct StorageTextureReadWriteBinding(Texture texture, bool cycle)
 {
-    public Texture TextureSlice = texture;
+    public Texture Texture = texture;
     public bool Cycle = cycle;
 
     public SDL.SDL_GPUStorageTextureReadWriteBinding ToSDLGpu() 
     {
         return new SDL.SDL_GPUStorageTextureReadWriteBinding() 
         {
-            texture = TextureSlice.Handle,
+            texture = Texture.Handle,
             cycle = Cycle
         };
     }
@@ -493,7 +493,7 @@ public unsafe struct ComputePipelineCreateInfo
 
 public struct TextureLocation(Texture slice, uint x, uint y, uint z)
 {
-    public Texture TextureSlice = slice;
+    public Texture Texture = slice;
     public uint X = x;
     public uint Y = y;
     public uint Z = z;
@@ -502,7 +502,7 @@ public struct TextureLocation(Texture slice, uint x, uint y, uint z)
     {
         return new SDL.SDL_GPUTextureLocation() 
         {
-            texture = TextureSlice.Handle,
+            texture = Texture.Handle,
             x = X,
             y = Y,
             z = Z

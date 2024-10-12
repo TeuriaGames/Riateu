@@ -63,7 +63,7 @@ public class CommandBuffer : IGraphicsPool
         SDL.SDL_BlitGPUTexture(Handle, info);
     }
 
-    public unsafe RenderPass BeginRenderPass(in ColorAttachmentInfo info) 
+    public unsafe RenderPass BeginRenderPass(in ColorTargetInfo info) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -81,7 +81,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(in ColorAttachmentInfo info, in ColorAttachmentInfo info2) 
+    public unsafe RenderPass BeginRenderPass(in ColorTargetInfo info, in ColorTargetInfo info2) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -103,7 +103,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(in ColorAttachmentInfo info, in ColorAttachmentInfo info2, in ColorAttachmentInfo info3) 
+    public unsafe RenderPass BeginRenderPass(in ColorTargetInfo info, in ColorTargetInfo info2, in ColorTargetInfo info3) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -129,7 +129,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(in ColorAttachmentInfo info, in ColorAttachmentInfo info2, in ColorAttachmentInfo info3, in ColorAttachmentInfo info4) 
+    public unsafe RenderPass BeginRenderPass(in ColorTargetInfo info, in ColorTargetInfo info2, in ColorTargetInfo info3, in ColorTargetInfo info4) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -159,7 +159,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(Span<ColorAttachmentInfo> infoSpan) 
+    public unsafe RenderPass BeginRenderPass(Span<ColorTargetInfo> infoSpan) 
     {
         int length = infoSpan.Length;
 #if DEBUG
@@ -168,7 +168,7 @@ public class CommandBuffer : IGraphicsPool
 
         for (int i = 0; i < length; i++) 
         {
-            ColorAttachmentInfo info = infoSpan[i];
+            ColorTargetInfo info = infoSpan[i];
             AssertTextureIsNotNull(info);
             AssertColorIsRenderTarget(info);
         }
@@ -186,7 +186,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(in DepthStencilAttachmentInfo depthStencilAttachment, in Span<ColorAttachmentInfo> infoSpan) 
+    public unsafe RenderPass BeginRenderPass(in DepthStencilTargetInfo depthStencilAttachment, in Span<ColorTargetInfo> infoSpan) 
     {
         int length = infoSpan.Length;
 #if DEBUG
@@ -196,7 +196,7 @@ public class CommandBuffer : IGraphicsPool
 
         for (int i = 0; i < length; i++) 
         {
-            ColorAttachmentInfo info = infoSpan[i];
+            ColorTargetInfo info = infoSpan[i];
             AssertTextureIsNotNull(info);
             AssertColorIsRenderTarget(info);
         }
@@ -215,7 +215,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(in DepthStencilAttachmentInfo depthStencilAttachment, in ColorAttachmentInfo info) 
+    public unsafe RenderPass BeginRenderPass(in DepthStencilTargetInfo depthStencilAttachment, in ColorTargetInfo info) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -235,7 +235,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(in DepthStencilAttachmentInfo depthStencilAttachment, in ColorAttachmentInfo info, in ColorAttachmentInfo info2) 
+    public unsafe RenderPass BeginRenderPass(in DepthStencilTargetInfo depthStencilAttachment, in ColorTargetInfo info, in ColorTargetInfo info2) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -259,7 +259,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(in DepthStencilAttachmentInfo depthStencilAttachment, in ColorAttachmentInfo info, in ColorAttachmentInfo info2, in ColorAttachmentInfo info3) 
+    public unsafe RenderPass BeginRenderPass(in DepthStencilTargetInfo depthStencilAttachment, in ColorTargetInfo info, in ColorTargetInfo info2, in ColorTargetInfo info3) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -286,7 +286,7 @@ public class CommandBuffer : IGraphicsPool
         return renderPass;
     }
 
-    public unsafe RenderPass BeginRenderPass(in DepthStencilAttachmentInfo depthStencilAttachment, in ColorAttachmentInfo info, in ColorAttachmentInfo info2, in ColorAttachmentInfo info3, in ColorAttachmentInfo info4) 
+    public unsafe RenderPass BeginRenderPass(in DepthStencilTargetInfo depthStencilAttachment, in ColorTargetInfo info, in ColorTargetInfo info2, in ColorTargetInfo info3, in ColorTargetInfo info4) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -514,17 +514,17 @@ public class CommandBuffer : IGraphicsPool
 
 
 #if DEBUG
-    private void AssertTextureIsNotNull(ColorAttachmentInfo info) 
+    private void AssertTextureIsNotNull(ColorTargetInfo info) 
     {
-        if (info.TextureSlice == null || info.TextureSlice.Handle == IntPtr.Zero) 
+        if (info.Texture == null || info.Texture.Handle == IntPtr.Zero) 
         {
             throw new InvalidOperationException("Render Target or a Target Texture in color attachment must not be null.");
         }
     }
 
-    private void AssertColorIsRenderTarget(ColorAttachmentInfo info) 
+    private void AssertColorIsRenderTarget(ColorTargetInfo info) 
     {
-        if ((info.TextureSlice.UsageFlags & TextureUsageFlags.ColorTarget) == 0) 
+        if ((info.Texture.UsageFlags & TextureUsageFlags.ColorTarget) == 0) 
         {
             throw new InvalidOperationException("Render pass color attachment must be a Render Target or has a TextureUsageFlags.ColorTarget");
         }
