@@ -1,11 +1,12 @@
 using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
 using ImGuiNET;
-using NativeFileDialogSharp;
 using Riateu.Graphics;
 using Riateu.ImGuiRend;
 using Riateu.Inputs;
+using SDL3;
 
 namespace Riateu.Content.App;
 
@@ -120,11 +121,34 @@ public class ContentWindow : GameLoop
 
     private void OnOpenProject() 
     {
-        DialogResult dialog = Dialog.FolderPicker("./");
-        if (dialog.IsOk) 
+        SDL.SDL_ShowOpenFolderDialog(OnDialogOpen, IntPtr.Zero, IntPtr.Zero, "./", false);
+    }
+
+    private unsafe void OnDialogOpen(IntPtr userdata, IntPtr filelist, int filter)
+    {
+        if (filelist == IntPtr.Zero)
         {
-            SelectedProject = dialog.Path;
+            return;
         }
+        if (*(byte*)filelist == IntPtr.Zero) 
+        {
+            return;
+        }
+        byte **files = (byte**)filelist;
+        byte *ptr = files[0];
+        int count = 0;
+        while (*ptr != 0)
+        {
+            ptr++;
+            count++;
+        }
+
+        if (count <= 0)
+        {
+            return;
+        }
+        string folder = Encoding.UTF8.GetString(files[0], count);
+        SelectedProject = folder;
     }
 
     private void OnAssetSelected(string path) 
