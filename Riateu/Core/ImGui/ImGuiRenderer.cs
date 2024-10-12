@@ -266,7 +266,8 @@ public class ImGuiRenderer
         renderPass.BindVertexBuffer(imGuiVertexBuffer);
         renderPass.BindIndexBuffer(imGuiIndexBuffer, IndexElementSize.SixteenBit);
 
-        uint vertexOffset = 0;
+        int vertexOffset = 0;
+        uint indexOffset = 0;
 
         for (int n = 0; n < drawDataPtr.CmdListsCount; n += 1)
         {
@@ -296,13 +297,14 @@ public class ImGuiRenderer
                 renderPass.DrawIndexedPrimitives(
                     drawCmd.ElemCount,
                     1,
-                    0u,
-                    (int)vertexOffset,
+                    indexOffset,
+                    vertexOffset,
                     0u
                 );
+                indexOffset += (uint)drawCmd.ElemCount;
             }
 
-            vertexOffset += (uint)cmdList.VtxBuffer.Size;
+            vertexOffset += cmdList.VtxBuffer.Size;
         }
     }
 
