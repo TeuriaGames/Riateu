@@ -37,7 +37,7 @@ public class Window : IDisposable
 
     public Action<uint, uint> OnSizeChange = delegate {};
 
-    public Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 
+    public Window(WindowSettings settings, SDL.SDL_WindowFlags flags, uint id) 
     {
         if (settings.WindowMode == WindowMode.Fullscreen) 
         {
