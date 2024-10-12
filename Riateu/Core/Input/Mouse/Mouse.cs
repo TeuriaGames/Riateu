@@ -1,6 +1,6 @@
 using System.Drawing;
 using System.Numerics;
-using SDL2;
+using SDL3;
 
 namespace Riateu.Inputs;
 
@@ -30,7 +30,7 @@ public class Mouse
     private int previousWheelRawY = 0;
     private MouseButton[] MouseButtons = new MouseButton[5];
 
-    internal uint ButtonMask { get; private set; }
+    internal SDL.SDL_MouseButtonFlags ButtonMask { get; private set; }
 
     private bool relativeMode;
 
@@ -40,7 +40,8 @@ public class Mouse
         set
         {
             relativeMode = value;
-            SDL.SDL_SetRelativeMouseMode(relativeMode ?  SDL.SDL_bool.SDL_TRUE : SDL.SDL_bool.SDL_FALSE);
+            // FIXME RelativeMode
+            // SDL.SDL_SetRelativeMouseMode(relativeMode ?  SDL.SDL_bool.SDL_TRUE : SDL.SDL_bool.SDL_FALSE);
         }
     }
 
@@ -52,18 +53,23 @@ public class Mouse
         set
         {
             hidden = value;
-            SDL.SDL_ShowCursor(hidden ? SDL.SDL_DISABLE : SDL.SDL_ENABLE);
+            if (hidden) 
+            {
+                SDL.SDL_HideCursor();
+                return;
+            } 
+            SDL.SDL_ShowCursor();
         }
     }
 
 
     internal Mouse()
     {
-        LeftButton = new MouseButton(this, MouseButtonCode.Left, SDL.SDL_BUTTON_LMASK);
-        MiddleButton = new MouseButton(this, MouseButtonCode.Middle, SDL.SDL_BUTTON_MMASK);
-        RightButton = new MouseButton(this, MouseButtonCode.Right, SDL.SDL_BUTTON_RMASK);
-        X1Button = new MouseButton(this, MouseButtonCode.X1, SDL.SDL_BUTTON_X1MASK);
-        X2Button = new MouseButton(this, MouseButtonCode.X2, SDL.SDL_BUTTON_X2MASK);
+        LeftButton = new MouseButton(this, MouseButtonCode.Left, SDL.SDL_MouseButtonFlags.SDL_BUTTON_LMASK);
+        MiddleButton = new MouseButton(this, MouseButtonCode.Middle, SDL.SDL_MouseButtonFlags.SDL_BUTTON_MMASK);
+        RightButton = new MouseButton(this, MouseButtonCode.Right, SDL.SDL_MouseButtonFlags.SDL_BUTTON_RMASK);
+        X1Button = new MouseButton(this, MouseButtonCode.X1, SDL.SDL_MouseButtonFlags.SDL_BUTTON_X1MASK);
+        X2Button = new MouseButton(this, MouseButtonCode.X2, SDL.SDL_MouseButtonFlags.SDL_BUTTON_X2MASK);
 
         MouseButtons[0] = LeftButton;
         MouseButtons[1] = RightButton;
@@ -76,13 +82,13 @@ public class Mouse
     {
         AnyPressed = false;
 
-        ButtonMask = SDL.SDL_GetMouseState(out var x, out var y);
-        SDL.SDL_GetRelativeMouseState(out var deltaX, out var deltaY);
+        ButtonMask = SDL.SDL_GetMouseState(out float x, out float y);
+        SDL.SDL_GetRelativeMouseState(out float deltaX, out float deltaY);
 
-        X = x;
-        Y = y;
-        DeltaX = deltaX;
-        DeltaY = deltaY;
+        X = (int)x;
+        Y = (int)y;
+        DeltaX = (int)deltaX;
+        DeltaY = (int)deltaY;
 
         WheelX = WheelRawX - previousWheelRawX;
         previousWheelRawX = WheelRawX;
@@ -104,6 +110,11 @@ public class Mouse
 
     public void ShowCursor(bool show) 
     {
-        SDL.SDL_ShowCursor(show ? 1 : 0);
+        if (show) 
+        {
+            SDL.SDL_ShowCursor();
+            return;
+        }
+        SDL.SDL_HideCursor();
     }
 }

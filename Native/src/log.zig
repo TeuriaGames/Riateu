@@ -1,7 +1,5 @@
-const sdl2 = @cImport(
-    @cInclude("SDL2/SDL.h")
-);
+const sdl3 = @cImport(@cInclude("SDL3/SDL.h"));
 
 pub fn log_error(fmt: []const u8, args: anytype) void {
-    sdl2.SDL_LogError(sdl2.SDL_LOG_CATEGORY_ERROR, fmt.ptr, args); 
+    sdl3.SDL_LogError(sdl3.SDL_LOG_CATEGORY_ERROR, fmt.ptr, args);
 }

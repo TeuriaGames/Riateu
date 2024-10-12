@@ -2,22 +2,13 @@ const std = @import("std");
 const fs = std.fs;
 
 const log = @import("log.zig");
-const qoi = @cImport(
-    @cInclude("qoi.h")
-);
-const sdl2 = @cImport(
-    @cInclude("SDL2/SDL.h")
-);
-const stb_image = @cImport(
-    @cInclude("stb_image.h")
-);
-const stb_image_write = @cImport(
-    @cInclude("stb_image_write.h")
-);
+const qoi = @cImport(@cInclude("qoi.h"));
+const stb_image = @cImport(@cInclude("stb_image.h"));
+const stb_image_write = @cImport(@cInclude("stb_image_write.h"));
 
-export fn Riateu_LoadImage(data: [*c]const u8, length: c_int, width: [*c]c_int, height: [*c]c_int, len: [*c]c_int) [*c] u8 {
-    var pixels: [*c] u8 = undefined;
-    var result: [*c] u8 = undefined;
+export fn Riateu_LoadImage(data: [*c]const u8, length: c_int, width: [*c]c_int, height: [*c]c_int, len: [*c]c_int) [*c]u8 {
+    var pixels: [*c]u8 = undefined;
+    var result: [*c]u8 = undefined;
     if (valid_qoi_image(data, length)) {
         const option_result = load_qoi_image(data, length, width, height);
         if (option_result) |opt| {
@@ -53,7 +44,7 @@ export fn Riateu_LoadImage(data: [*c]const u8, length: c_int, width: [*c]c_int, 
     return result;
 }
 
-export fn Riateu_FreeImage(data: [*c] u8) void {
+export fn Riateu_FreeImage(data: [*c]u8) void {
     stb_image.stbi_image_free(data);
 }
 
@@ -109,20 +100,18 @@ inline fn read_qoi_magic(data: [*c]const u8) u32 {
 }
 
 inline fn valid_qoi_image(data: [*c]const u8, length: c_int) bool {
-    if (length < QOI_HEADER_SIZE) 
-    {
+    if (length < QOI_HEADER_SIZE) {
         return false;
     }
 
     const magic = read_qoi_magic(data);
-    if (magic == QOI_MAGIC) 
-    {
+    if (magic == QOI_MAGIC) {
         return true;
     }
     return false;
 }
 
-fn load_qoi_image(data: [*c]const u8, length: c_int, width: [*c]c_int, height: [*c]c_int) ?[*c] u8 {
+fn load_qoi_image(data: [*c]const u8, length: c_int, width: [*c]c_int, height: [*c]c_int) ?[*c]u8 {
     var desc: qoi.qoi_desc = undefined;
     const result = qoi.qoi_decode(data, length, &desc, 4);
 

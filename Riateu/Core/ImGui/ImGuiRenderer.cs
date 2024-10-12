@@ -71,7 +71,7 @@ public class ImGuiRenderer
                 VertexShader = imGuiShader,
                 FragmentShader = fragmentShader,
                 VertexInputState = new VertexInputState(
-                    VertexBinding.Create<Position2DTextureColorVertex>(0),
+                    VertexBufferDescription.Create<Position2DTextureColorVertex>(0),
                     Position2DTextureColorVertex.Attributes(0)
                 )
             }
@@ -213,22 +213,26 @@ public class ImGuiRenderer
         int indexSize = 0;
         int indexOffset = drawDataPtr.TotalVtxCount * sizeof(Position2DTextureColorVertex);
 
-        transferBuffer.Map(true, out byte *vertexIndexData);
-        for (var n = 0; n < drawDataPtr.CmdListsCount; n += 1)
+        var vertexIndexData = transferBuffer.Map(true);
+        fixed (byte *ptr = vertexIndexData) 
         {
-            var cmdList = drawDataPtr.CmdLists[n];
-            int size = cmdList.VtxBuffer.Size * sizeof(Position2DTextureColorVertex);
-            NativeMemory.Copy((void*)cmdList.VtxBuffer.Data, &vertexIndexData[vertexSize], (nuint)size);
-            vertexSize += size;
+            for (var n = 0; n < drawDataPtr.CmdListsCount; n += 1)
+            {
+                var cmdList = drawDataPtr.CmdLists[n];
+                int size = cmdList.VtxBuffer.Size * sizeof(Position2DTextureColorVertex);
+                NativeMemory.Copy((void*)cmdList.VtxBuffer.Data, &ptr[vertexSize], (nuint)size);
+                vertexSize += size;
 
-            size = cmdList.IdxBuffer.Size * sizeof(ushort);
-            NativeMemory.Copy(
-                (void*)cmdList.IdxBuffer.Data, 
-                &vertexIndexData[indexOffset + indexSize], 
-                (nuint)size
-            );
-            indexSize += size;
+                size = cmdList.IdxBuffer.Size * sizeof(ushort);
+                NativeMemory.Copy(
+                    (void*)cmdList.IdxBuffer.Data, 
+                    &ptr[indexOffset + indexSize], 
+                    (nuint)size
+                );
+                indexSize += size;
+            }
         }
+
         transferBuffer.Unmap();
 
         CopyPass copyPass = commandBuffer.BeginCopyPass();
@@ -260,10 +264,9 @@ public class ImGuiRenderer
         );
 
         renderPass.BindVertexBuffer(imGuiVertexBuffer);
-        renderPass.BindIndexBuffer(imGuiIndexBuffer, IndexElementSize.Sixteen);
+        renderPass.BindIndexBuffer(imGuiIndexBuffer, IndexElementSize.SixteenBit);
 
         uint vertexOffset = 0;
-        uint indexOffset = 0;
 
         for (int n = 0; n < drawDataPtr.CmdListsCount; n += 1)
         {
@@ -291,12 +294,12 @@ public class ImGuiRenderer
                 renderPass.SetScissor(new Rectangle(x, y, (int)width, (int)height));
 
                 renderPass.DrawIndexedPrimitives(
-                    vertexOffset,
-                    indexOffset,
-                    drawCmd.ElemCount / 3
+                    drawCmd.ElemCount,
+                    1,
+                    0u,
+                    (int)vertexOffset,
+                    0u
                 );
-
-                indexOffset += drawCmd.ElemCount;
             }
 
             vertexOffset += (uint)cmdList.VtxBuffer.Size;

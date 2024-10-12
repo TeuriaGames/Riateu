@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Riateu.Audios;
@@ -9,9 +10,14 @@ namespace Riateu.Content;
 
 public interface IAssets {}
 
-public class Ref<T>(T data)
+public class Ref<T>
 {
-    public T Data = data;
+    public T Data;
+
+    public Ref(T data) 
+    {
+        Data = data;
+    }
 
     public static implicit operator T(Ref<T> refs) 
     {
@@ -23,6 +29,7 @@ public record struct AtlasItem(string Name, Image Image);
 
 public class AssetStorage
 {
+    private enum WatchType { Texture }
     private Dictionary<string, IAssets> assetsCache = new Dictionary<string, IAssets>();
     private string assetPath;
     private ResourceUploader uploader;
@@ -30,12 +37,20 @@ public class AssetStorage
     private AudioDevice audioDevice;
     private GraphicsDevice graphicsDevice;
 
+#if DEBUG
+    private Dictionary<WatchType, List<string>> watchlist = new ();
+    private FileSystemWatcher watcher = new FileSystemWatcher();
+#endif
+
     public AssetStorage(GraphicsDevice graphicsDevice, AudioDevice audioDevice, string path) 
     {
         assetPath = path;
         packer = new Packer<AtlasItem>(8192);
         this.audioDevice = audioDevice;
         this.graphicsDevice = graphicsDevice;
+#if DEBUG
+        watchlist.Add(WatchType.Texture, new List<string>());
+#endif
     }
 
     public void StartContext(ResourceUploader uploader) 
@@ -138,6 +153,7 @@ public class AssetStorage
         {
             return (Ref<Texture>)asset;
         }
+        AddToWatchlist(path, WatchType.Texture);
         return new Ref<Texture>(uploader.CreateTexture2DFromCompressed(path));
     }
 
@@ -219,5 +235,16 @@ public class AssetStorage
     {
         uploader.Upload();
         uploader.Dispose();
+    }
+
+    [Conditional("DEBUG")]
+    private void AddToWatchlist(string path, WatchType type) 
+    {
+        var dirName = Path.GetDirectoryName(path);
+        var list = watchlist[type];
+        if (!list.Contains(dirName)) 
+        {
+            watchlist[type].Add(dirName);
+        }
     }
 }

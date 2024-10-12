@@ -6,7 +6,7 @@ using Riateu.Audios;
 using Riateu.Content;
 using Riateu.Graphics;
 using Riateu.Inputs;
-using SDL2;
+using SDL3;
 
 namespace Riateu;
 
@@ -78,10 +78,20 @@ public abstract class GameApp
             backendFlags = BackendFlags.Metal;
         }
 
+        SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN;
 
+        if (backendFlags != BackendFlags.D3D11) 
+        {
+            windowFlags |= backendFlags switch 
+            {
+                BackendFlags.Vulkan => SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN,
+                BackendFlags.Metal => SDL.SDL_WindowFlags.SDL_WINDOW_METAL,
+                _ => throw new Exception("Not Supported")
+            };
+        }
 
         MainWindow = Window.CreateWindow(settings, backendFlags);
-        GraphicsDevice = new GraphicsDevice(graphicsSettings, backendFlags);
+        GraphicsDevice = new GraphicsDevice(graphicsSettings);
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
         {
@@ -140,7 +150,7 @@ public abstract class GameApp
         CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
         GraphicsDevice.DeviceClaimCommandBuffer(cmdBuf);
         RenderTarget backbuffer = cmdBuf.AcquireSwapchainTarget(MainWindow);
-        if (backbuffer != null) 
+        if (backbuffer != null && backbuffer.Handle != 0) 
         {
             scene.Render(backbuffer);
         }
@@ -238,29 +248,25 @@ public abstract class GameApp
 
     private void PollEvents() 
     {
-        while (SDL.SDL_PollEvent(out SDL.SDL_Event e) == 1) 
+        while (SDL.SDL_PollEvent(out var e)) 
         {
             switch (e.type) 
             {
-            case SDL.SDL_EventType.SDL_QUIT:
+            case (uint)SDL.SDL_EventType.SDL_EVENT_QUIT:
                 Exiting = true;
                 break;
-            case SDL.SDL_EventType.SDL_MOUSEWHEEL:
-                InputDevice.Mouse.WheelRawX += e.wheel.x;
-                InputDevice.Mouse.WheelRawY += e.wheel.y;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_MOUSE_WHEEL:
+                InputDevice.Mouse.WheelRawX += (int)e.wheel.x;
+                InputDevice.Mouse.WheelRawY += (int)e.wheel.y;
                 break;
-            case SDL.SDL_EventType.SDL_WINDOWEVENT:
-                if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED) 
-                {
-                    MainWindow.HandleSizeChanged((uint)e.window.data1, (uint)e.window.data2);
-                }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE) 
-                {
-                    GraphicsDevice.UnclaimWindow(MainWindow);
-                    MainWindow.Dispose();
-                }
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
+                MainWindow.HandleSizeChanged((uint)e.window.data1, (uint)e.window.data2);
                 break;
-            case SDL.SDL_EventType.SDL_TEXTINPUT:
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                GraphicsDevice.UnclaimWindow(MainWindow);
+                MainWindow.Dispose();
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_TEXT_INPUT:
                 HandleTextInput(e);
                 break;
             }
@@ -280,7 +286,7 @@ public abstract class GameApp
         if (count > 0) 
         {
             char *charPtr = stackalloc char[count];
-            int chars = Encoding.UTF8.GetChars(evt.text.text, count, charPtr, count);
+            int chars = Encoding.UTF8.GetChars((byte*)evt.text.text, count, charPtr, count);
 
             for (int i = 0; i < chars; i++) 
             {

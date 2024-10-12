@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-using RefreshCS;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -12,8 +12,8 @@ public class GraphicsPipeline : GraphicsResource
 
     public unsafe GraphicsPipeline(GraphicsDevice device, in GraphicsPipelineCreateInfo info) : base(device)
     {
-        Refresh.VertexAttribute *vertexAttributes = (Refresh.VertexAttribute*)NativeMemory.Alloc(
-            (nuint)(info.VertexInputState.VertexAttributes.Length * sizeof(Refresh.VertexAttribute))
+        SDL.SDL_GPUVertexAttribute *vertexAttributes = (SDL.SDL_GPUVertexAttribute*)NativeMemory.Alloc(
+            (nuint)(info.VertexInputState.VertexAttributes.Length * sizeof(SDL.SDL_GPUVertexAttribute))
         );
 
         for (int i = 0; i < info.VertexInputState.VertexAttributes.Length; i++) 
@@ -21,8 +21,8 @@ public class GraphicsPipeline : GraphicsResource
             vertexAttributes[i] = info.VertexInputState.VertexAttributes[i].ToSDLGpu();
         }
 
-        Refresh.VertexBinding *vertexBindings = (Refresh.VertexBinding*)NativeMemory.Alloc(
-            (nuint)(info.VertexInputState.VertexBindings.Length * sizeof(Refresh.VertexBinding))
+        SDL.SDL_GPUVertexBufferDescription *vertexBindings = (SDL.SDL_GPUVertexBufferDescription*)NativeMemory.Alloc(
+            (nuint)(info.VertexInputState.VertexBindings.Length * sizeof(SDL.SDL_GPUVertexBufferDescription))
         );
 
         for (int i = 0; i < info.VertexInputState.VertexBindings.Length; i++) 
@@ -30,47 +30,42 @@ public class GraphicsPipeline : GraphicsResource
             vertexBindings[i] = info.VertexInputState.VertexBindings[i].ToSDLGpu();
         }
 
-        Refresh.ColorAttachmentDescription *colorAttachmentDescriptions = stackalloc Refresh.ColorAttachmentDescription[
+        SDL.SDL_GPUColorTargetDescription *colorAttachmentDescriptions = stackalloc SDL.SDL_GPUColorTargetDescription[
             info.AttachmentInfo.ColorAttachmentDescriptions.Length
         ];
 
         for (int i = 0; i < info.AttachmentInfo.ColorAttachmentDescriptions.Length; i++) 
         {
-            colorAttachmentDescriptions[i].Format = (Refresh.TextureFormat)info.AttachmentInfo.ColorAttachmentDescriptions[i].Format;
-            colorAttachmentDescriptions[i].BlendState = info.AttachmentInfo.ColorAttachmentDescriptions[i].BlendState.ToSDLGpu();
+            colorAttachmentDescriptions[i].format = (SDL.SDL_GPUTextureFormat)info.AttachmentInfo.ColorAttachmentDescriptions[i].Format;
+            colorAttachmentDescriptions[i].blend_state = info.AttachmentInfo.ColorAttachmentDescriptions[i].BlendState.ToSDLGpu();
         }
 
-        Refresh.GraphicsPipelineCreateInfo refreshGraphicsPipelineCreateInfo = new Refresh.GraphicsPipelineCreateInfo 
+        SDL.SDL_GPUGraphicsPipelineCreateInfo gpuGraphicsPipelineCreateInfo = new SDL.SDL_GPUGraphicsPipelineCreateInfo 
         {
-            VertexShader = info.VertexShader.Handle,
-            FragmentShader = info.FragmentShader.Handle,
+            vertex_shader = info.VertexShader.Handle,
+            fragment_shader = info.FragmentShader.Handle,
 
-            VertexInputState = new Refresh.VertexInputState() 
+            vertex_input_state = new SDL.SDL_GPUVertexInputState() 
             {
-                VertexAttributes = vertexAttributes,
-                VertexAttributeCount = (uint)info.VertexInputState.VertexAttributes.Length,
-                VertexBindings = vertexBindings,
-                VertexBindingCount = (uint)info.VertexInputState.VertexBindings.Length
+                vertex_attributes = vertexAttributes,
+                num_vertex_attributes = (uint)info.VertexInputState.VertexAttributes.Length,
+                vertex_buffer_descriptions = vertexBindings,
+                num_vertex_buffers = (uint)info.VertexInputState.VertexBindings.Length
             },
-            PrimitiveType = (Refresh.PrimitiveType)info.PrimitiveType,
-            RasterizerState = info.RasterizerState.ToSDLGpu(),
-            MultisampleState = info.MultisampleState.ToSDLGpu(),
-            DepthStencilState = info.DepthStencilState.ToSDLGpu(),
-            AttachmentInfo = new Refresh.GraphicsPipelineAttachmentInfo() 
+            primitive_type = (SDL.SDL_GPUPrimitiveType)info.PrimitiveType,
+            rasterizer_state = info.RasterizerState.ToSDLGpu(),
+            multisample_state = info.MultisampleState.ToSDLGpu(),
+            depth_stencil_state = info.DepthStencilState.ToSDLGpu(),
+            target_info = new SDL.SDL_GPUGraphicsPipelineTargetInfo() 
             {
-                ColorAttachmentCount = (uint)info.AttachmentInfo.ColorAttachmentDescriptions.Length,
-                ColorAttachmentDescriptions = colorAttachmentDescriptions,
-                DepthStencilFormat = (Refresh.TextureFormat)info.AttachmentInfo.DepthStencilFormat,
-                HasDepthStencilAttachment = info.AttachmentInfo.HasDepthStencilAttachment ? 1 : 0
+                num_color_targets = (uint)info.AttachmentInfo.ColorAttachmentDescriptions.Length,
+                color_target_descriptions = colorAttachmentDescriptions,
+                depth_stencil_format = (SDL.SDL_GPUTextureFormat)info.AttachmentInfo.DepthStencilFormat,
+                has_depth_stencil_target = info.AttachmentInfo.HasDepthStencilAttachment
             },
         };
 
-        refreshGraphicsPipelineCreateInfo.BlendConstants[0] = info.BlendConstants.R;
-        refreshGraphicsPipelineCreateInfo.BlendConstants[1] = info.BlendConstants.G;
-        refreshGraphicsPipelineCreateInfo.BlendConstants[2] = info.BlendConstants.B;
-        refreshGraphicsPipelineCreateInfo.BlendConstants[3] = info.BlendConstants.A;
-
-        Handle = Refresh.Refresh_CreateGraphicsPipeline(Device.Handle, refreshGraphicsPipelineCreateInfo);
+        Handle = SDL.SDL_CreateGPUGraphicsPipeline(Device.Handle, gpuGraphicsPipelineCreateInfo);
 
         if (Handle == IntPtr.Zero) 
         {
@@ -91,6 +86,6 @@ public class GraphicsPipeline : GraphicsResource
 
     protected override void HandleDispose(nint handle)
     {
-        Refresh.Refresh_ReleaseGraphicsPipeline(Device.Handle, handle);
+        SDL.SDL_ReleaseGPUGraphicsPipeline(Device.Handle, handle);
     }
 }

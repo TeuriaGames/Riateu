@@ -1,5 +1,6 @@
 using System;
-using RefreshCS;
+using System.Runtime.InteropServices;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -14,7 +15,11 @@ public class TransferBuffer : GraphicsResource
 
     public TransferBuffer(GraphicsDevice device, TransferBufferUsage usage, uint size) : base(device)
     {
-        Handle = Refresh.Refresh_CreateTransferBuffer(Device.Handle, (Refresh.TransferBufferUsage)usage, size);
+        var info = new SDL.SDL_GPUTransferBufferCreateInfo() {
+            usage = (SDL.SDL_GPUTransferBufferUsage)usage,
+            size = size
+        };
+        Handle = SDL.SDL_CreateGPUTransferBuffer(Device.Handle, info);
         Size = size;
     }
 
@@ -24,13 +29,34 @@ public class TransferBuffer : GraphicsResource
         return new TransferBuffer(device, usage, size * (uint)sizeof(T));
     }
 
-    public unsafe void Map(bool cycle, out byte *data) 
+    public unsafe byte* UnsafeMap(bool cycle) 
     {
 #if DEBUG
         AssertNotMapped();
         IsMapped = true;
 #endif
-        Refresh.Refresh_MapTransferBuffer(Device.Handle, Handle, cycle ? 1 : 0, out data);
+        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
+        return data;
+    }
+
+    public unsafe Span<byte> Map(bool cycle) 
+    {
+#if DEBUG
+        AssertNotMapped();
+        IsMapped = true;
+#endif
+        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
+        return new Span<byte>(data, (int)Size);
+    }
+
+    public unsafe Span<T> Map<T>(bool cycle) 
+    {
+#if DEBUG
+        AssertNotMapped();
+        IsMapped = true;
+#endif
+        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
+        return new Span<T>(data, (int)Size);
     }
 
     public void Unmap() 
@@ -38,7 +64,7 @@ public class TransferBuffer : GraphicsResource
 #if DEBUG
         IsMapped = false;
 #endif
-        Refresh.Refresh_UnmapTransferBuffer(Device.Handle, Handle);
+        SDL.SDL_UnmapGPUTransferBuffer(Device.Handle, Handle);
     }
 
     public unsafe uint SetTransferData<T>(Span<T> source, uint bufferOffsetInBytes, bool cycle) 
@@ -54,15 +80,12 @@ public class TransferBuffer : GraphicsResource
         AssertNotMapped();
 #endif
 
+        byte *mappedBuffer = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
         fixed (T* dataPtr = source) 
         {
-            Refresh.Refresh_SetTransferData(Device.Handle, (nint)dataPtr, new Refresh.TransferBufferRegion() 
-            {
-                TransferBuffer = Handle,
-                Offset = bufferOffsetInBytes,
-                Size = dataLengthInBytes
-            }, cycle ? 1 : 0);
+            NativeMemory.Copy(dataPtr, mappedBuffer, dataLengthInBytes + bufferOffsetInBytes);
         }
+        SDL.SDL_UnmapGPUTransferBuffer(Device.Handle, Handle);
 
         return dataLengthInBytes;
     }
@@ -70,27 +93,27 @@ public class TransferBuffer : GraphicsResource
     public unsafe uint GetTransferData<T>(Span<T> dest, uint bufferOffsetInBytes) 
     where T : unmanaged
     {
-        int elementSize = sizeof(T);
-        uint dataLengthInBytes = (uint)(elementSize * dest.Length);
-#if DEBUG
-        if (dataLengthInBytes > Size + bufferOffsetInBytes) 
-        {
-            throw new InvalidOperationException($"Data overflow! Transfer buffer length {Size}, offset {bufferOffsetInBytes}, copy length {dataLengthInBytes}");
-        }
-        AssertNotMapped();
-#endif
+        throw new NotImplementedException();
+//         int elementSize = sizeof(T);
+//         uint dataLengthInBytes = (uint)(elementSize * dest.Length);
+// #if DEBUG
+//         if (dataLengthInBytes > Size + bufferOffsetInBytes) 
+//         {
+//             throw new InvalidOperationException($"Data overflow! Transfer buffer length {Size}, offset {bufferOffsetInBytes}, copy length {dataLengthInBytes}");
+//         }
+//         AssertNotMapped();
+// #endif
+//         fixed (T* dataPtr = dest) 
+//         {
+//             Refresh.Refresh_GetTransferData(Device.Handle, new Refresh.TransferBufferRegion() 
+//             {
+//                 TransferBuffer = Handle,
+//                 Offset = bufferOffsetInBytes,
+//                 Size = dataLengthInBytes
+//             }, (nint)dataPtr);
+//         }
 
-        fixed (T* dataPtr = dest) 
-        {
-            Refresh.Refresh_GetTransferData(Device.Handle, new Refresh.TransferBufferRegion() 
-            {
-                TransferBuffer = Handle,
-                Offset = bufferOffsetInBytes,
-                Size = dataLengthInBytes
-            }, (nint)dataPtr);
-        }
-
-        return dataLengthInBytes;
+//         return dataLengthInBytes;
     }
 
 
@@ -100,7 +123,7 @@ public class TransferBuffer : GraphicsResource
 
     protected override void HandleDispose(nint handle)
     {
-        Refresh.Refresh_ReleaseTransferBuffer(Device.Handle, handle);
+        SDL.SDL_ReleaseGPUTransferBuffer(Device.Handle, handle);
     }
 
 #if DEBUG

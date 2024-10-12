@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Riateu.Graphics;
-using SDL2;
+using SDL3;
 
 namespace Riateu;
 
@@ -35,15 +35,11 @@ public class Window : IDisposable
 
     public Action<uint, uint> OnSizeChange = delegate {};
 
-    private Window(WindowSettings settings, SDL.SDL_WindowFlags flags, uint id) 
+    public Window(WindowSettings settings, SDL.SDL_WindowFlags flags, uint id) 
     {
         if (settings.WindowMode == WindowMode.Fullscreen) 
         {
             flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
-        }
-        else if (settings.WindowMode == WindowMode.BorderlessFullscreen) 
-        {
-            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
         }
 
         if (settings.Flags.Resizable) 
@@ -58,17 +54,18 @@ public class Window : IDisposable
 
         this.windowMode = settings.WindowMode;
 
-        SDL.SDL_GetDesktopDisplayMode(0, out var mode);
+        var modeID = SDL.SDL_GetPrimaryDisplay();
 
-        Handle = SDL.SDL_CreateWindow(
-            settings.Title,
-            SDL.SDL_WINDOWPOS_CENTERED,
-            SDL.SDL_WINDOWPOS_CENTERED,
-            settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : mode.w,
-            settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : mode.h,
-            flags
-        );
+        unsafe {
+            SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(modeID);
 
+            Handle = SDL.SDL_CreateWindow(
+                settings.Title,
+                settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
+                settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
+                flags
+            );
+        }
         SDL.SDL_GetWindowSize(Handle, out int width, out int height);
 
         Width = (uint)width;
@@ -113,28 +110,29 @@ public class Window : IDisposable
 
         if (WindowMode == WindowMode.Windowed) 
         {
-            SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+            var displayID = SDL.SDL_GetDisplayForWindow(Handle);
+            unsafe {
+                SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(displayID);
+                SDL.SDL_SetWindowPosition(Handle, modePtr->w / 2, modePtr->h / 2);
+            }
         }
     }
     public void SetScreenMode(WindowMode windowMode)
     {
-        SDL.SDL_WindowFlags windowFlag = 0;
-
         if (windowMode == WindowMode.Fullscreen)
         {
-            windowFlag = SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
+            SDL.SDL_SetWindowFullscreen(Handle, true);
         }
-        else if (windowMode == WindowMode.BorderlessFullscreen)
+        else
         {
-            windowFlag = SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
+            var displayID = SDL.SDL_GetDisplayForWindow(Handle);
+            unsafe {
+                SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(displayID);
+                SDL.SDL_SetWindowPosition(Handle, modePtr->w / 2, modePtr->h / 2);
+            }
         }
 
-        SDL.SDL_SetWindowFullscreen(Handle, (uint) windowFlag);
-
-        if (windowMode == WindowMode.Windowed)
-        {
-            SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
-        }
+        SDL.SDL_SyncWindow(Handle);
 
         WindowMode = windowMode;
     }
@@ -183,5 +181,4 @@ public enum WindowMode
 {
     Windowed,
     Fullscreen,
-    BorderlessFullscreen
 }

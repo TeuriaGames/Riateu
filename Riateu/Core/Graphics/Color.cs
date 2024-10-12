@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -82,14 +83,14 @@ public struct Color : IEquatable<Color>
 
     public override readonly string ToString() => ($"({R}, {G}, {B}, {A})");
 
-    public RefreshCS.Refresh.Color ToSDLGpu() 
+    public SDL.SDL_FColor ToSDLGpu() 
     {
-        return new RefreshCS.Refresh.Color() 
+        return new SDL.SDL_FColor 
         {
-            R = R / 255f,
-            G = G / 255f,
-            B = B / 255f,
-            A = A / 255f,
+            r = R / 255f,
+            g = G / 255f,
+            b = B / 255f,
+            a = A / 255f
         };
     }
 

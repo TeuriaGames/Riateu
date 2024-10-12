@@ -77,7 +77,7 @@ public class Batch : System.IDisposable
         using TransferBuffer transferBuffer = TransferBuffer.Create<uint>(device, TransferBufferUsage.Upload, maxIndices);
         StructuredBuffer<uint> indexBuffer = new StructuredBuffer<uint>(device, BufferUsageFlags.Index, maxIndices);
 
-        transferBuffer.Map(false, out byte* mapPtr);
+        var mapPtr = transferBuffer.UnsafeMap(false);
         uint* indexPtr = (uint*)mapPtr;
 
         for (uint i = 0, j = 0; i < maxIndices; i += 6, j += 4)
@@ -168,7 +168,7 @@ public class Batch : System.IDisposable
         };
 
         unsafe {
-            transferComputeBuffer.Map(true, out byte* data);
+            var data = transferComputeBuffer.UnsafeMap(true);
             datas = (BatchData*)data;
         }
     }
@@ -260,10 +260,10 @@ public class Batch : System.IDisposable
             BindUniformMatrix(start.Matrix);
             renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
             renderPass.BindVertexBuffer(vertexBuffer);
-            renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwo);
+            renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwoBit);
             renderPass.BindFragmentSampler(start.Binding);
             start.Material.BindUniforms(new UniformBinder());
-            renderPass.DrawIndexedPrimitives(start.Offset * 4u, 0u, start.Count * 2u, 1);
+            renderPass.DrawIndexedPrimitives(start.Count * 6u, 1, 0u, (int)(start.Offset * 4u), 0u);
 
             start = ref Unsafe.Add(ref start, 1);
         }
@@ -291,7 +291,7 @@ public class Batch : System.IDisposable
         computeBuffer = new StructuredBuffer<BatchData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
         currentMaxTexture = maxTextures;
         unsafe {
-            transferComputeBuffer.Map(true, out byte* data);
+            var data = transferComputeBuffer.UnsafeMap(true);
             datas = (BatchData*)data;
         }
     }

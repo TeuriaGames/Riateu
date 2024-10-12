@@ -1,4 +1,5 @@
-using RefreshCS;
+using System;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -14,7 +15,7 @@ public class RawBuffer : GraphicsResource
         {
             if (Device.DebugMode) 
             {
-                Refresh.Refresh_SetBufferName(Device.Handle, Handle, value);
+                SDL.SDL_SetGPUBufferName(Device.Handle, Handle, value);
             }
 
             name = value;
@@ -24,7 +25,16 @@ public class RawBuffer : GraphicsResource
 
     public RawBuffer(GraphicsDevice device, BufferUsageFlags usageFlags, uint sizeInBytes) : base(device)
     {
-        Handle = Refresh.Refresh_CreateBuffer(device.Handle, (Refresh.BufferUsageFlags)usageFlags, sizeInBytes);
+        var info = new SDL.SDL_GPUBufferCreateInfo() 
+        {
+            usage = (SDL.SDL_GPUBufferUsageFlags)usageFlags,
+            size = sizeInBytes
+        };
+        Handle = SDL.SDL_CreateGPUBuffer(device.Handle, info);
+        if (Handle == IntPtr.Zero) 
+        {
+            Logger.Error(SDL.SDL_GetError());
+        }
         UsageFlags = usageFlags;
         Size = sizeInBytes;
     }
@@ -35,7 +45,7 @@ public class RawBuffer : GraphicsResource
 
     protected override void HandleDispose(nint handle)
     {
-        Refresh.Refresh_ReleaseBuffer(Device.Handle, handle);
+        SDL.SDL_ReleaseGPUBuffer(Device.Handle, handle);
     }
 
     public static implicit operator BufferBinding(RawBuffer buffer) 

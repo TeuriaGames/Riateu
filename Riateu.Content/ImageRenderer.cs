@@ -24,7 +24,7 @@ public class ImageRenderer
         camera = new Camera(1024/3, 640/2);
         this.device = device;
         this.batch = batch;
-        renderTarget = new RenderTarget(device, 320, 320, TextureFormat.R8G8B8A8);
+        renderTarget = new RenderTarget(device, 320, 320, TextureFormat.R8G8B8A8_UNORM);
         renderTargetPtr = renderer.BindTexture(renderTarget);
     }
 

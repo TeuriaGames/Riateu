@@ -1,7 +1,8 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using RefreshCS;
+using System.Text;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -56,25 +57,32 @@ public class ComputePipeline : GraphicsResource
 		var bytecodeSpan = new Span<byte>(bytecodeBuffer, (int) stream.Length);
 		stream.ReadExactly(bytecodeSpan);
 
-		Refresh.ComputePipelineCreateInfo refreshPipelineCreateInfo = new Refresh.ComputePipelineCreateInfo 
-        {
-            Code = bytecodeBuffer,
-            CodeSize = (nuint) stream.Length,
-            EntryPointName = entryPointName,
-            Format = (Refresh.ShaderFormat) computePipelineCreateInfo.ShaderFormat,
-            ReadOnlyStorageTextureCount = computePipelineCreateInfo.ReadOnlyStorageTextureCount,
-            ReadOnlyStorageBufferCount = computePipelineCreateInfo.ReadOnlyStorageBufferCount,
-            ReadWriteStorageTextureCount = computePipelineCreateInfo.ReadWriteStorageTextureCount,
-            ReadWriteStorageBufferCount = computePipelineCreateInfo.ReadWriteStorageBufferCount,
-            UniformBufferCount = computePipelineCreateInfo.UniformBufferCount,
-            ThreadCountX = computePipelineCreateInfo.ThreadCountX,
-            ThreadCountY = computePipelineCreateInfo.ThreadCountY,
-            ThreadCountZ = computePipelineCreateInfo.ThreadCountZ
-        };
+		var entryPointLength = Encoding.UTF8.GetByteCount(entryPointName) + 1;
+		var entryPointBuffer = (byte*)NativeMemory.Alloc((nuint) entryPointLength);
+		var buffer = new Span<byte>(entryPointBuffer, entryPointLength);
+		var byteCount = Encoding.UTF8.GetBytes(entryPointName, buffer);
+		buffer[byteCount] = 0;
 
-		var computePipelineHandle = Refresh.Refresh_CreateComputePipeline(
+		SDL.SDL_GPUComputePipelineCreateInfo gpuPipelineCreateInfo = new SDL.SDL_GPUComputePipelineCreateInfo 
+		{
+            code = bytecodeBuffer,
+            code_size = (nuint) stream.Length,
+            entrypoint = (byte*)entryPointBuffer,
+            format = (SDL.SDL_GPUShaderFormat) computePipelineCreateInfo.ShaderFormat,
+            num_readonly_storage_textures = computePipelineCreateInfo.ReadOnlyStorageTextureCount,
+            num_readonly_storage_buffers = computePipelineCreateInfo.ReadOnlyStorageBufferCount,
+            num_readwrite_storage_textures = computePipelineCreateInfo.ReadWriteStorageTextureCount,
+            num_readwrite_storage_buffers = computePipelineCreateInfo.ReadWriteStorageBufferCount,
+            num_uniform_buffers = computePipelineCreateInfo.UniformBufferCount,
+			num_samplers = computePipelineCreateInfo.SamplersCount,
+            threadcount_x = computePipelineCreateInfo.ThreadCountX,
+            threadcount_y = computePipelineCreateInfo.ThreadCountY,
+            threadcount_z = computePipelineCreateInfo.ThreadCountZ
+		};
+
+		var computePipelineHandle = SDL.SDL_CreateGPUComputePipeline(
 			device.Handle,
-			refreshPipelineCreateInfo
+			gpuPipelineCreateInfo
 		);
 
 		if (computePipelineHandle == nint.Zero)
@@ -82,6 +90,7 @@ public class ComputePipeline : GraphicsResource
 			throw new Exception("Could not create compute pipeline!");
 		}
 
+		NativeMemory.Free(entryPointBuffer);
 		NativeMemory.Free(bytecodeBuffer);
 		return computePipelineHandle;
 	}
@@ -92,6 +101,6 @@ public class ComputePipeline : GraphicsResource
 
     protected override void HandleDispose(nint handle)
     {
-        Refresh.Refresh_ReleaseComputePipeline(Device.Handle, handle);
+		SDL.SDL_ReleaseGPUComputePipeline(Device.Handle, handle);
     }
 }

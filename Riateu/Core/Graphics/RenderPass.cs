@@ -1,5 +1,5 @@
 using System;
-using RefreshCS;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -10,68 +10,78 @@ public class RenderPass : IPassPool
 
     public void BindGraphicsPipeline(GraphicsPipeline pipeline) 
     {
-        Refresh.Refresh_BindGraphicsPipeline(Handle, pipeline.Handle);
+        SDL.SDL_BindGPUGraphicsPipeline(Handle, pipeline.Handle);
     }
 
     public unsafe void BindVertexBuffer(in BufferBinding bufferBinding, uint bindingSlot = 0) 
     {
-        Refresh.BufferBinding gpuBufferBinding = bufferBinding.ToSDLGpu();
+        SDL.SDL_GPUBufferBinding gpuBufferBinding = bufferBinding.ToSDLGpu();
 
-        Refresh.Refresh_BindVertexBuffers(Handle, bindingSlot, &gpuBufferBinding, 1);
+        SDL.SDL_BindGPUVertexBuffers(Handle, bindingSlot, [gpuBufferBinding], 1);
     }
 
     public unsafe void BindIndexBuffer(in BufferBinding bufferBinding, IndexElementSize elementSize) 
     {
-        Refresh.BufferBinding gpuBufferBinding = bufferBinding.ToSDLGpu();
+        SDL.SDL_GPUBufferBinding gpuBufferBinding = bufferBinding.ToSDLGpu();
 
-        Refresh.Refresh_BindIndexBuffer(Handle, gpuBufferBinding, (Refresh.IndexElementSize)elementSize);
+        SDL.SDL_BindGPUIndexBuffer(Handle, gpuBufferBinding, (SDL.SDL_GPUIndexElementSize)elementSize);
     }
 
-    public void DrawPrimitives(uint vertexStart, uint primitiveCount) 
+    public void DrawPrimitives(uint vertexCount, uint instanceCount, uint firstVertex = 0, uint firstInstance = 0) 
     {
-        Refresh.Refresh_DrawPrimitives(Handle, vertexStart, primitiveCount);
+        SDL.SDL_DrawGPUPrimitives(Handle, vertexCount, instanceCount, firstVertex, firstInstance);
     }
 
-    public void DrawIndexedPrimitives(uint baseVertex, uint startIndex, uint primitiveCount, uint instanceCount = 1) 
+    public void DrawIndexedPrimitives(uint indexCount, uint instanceCount, uint firstIndex, int vertexOffset, uint firstInstance) 
     {
-        Refresh.Refresh_DrawIndexedPrimitives(Handle, baseVertex, startIndex, primitiveCount, instanceCount);
+        SDL.SDL_DrawGPUIndexedPrimitives(Handle, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
     }
 
     public unsafe void BindVertexSampler(in TextureSamplerBinding textureSamplerBinding, uint slot = 0) 
     {
-        Refresh.TextureSamplerBinding textureSampler = textureSamplerBinding.ToSDLGpu();
+        SDL.SDL_GPUTextureSamplerBinding textureSampler = textureSamplerBinding.ToSDLGpu();
 
-        Refresh.Refresh_BindVertexSamplers(Handle, slot, &textureSampler, 1);
+        Span<SDL.SDL_GPUTextureSamplerBinding> bindings = stackalloc SDL.SDL_GPUTextureSamplerBinding[1];
+        bindings[0] = textureSampler;
+
+        SDL.SDL_BindGPUVertexSamplers(Handle, slot, bindings, 1);
     }
 
-    public unsafe void BindFragmentSampler(in TextureSamplerBinding textureSamplerBinding, uint firstSlot = 0) 
+    public unsafe void BindFragmentSampler(in TextureSamplerBinding textureSamplerBinding, uint slot = 0) 
     {
-        Refresh.TextureSamplerBinding bind = textureSamplerBinding.ToSDLGpu();
-        Refresh.Refresh_BindFragmentSamplers(Handle, firstSlot, &bind, 1);
+        SDL.SDL_GPUTextureSamplerBinding textureSampler = textureSamplerBinding.ToSDLGpu();
+
+        Span<SDL.SDL_GPUTextureSamplerBinding> bindings = stackalloc SDL.SDL_GPUTextureSamplerBinding[1];
+        bindings[0] = textureSampler;
+
+        SDL.SDL_BindGPUFragmentSamplers(Handle, slot, bindings, 1);
     }
 
-    public unsafe void BindFragmentSamplers(in TextureSamplerBinding firstTexture, in TextureSamplerBinding secondTexture, uint firstSlot = 0) 
+    public unsafe void BindFragmentSamplers(in TextureSamplerBinding firstTexture, in TextureSamplerBinding secondTexture, uint slot = 0) 
     {
-        Refresh.TextureSamplerBinding bind = firstTexture.ToSDLGpu();
-        Refresh.TextureSamplerBinding bind2 = secondTexture.ToSDLGpu();
+        SDL.SDL_GPUTextureSamplerBinding textureSampler1 = firstTexture.ToSDLGpu();
+        SDL.SDL_GPUTextureSamplerBinding textureSampler2 = secondTexture.ToSDLGpu();
 
-        Refresh.TextureSamplerBinding* binds = stackalloc Refresh.TextureSamplerBinding[2] { bind, bind2 };
-        Refresh.Refresh_BindFragmentSamplers(Handle, firstSlot, binds, 2);
+        Span<SDL.SDL_GPUTextureSamplerBinding> bindings = stackalloc SDL.SDL_GPUTextureSamplerBinding[2];
+        bindings[0] = textureSampler1;
+        bindings[1] = textureSampler2;
+
+        SDL.SDL_BindGPUFragmentSamplers(Handle, slot, bindings, 2);
     }
 
     public void SetViewport(in Viewport viewport) 
     {
-        Refresh.Refresh_SetViewport(Handle, new Refresh.Viewport
+        SDL.SDL_SetGPUViewport(Handle, new SDL.SDL_GPUViewport
         {
-            X = viewport.X, Y = viewport.Y, W = viewport.Width, H = viewport.Height
+            x = viewport.X, y = viewport.Y, w = viewport.Width, h = viewport.Height
         });
     }
 
     public void SetScissor(in Rectangle scissor) 
     {
-        Refresh.Refresh_SetScissor(Handle, new Refresh.Rect 
+        SDL.SDL_SetGPUScissor(Handle, new SDL.SDL_Rect 
         {
-            X = scissor.X, Y = scissor.Y, W = scissor.Width, H = scissor.Height
+            x = scissor.X, y = scissor.Y, w = scissor.Width, h = scissor.Height
         });
     }
 

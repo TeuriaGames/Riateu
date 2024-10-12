@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using RefreshCS;
-using SDL2;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -11,24 +10,35 @@ public class GraphicsDevice : IDisposable
     public IntPtr Handle { get; internal set; }
     private bool IsDisposed;
 
-    public BackendFlags BackendFlags { get; private set; }
+    public string Driver { get; private set; }
     public bool DebugMode { get; private set; }
 
     private CommandBuffer deviceCmdBuffer;
 
     private HashSet<GCHandle> resources = new HashSet<GCHandle>();
 
-    public GraphicsDevice(GraphicsSettings settings, BackendFlags flags) 
+    public GraphicsDevice(GraphicsSettings settings) 
     {
-        Handle = RefreshCS.Refresh.Refresh_CreateDevice(
-            (RefreshCS.Refresh.BackendFlags)flags, 
-            settings.DebugMode ? 1 : 0, 
-            settings.LowPowerMode ? 1 : 0);
+        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)ShaderFormat.SPIRV, settings.DebugMode, null);
 
-        BackendFlags = (BackendFlags)RefreshCS.Refresh.Refresh_GetBackend(Handle);
+        if (Handle == IntPtr.Zero) 
+        {
+            Logger.Info("Graphics Device failed to create!");
+            Logger.Error(SDL.SDL_GetError());
+            return;
+        }
+
+        string driver = SDL.SDL_GetGPUDeviceDriver(Handle);
+
+        Driver = driver;
         DebugMode = settings.DebugMode;
 
-        Logger.Info("Graphics Device Created successfully!");
+        Logger.Info($"""
+        {'\n'}
+        Riateu v0.10.0
+        Device Driver: {driver}
+        SDL Version: 3.1.3 Pre-release
+        """);
     }
 
     public void SetSwapchainParameters(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
@@ -37,10 +47,11 @@ public class GraphicsDevice : IDisposable
         {
             throw new Exception("Cannto change the swapchain parameters when window has not been claimed yet.");
         }
-        Refresh.Refresh_SetSwapchainParameters(
+
+        SDL.SDL_SetGPUSwapchainParameters(
             Handle, window.Handle, 
-            (Refresh.SwapchainComposition)swapchainComposition, 
-            (Refresh.PresentMode)presentMode);
+            (SDL.SDL_GPUSwapchainComposition)swapchainComposition, 
+            (SDL.SDL_GPUPresentMode)presentMode);
     }
 
     public bool ClaimWindow(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
@@ -50,17 +61,24 @@ public class GraphicsDevice : IDisposable
             Logger.Error("Window has already been claimed");
             return false;
         }
-        bool result = RefreshCS.Refresh.Refresh_ClaimWindow(
-            Handle, window.Handle, 
-            (RefreshCS.Refresh.SwapchainComposition)swapchainComposition, 
-            (RefreshCS.Refresh.PresentMode)presentMode) == 1;
-        
+
+
+        bool result = SDL.SDL_ClaimWindowForGPUDevice(Handle, window.Handle);
+
         if (result) 
         {
+            SDL.SDL_SetGPUSwapchainParameters(
+                Handle, window.Handle, 
+                (SDL.SDL_GPUSwapchainComposition)swapchainComposition, 
+                (SDL.SDL_GPUPresentMode)presentMode);
             window.Claimed = true;
             window.SwapchainComposition = swapchainComposition;
-            window.SwapchainFormat = (TextureFormat)RefreshCS.Refresh.Refresh_GetSwapchainTextureFormat(Handle, window.Handle);
+            window.SwapchainFormat = (TextureFormat)SDL.SDL_GetGPUSwapchainTextureFormat(Handle, window.Handle);
             window.SwapchainTarget = new RenderTarget(this);
+        }
+        else 
+        {
+            Logger.Error(SDL.SDL_GetError());
         }
 
         return result;
@@ -70,7 +88,8 @@ public class GraphicsDevice : IDisposable
     {
         if (window.Claimed) 
         {
-            RefreshCS.Refresh.Refresh_UnclaimWindow(Handle, window.Handle);
+            // FIXME unclaim
+            SDL.SDL_ReleaseWindowFromGPUDevice(Handle, window.Handle);
             window.Claimed = false;
             window.SwapchainTarget.Handle = IntPtr.Zero;
         }
@@ -83,13 +102,13 @@ public class GraphicsDevice : IDisposable
 
     public void Submit(CommandBuffer commandBuffer) 
     {
-        RefreshCS.Refresh.Refresh_Submit(commandBuffer.Handle);
+        SDL.SDL_SubmitGPUCommandBuffer(commandBuffer.Handle);
         GraphicsPool<CommandBuffer>.Release(commandBuffer);
     }
 
     public Fence SubmitAndAcquireFence(CommandBuffer commandBuffer) 
     {
-        IntPtr fencePtr = RefreshCS.Refresh.Refresh_SubmitAndAcquireFence(commandBuffer.Handle);
+        IntPtr fencePtr = SDL.SDL_SubmitGPUCommandBufferAndAcquireFence(commandBuffer.Handle);
         GraphicsPool<CommandBuffer>.Release(commandBuffer);
         Fence fence = GraphicsPool<Fence>.Obtain(this);
         fence.Handle = fencePtr;
@@ -103,42 +122,44 @@ public class GraphicsDevice : IDisposable
 
     public void Wait() 
     {
-        Refresh.Refresh_Wait(Handle);
+        SDL.SDL_WaitForGPUIdle(Handle);
     }
 
     public unsafe void WaitForFence(Fence fence) 
     {
         IntPtr fencePtr = fence.Handle;
-        Refresh.Refresh_WaitForFences(Handle, 1, &fencePtr, 1);
+        Span<nint> fences = stackalloc nint[1];
+        fences[0] = fencePtr;
+        SDL.SDL_WaitForGPUFences(Handle, true, fences, 1);
     }
 
     public unsafe void WaitForFences(ReadOnlySpan<Fence> fences, bool waitAll) 
     {
-        IntPtr* fencePtrs = stackalloc IntPtr[fences.Length];
+        Span<nint> fencePtrs = stackalloc IntPtr[fences.Length];
 
         for (int i = 0; i < fences.Length; i++) 
         {
             fencePtrs[i] = fences[i].Handle;
         }
 
-        Refresh.Refresh_WaitForFences(Handle, waitAll ? 1 : 0, fencePtrs, (uint)fences.Length);
+        SDL.SDL_WaitForGPUFences(Handle, true, fencePtrs, (uint)fencePtrs.Length);
     }
 
     public bool QueryFence(Fence fence) 
     {
-        int result = Refresh.Refresh_QueryFence(Handle, fence.Handle);
+        bool result = SDL.SDL_QueryGPUFence(Handle, fence.Handle);
 
-        if (result < 0) 
+        if (result) 
         {
             throw new Exception("The graphics device has been destroyed!");
         }
 
-        return result != 0;
+        return result;
     }
 
     public void ReleaseFence(Fence fence) 
     {
-        Refresh.Refresh_ReleaseFence(Handle, fence.Handle);
+        SDL.SDL_ReleaseGPUFence(Handle, fence.Handle);
         GraphicsPool<Fence>.Release(fence);
     }
 
@@ -155,7 +176,7 @@ public class GraphicsDevice : IDisposable
     public RenderPass BeginTarget(RenderTarget target, DepthTarget buffer, Color clearColor, bool cycle) 
     {
         return deviceCmdBuffer.BeginRenderPass(
-            new DepthStencilAttachmentInfo(buffer, new DepthStencilValue(buffer.Depth, 0), true, LoadOp.Clear, StoreOp.DontCare, LoadOp.Clear), 
+            new DepthStencilAttachmentInfo(buffer, buffer.LayerCountOrDepth, 0, true, LoadOp.Clear, StoreOp.DontCare, LoadOp.Clear), 
             new ColorAttachmentInfo(target, clearColor, cycle)
         );
     }
@@ -193,7 +214,7 @@ public class GraphicsDevice : IDisposable
                 }
             }
             resources.Clear();
-            RefreshCS.Refresh.Refresh_DestroyDevice(Handle);
+            SDL.SDL_DestroyGPUDevice(Handle);
             IsDisposed = true;
         }
     }

@@ -50,17 +50,17 @@ public struct InstancedVertex(Vector3 position, Vector2 scale, UV uv, Color colo
     public static VertexAttribute[] Attributes(uint binding)
     {
         return [
-            new VertexAttribute(binding, 0, VertexElementFormat.Vector3, 0),
+            new VertexAttribute(binding, 0, VertexElementFormat.Float3, 0),
 
-            new VertexAttribute(binding, 1, VertexElementFormat.Vector2, 12),
-            new VertexAttribute(binding, 2, VertexElementFormat.Vector2, 20),
-            new VertexAttribute(binding, 3, VertexElementFormat.Vector2, 28),
-            new VertexAttribute(binding, 4, VertexElementFormat.Vector2, 36),
+            new VertexAttribute(binding, 1, VertexElementFormat.Float2, 12),
+            new VertexAttribute(binding, 2, VertexElementFormat.Float2, 20),
+            new VertexAttribute(binding, 3, VertexElementFormat.Float2, 28),
+            new VertexAttribute(binding, 4, VertexElementFormat.Float2, 36),
 
-            new VertexAttribute(binding, 5, VertexElementFormat.Vector2, 44),
-            new VertexAttribute(binding, 6, VertexElementFormat.Vector2, 52),
+            new VertexAttribute(binding, 5, VertexElementFormat.Float2, 44),
+            new VertexAttribute(binding, 6, VertexElementFormat.Float2, 52),
             new VertexAttribute(binding, 7, VertexElementFormat.Float, 60),
-            new VertexAttribute(binding, 8, VertexElementFormat.Color, 64),
+            new VertexAttribute(binding, 8, VertexElementFormat.Ubyte4Norm, 64),
         ];
     }
 }

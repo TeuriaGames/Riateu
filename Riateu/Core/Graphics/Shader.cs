@@ -1,7 +1,8 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using RefreshCS;
+using System.Text;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -59,25 +60,34 @@ public class Shader : GraphicsResource
     {
         fixed (byte* b = bytes) 
         {
-            Refresh.ShaderCreateInfo refreshShaderCreateInfo = new Refresh.ShaderCreateInfo 
+            var entryPointLength = Encoding.UTF8.GetByteCount(entryPoint) + 1;
+			var entryPointBuffer = NativeMemory.Alloc((nuint) entryPointLength);
+            var buffer = new Span<byte>(entryPointBuffer, entryPointLength);
+			var byteCount = Encoding.UTF8.GetBytes(entryPoint, buffer);
+            buffer[byteCount] = 0;
+
+            SDL.SDL_GPUShaderCreateInfo gpuShaderCreateInfo = new SDL.SDL_GPUShaderCreateInfo() 
             {
-                CodeSize = (nuint)bytes.Length,
-                Code = (byte*)b,
-                EntryPointName = entryPoint,
-                Stage = (Refresh.ShaderStage)info.ShaderStage,
-                Format = (Refresh.ShaderFormat)info.ShaderFormat,
-                SamplerCount = info.SamplerCount,
-                StorageBufferCount = info.StorageBufferCount,
-                StorageTextureCount = info.StorageTextureCount,
-                UniformBufferCount = info.UniformBufferCount
+                code_size = (nuint)bytes.Length,
+                code = (byte*)b,
+                entrypoint = (byte*)entryPointBuffer,
+                stage = (SDL.SDL_GPUShaderStage)info.ShaderStage,
+                format = (SDL.SDL_GPUShaderFormat)info.ShaderFormat,
+                num_samplers = info.SamplerCount,
+                num_storage_buffers = info.StorageBufferCount,
+                num_storage_textures = info.StorageTextureCount,
+                num_uniform_buffers = info.UniformBufferCount
             };
 
-            IntPtr shaderPtr = Refresh.Refresh_CreateShader(device.Handle, refreshShaderCreateInfo);
+
+            IntPtr shaderPtr = SDL.SDL_CreateGPUShader(device.Handle, gpuShaderCreateInfo);
 
             if (shaderPtr == IntPtr.Zero) 
             {
                 throw new InvalidOperationException("Shader compilation failed!");
             }
+
+            NativeMemory.Free(entryPointBuffer);
 
             return shaderPtr;
         }
@@ -89,6 +99,6 @@ public class Shader : GraphicsResource
 
     protected override void HandleDispose(nint handle)
     {
-        Refresh.Refresh_ReleaseShader(Device.Handle, handle);
+        SDL.SDL_ReleaseGPUShader(Device.Handle, handle);
     }
 }

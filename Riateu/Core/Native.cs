@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using SDL3;
 
 namespace Riateu;
 
@@ -82,4 +83,12 @@ internal static partial class Native
 
     [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
     internal static extern IntPtr Riateu_FreeGif(IntPtr gif);
+
+    [DllImport("SDL3", CallingConvention = CallingConvention.Cdecl)]
+    internal static extern uint SDL_CalculateGPUTextureFormatSize(
+        SDL.SDL_GPUTextureFormat format,
+        uint width,
+        uint height,
+        uint depthOrLayerCount
+    );
 }

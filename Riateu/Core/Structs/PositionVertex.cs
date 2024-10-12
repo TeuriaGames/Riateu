@@ -17,7 +17,7 @@ public struct PositionVertex(Vector3 position) : IVertexFormat
     public static VertexAttribute[] Attributes(uint binding)
     {
         return [
-            new VertexAttribute(binding, 0, VertexElementFormat.Vector3, 0)
+            new VertexAttribute(binding, 0, VertexElementFormat.Float3, 0)
         ];
     }
 }
