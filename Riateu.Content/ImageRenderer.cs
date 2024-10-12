@@ -60,10 +60,6 @@ public class ImageRenderer
             return;
         }
 
-        batch.Begin(texture, DrawSampler.PointClamp, camera);
-        // batch.Draw(new Vector2((320 * 0.5f) - (texture.Width * 0.5f), (320 * 0.5f) - (texture.Height * 0.5f)), Color.White);
-        batch.Draw(Vector2.Zero, Color.White);
-        batch.End();
         ImGui.Image(renderTargetPtr, new Vector2(160, 160));
 
         ImGui.SameLine();
@@ -88,8 +84,16 @@ public class ImageRenderer
         ImGui.Button("Import");
     }
 
-    public void Render() 
+    public void Render()
     {
+        if (texture == null) 
+        {
+            return;
+        }
+        batch.Begin(texture, DrawSampler.PointClamp, camera);
+        batch.Draw(Vector2.Zero, Color.White);
+        batch.End();
+
         RenderPass pass = device.BeginTarget(renderTarget, Color.Black, true);
         batch.Render(pass);
         device.EndTarget(pass);
