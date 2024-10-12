@@ -45,6 +45,9 @@ internal static unsafe class Clipboard
 		return ptr;
 	}
 
-	public static readonly IntPtr GetFnPtr = GetPointerTo(Get);
-	public static readonly IntPtr SetFnPtr = GetPointerTo(Set);
+	public static delegate *<void*, byte*> GetFnPtr = &Get;
+	public static delegate *<void*, byte*, void> SetFnPtr = &Set;
+
+	// public static readonly IntPtr GetFnPtr = GetPointerTo(Get);
+	// public static readonly IntPtr SetFnPtr = GetPointerTo(Set);
 }

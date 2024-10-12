@@ -89,8 +89,11 @@ public class ImGuiRenderer
 
         if (!OperatingSystem.IsWindows())
         {
-            io.SetClipboardTextFn = Clipboard.SetFnPtr;
-            io.GetClipboardTextFn = Clipboard.GetFnPtr;
+            unsafe 
+            {
+                io.SetClipboardTextFn = (nint)Clipboard.SetFnPtr;
+                io.GetClipboardTextFn = (nint)Clipboard.GetFnPtr;
+            }
         }
 
         ImGui.SetCurrentContext(context);
