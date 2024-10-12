@@ -34,9 +34,8 @@ public class CommandBuffer : IGraphicsPool
 #endif
         var success = SDL.SDL_AcquireGPUSwapchainTexture(Handle, window.Handle, out nint texPtr, out uint w, out uint h);
 
-        if (!success) 
+        if (!success || texPtr == IntPtr.Zero) 
         {
-            Logger.Error(SDL.SDL_GetError());
             return null;
         }
 

@@ -150,7 +150,7 @@ public abstract class GameApp
         CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
         GraphicsDevice.DeviceClaimCommandBuffer(cmdBuf);
         RenderTarget backbuffer = cmdBuf.AcquireSwapchainTarget(MainWindow);
-        if (backbuffer != null && backbuffer.Handle != 0) 
+        if (backbuffer != null) 
         {
             scene.Render(backbuffer);
         }
