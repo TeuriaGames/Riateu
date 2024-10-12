@@ -16,20 +16,18 @@ public class RenderPass : IPassPool
     public unsafe void BindVertexBuffer(in BufferBinding bufferBinding, uint bindingSlot = 0) 
     {
         SDL.SDL_GPUBufferBinding gpuBufferBinding = bufferBinding.ToSDLGpu();
-        Span<SDL.SDL_GPUBufferBinding> gpuBufferBindings = stackalloc SDL.SDL_GPUBufferBinding[1];
 
-        SDL.SDL_BindGPUVertexBuffers(Handle, bindingSlot, gpuBufferBindings, 1);
+        SDL.SDL_BindGPUVertexBuffers(Handle, bindingSlot, [gpuBufferBinding], 1);
     }
 
     public unsafe void BindIndexBuffer(in BufferBinding bufferBinding, IndexElementSize elementSize) 
     {
         SDL.SDL_GPUBufferBinding gpuBufferBinding = bufferBinding.ToSDLGpu();
-        Span<SDL.SDL_GPUBufferBinding> gpuBufferBindings = stackalloc SDL.SDL_GPUBufferBinding[1];
 
         SDL.SDL_BindGPUIndexBuffer(Handle, gpuBufferBinding, (SDL.SDL_GPUIndexElementSize)elementSize);
     }
 
-    public void DrawPrimitives(uint vertexCount, uint instanceCount, uint firstVertex = 1, uint firstInstance = 1) 
+    public void DrawPrimitives(uint vertexCount, uint instanceCount, uint firstVertex = 0, uint firstInstance = 0) 
     {
         SDL.SDL_DrawGPUPrimitives(Handle, vertexCount, instanceCount, firstVertex, firstInstance);
     }

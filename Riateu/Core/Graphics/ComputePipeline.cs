@@ -57,9 +57,11 @@ public class ComputePipeline : GraphicsResource
 		var bytecodeSpan = new Span<byte>(bytecodeBuffer, (int) stream.Length);
 		stream.ReadExactly(bytecodeSpan);
 
-		var entryPointLength = Encoding.UTF8.GetByteCount(entryPointName);
-		var entryPointBuffer = NativeMemory.Alloc((nuint) entryPointLength);
-		Encoding.UTF8.GetString((byte*) entryPointBuffer, entryPointLength);
+		var entryPointLength = Encoding.UTF8.GetByteCount(entryPointName) + 1;
+		var entryPointBuffer = (byte*)NativeMemory.Alloc((nuint) entryPointLength);
+		var buffer = new Span<byte>(entryPointBuffer, entryPointLength);
+		var byteCount = Encoding.UTF8.GetBytes(entryPointName, buffer);
+		buffer[byteCount] = 0;
 
 		SDL.SDL_GPUComputePipelineCreateInfo gpuPipelineCreateInfo = new SDL.SDL_GPUComputePipelineCreateInfo 
 		{

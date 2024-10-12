@@ -90,8 +90,8 @@ public abstract class GameApp
             };
         }
 
-        MainWindow = new Window(settings, windowFlags);
-        GraphicsDevice = new GraphicsDevice(graphicsSettings, backendFlags);
+        MainWindow = Window.CreateWindow(settings, backendFlags);
+        GraphicsDevice = new GraphicsDevice(graphicsSettings);
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
         {
@@ -150,7 +150,7 @@ public abstract class GameApp
         CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
         GraphicsDevice.DeviceClaimCommandBuffer(cmdBuf);
         RenderTarget backbuffer = cmdBuf.AcquireSwapchainTarget(MainWindow);
-        if (backbuffer != null) 
+        if (backbuffer != null && backbuffer.Handle != 0) 
         {
             scene.Render(backbuffer);
         }

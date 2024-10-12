@@ -74,7 +74,7 @@ public unsafe class ResourceUploader : GraphicsResource
 
 	public Texture CreateTexture2D<T>(Span<T> pixelData, uint width, uint height) where T : unmanaged
 	{
-        Texture texture = new Texture(Device, width, height, TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler);
+        Texture texture = new Texture(Device, width, height, TextureFormat.R8G8B8A8_UNORM, TextureUsageFlags.Sampler);
 		SetTextureData(texture, pixelData, false);
 		return texture;
 	}
@@ -87,7 +87,7 @@ public unsafe class ResourceUploader : GraphicsResource
         fixed (byte *ptr = compressedImageData) 
         {
 			IntPtr image = Native.Riateu_LoadImage(ptr, compressedImageData.Length, out int width, out int height, out int len);
-            Texture texture = new Texture(Device, (uint)width, (uint)height, TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler);
+            Texture texture = new Texture(Device, (uint)width, (uint)height, TextureFormat.R8G8B8A8_UNORM, TextureUsageFlags.Sampler);
 			Span<byte> span = new Span<byte>((void*)image, len);
 
 			SetTextureData(texture, span, false);
@@ -104,7 +104,7 @@ public unsafe class ResourceUploader : GraphicsResource
             var pixelData = Native.Riateu_LoadImage(ptr, compressedImageData.Length, out _, out _, out int sizeInBytes);
             var pixelSpan = new Span<byte>((void*) pixelData, (int) sizeInBytes);
 
-            SetTextureData(textureRegion, span, false);
+            SetTextureData(textureRegion, pixelSpan, false);
 
             Native.Riateu_FreeImage(pixelData);
         }
@@ -148,7 +148,7 @@ public unsafe class ResourceUploader : GraphicsResource
 		uint resourceOffset;
 		fixed (T* dataPtr = data)
 		{
-			resourceOffset = CopyTextureData(dataPtr, dataLengthInBytes, Texture.BytesPerPixel(textureRegion.Texture.Format));
+			resourceOffset = CopyTextureData(dataPtr, dataLengthInBytes, 16);
 		}
 
 		textureUploads.Add((resourceOffset, textureRegion, cycle));
@@ -195,8 +195,11 @@ public unsafe class ResourceUploader : GraphicsResource
 				bufferTransferBuffer = new TransferBuffer(Device, TransferBufferUsage.Upload, bufferDataSize);
 			}
 
-			bufferTransferBuffer.Map(true, out byte* ptr);
-			NativeMemory.Copy(bufferData, ptr, bufferDataSize);
+			var span = bufferTransferBuffer.Map(true);
+			fixed (byte *ptr = span) 
+			{
+				NativeMemory.Copy(bufferData, ptr, bufferDataSize);
+			}
 			bufferTransferBuffer.Unmap();
 		}
 
@@ -209,8 +212,11 @@ public unsafe class ResourceUploader : GraphicsResource
 				textureTransferBuffer = new TransferBuffer(Device, TransferBufferUsage.Upload, textureDataSize);
 			}
 
-			textureTransferBuffer.Map(true, out byte* ptr);
-			NativeMemory.Copy(textureData, ptr, textureDataSize);
+			var span = textureTransferBuffer.Map(true);
+			fixed (byte *ptr = span) 
+			{
+				NativeMemory.Copy(textureData, ptr, textureDataSize);
+			}
 			textureTransferBuffer.Unmap();
 		}
 	}

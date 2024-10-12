@@ -22,8 +22,8 @@ public struct PositionColorVertex(Vector3 position, Color color) : IVertexFormat
     public static VertexAttribute[] Attributes(uint binding)
     {
         return [
-            new VertexAttribute(binding, 0, VertexElementFormat.Vector3, 0),
-            new VertexAttribute(binding, 0, VertexElementFormat.Color, 16),
+            new VertexAttribute(binding, 0, VertexElementFormat.Float3, 0),
+            new VertexAttribute(binding, 0, VertexElementFormat.Ubyte4Norm, 16),
         ];
     }
 }

@@ -1,27 +1,24 @@
 const c_font = @import("thirdparty.zig").c_font;
 
-const sdl2 = @cImport(
-    @cInclude("SDL2/SDL.h")
-);
+const sdl3 = @cImport(@cInclude("SDL3/SDL.h"));
 
 const log = @import("log.zig");
 
 pub const RiateuFont = [*c]c_font.stbtt_fontinfo;
 
 export fn Riateu_LoadFont(data: [*c]const u8) RiateuFont {
-    if (c_font.stbtt_GetNumberOfFonts(data) <= 0) 
-    {
+    if (c_font.stbtt_GetNumberOfFonts(data) <= 0) {
         log.log_error("Number of fonts were below 0.", .{});
         return null;
     }
 
-    const info = sdl2.SDL_malloc(@sizeOf(c_font.stbtt_fontinfo));
+    const info = sdl3.SDL_malloc(@sizeOf(c_font.stbtt_fontinfo));
 
     if (info) |inf| {
         const info_strict = @as([*]c_font.stbtt_fontinfo, @alignCast(@ptrCast(inf)));
         if (c_font.stbtt_InitFont(info_strict, data, 0) == 0) {
             log.log_error("Unable to create font.", .{});
-            sdl2.SDL_free(info);
+            sdl3.SDL_free(info);
             return null;
         }
 
@@ -32,11 +29,7 @@ export fn Riateu_LoadFont(data: [*c]const u8) RiateuFont {
     return null;
 }
 
-export fn Riateu_GetFontCharacter(
-    font: RiateuFont, glyph: c_int, scale: f32,
-    width: [*c]c_int, height: [*c]c_int, advance: [*c]f32,
-    offsetX: [*c]f32, offsetY: [*c]f32, visible: [*c]c_int
-) void {
+export fn Riateu_GetFontCharacter(font: RiateuFont, glyph: c_int, scale: f32, width: [*c]c_int, height: [*c]c_int, advance: [*c]f32, offsetX: [*c]f32, offsetY: [*c]f32, visible: [*c]c_int) void {
     var adv: c_int = 0;
     var x0: c_int = 0;
     var y0: c_int = 0;
@@ -65,15 +58,13 @@ export fn Riateu_GetFontPixels(font: RiateuFont, dest: [*c]u8, glyph: c_int, wid
     const len: c_int = width * height;
     var idx: usize = @as(usize, @intCast(len - 1)) * 4;
     var point: usize = @intCast(len - 1);
-    while (point >= 0) 
-    {
+    while (point >= 0) {
         dest[idx] = dest[point];
         dest[idx + 1] = dest[point];
         dest[idx + 2] = dest[point];
         dest[idx + 3] = dest[point];
 
-        if (point > 0) 
-        {
+        if (point > 0) {
             point -= 1;
             idx -= 4;
             continue;
@@ -100,7 +91,7 @@ export fn Riateu_GetFontKerning(font: RiateuFont, glyph1: c_int, glyph2: c_int, 
 }
 
 export fn Riateu_FreeFont(font: RiateuFont) void {
-    sdl2.SDL_free(font);
+    sdl3.SDL_free(font);
 }
 
 test {

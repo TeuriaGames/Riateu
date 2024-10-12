@@ -7,11 +7,11 @@ namespace Riateu.Graphics;
 #region Enums
 public enum PrimitiveType
 {
-    PointList,
+    TriangleList,
+    TriangleStrip,
     LineList,
     LineStrip,
-    TriangleList,
-    TriangleStrip
+    PointList,
 }
 
 public enum LoadOp
@@ -35,53 +35,69 @@ public enum IndexElementSize
 
 public enum TextureFormat
 {
-    Invalid = -1,
-
-    /* Unsigned Normalized Float Color Formats */
-    R8G8B8A8,
-    B8G8R8A8,
-    B5G6R5,
-    B5G5R5A1,
-    B4G4R4A4,
-    R10G10B10A2,
-    R16G16,
-    R16G16B16A16,
-    R8,
-    A8,
-    /* Compressed Unsigned Normalized Float Color Formats */
-    BC1,
-    BC2,
-    BC3,
-    BC7,
-    /* Signed Normalized Float Color Formats  */
-    R8G8_SNORM,
-    R8G8B8A8_SNORM,
-    /* Signed Float Color Formats */
-    R16_SFLOAT,
-    R16G16_SFLOAT,
-    R16G16B16A16_SFLOAT,
-    R32_SFLOAT,
-    R32G32_SFLOAT,
-    R32G32B32A32_SFLOAT,
-    /* Unsigned Integer Color Formats */
-    R8_UINT,
-    R8G8_UINT,
-    R8G8B8A8_UINT,
-    R16_UINT,
-    R16G16_UINT,
-    R16G16B16A16_UINT,
-    /* SRGB Color Formats */
-    R8G8B8A8_SRGB,
-    B8G8R8A8_SRGB,
-    /* Compressed SRGB Color Formats */
-    BC3_SRGB,
-    BC7_SRGB,
-    /* Depth Formats */
-    D16_UNORM,
-    D24_UNORM,
-    D32_SFLOAT,
-    D24_UNORM_S8_UINT,
-    D32_SFLOAT_S8_UINT
+    INVALID = 0,
+    A8_UNORM = 1,
+    R8_UNORM = 2,
+    R8G8_UNORM = 3,
+    R8G8B8A8_UNORM = 4,
+    R16_UNORM = 5,
+    R16G16_UNORM = 6,
+    R16G16B16A16_UNORM = 7,
+    R10G10B10A2_UNORM = 8,
+    B5G6R5_UNORM = 9,
+    B5G5R5A1_UNORM = 10,
+    B4G4R4A4_UNORM = 11,
+    B8G8R8A8_UNORM = 12,
+    BC1_RGBA_UNORM = 13,
+    BC2_RGBA_UNORM = 14,
+    BC3_RGBA_UNORM = 15,
+    BC4_R_UNORM = 16,
+    BC5_RG_UNORM = 17,
+    BC7_RGBA_UNORM = 18,
+    BC6H_RGB_FLOAT = 19,
+    BC6H_RGB_UFLOAT = 20,
+    R8_SNORM = 21,
+    R8G8_SNORM = 22,
+    R8G8B8A8_SNORM = 23,
+    R16_SNORM = 24,
+    R16G16_SNORM = 25,
+    R16G16B16A16_SNORM = 26,
+    R16_FLOAT = 27,
+    R16G16_FLOAT = 28,
+    R16G16B16A16_FLOAT = 29,
+    R32_FLOAT = 30,
+    R32G32_FLOAT = 31,
+    R32G32B32A32_FLOAT = 32,
+    R11G11B10_UFLOAT = 33,
+    R8_UINT = 34,
+    R8G8_UINT = 35,
+    R8G8B8A8_UINT = 36,
+    R16_UINT = 37,
+    R16G16_UINT = 38,
+    R16G16B16A16_UINT = 39,
+    R32_UINT = 40,
+    R32G32_UINT = 41,
+    R32G32B32A32_UINT = 42,
+    R8_INT = 43,
+    R8G8_INT = 44,
+    R8G8B8A8_INT = 45,
+    R16_INT = 46,
+    R16G16_INT = 47,
+    R16G16B16A16_INT = 48,
+    R32_INT = 49,
+    R32G32_INT = 50,
+    R32G32B32A32_INT = 51,
+    R8G8B8A8_UNORM_SRGB = 52,
+    B8G8R8A8_UNORM_SRGB = 53,
+    BC1_RGBA_UNORM_SRGB = 54,
+    BC2_RGBA_UNORM_SRGB = 55,
+    BC3_RGBA_UNORM_SRGB = 56,
+    BC7_RGBA_UNORM_SRGB = 57,
+    D16_UNORM = 58,
+    D24_UNORM = 59,
+    D32_FLOAT = 60,
+    D24_UNORM_S8_UINT = 61,
+    D32_FLOAT_S8_UINT = 62,
 }
 
 [Flags]
@@ -120,8 +136,8 @@ public enum BufferUsageFlags
     Index = 0x2,
     Indirect = 0x4,
     GraphicsStorage = 0x8,
-    ComputeStorageRead = 0x20,
-    ComputeStorageWrite = 0x40
+    ComputeStorageRead = 0x10,
+    ComputeStorageWrite = 0x20
 }
 
 public enum TransferBufferUsage
@@ -148,19 +164,36 @@ public enum ShaderFormat
 
 public enum VertexElementFormat
 {
-    Uint,
-    Float,
-    Vector2,
-    Vector3,
-    Vector4,
-    Color,
-    Byte4,
-    Short2,
-    Short4,
-    NormalizedShort2,
-    NormalizedShort4,
-    HalfVector2,
-    HalfVector4
+	Int = 1,
+	Int2,
+	Int3,
+	Int4,
+	Uint,
+	Uint2,
+	Uint3,
+	Uint4,
+	Float,
+	Float2,
+	Float3,
+	Float4,
+	Byte2,
+	Byte4,
+	Ubyte2,
+	Ubyte4,
+	Byte2Norm,
+	Byte4Norm,
+	Ubyte2Norm,
+	Ubyte4Norm,
+	Short2,
+	Short4,
+	Ushort2,
+	Ushort4,
+	Short2Norm,
+	Short4Norm,
+	Ushort2Norm,
+	Ushort4Norm,
+	Half2,
+	Half4,
 }
 
 public enum VertexInputRate
@@ -190,7 +223,7 @@ public enum FrontFace
 
 public enum CompareOp
 {
-    Never,
+    Never = 1,
     Less,
     Equal,
     LessOrEqual,
@@ -202,7 +235,7 @@ public enum CompareOp
 
 public enum StencilOp
 {
-    Keep,
+    Keep = 1,
     Zero,
     Replace,
     IncrementAndClamp,
@@ -214,7 +247,7 @@ public enum StencilOp
 
 public enum BlendOp
 {
-    Add,
+    Add = 1,
     Subtract,
     ReverseSubtract,
     Min,
@@ -223,7 +256,7 @@ public enum BlendOp
 
 public enum BlendFactor
 {
-    Zero,
+    Zero = 1,
     One,
     SourceColor,
     OneMinusSourceColor,
@@ -334,9 +367,8 @@ public struct TextureCreateInfo
 {
     public uint Width;
     public uint Height;
-    public uint Depth;
+    public uint LayerCountOrDepth;
     public TextureType TextureType;
-    public uint LayerCount;
     public uint LevelCount;
     public SampleCount SampleCount;
     public TextureFormat Format;
@@ -350,8 +382,8 @@ public struct TextureCreateInfo
             format = (SDL.SDL_GPUTextureFormat)Format,
             width = Width,
             height = Height,
-            layer_count_or_depth = LayerCount,
-            num_levels = LayerCount,
+            layer_count_or_depth = LayerCountOrDepth,
+            num_levels = LevelCount,
             sample_count = (SDL.SDL_GPUSampleCount)SampleCount,
             usage = (SDL.SDL_GPUTextureUsageFlags)UsageFlags
         };
@@ -507,7 +539,7 @@ public struct BlitRegion
         W = texture.Width;
         H = texture.Height;
         MipLevel = 1;
-        LayerDepthOrPlane = texture.Depth;
+        LayerDepthOrPlane = texture.LayerCountOrDepth;
     }
 
     public SDL.SDL_GPUBlitRegion ToSDLGpu() 
@@ -554,7 +586,7 @@ public struct TextureRegion
         Z = 0;
         W = texture.Width;
         H = texture.Height;
-        D = texture.Depth;
+        D = texture.LayerCountOrDepth;
     }
 
     public SDL.SDL_GPUTextureRegion ToSDLGpu() 

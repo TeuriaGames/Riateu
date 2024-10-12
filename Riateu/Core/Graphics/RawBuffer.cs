@@ -1,3 +1,4 @@
+using System;
 using SDL3;
 
 namespace Riateu.Graphics;
@@ -30,6 +31,10 @@ public class RawBuffer : GraphicsResource
             size = sizeInBytes
         };
         Handle = SDL.SDL_CreateGPUBuffer(device.Handle, info);
+        if (Handle == IntPtr.Zero) 
+        {
+            Logger.Error(SDL.SDL_GetError());
+        }
         UsageFlags = usageFlags;
         Size = sizeInBytes;
     }

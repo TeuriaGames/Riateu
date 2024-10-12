@@ -1,7 +1,7 @@
 const std = @import("std");
 const c_font = @import("thirdparty.zig").c_font;
 
-const sdl2 = @cImport(@cInclude("SDL2/SDL.h"));
+const sdl3 = @cImport(@cInclude("SDL3/SDL.h"));
 
 const log = @import("log.zig");
 
@@ -13,11 +13,7 @@ export fn Riateu_GetMSDFFontGlyphBox(font: RiateuFont, glyphIndex: c_int, x0: [*
 }
 
 export fn Riateu_GetMSDFFontPixels(font: RiateuFont, dest: [*c]u8, glyph: c_int, borderSize: c_uint, size: f32, range: f32) c_int {
-    var allocCtx = c_font.msdf_AllocCtx {
-        .alloc = g_alloc,
-        .free = g_free,
-        .ctx = null
-    };
+    var allocCtx = c_font.msdf_AllocCtx{ .alloc = g_alloc, .free = g_free, .ctx = null };
     const genScale = f.Riateu_GetFontPixelScale(font, size);
 
     var msdfResult: c_font.msdf_Result = undefined;
@@ -81,27 +77,26 @@ export fn Riateu_GetMSDFFontPixels(font: RiateuFont, dest: [*c]u8, glyph: c_int,
             pixelRow[x * 4 + 0] = @intFromFloat(r * 255.0);
             pixelRow[x * 4 + 1] = @intFromFloat(g * 255.0);
             pixelRow[x * 4 + 2] = @intFromFloat(b * 255.0);
-            pixelRow[x * 4 + 3] = 255; 
+            pixelRow[x * 4 + 3] = 255;
         }
     }
 
-    sdl2.free(msdfResult.rgb);
+    sdl3.SDL_free(msdfResult.rgb);
     return 0;
 }
 
 export fn Riateu_FreeMSDFFont(msdf: [*c]u8) void {
-    sdl2.free(msdf);
+    sdl3.SDL_free(msdf);
 }
 
-
 fn g_alloc(size: usize, ctx: ?*anyopaque) callconv(.C) ?*anyopaque {
-    if (ctx) |_| {} 
-    return sdl2.malloc(size);
+    if (ctx) |_| {}
+    return sdl3.SDL_malloc(size);
 }
 
 fn g_free(mem: ?*anyopaque, ctx: ?*anyopaque) callconv(.C) void {
-    if (ctx) |_| {} 
-    sdl2.free(mem);
+    if (ctx) |_| {}
+    sdl3.SDL_free(mem);
 }
 
 inline fn g_min(a: f32, b: f32) f32 {
@@ -125,4 +120,3 @@ inline fn g_clamp(val: f32, min: f32, max: f32) f32 {
 inline fn g_median(r: f32, g: f32, b: f32) f32 {
     return g_max(g_min(r, g), g_min(g_max(r, g), b));
 }
-

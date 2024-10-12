@@ -36,6 +36,7 @@ public class CommandBuffer : IGraphicsPool
 
         if (!success) 
         {
+            Logger.Error(SDL.SDL_GetError());
             return null;
         }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SDL3;
 
@@ -11,22 +10,35 @@ public class GraphicsDevice : IDisposable
     public IntPtr Handle { get; internal set; }
     private bool IsDisposed;
 
-    public BackendFlags BackendFlags { get; private set; }
+    public string Driver { get; private set; }
     public bool DebugMode { get; private set; }
 
     private CommandBuffer deviceCmdBuffer;
 
     private HashSet<GCHandle> resources = new HashSet<GCHandle>();
 
-    public GraphicsDevice(GraphicsSettings settings, BackendFlags flags) 
+    public GraphicsDevice(GraphicsSettings settings) 
     {
-        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)ShaderFormat.SPIRV, settings.DebugMode, "GAME DEVICE");
+        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)ShaderFormat.SPIRV, settings.DebugMode, null);
 
+        if (Handle == IntPtr.Zero) 
+        {
+            Logger.Info("Graphics Device failed to create!");
+            Logger.Error(SDL.SDL_GetError());
+            return;
+        }
 
-        BackendFlags = flags;
+        string driver = SDL.SDL_GetGPUDeviceDriver(Handle);
+
+        Driver = driver;
         DebugMode = settings.DebugMode;
 
-        Logger.Info("Graphics Device Created successfully!");
+        Logger.Info($"""
+        {'\n'}
+        Riateu v0.10.0
+        Device Driver: {driver}
+        SDL Version: 3.1.3 Pre-release
+        """);
     }
 
     public void SetSwapchainParameters(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
@@ -64,6 +76,10 @@ public class GraphicsDevice : IDisposable
             window.SwapchainFormat = (TextureFormat)SDL.SDL_GetGPUSwapchainTextureFormat(Handle, window.Handle);
             window.SwapchainTarget = new RenderTarget(this);
         }
+        else 
+        {
+            Logger.Error(SDL.SDL_GetError());
+        }
 
         return result;
     }
@@ -73,7 +89,7 @@ public class GraphicsDevice : IDisposable
         if (window.Claimed) 
         {
             // FIXME unclaim
-            // SDL.SDL_GPURefresh_UnclaimWindow(Handle, window.Handle);
+            SDL.SDL_ReleaseWindowFromGPUDevice(Handle, window.Handle);
             window.Claimed = false;
             window.SwapchainTarget.Handle = IntPtr.Zero;
         }
@@ -160,7 +176,7 @@ public class GraphicsDevice : IDisposable
     public RenderPass BeginTarget(RenderTarget target, DepthTarget buffer, Color clearColor, bool cycle) 
     {
         return deviceCmdBuffer.BeginRenderPass(
-            new DepthStencilAttachmentInfo(buffer, new DepthStencilValue(buffer.Depth, 0), true, LoadOp.Clear, StoreOp.DontCare, LoadOp.Clear), 
+            new DepthStencilAttachmentInfo(buffer, buffer.LayerCountOrDepth, 0, true, LoadOp.Clear, StoreOp.DontCare, LoadOp.Clear), 
             new ColorAttachmentInfo(target, clearColor, cycle)
         );
     }

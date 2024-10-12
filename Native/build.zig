@@ -22,30 +22,27 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
-        .strip = true
+        .strip = true,
     });
 
-    const sourceFiles = &[_][]const u8 { "./lib/src/zig_includes.c" };
-    const sourceFlags = &[_][]const u8 { "-g", "-O3" };
+    const sourceFiles = &[_][]const u8{"./lib/src/zig_includes.c"};
+    const sourceFlags = &[_][]const u8{ "-g", "-O3" };
 
-    lib.addCSourceFiles(.{ 
-        .files = sourceFiles, 
-        .flags = sourceFlags
-    });
+    lib.addCSourceFiles(.{ .files = sourceFiles, .flags = sourceFlags });
     lib.addIncludePath(b.path("lib/include"));
+    lib.addIncludePath(b.path("lib/SDL3/include"));
     if (target.result.isMinGW()) {
-        lib.addObjectFile(b.path("../runtimes/x64/SDL2.dll"));
+        lib.addObjectFile(b.path("../runtimes/x64/SDL3.dll"));
         addInstallPath(b, lib, "../../runtimes/x64");
     } else if (target.result.isDarwin()) {
         lib.addObjectFile(b.path("../runtimes/osx/libSDL2-2.0.0.dylib"));
         addInstallPath(b, lib, "../../runtimes/osx");
     } else {
-        lib.linkSystemLibrary("SDL2");
+        lib.addObjectFile(b.path("../runtimes/lib64/libSDL3.so"));
         addInstallPath(b, lib, "../../runtimes/lib64");
     }
 
     lib.linkLibC();
-
 
     // This declares intent for the library to be installed into the standard
     // location when the user invokes the "install" step (the default step when
@@ -60,12 +57,8 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-
     lib_unit_tests.addIncludePath(b.path("lib/include"));
-    lib_unit_tests.addCSourceFiles(.{ 
-        .files = sourceFiles, 
-        .flags = sourceFlags 
-    });
+    lib_unit_tests.addCSourceFiles(.{ .files = sourceFiles, .flags = sourceFlags });
     lib_unit_tests.linkSystemLibrary("SDL2");
     lib_unit_tests.linkLibC();
 
@@ -79,12 +72,6 @@ pub fn build(b: *std.Build) void {
 }
 
 fn addInstallPath(b: *std.Build, compile: *std.Build.Step.Compile, path: []const u8) void {
-    const output_step = b.addInstallArtifact(compile, .{ 
-        .dest_dir = .{ 
-            .override = .{ 
-                .custom = path
-            }
-        }
-    });
+    const output_step = b.addInstallArtifact(compile, .{ .dest_dir = .{ .override = .{ .custom = path } } });
     b.getInstallStep().dependOn(&output_step.step);
 }

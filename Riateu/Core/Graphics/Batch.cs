@@ -263,7 +263,7 @@ public class Batch : System.IDisposable
             renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwoBit);
             renderPass.BindFragmentSampler(start.Binding);
             start.Material.BindUniforms(new UniformBinder());
-            renderPass.DrawIndexedPrimitives(start.Count * 2u, 1, 0u, (int)(start.Offset * 4u), 0u);
+            renderPass.DrawIndexedPrimitives(start.Count * 6u, 1, 0u, (int)(start.Offset * 4u), 0u);
 
             start = ref Unsafe.Add(ref start, 1);
         }

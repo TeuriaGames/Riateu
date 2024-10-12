@@ -110,6 +110,11 @@ public class Mouse
 
     public void ShowCursor(bool show) 
     {
-        SDL.SDL_ShowCursor(show ? 1 : 0);
+        if (show) 
+        {
+            SDL.SDL_ShowCursor();
+            return;
+        }
+        SDL.SDL_HideCursor();
     }
 }

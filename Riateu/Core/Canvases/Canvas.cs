@@ -53,7 +53,7 @@ public class Canvas : IDisposable
     /// <param name="height">A height of a canvas</param>
     public Canvas(Scene scene, GraphicsDevice device, uint width, uint height)
     {
-        CanvasTexture = new Texture(device, width, height, TextureFormat.R8G8B8A8, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
+        CanvasTexture = new Texture(device, width, height, TextureFormat.R8G8B8A8_UNORM, TextureUsageFlags.Sampler | TextureUsageFlags.ColorTarget);
         this.width = width;
         this.height = height;
         this.Scene = scene;

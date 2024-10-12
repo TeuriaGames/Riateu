@@ -29,9 +29,9 @@ public struct PositionTextureColorVertex(Vector3 position, Vector2 texCoord, Col
     public static VertexAttribute[] Attributes(uint binding)
     {
         return [
-            new VertexAttribute(binding, 0, VertexElementFormat.Vector4, 0),
-            new VertexAttribute(binding, 1, VertexElementFormat.Vector2, 16),
-            new VertexAttribute(binding, 2, VertexElementFormat.Vector4, 32),
+            new VertexAttribute(binding, 0, VertexElementFormat.Float4, 0),
+            new VertexAttribute(binding, 1, VertexElementFormat.Float2, 16),
+            new VertexAttribute(binding, 2, VertexElementFormat.Float4, 32),
         ];
     }
 }

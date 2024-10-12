@@ -60,9 +60,11 @@ public class Shader : GraphicsResource
     {
         fixed (byte* b = bytes) 
         {
-            var entryPointLength = Encoding.UTF8.GetByteCount(entryPoint);
+            var entryPointLength = Encoding.UTF8.GetByteCount(entryPoint) + 1;
 			var entryPointBuffer = NativeMemory.Alloc((nuint) entryPointLength);
-			Encoding.UTF8.GetString((byte*) entryPointBuffer, entryPointLength);
+            var buffer = new Span<byte>(entryPointBuffer, entryPointLength);
+			var byteCount = Encoding.UTF8.GetBytes(entryPoint, buffer);
+            buffer[byteCount] = 0;
 
             SDL.SDL_GPUShaderCreateInfo gpuShaderCreateInfo = new SDL.SDL_GPUShaderCreateInfo() 
             {

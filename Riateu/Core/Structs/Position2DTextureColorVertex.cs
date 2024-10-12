@@ -35,24 +35,12 @@ public struct Position2DTextureColorVertex : IVertexFormat
         Color = color;
     }
 
-    /// <summary>
-    /// The element format used for the graphics pipeline.
-    /// </summary>
-    public static VertexElementFormat[] Formats { get; } = new VertexElementFormat[3]
-    {
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Vector2,
-        VertexElementFormat.Color
-    };
-
-    public static uint[] Offsets => [0, 8, 16];
-
     public static VertexAttribute[] Attributes(uint binding)
     {
         return [
-            new VertexAttribute(binding, 0, VertexElementFormat.Vector2, 0),
-            new VertexAttribute(binding, 1, VertexElementFormat.Vector2, 8),
-            new VertexAttribute(binding, 2, VertexElementFormat.Color, 16),
+            new VertexAttribute(binding, 0, VertexElementFormat.Float2, 0),
+            new VertexAttribute(binding, 1, VertexElementFormat.Float2, 8),
+            new VertexAttribute(binding, 2, VertexElementFormat.Ubyte4Norm, 16),
         ];
     }
 }
