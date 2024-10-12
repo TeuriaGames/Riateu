@@ -32,10 +32,9 @@ public class CommandBuffer : IGraphicsPool
         }
         acquiredSwapChainTarget = true;
 #endif
-        uint w = 0, h = 0;
-        IntPtr texPtr = SDL.SDL_AcquireGPUSwapchainTexture(Handle, window.Handle, ref w, ref h);
+        var success = SDL.SDL_AcquireGPUSwapchainTexture(Handle, window.Handle, out nint texPtr, out uint w, out uint h);
 
-        if (texPtr == IntPtr.Zero) 
+        if (!success) 
         {
             return null;
         }
@@ -48,7 +47,7 @@ public class CommandBuffer : IGraphicsPool
         return window.SwapchainTarget;
     }
 
-    public void Blit(in TextureRegion source, in TextureRegion destination, Filter filter, bool cycle) 
+    public void Blit(in BlitRegion source, in BlitRegion destination, Filter filter, bool cycle) 
     {
 #if DEBUG
         AssertNotSubmitted();
@@ -57,11 +56,11 @@ public class CommandBuffer : IGraphicsPool
         SDL.SDL_GPUBlitInfo info = new SDL.SDL_GPUBlitInfo 
         {
             source = source.ToSDLGpu(),
-            destination = source.ToSDLGpu(),
+            destination = destination.ToSDLGpu(),
             filter = (SDL.SDL_GPUFilter)filter,
             cycle = cycle
         };
-        SDL.SDL_BlitGPUTexture(Handle, ref info);
+        SDL.SDL_BlitGPUTexture(Handle, info);
     }
 
     public unsafe RenderPass BeginRenderPass(in ColorAttachmentInfo info) 
@@ -74,10 +73,10 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info);
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorTargetInfo *infos = stackalloc SDL.SDL_GPUColorTargetInfo[1];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[1];
         infos[0] = info.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, ref infos[0], 1, (SDL.SDL_GPUDepthStencilTargetInfo*)IntPtr.Zero);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 1, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -95,11 +94,11 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info2);
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[2];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[2];
         infos[0] = info.ToSDLGpu();
         infos[1] = info2.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 2, (SDL.SDL_GPUDepthStencilAttachmentInfo*)IntPtr.Zero);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 2, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -120,12 +119,12 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info3);
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[3];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[3];
         infos[0] = info.ToSDLGpu();
         infos[1] = info2.ToSDLGpu();
         infos[2] = info3.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 3, (SDL.SDL_GPUDepthStencilAttachmentInfo*)IntPtr.Zero);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 3, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -149,13 +148,13 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info4);
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[4];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[4];
         infos[0] = info.ToSDLGpu();
         infos[1] = info2.ToSDLGpu();
         infos[2] = info3.ToSDLGpu();
         infos[3] = info3.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 4, (SDL.SDL_GPUDepthStencilAttachmentInfo*)IntPtr.Zero);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 4, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -176,13 +175,13 @@ public class CommandBuffer : IGraphicsPool
 
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[length];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[length];
         for (int i = 0; i < length; i++) 
         {
             infos[i] = infoSpan[i].ToSDLGpu();
         }
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, (uint)length, (SDL.SDL_GPUDepthStencilAttachmentInfo*)IntPtr.Zero);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, (uint)length, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -203,15 +202,15 @@ public class CommandBuffer : IGraphicsPool
         }
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[1];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[length];
         for (int i = 0; i < length; i++) 
         {
             infos[i] = infoSpan[i].ToSDLGpu();
         }
 
-        Refresh.DepthStencilAttachmentInfo dsa = depthStencilAttachment.ToSDLGpu();
+        SDL.SDL_GPUDepthStencilTargetInfo dsa = depthStencilAttachment.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 1, &dsa);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, (uint)length, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -226,12 +225,12 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info);
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[1];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[1];
         infos[0] = info.ToSDLGpu();
 
-        Refresh.DepthStencilAttachmentInfo dsa = depthStencilAttachment.ToSDLGpu();
+        SDL.SDL_GPUDepthStencilTargetInfo dsa = depthStencilAttachment.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 1, &dsa);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 1, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -249,13 +248,13 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info2);
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[2];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[2];
         infos[0] = info.ToSDLGpu();
         infos[1] = info2.ToSDLGpu();
 
-        Refresh.DepthStencilAttachmentInfo dsa = depthStencilAttachment.ToSDLGpu();
+        SDL.SDL_GPUDepthStencilTargetInfo dsa = depthStencilAttachment.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 2, &dsa);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 2, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -276,13 +275,13 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info3);
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[3];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[3];
         infos[0] = info.ToSDLGpu();
         infos[1] = info2.ToSDLGpu();
         infos[2] = info3.ToSDLGpu();
-        Refresh.DepthStencilAttachmentInfo dsa = depthStencilAttachment.ToSDLGpu();
+        SDL.SDL_GPUDepthStencilTargetInfo dsa = depthStencilAttachment.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 3, &dsa);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 3, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -306,15 +305,15 @@ public class CommandBuffer : IGraphicsPool
         AssertColorIsRenderTarget(info4);
         renderPassActive = true;
 #endif
-        SDL.SDL_GPUColorAttachmentInfo* infos = stackalloc SDL.SDL_GPUColorAttachmentInfo[4];
+        Span<SDL.SDL_GPUColorTargetInfo> infos = stackalloc SDL.SDL_GPUColorTargetInfo[4];
         infos[0] = info.ToSDLGpu();
         infos[1] = info2.ToSDLGpu();
         infos[2] = info3.ToSDLGpu();
         infos[3] = info3.ToSDLGpu();
 
-        Refresh.DepthStencilAttachmentInfo dsa = depthStencilAttachment.ToSDLGpu();
+        SDL.SDL_GPUDepthStencilTargetInfo dsa = depthStencilAttachment.ToSDLGpu();
 
-        IntPtr pass = SDL.SDL_GPURefresh_BeginRenderPass(Handle, infos, 3, &dsa);
+        IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 3, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
         return renderPass;
     }
@@ -326,7 +325,7 @@ public class CommandBuffer : IGraphicsPool
         AssertIsPassActive("Render", renderPassActive);
         renderPassActive = false;
 #endif
-        SDL.SDL_GPURefresh_EndRenderPass(renderPass.Handle);
+        SDL.SDL_EndGPURenderPass(renderPass.Handle);
         PassPool<RenderPass>.Release(renderPass);
     }
 
@@ -337,7 +336,7 @@ public class CommandBuffer : IGraphicsPool
         AssertNoAnyPassActive();
         copyPassActive = true;
 #endif
-        IntPtr copyPassPtr = Refresh.Refresh_BeginCopyPass(Handle);
+        IntPtr copyPassPtr = SDL.SDL_BeginGPUCopyPass(Handle);
 
         CopyPass copyPass = PassPool<CopyPass>.Obtain(copyPassPtr);
         return copyPass;
@@ -350,7 +349,7 @@ public class CommandBuffer : IGraphicsPool
         AssertIsPassActive("Copy", copyPassActive);
         copyPassActive = false;
 #endif
-        Refresh.Refresh_EndCopyPass(copyPass.Handle);
+        SDL.SDL_EndGPUCopyPass(copyPass.Handle);
         PassPool<CopyPass>.Release(copyPass);
     }
 
@@ -361,8 +360,11 @@ public class CommandBuffer : IGraphicsPool
         AssertNoAnyPassActive();
         computePassActive = true;
 #endif
-        Refresh.StorageBufferReadWriteBinding storage = readWriteBinding.ToSDLGpu();
-        IntPtr computePassPtr = Refresh.Refresh_BeginComputePass(Handle, (Refresh.StorageTextureReadWriteBinding*)nint.Zero, 0, &storage, 1);
+        SDL.SDL_GPUStorageBufferReadWriteBinding storage = readWriteBinding.ToSDLGpu();
+        Span<SDL.SDL_GPUStorageBufferReadWriteBinding> storages = stackalloc SDL.SDL_GPUStorageBufferReadWriteBinding[1];
+        storages[0] = storage;
+
+        IntPtr computePassPtr = SDL.SDL_BeginGPUComputePass(Handle, new Span<SDL.SDL_GPUStorageTextureReadWriteBinding>(), 0, storages, 1);
 
         ComputePass computePass = PassPool<ComputePass>.Obtain(computePassPtr);
         return computePass;
@@ -375,8 +377,10 @@ public class CommandBuffer : IGraphicsPool
         AssertNoAnyPassActive();
         computePassActive = true;
 #endif
-        Refresh.StorageTextureReadWriteBinding storage = readWriteBinding.ToSDLGpu();
-        IntPtr computePassPtr = Refresh.Refresh_BeginComputePass(Handle, &storage, 1, (Refresh.StorageBufferReadWriteBinding*)nint.Zero, 0);
+        SDL.SDL_GPUStorageTextureReadWriteBinding storage = readWriteBinding.ToSDLGpu();
+        Span<SDL.SDL_GPUStorageTextureReadWriteBinding> storages = stackalloc SDL.SDL_GPUStorageTextureReadWriteBinding[1];
+        storages[0] = storage;
+        IntPtr computePassPtr = SDL.SDL_BeginGPUComputePass(Handle, storages, 1, new Span<SDL.SDL_GPUStorageBufferReadWriteBinding>(), 0);
 
         ComputePass computePass = PassPool<ComputePass>.Obtain(computePassPtr);
         return computePass;
@@ -389,9 +393,14 @@ public class CommandBuffer : IGraphicsPool
         AssertNoAnyPassActive();
         computePassActive = true;
 #endif
-        Refresh.StorageBufferReadWriteBinding bufStorage = buffer.ToSDLGpu();
-        Refresh.StorageTextureReadWriteBinding texStorage = texture.ToSDLGpu();
-        IntPtr computePassPtr = Refresh.Refresh_BeginComputePass(Handle, &texStorage, 1, &bufStorage, 1);
+        SDL.SDL_GPUStorageBufferReadWriteBinding bufStorage = buffer.ToSDLGpu();
+        Span<SDL.SDL_GPUStorageBufferReadWriteBinding> bufStorages = stackalloc SDL.SDL_GPUStorageBufferReadWriteBinding[1];
+        bufStorages[0] = bufStorage;
+
+        SDL.SDL_GPUStorageTextureReadWriteBinding texStorage = texture.ToSDLGpu();
+        Span<SDL.SDL_GPUStorageTextureReadWriteBinding> texStorages = stackalloc SDL.SDL_GPUStorageTextureReadWriteBinding[1];
+        texStorages[0] = texStorage;
+        IntPtr computePassPtr = SDL.SDL_BeginGPUComputePass(Handle, texStorages, 1, bufStorages, 1);
 
         ComputePass computePass = PassPool<ComputePass>.Obtain(computePassPtr);
         return computePass;
@@ -404,7 +413,7 @@ public class CommandBuffer : IGraphicsPool
         AssertIsPassActive("Compute", computePassActive);
         computePassActive = false;
 #endif
-        Refresh.Refresh_EndComputePass(computePass.Handle);
+        SDL.SDL_EndGPUComputePass(computePass.Handle);
         PassPool<ComputePass>.Release(computePass);
     }
 
@@ -415,7 +424,7 @@ public class CommandBuffer : IGraphicsPool
 	/// </summary>
 	public unsafe void PushVertexUniformData(void* uniformsPtr, uint size, uint slot = 0) 
     {
-		Refresh.Refresh_PushVertexUniformData(Handle, slot, (nint) uniformsPtr, size);
+        SDL.SDL_PushGPUVertexUniformData(Handle, slot, (nint)uniformsPtr, size);
 	}
 
 	/// <summary>
@@ -439,7 +448,7 @@ public class CommandBuffer : IGraphicsPool
 	/// </summary>
 	public unsafe void PushFragmentUniformData(void* uniformsPtr, uint size, uint slot = 0) 
     {
-		Refresh.Refresh_PushFragmentUniformData(Handle, slot, (nint) uniformsPtr, size);
+        SDL.SDL_PushGPUFragmentUniformData(Handle, slot, (nint)uniformsPtr, size);
 	}
 
 	/// <summary>
@@ -463,7 +472,7 @@ public class CommandBuffer : IGraphicsPool
 	/// </summary>
 	public unsafe void PushComputeUniformData(void* uniformsPtr, uint size, uint slot = 0) 
     {
-		Refresh.Refresh_PushComputeUniformData(Handle, slot, (nint) uniformsPtr, size);
+        SDL.SDL_PushGPUComputeUniformData(Handle, slot, (nint)uniformsPtr, size);
 	}
 
 	/// <summary>
@@ -485,7 +494,7 @@ public class CommandBuffer : IGraphicsPool
     public void Obtain(GraphicsDevice device)
     {
         Device = device;
-        Handle = SDL.SDL_GPURefresh_AcquireCommandBuffer(device.Handle);
+        Handle = SDL.SDL_AcquireGPUCommandBuffer(device.Handle);
 #if DEBUG
         Submitted = false;
 #endif
@@ -507,7 +516,7 @@ public class CommandBuffer : IGraphicsPool
 #if DEBUG
     private void AssertTextureIsNotNull(ColorAttachmentInfo info) 
     {
-        if (info.TextureSlice.Texture == null || info.TextureSlice.Texture.Handle == IntPtr.Zero) 
+        if (info.TextureSlice == null || info.TextureSlice.Handle == IntPtr.Zero) 
         {
             throw new InvalidOperationException("Render Target or a Target Texture in color attachment must not be null.");
         }
@@ -515,7 +524,7 @@ public class CommandBuffer : IGraphicsPool
 
     private void AssertColorIsRenderTarget(ColorAttachmentInfo info) 
     {
-        if ((info.TextureSlice.Texture.UsageFlags & TextureUsageFlags.ColorTarget) == 0) 
+        if ((info.TextureSlice.UsageFlags & TextureUsageFlags.ColorTarget) == 0) 
         {
             throw new InvalidOperationException("Render pass color attachment must be a Render Target or has a TextureUsageFlags.ColorTarget");
         }

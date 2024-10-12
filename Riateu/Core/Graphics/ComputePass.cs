@@ -1,5 +1,5 @@
 using System;
-using RefreshCS;
+using SDL3;
 
 namespace Riateu.Graphics;
 
@@ -9,26 +9,28 @@ public class ComputePass : IPassPool
 
     public void BindComputePipeline(ComputePipeline computePipeline) 
     {
-        Refresh.Refresh_BindComputePipeline(Handle, computePipeline.Handle);
+        SDL.SDL_BindGPUComputePipeline(Handle, computePipeline.Handle);
     }
 
-    public unsafe void BindStorageTexture(TextureSlice textureSlice, uint slot = 0) 
+    public unsafe void BindStorageTexture(Texture textureSlice, uint slot = 0) 
     {
-        Refresh.TextureSlice slice = textureSlice.ToSDLGpu();
+        Span<nint> textureStorages = stackalloc nint[1];
+        textureStorages[0] = textureSlice.Handle;
 
-        Refresh.Refresh_BindComputeStorageTextures(Handle, slot, &slice, 1);
+        SDL.SDL_BindGPUComputeStorageTextures(Handle, slot, textureStorages, 1);
     }
 
     public unsafe void BindStorageBuffer(RawBuffer buffer, uint slot = 0) 
     {
-        IntPtr bufferPtr = buffer.Handle;
+        Span<nint> bufferStorages = stackalloc nint[1];
+        bufferStorages[0] = buffer.Handle;
 
-        Refresh.Refresh_BindComputeStorageBuffers(Handle, slot, &bufferPtr, 1);
+        SDL.SDL_BindGPUComputeStorageBuffers(Handle, slot, bufferStorages, 1);
     }
 
     public void Dispatch(uint groupCountX, uint groupCountY, uint groupCountZ) 
     {
-        Refresh.Refresh_DispatchCompute(Handle, groupCountX, groupCountY, groupCountZ);
+        SDL.SDL_DispatchGPUCompute(Handle, groupCountX, groupCountY, groupCountZ);
     }
 
     public void Obtain(nint handle)

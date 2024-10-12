@@ -22,7 +22,7 @@ public class Texture : GraphicsResource
     public Texture(GraphicsDevice device, TextureCreateInfo info) : base(device)
     {
         var sdlGPUInfo = info.ToSDLGpu();
-        Handle = SDL.SDL_CreateGPUTexture(device.Handle, ref sdlGPUInfo);
+        Handle = SDL.SDL_CreateGPUTexture(device.Handle, sdlGPUInfo);
         Width = info.Width;
         Height = info.Height;
         Depth = info.Depth;
@@ -77,11 +77,6 @@ public class Texture : GraphicsResource
     public static implicit operator TextureRegion(Texture texture) 
     {
         return new TextureRegion(texture);
-    }
-
-    public static implicit operator TextureSlice(Texture texture) 
-    {
-        return new TextureSlice(texture);
     }
 
     public static uint BytesPerPixel(TextureFormat format)

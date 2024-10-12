@@ -248,8 +248,7 @@ public abstract class GameApp
 
     private void PollEvents() 
     {
-        SDL.SDL_Event e = default;
-        while (SDL.SDL_PollEvent(ref e)) 
+        while (SDL.SDL_PollEvent(out var e)) 
         {
             switch (e.type) 
             {
@@ -276,7 +275,7 @@ public abstract class GameApp
 
     private unsafe void HandleTextInput(SDL.SDL_Event evt) 
     {
-        char *textPtr = evt.text.text;
+        byte *textPtr = evt.text.text;
         int count = 0;
         while (*textPtr != 0) 
         {

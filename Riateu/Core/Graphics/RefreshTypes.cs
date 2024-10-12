@@ -29,8 +29,8 @@ public enum StoreOp
 
 public enum IndexElementSize
 {
-    Sixteen,
-    ThirtyTwo
+    SixteenBit,
+    ThirtyTwoBit
 }
 
 public enum TextureFormat
@@ -138,14 +138,12 @@ public enum ShaderStage
 
 public enum ShaderFormat
 {
-    Invalid,
-    SPIRV,
-    HLSL,
-    DXBC,
-    DXIL,
-    MSL,
-    METALLIB,
-    SECRET
+    Private = 0x1, 
+    SPIRV = 0x2,
+    DXBC = 0x4,
+    DXIL = 0x08,
+    MSL = 0x10,
+    METALLIB = 0x20
 }
 
 public enum VertexElementFormat
@@ -360,9 +358,9 @@ public struct TextureCreateInfo
     }
 }
 
-public struct ColorAttachmentInfo(TextureSlice slice, Color clearColor, bool cycle, LoadOp loadOp = LoadOp.Clear, StoreOp storeOp = StoreOp.Store)
+public struct ColorAttachmentInfo(Texture texture, Color clearColor, bool cycle, LoadOp loadOp = LoadOp.Clear, StoreOp storeOp = StoreOp.Store)
 {
-    public TextureSlice TextureSlice = slice;
+    public Texture TextureSlice = texture;
     public Color ClearColor = clearColor;
     public LoadOp LoadOp = loadOp;
     public StoreOp StoreOp = storeOp;
@@ -372,7 +370,7 @@ public struct ColorAttachmentInfo(TextureSlice slice, Color clearColor, bool cyc
     {
         return new SDL.SDL_GPUColorTargetInfo() 
         {
-            texture = TextureSlice.ToSDLGpu(),
+            texture = TextureSlice.Handle,
             clear_color = ClearColor.ToSDLGpu(),
             load_op = (SDL.SDL_GPULoadOp)LoadOp,
             store_op = (SDL.SDL_GPUStoreOp)StoreOp,
@@ -383,7 +381,8 @@ public struct ColorAttachmentInfo(TextureSlice slice, Color clearColor, bool cyc
 
 public struct DepthStencilAttachmentInfo(
     Texture texture, 
-    DepthStencilValue depthStencilValue, 
+    float depth,
+    byte stencil,
     bool cycle,
     LoadOp loadOp = LoadOp.DontCare, 
     StoreOp storeOp = StoreOp.DontCare,
@@ -391,25 +390,27 @@ public struct DepthStencilAttachmentInfo(
     StoreOp stencilStoreOp = StoreOp.DontCare
 )
 {
-    public TextureSlice TextureSlice = texture;
-    public DepthStencilValue DepthStencilClearValue = depthStencilValue;
+    public Texture TextureSlice = texture;
+    public float Depth = depth;
     public LoadOp LoadOp = loadOp;
     public StoreOp StoreOp = storeOp;
     public LoadOp StencilLoadOp = stencilLoadOp;
     public StoreOp StencilStoreOp = stencilStoreOp;
+    public byte Stencil = stencil;
     public bool Cycle = cycle;
 
-    public Refresh.DepthStencilAttachmentInfo ToSDLGpu() 
+    public SDL.SDL_GPUDepthStencilTargetInfo ToSDLGpu() 
     {
-        return new Refresh.DepthStencilAttachmentInfo() 
+        return new SDL.SDL_GPUDepthStencilTargetInfo() 
         {
-            TextureSlice = TextureSlice.ToSDLGpu(),
-            DepthStencilClearValue = DepthStencilClearValue.ToSDLGpu(),
-            LoadOp = (Refresh.LoadOp)LoadOp,
-            StoreOp = (Refresh.StoreOp)StoreOp,
-            StencilLoadOp = (Refresh.LoadOp)StencilLoadOp,
-            StencilStoreOp = (Refresh.StoreOp)StencilLoadOp,
-            Cycle = Cycle ? 1 : 0
+            texture = TextureSlice.Handle,
+            clear_depth = Depth,
+            clear_stencil = Stencil,
+            load_op = (SDL.SDL_GPULoadOp)LoadOp,
+            store_op = (SDL.SDL_GPUStoreOp)StoreOp,
+            stencil_load_op = (SDL.SDL_GPULoadOp)StencilLoadOp,
+            stencil_store_op = (SDL.SDL_GPUStoreOp)StencilLoadOp,
+            cycle = Cycle
         };
     }
 }
@@ -419,27 +420,27 @@ public struct StorageBufferReadWriteBinding(RawBuffer buffer, bool cycle)
     public RawBuffer Buffer = buffer;
     public bool Cycle = cycle; 
 
-    public Refresh.StorageBufferReadWriteBinding ToSDLGpu() 
+    public SDL.SDL_GPUStorageBufferReadWriteBinding ToSDLGpu() 
     {
-        return new Refresh.StorageBufferReadWriteBinding() 
+        return new SDL.SDL_GPUStorageBufferReadWriteBinding() 
         {
-            Buffer = Buffer.Handle,
-            Cycle = Cycle ? 1 : 0
+            buffer = Buffer.Handle,
+            cycle = Cycle
         };
     }
 }
 
-public struct StorageTextureReadWriteBinding
+public struct StorageTextureReadWriteBinding(Texture texture, bool cycle)
 {
-    public TextureSlice TextureSlice;
-    public bool Cycle;
+    public Texture TextureSlice = texture;
+    public bool Cycle = cycle;
 
-    public Refresh.StorageTextureReadWriteBinding ToSDLGpu() 
+    public SDL.SDL_GPUStorageTextureReadWriteBinding ToSDLGpu() 
     {
-        return new Refresh.StorageTextureReadWriteBinding() 
+        return new SDL.SDL_GPUStorageTextureReadWriteBinding() 
         {
-            TextureSlice = TextureSlice.ToSDLGpu(),
-            Cycle = Cycle ? 1 : 0
+            texture = TextureSlice.Handle,
+            cycle = Cycle
         };
     }
 }
@@ -452,46 +453,15 @@ public unsafe struct ComputePipelineCreateInfo
     public uint ReadWriteStorageTextureCount;
     public uint ReadWriteStorageBufferCount;
     public uint UniformBufferCount;
+    public uint SamplersCount;
     public uint ThreadCountX;
     public uint ThreadCountY;
     public uint ThreadCountZ;
 }
 
-public struct DepthStencilValue(float depth, uint stencil)
+public struct TextureLocation(Texture slice, uint x, uint y, uint z)
 {
-    public float Depth = depth;
-    public uint Stencil = stencil;
-
-    public Refresh.DepthStencilValue ToSDLGpu() 
-    {
-        return new Refresh.DepthStencilValue() 
-        {
-            Depth = Depth,
-            Stencil = Stencil
-        };
-    }
-}
-
-public struct TextureSlice(Texture texture, uint mipLevel = 0, uint layer = 0)
-{
-    public Texture Texture = texture;
-    public uint MipLevel = mipLevel;
-    public uint Layer = layer;
-
-    public SDL.SDL_GPUTextureSlice ToSDLGpu() 
-    {
-        return new SDL.SDL_GPUTextureSlice() 
-        {
-            Texture = Texture.Handle,
-            MipLevel = MipLevel,
-            Layer = Layer
-        };
-    }
-}
-
-public struct TextureLocation(TextureSlice slice, uint x, uint y, uint z)
-{
-    public TextureSlice TextureSlice = slice;
+    public Texture TextureSlice = slice;
     public uint X = x;
     public uint Y = y;
     public uint Z = z;
@@ -500,17 +470,64 @@ public struct TextureLocation(TextureSlice slice, uint x, uint y, uint z)
     {
         return new SDL.SDL_GPUTextureLocation() 
         {
-            TextureSlice = TextureSlice.ToSDLGpu(),
-            X = X,
-            Y = Y,
-            Z = Z
+            texture = TextureSlice.Handle,
+            x = X,
+            y = Y,
+            z = Z
+        };
+    }
+}
+
+public struct BlitRegion
+{
+    public Texture Texture;
+    public uint MipLevel;
+    public uint LayerDepthOrPlane;
+    public uint X;
+    public uint Y;
+    public uint W;
+    public uint H;
+
+    public BlitRegion(Texture texture, uint x, uint y, uint mipLevel, uint width, uint height, uint depthOrPlane)  
+    {
+        Texture = texture;
+        X = x;
+        Y = y;
+        W = width;
+        H = height;
+        MipLevel = mipLevel;
+        LayerDepthOrPlane = depthOrPlane;
+    }
+
+    public BlitRegion(Texture texture)  
+    {
+        Texture = texture;
+        X = 0;
+        Y = 0;
+        W = texture.Width;
+        H = texture.Height;
+        MipLevel = 1;
+        LayerDepthOrPlane = texture.Depth;
+    }
+
+    public SDL.SDL_GPUBlitRegion ToSDLGpu() 
+    {
+        return new SDL.SDL_GPUBlitRegion() 
+        {
+            texture = Texture.Handle,
+            x = X,
+            y = Y,
+            w = W,
+            h = H,
+            mip_level = MipLevel,
+            layer_or_depth_plane = LayerDepthOrPlane
         };
     }
 }
 
 public struct TextureRegion
 {
-    public TextureSlice TextureSlice;
+    public Texture Texture;
     public uint X;
     public uint Y;
     public uint Z;
@@ -518,9 +535,9 @@ public struct TextureRegion
     public uint H;
     public uint D;
 
-    public TextureRegion(TextureSlice textureSlice, uint x, uint y, uint z, uint width, uint height, uint depth)  
+    public TextureRegion(Texture texture, uint x, uint y, uint z, uint width, uint height, uint depth)  
     {
-        TextureSlice = textureSlice;
+        Texture = texture;
         X = x;
         Y = y;
         Z = z;
@@ -529,9 +546,9 @@ public struct TextureRegion
         D = depth;
     }
 
-    public TextureRegion(Texture texture) 
+    public TextureRegion(Texture texture)  
     {
-        TextureSlice = new TextureSlice(texture, 0, 0);
+        Texture = texture;
         X = 0;
         Y = 0;
         Z = 0;
@@ -544,13 +561,13 @@ public struct TextureRegion
     {
         return new SDL.SDL_GPUTextureRegion() 
         {
-            TextureSlice = TextureSlice.ToSDLGpu(),
-            X = X,
-            Y = Y,
-            Z = Z,
-            W = W,
-            H = H,
-            D = D
+            texture = Texture.Handle,
+            x = X,
+            y = Y,
+            z = Z,
+            w = W,
+            h = H,
+            d = D
         };
     }
 }
@@ -570,36 +587,19 @@ public struct TransferBufferLocation(TransferBuffer buffer, uint offset = 0)
     }
 }
 
-public struct TransferBufferRegion(TransferBuffer buffer, uint offset, uint size)
-{
-    public TransferBuffer TransferBuffer = buffer;
-    public uint Offset = offset;
-    public uint Size = size;
-
-    public Refresh.TransferBufferRegion ToSDLGpu() 
-    {
-        return new Refresh.TransferBufferRegion() 
-        {
-            TransferBuffer= TransferBuffer.Handle,
-            Offset = Offset,
-            Size = Size
-        };
-    }
-}
-
 public struct BufferRegion(RawBuffer buffer, uint offset, uint size)
 {
     public RawBuffer Buffer = buffer;
     public uint Offset = offset;
     public uint Size = size;
 
-    public Refresh.BufferRegion ToSDLGpu() 
+    public SDL.SDL_GPUBufferRegion ToSDLGpu() 
     {
-        return new Refresh.BufferRegion() 
+        return new SDL.SDL_GPUBufferRegion() 
         {
-            Buffer = Buffer.Handle,
-            Offset = Offset,
-            Size = Size
+            buffer = Buffer.Handle,
+            offset = Offset,
+            size = Size
         };
     }
 }
@@ -609,12 +609,12 @@ public struct BufferLocation(RawBuffer buffer, uint offset)
     public RawBuffer Buffer = buffer;
     public uint Offset = offset;
 
-    public Refresh.BufferLocation ToSDLGpu() 
+    public SDL.SDL_GPUBufferLocation ToSDLGpu() 
     {
-        return new Refresh.BufferLocation() 
+        return new SDL.SDL_GPUBufferLocation() 
         {
-            Buffer = Buffer.Handle,
-            Offset = Offset,
+            buffer = Buffer.Handle,
+            offset = Offset,
         };
     }
 }
@@ -646,22 +646,22 @@ public struct GraphicsPipelineCreateInfo
 
 public struct VertexInputState 
 {
-    public VertexBinding[] VertexBindings;
+    public VertexBufferDescription[] VertexBindings;
     public VertexAttribute[] VertexAttributes;
 
     public static readonly VertexInputState Empty = new VertexInputState() 
     {
-        VertexBindings = Array.Empty<VertexBinding>(),
+        VertexBindings = Array.Empty<VertexBufferDescription>(),
         VertexAttributes = Array.Empty<VertexAttribute>()
     };
 
-    public VertexInputState(VertexBinding vertexBinding, VertexAttribute[] vertexAttributes) 
+    public VertexInputState(VertexBufferDescription vertexBinding, VertexAttribute[] vertexAttributes) 
     {
         VertexBindings = [vertexBinding];
         VertexAttributes = vertexAttributes;
     }
 
-    public VertexInputState(VertexBinding[] vertexBindings, VertexAttribute[] vertexAttributes) 
+    public VertexInputState(VertexBufferDescription[] vertexBindings, VertexAttribute[] vertexAttributes) 
     {
         VertexBindings = vertexBindings;
         VertexAttributes = vertexAttributes;
@@ -761,18 +761,18 @@ public struct ColorAttachmentBlendState
 		ColorWriteMask = ColorComponentFlags.None
 	};
 
-	public Refresh.ColorAttachmentBlendState ToSDLGpu()
+	public SDL.SDL_GPUColorTargetBlendState ToSDLGpu()
 	{
-		return new Refresh.ColorAttachmentBlendState
+		return new SDL.SDL_GPUColorTargetBlendState
 		{
-			BlendEnable = BlendEnable ? 1 : 0,
-			AlphaBlendOp = (Refresh.BlendOp) AlphaBlendOp,
-			ColorBlendOp = (Refresh.BlendOp) ColorBlendOp,
-			ColorWriteMask = (Refresh.ColorComponentFlags) ColorWriteMask,
-			DestinationAlphaBlendFactor = (Refresh.BlendFactor) DestinationAlphaBlendFactor,
-			DestinationColorBlendFactor = (Refresh.BlendFactor) DestinationColorBlendFactor,
-			SourceAlphaBlendFactor = (Refresh.BlendFactor) SourceAlphaBlendFactor,
-			SourceColorBlendFactor = (Refresh.BlendFactor) SourceColorBlendFactor
+			enable_blend = BlendEnable,
+			alpha_blend_op = (SDL.SDL_GPUBlendOp) AlphaBlendOp,
+			color_blend_op = (SDL.SDL_GPUBlendOp) ColorBlendOp,
+			color_write_mask = (SDL.SDL_GPUColorComponentFlags) ColorWriteMask,
+			dst_alpha_blendfactor = (SDL.SDL_GPUBlendFactor) DestinationAlphaBlendFactor,
+			dst_color_blendfactor = (SDL.SDL_GPUBlendFactor) DestinationColorBlendFactor,
+			src_alpha_blendfactor = (SDL.SDL_GPUBlendFactor) SourceAlphaBlendFactor,
+			src_color_blendfactor = (SDL.SDL_GPUBlendFactor) SourceColorBlendFactor
 		};
 	}
 }
@@ -790,6 +790,7 @@ public struct RasterizerState
     public float DepthBiasClamp;
     public float DepthBiasConstantFactor;
     public bool DepthBiasEnable;
+    public bool DepthClipEnable;
     public float DepthBiasSlopeFactor;
     public FillMode FillMode;
     public FrontFace FrontFace;
@@ -858,38 +859,42 @@ public struct RasterizerState
 		DepthBiasEnable = false
 	};
 
-	public Refresh.RasterizerState ToSDLGpu()
+	public SDL.SDL_GPURasterizerState ToSDLGpu()
 	{
-		return new Refresh.RasterizerState
+		return new SDL.SDL_GPURasterizerState
 		{
-			CullMode = (Refresh.CullMode) CullMode,
-			DepthBiasClamp = DepthBiasClamp,
-			DepthBiasConstantFactor = DepthBiasConstantFactor,
-			DepthBiasEnable = DepthBiasEnable ? 1 : 0,
-			DepthBiasSlopeFactor = DepthBiasSlopeFactor,
-			FillMode = (Refresh.FillMode) FillMode,
-			FrontFace = (Refresh.FrontFace) FrontFace
+			cull_mode = (SDL.SDL_GPUCullMode) CullMode,
+			depth_bias_clamp = DepthBiasClamp,
+			depth_bias_constant_factor = DepthBiasConstantFactor,
+			enable_depth_bias = DepthBiasEnable,
+            enable_depth_clip = DepthClipEnable,
+            depth_bias_slope_factor = DepthBiasSlopeFactor,
+			fill_mode = (SDL.SDL_GPUFillMode) FillMode,
+			front_face = (SDL.SDL_GPUFrontFace) FrontFace
 		};
 	}
 }
 
-public struct MultisampleState(SampleCount sampleCount, uint sampleMask)
+public struct MultisampleState(SampleCount sampleCount, uint sampleMask, bool enableMask)
 {
     public SampleCount MultisampleCount = sampleCount;
     public uint SampleMask = sampleMask;
+    public bool MaskEnable = enableMask;
 
     public static readonly MultisampleState None = new MultisampleState() 
     {
         MultisampleCount = SampleCount.One,
-        SampleMask = uint.MaxValue
+        SampleMask = uint.MaxValue,
+        MaskEnable = false
     };
 
-    public Refresh.MultisampleState ToSDLGpu() 
+    public SDL.SDL_GPUMultisampleState ToSDLGpu() 
     {
-        return new Refresh.MultisampleState() 
+        return new SDL.SDL_GPUMultisampleState() 
         {
-            MultisampleCount = (Refresh.SampleCount)MultisampleCount,
-            SampleMask = SampleMask
+            sample_count = (SDL.SDL_GPUSampleCount)MultisampleCount,
+            sample_mask = SampleMask,
+            enable_mask = MaskEnable
         };
     }
 }
@@ -899,52 +904,52 @@ public struct BlendConstants
     public float R, G, B, A;
 }
 
-public struct VertexAttribute(uint binding, uint location, VertexElementFormat format, uint offset)
+public struct VertexAttribute(uint bufferSlot, uint location, VertexElementFormat format, uint offset)
 {
     public uint Location = location;
-    public uint Binding = binding;
+    public uint BufferSlot = bufferSlot;
     public VertexElementFormat Format = format;
     public uint Offset = offset;
 
-    public Refresh.VertexAttribute ToSDLGpu() 
+    public SDL.SDL_GPUVertexAttribute ToSDLGpu() 
     {
-        return new Refresh.VertexAttribute 
+        return new SDL.SDL_GPUVertexAttribute
         {
-            Location = Location,
-            Binding = Binding,
-            Format = (Refresh.VertexElementFormat)Format,
-            Offset = Offset
+            location = Location,
+            buffer_slot = BufferSlot,
+            format = (SDL.SDL_GPUVertexElementFormat)Format,
+            offset = Offset
         };
     }
 }
 
-public struct VertexBinding
+public struct VertexBufferDescription
 {
-    public uint Binding;
+    public uint Slot;
     public uint Stride;
     public VertexInputRate InputRate;
     public uint StepRate;
 
-    public unsafe static VertexBinding Create<T>(uint binding, VertexInputRate inputRate = VertexInputRate.Vertex, uint stepRate = 1) 
+    public unsafe static VertexBufferDescription Create<T>(uint slot, VertexInputRate inputRate = VertexInputRate.Vertex, uint stepRate = 1) 
     where T : unmanaged
     {
-        return new VertexBinding 
+        return new VertexBufferDescription 
         {
-            Binding = binding,
+            Slot = slot,
             InputRate = inputRate,
             StepRate = stepRate,
             Stride = (uint)sizeof(T)
         };
     }
 
-    public Refresh.VertexBinding ToSDLGpu() 
+    public SDL.SDL_GPUVertexBufferDescription ToSDLGpu() 
     {
-        return new Refresh.VertexBinding() 
+        return new SDL.SDL_GPUVertexBufferDescription() 
         {
-            Binding = Binding,
-            StepRate = StepRate,
-            InputRate = (Refresh.VertexInputRate)InputRate,
-            Stride = Stride
+            slot = Slot,
+            instance_step_rate = StepRate,
+            input_rate = (SDL.SDL_GPUVertexInputRate)InputRate,
+            pitch = Stride
         };
     }
 }

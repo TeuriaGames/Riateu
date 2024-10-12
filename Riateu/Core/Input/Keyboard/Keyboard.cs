@@ -29,8 +29,7 @@ public class Keyboard
 
     public Keyboard() 
     {
-        int numKeys = 0;
-        SDL.SDL_GetKeyboardState(ref numKeys);
+        SDL.SDL_GetKeyboardState(out int numKeys);
 
         KeyCodes = Enum.GetValues<KeyCode>();
         Buttons = new KeyboardButton[numKeys];
@@ -44,8 +43,7 @@ public class Keyboard
     {
         AnyPressed = false;
 
-        int numKeys = 0;
-        State = SDL.SDL_GetKeyboardState(ref numKeys);
+        State = SDL.SDL_GetKeyboardState(out int numKeys);
         foreach (KeyCode keyCode in KeyCodes) 
         {
             KeyboardButton button = Buttons[(int)keyCode];

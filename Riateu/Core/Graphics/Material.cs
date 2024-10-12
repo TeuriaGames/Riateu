@@ -28,7 +28,7 @@ public struct MaterialBuilder
 {
     private Shader vertexShader;
     private Shader fragmentShader;
-    private WeakList<(VertexBinding, VertexAttribute[])> inputStates;
+    private WeakList<(VertexBufferDescription, VertexAttribute[])> inputStates;
     private uint inputTotalIDs;
     private uint attribStrides;
 
@@ -43,7 +43,7 @@ public struct MaterialBuilder
     {
         this.vertexShader = vertexShader;
         this.fragmentShader = fragmentShader;
-        inputStates = new WeakList<(VertexBinding, VertexAttribute[])>();
+        inputStates = new WeakList<(VertexBufferDescription, VertexAttribute[])>();
     }
 
     public MaterialBuilder SetBlendConstants(int r, int g, int b, int a) 
@@ -97,7 +97,7 @@ public struct MaterialBuilder
     where T : unmanaged, IVertexFormat
     {
         VertexAttribute[] attributes = T.Attributes(inputTotalIDs);
-        inputStates.Add((VertexBinding.Create<T>(inputTotalIDs, inputRate, stepRate), attributes));
+        inputStates.Add((VertexBufferDescription.Create<T>(inputTotalIDs, inputRate, stepRate), attributes));
         attribStrides += (uint)attributes.Length;
         inputTotalIDs++;
         return this;
@@ -105,7 +105,7 @@ public struct MaterialBuilder
 
     public Material Build(GraphicsDevice device) 
     {
-        VertexBinding[] bindings = new VertexBinding[inputTotalIDs];
+        VertexBufferDescription[] bindings = new VertexBufferDescription[inputTotalIDs];
         VertexAttribute[] attributes = new VertexAttribute[attribStrides];
 
         int i = 0;

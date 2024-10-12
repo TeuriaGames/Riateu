@@ -43,11 +43,6 @@ public class Window : IDisposable
         {
             flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
         }
-        else if (settings.WindowMode == WindowMode.BorderlessFullscreen) 
-        {
-            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
-            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
-        }
 
         if (settings.Flags.Resizable) 
         {
@@ -61,10 +56,10 @@ public class Window : IDisposable
 
         this.windowMode = settings.WindowMode;
 
-        IntPtr mode = SDL.SDL_GetDesktopDisplayMode(0);
+        var modeID = SDL.SDL_GetPrimaryDisplay();
 
         unsafe {
-            SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)mode;
+            SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(modeID);
 
             Handle = SDL.SDL_CreateWindow(
                 settings.Title,
@@ -73,8 +68,7 @@ public class Window : IDisposable
                 flags
             );
         }
-        int width = 0, height = 0;
-        SDL.SDL_GetWindowSize(Handle, ref width, ref height);
+        SDL.SDL_GetWindowSize(Handle, out int width, out int height);
 
         Width = (uint)width;
         Height = (uint)height;
@@ -118,33 +112,29 @@ public class Window : IDisposable
 
         if (WindowMode == WindowMode.Windowed) 
         {
-            // SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
+            var displayID = SDL.SDL_GetDisplayForWindow(Handle);
+            unsafe {
+                SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(displayID);
+                SDL.SDL_SetWindowPosition(Handle, modePtr->w / 2, modePtr->h / 2);
+            }
         }
     }
     public void SetScreenMode(WindowMode windowMode)
     {
-        SDL.SDL_WindowFlags windowFlag = 0;
-        bool fullscreen = false;
-
         if (windowMode == WindowMode.Fullscreen)
         {
-            windowFlag = SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
-            fullscreen = true;
+            SDL.SDL_SetWindowFullscreen(Handle, true);
         }
-        else if (windowMode == WindowMode.BorderlessFullscreen)
+        else
         {
-            windowFlag |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
-            windowFlag |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
-            fullscreen = true;
+            var displayID = SDL.SDL_GetDisplayForWindow(Handle);
+            unsafe {
+                SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(displayID);
+                SDL.SDL_SetWindowPosition(Handle, modePtr->w / 2, modePtr->h / 2);
+            }
         }
 
-        // FIXME the flags
-        SDL.SDL_SetWindowFullscreen(Handle, fullscreen);
-
-        if (windowMode == WindowMode.Windowed)
-        {
-            // SDL.SDL_SetWindowPosition(Handle, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED);
-        }
+        SDL.SDL_SyncWindow(Handle);
 
         WindowMode = windowMode;
     }
@@ -192,5 +182,5 @@ public record struct Flags(bool Resizable = false, bool StartMaximized = false);
 public enum WindowMode 
 {
     Windowed,
-    Fullscreen
+    Fullscreen,
 }

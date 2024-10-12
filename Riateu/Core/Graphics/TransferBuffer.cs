@@ -19,7 +19,7 @@ public class TransferBuffer : GraphicsResource
             usage = (SDL.SDL_GPUTransferBufferUsage)usage,
             size = size
         };
-        Handle = SDL.SDL_CreateGPUTransferBuffer(Device.Handle, ref info);
+        Handle = SDL.SDL_CreateGPUTransferBuffer(Device.Handle, info);
         Size = size;
     }
 
@@ -29,13 +29,34 @@ public class TransferBuffer : GraphicsResource
         return new TransferBuffer(device, usage, size * (uint)sizeof(T));
     }
 
-    public unsafe void Map(bool cycle, out byte *data) 
+    public unsafe byte* UnsafeMap(bool cycle) 
     {
 #if DEBUG
         AssertNotMapped();
         IsMapped = true;
 #endif
-        data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
+        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
+        return data;
+    }
+
+    public unsafe Span<byte> Map(bool cycle) 
+    {
+#if DEBUG
+        AssertNotMapped();
+        IsMapped = true;
+#endif
+        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
+        return new Span<byte>(data, (int)Size);
+    }
+
+    public unsafe Span<T> Map<T>(bool cycle) 
+    {
+#if DEBUG
+        AssertNotMapped();
+        IsMapped = true;
+#endif
+        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
+        return new Span<T>(data, (int)Size);
     }
 
     public void Unmap() 

@@ -101,12 +101,12 @@ public unsafe class ResourceUploader : GraphicsResource
 	{
         fixed (byte *ptr = compressedImageData) 
         {
-			IntPtr image = Native.Riateu_LoadImage(ptr, compressedImageData.Length, out int width, out int height, out int len);
-            var span = new Span<byte>((void*) image, len);
+            var pixelData = Native.Riateu_LoadImage(ptr, compressedImageData.Length, out _, out _, out int sizeInBytes);
+            var pixelSpan = new Span<byte>((void*) pixelData, (int) sizeInBytes);
 
             SetTextureData(textureRegion, span, false);
 
-            Native.Riateu_FreeImage(image);
+            Native.Riateu_FreeImage(pixelData);
         }
 	}
 
@@ -148,7 +148,7 @@ public unsafe class ResourceUploader : GraphicsResource
 		uint resourceOffset;
 		fixed (T* dataPtr = data)
 		{
-			resourceOffset = CopyTextureData(dataPtr, dataLengthInBytes, Texture.BytesPerPixel(textureRegion.TextureSlice.Texture.Format));
+			resourceOffset = CopyTextureData(dataPtr, dataLengthInBytes, Texture.BytesPerPixel(textureRegion.Texture.Format));
 		}
 
 		textureUploads.Add((resourceOffset, textureRegion, cycle));

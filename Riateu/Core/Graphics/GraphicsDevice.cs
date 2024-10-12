@@ -20,7 +20,7 @@ public class GraphicsDevice : IDisposable
 
     public GraphicsDevice(GraphicsSettings settings, BackendFlags flags) 
     {
-        Handle = SDL.SDL_CreateGPUDevice((uint)flags, settings.DebugMode, "GAME DEVICE");
+        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)ShaderFormat.SPIRV, settings.DebugMode, "GAME DEVICE");
 
 
         BackendFlags = flags;
@@ -112,19 +112,21 @@ public class GraphicsDevice : IDisposable
     public unsafe void WaitForFence(Fence fence) 
     {
         IntPtr fencePtr = fence.Handle;
-        SDL.SDL_WaitForGPUFences(Handle, true, ref fencePtr, 1);
+        Span<nint> fences = stackalloc nint[1];
+        fences[0] = fencePtr;
+        SDL.SDL_WaitForGPUFences(Handle, true, fences, 1);
     }
 
     public unsafe void WaitForFences(ReadOnlySpan<Fence> fences, bool waitAll) 
     {
-        IntPtr* fencePtrs = stackalloc IntPtr[fences.Length];
+        Span<nint> fencePtrs = stackalloc IntPtr[fences.Length];
 
         for (int i = 0; i < fences.Length; i++) 
         {
             fencePtrs[i] = fences[i].Handle;
         }
 
-        SDL.SDL_WaitForGPUFences(Handle, true, ref Unsafe.AsRef<IntPtr>(fencePtrs), 1);
+        SDL.SDL_WaitForGPUFences(Handle, true, fencePtrs, (uint)fencePtrs.Length);
     }
 
     public bool QueryFence(Fence fence) 
