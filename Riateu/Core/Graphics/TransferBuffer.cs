@@ -93,27 +93,24 @@ public class TransferBuffer : GraphicsResource
     public unsafe uint GetTransferData<T>(Span<T> dest, uint bufferOffsetInBytes) 
     where T : unmanaged
     {
-        throw new NotImplementedException();
-//         int elementSize = sizeof(T);
-//         uint dataLengthInBytes = (uint)(elementSize * dest.Length);
-// #if DEBUG
-//         if (dataLengthInBytes > Size + bufferOffsetInBytes) 
-//         {
-//             throw new InvalidOperationException($"Data overflow! Transfer buffer length {Size}, offset {bufferOffsetInBytes}, copy length {dataLengthInBytes}");
-//         }
-//         AssertNotMapped();
-// #endif
-//         fixed (T* dataPtr = dest) 
-//         {
-//             Refresh.Refresh_GetTransferData(Device.Handle, new Refresh.TransferBufferRegion() 
-//             {
-//                 TransferBuffer = Handle,
-//                 Offset = bufferOffsetInBytes,
-//                 Size = dataLengthInBytes
-//             }, (nint)dataPtr);
-//         }
+        int elementSize = sizeof(T);
+        uint dataLengthInBytes = (uint)(elementSize * dest.Length);
+#if DEBUG
+        if (dataLengthInBytes > Size + bufferOffsetInBytes) 
+        {
+            throw new InvalidOperationException($"Data overflow! Transfer buffer length {Size}, offset {bufferOffsetInBytes}, copy length {dataLengthInBytes}");
+        }
+        AssertNotMapped();
+#endif
 
-//         return dataLengthInBytes;
+        byte *mappedBuffer = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, false);
+        fixed (T *dataPtr = dest) 
+        {
+            NativeMemory.Copy(mappedBuffer, &dataPtr[bufferOffsetInBytes], dataLengthInBytes);
+        }
+        SDL.SDL_UnmapGPUTransferBuffer(Device.Handle, Handle);
+
+        return dataLengthInBytes;
     }
 
 
