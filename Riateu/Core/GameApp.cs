@@ -64,19 +64,27 @@ public abstract class GameApp
     public GameApp(WindowSettings settings, GraphicsSettings graphicsSettings)
     {
         Instance = this;
-        BackendFlags backendFlags = 0;
+        string backendName = null;
+        // Prefer Vulkan for now on
+        BackendFlags backendFlags = BackendFlags.Vulkan;
+#if VULKAN_FOR_NOW
         if (Environment.OSVersion.Platform == PlatformID.Win32NT) 
         {
             backendFlags = BackendFlags.Vulkan;
+            backendName = "direct3d12";
         }
         else if (Environment.OSVersion.Platform == PlatformID.Unix) 
         {
             backendFlags = BackendFlags.Vulkan;
+            backendName = "vulkan";
         }
         else 
         {
             backendFlags = BackendFlags.Metal;
+            backendName = "metal";
         }
+#endif
+
 
         SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN;
 
@@ -91,7 +99,7 @@ public abstract class GameApp
         }
 
         MainWindow = Window.CreateWindow(settings, backendFlags);
-        GraphicsDevice = new GraphicsDevice(graphicsSettings);
+        GraphicsDevice = new GraphicsDevice(graphicsSettings, backendName);
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
         {
@@ -114,7 +122,7 @@ public abstract class GameApp
         ResourceUploader uploader = new ResourceUploader(GraphicsDevice);
         Assets.StartContext(uploader);
         LoadContent(Assets);
-        Assets.EndContext();
+        Assets.EndContext(true);
         Scene = Initialize();
     }
 

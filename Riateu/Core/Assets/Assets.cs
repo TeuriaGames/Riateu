@@ -12,16 +12,24 @@ public interface IAssets {}
 
 public class Ref<T>
 {
-    public T Data;
+    public T Data 
+    {
+        get => data;
+        set 
+        {
+            data = value;
+        }
+    }
+    private T data;
 
     public Ref(T data) 
     {
-        Data = data;
+        this.data = data;
     }
 
     public static implicit operator T(Ref<T> refs) 
     {
-        return refs.Data;
+        return refs.data;
     }
 }
 
@@ -29,7 +37,7 @@ public record struct AtlasItem(string Name, Image Image);
 
 public class AssetStorage
 {
-    private enum WatchType { Texture }
+    private enum WatchType { Texture, PackerAtlas, Atlas }
     private Dictionary<string, IAssets> assetsCache = new Dictionary<string, IAssets>();
     private string assetPath;
     private ResourceUploader uploader;
@@ -39,7 +47,8 @@ public class AssetStorage
 
 #if DEBUG
     private Dictionary<WatchType, List<string>> watchlist = new ();
-    private FileSystemWatcher watcher = new FileSystemWatcher();
+    private Dictionary<string, Action<string>> reactChanges = new ();
+    private List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
 #endif
 
     public AssetStorage(GraphicsDevice graphicsDevice, AudioDevice audioDevice, string path) 
@@ -50,6 +59,7 @@ public class AssetStorage
         this.graphicsDevice = graphicsDevice;
 #if DEBUG
         watchlist.Add(WatchType.Texture, new List<string>());
+        watchlist.Add(WatchType.PackerAtlas, new List<string>());
 #endif
     }
 
@@ -63,7 +73,7 @@ public class AssetStorage
     /// </summary>
     /// <param name="basePath">A target folder to look for</param>
     /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
-    public Atlas CreateAtlas(string basePath) 
+    public Ref<Atlas> CreateAtlas(string basePath) 
     {
         void Crawl(string path) 
         {
@@ -104,11 +114,26 @@ public class AssetStorage
 
         Crawl(basePath);
 
-
         if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
         {
-            return Atlas.LoadFromPacker(uploader, items, size);
+            Ref<Atlas> atlas = new Ref<Atlas>(Atlas.LoadFromPacker(uploader, items, size));
+            AddToWatchlist(basePath, WatchType.PackerAtlas, path => {
+                packer = new Packer<AtlasItem>(8192);
+                if (path.EndsWith(Path.DirectorySeparatorChar)) 
+                {
+                    path = path.Substring(0, path.Length - 1);
+                }
+
+                Crawl(path);
+
+                if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
+                {
+                    atlas.Data = Atlas.LoadFromPacker(uploader, items, size);
+                }
+            });
+            return atlas;
         }
+
         return null;
     }
 
@@ -117,11 +142,11 @@ public class AssetStorage
     /// </summary>
     /// <param name="packer">A packer that contains all of the added images</param>
     /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
-    public Atlas CreateAtlasFromPacker(Packer<AtlasItem> packer) 
+    public Ref<Atlas> CreateAtlasFromPacker(Packer<AtlasItem> packer) 
     {
         if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
         {
-            return Atlas.LoadFromPacker(uploader, items, size);
+            return new Ref<Atlas>(Atlas.LoadFromPacker(uploader, items, size));
         }
         return null;
     }
@@ -153,7 +178,7 @@ public class AssetStorage
         {
             return (Ref<Texture>)asset;
         }
-        AddToWatchlist(path, WatchType.Texture);
+        AddToWatchlist(path, WatchType.Texture, path => new Ref<Texture>(uploader.CreateTexture2DFromCompressed(path)));
         return new Ref<Texture>(uploader.CreateTexture2DFromCompressed(path));
     }
 
@@ -183,15 +208,16 @@ public class AssetStorage
         }
     }
 
-    public Atlas LoadAtlas(string path, Texture texture, bool ninePatchEnabled = false, JsonType fileType = JsonType.Json) 
+    public Ref<Atlas> LoadAtlas(string path, Texture texture, bool ninePatchEnabled = false, JsonType fileType = JsonType.Json) 
     {
         if (assetsCache.TryGetValue(path, out IAssets asset)) 
         {
-            return (Atlas)asset;
+            return (Ref<Atlas>)asset;
         }
-        Atlas atlas = Atlas.LoadFromFile(path, texture, fileType, ninePatchEnabled);
-        assetsCache.Add(path, atlas);
-
+        Ref<Atlas> atlas = new Ref<Atlas>(Atlas.LoadFromFile(path, texture, fileType, ninePatchEnabled));
+        AddToWatchlist(path, WatchType.Atlas, path => new Ref<Atlas>(
+            Atlas.LoadFromFile(path, texture, fileType, ninePatchEnabled))
+        );
         return atlas;
     }
 
@@ -231,20 +257,90 @@ public class AssetStorage
         return storage;
     }
 
-    public void EndContext() 
+    public void EndContext(bool initWatchers) 
     {
         uploader.Upload();
         uploader.Dispose();
+        if (initWatchers) 
+        {
+            InitWatchers(WatchType.Texture);
+            InitWatchers(WatchType.Atlas);
+            InitWatchers(WatchType.PackerAtlas);
+        }
     }
 
     [Conditional("DEBUG")]
-    private void AddToWatchlist(string path, WatchType type) 
+    private void InitWatchers(WatchType type) 
     {
-        var dirName = Path.GetDirectoryName(path);
+#if DEBUG
+        var paths = watchlist[type];
+
+        foreach (var path in paths) 
+        {
+            var watcher = new FileSystemWatcher(path);
+            watcher.EnableRaisingEvents = true;
+            watcher.IncludeSubdirectories = type == WatchType.PackerAtlas;
+            if (type == WatchType.PackerAtlas) 
+            {
+                watcher.Changed += (s, a) => {
+                    var ext = Path.GetExtension(a.FullPath);
+                    if (ext is not ".png" and not ".qoi" and not ".gif") 
+                    {
+                        return;
+                    }
+                    if (reactChanges.TryGetValue(path, out var val)) 
+                    {
+                        StartContext(new ResourceUploader(graphicsDevice));
+                        try 
+                        {
+                            val(path);
+                        }
+                        catch (Exception e) 
+                        {
+                            Console.WriteLine(e.ToString());
+                        }
+                        EndContext(false);
+                    }
+                };
+            }
+            else 
+            {
+                watcher.Changed += (s, a) => {
+                    var parenDir = Path.GetDirectoryName(a.FullPath);
+                    if (reactChanges.TryGetValue(parenDir, out var val)) 
+                    {
+                        StartContext(new ResourceUploader(graphicsDevice));
+                        val(a.FullPath);
+                        EndContext(false);
+                    }
+                };
+            }
+
+            watchers.Add(watcher);
+        }
+
+#endif
+    }
+
+    [Conditional("DEBUG")]
+    private void AddToWatchlist(string path, WatchType type, Action<string> action) 
+    {
+#if DEBUG
+        string dirName;
+        if (type == WatchType.Atlas) 
+        {
+            dirName = path;
+        }
+        else 
+        {
+            dirName = Path.GetDirectoryName(path);
+        }
         var list = watchlist[type];
         if (!list.Contains(dirName)) 
         {
             watchlist[type].Add(dirName);
         }
+        reactChanges.Add(path, action);
+#endif
     }
 }
