@@ -84,6 +84,18 @@ internal static partial class Native
     [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
     internal static extern IntPtr Riateu_FreeGif(IntPtr gif);
 
+    [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern int Riateu_InitShaderCross();
+
+    [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern void Riateu_DeinitShaderCross();
+
+    [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr Riateu_CompileSPIRVGraphics(IntPtr device, in SDL.SDL_GPUGraphicsPipelineCreateInfo createInfo);
+
+    [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr Riateu_CompileSPIRVCompute(IntPtr device, in SDL.SDL_GPUComputePipelineCreateInfo createInfo);
+
     [DllImport("SDL3", CallingConvention = CallingConvention.Cdecl)]
     internal static extern uint SDL_CalculateGPUTextureFormatSize(
         SDL.SDL_GPUTextureFormat format,

@@ -33,6 +33,7 @@ pub fn build(b: *std.Build) void {
     lib.addIncludePath(b.path("lib/SDL3/include"));
     if (target.result.isMinGW()) {
         lib.addObjectFile(b.path("../runtimes/x64/SDL3.dll"));
+        lib.addObjectFile(b.path("../runtimes/x64/spirv-cross-c-shared.dll"));
         addInstallPath(b, lib, "../../runtimes/x64");
     } else if (target.result.isDarwin()) {
         lib.addObjectFile(b.path("../runtimes/osx/libSDL2-2.0.0.dylib"));

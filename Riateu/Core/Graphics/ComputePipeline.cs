@@ -80,10 +80,22 @@ public class ComputePipeline : GraphicsResource
             threadcount_z = computePipelineCreateInfo.ThreadCountZ
 		};
 
-		var computePipelineHandle = SDL.SDL_CreateGPUComputePipeline(
-			device.Handle,
-			gpuPipelineCreateInfo
-		);
+		IntPtr computePipelineHandle;
+
+        if (device.Driver == "vulkan") 
+        {
+			computePipelineHandle = SDL.SDL_CreateGPUComputePipeline(
+				device.Handle,
+				gpuPipelineCreateInfo
+			);
+		}
+		else 
+		{
+			computePipelineHandle = Native.Riateu_CompileSPIRVCompute(
+				device.Handle,
+				gpuPipelineCreateInfo
+			);
+		}
 
 		if (computePipelineHandle == nint.Zero)
 		{

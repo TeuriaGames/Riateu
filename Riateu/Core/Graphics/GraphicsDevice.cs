@@ -17,9 +17,9 @@ public class GraphicsDevice : IDisposable
 
     private HashSet<GCHandle> resources = new HashSet<GCHandle>();
 
-    public GraphicsDevice(GraphicsSettings settings) 
+    public GraphicsDevice(GraphicsSettings settings, string backendName = null) 
     {
-        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)ShaderFormat.SPIRV, settings.DebugMode, null);
+        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXIL), settings.DebugMode, backendName);
 
         if (Handle == IntPtr.Zero) 
         {
@@ -31,6 +31,14 @@ public class GraphicsDevice : IDisposable
         string driver = SDL.SDL_GetGPUDeviceDriver(Handle);
 
         Driver = driver;
+
+        if (driver != "vulkan") 
+        {
+            if (Native.Riateu_InitShaderCross() != 0) 
+            {
+                Logger.Error("Shader Cross failed to initialize in non-Vulkan platform");
+            }
+        }
         DebugMode = settings.DebugMode;
 
         Logger.Info($"""
@@ -39,6 +47,7 @@ public class GraphicsDevice : IDisposable
         Device Driver: {driver}
         SDL Version: 3.1.3 Pre-release
         """);
+
     }
 
     public void SetSwapchainParameters(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
@@ -52,6 +61,8 @@ public class GraphicsDevice : IDisposable
             Handle, window.Handle, 
             (SDL.SDL_GPUSwapchainComposition)swapchainComposition, 
             (SDL.SDL_GPUPresentMode)presentMode);
+        window.SwapchainComposition = swapchainComposition;
+        window.SwapchainFormat = (TextureFormat)SDL.SDL_GetGPUSwapchainTextureFormat(Handle, window.Handle);
     }
 
     public bool ClaimWindow(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
@@ -216,6 +227,12 @@ public class GraphicsDevice : IDisposable
             resources.Clear();
             SDL.SDL_DestroyGPUDevice(Handle);
             IsDisposed = true;
+
+
+            if (Driver != "vulkan") 
+            {
+                Native.Riateu_DeinitShaderCross();
+            }
         }
     }
 
