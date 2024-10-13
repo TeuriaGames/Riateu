@@ -60,6 +60,7 @@ public class AssetStorage
 #if DEBUG
         watchlist.Add(WatchType.Texture, new List<string>());
         watchlist.Add(WatchType.PackerAtlas, new List<string>());
+        watchlist.Add(WatchType.Atlas, new List<string>());
 #endif
     }
 
