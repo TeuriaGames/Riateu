@@ -328,7 +328,7 @@ public class AssetStorage
     {
 #if DEBUG
         string dirName;
-        if (type == WatchType.Atlas) 
+        if (type == WatchType.PackerAtlas) 
         {
             dirName = path;
         }
