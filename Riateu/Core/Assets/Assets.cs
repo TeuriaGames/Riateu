@@ -59,7 +59,7 @@ public class AssetStorage
     }
 #endif
 
-    public void StartContext() 
+    internal void StartContext() 
     {
         uploader = new ResourceUploader(graphicsDevice);
         server.Reset();
@@ -240,7 +240,7 @@ public class AssetStorage
         return storage;
     }
 
-    public void EndContext() 
+    internal void EndContext() 
     {
         uploader.Upload();
         uploader.Dispose();
