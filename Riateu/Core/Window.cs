@@ -110,11 +110,7 @@ public class Window : IDisposable
 
         if (WindowMode == WindowMode.Windowed) 
         {
-            var displayID = SDL.SDL_GetDisplayForWindow(Handle);
-            unsafe {
-                SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(displayID);
-                SDL.SDL_SetWindowPosition(Handle, modePtr->w / 2, modePtr->h / 2);
-            }
+            SDL.SDL_SetWindowPosition(Handle, (int) 0x2FFF0000u, (int) 0x2FFF0000u);
         }
     }
     public void SetScreenMode(WindowMode windowMode)
@@ -125,11 +121,7 @@ public class Window : IDisposable
         }
         else
         {
-            var displayID = SDL.SDL_GetDisplayForWindow(Handle);
-            unsafe {
-                SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(displayID);
-                SDL.SDL_SetWindowPosition(Handle, modePtr->w / 2, modePtr->h / 2);
-            }
+            SDL.SDL_SetWindowPosition(Handle, (int) 0x2FFF0000u, (int) 0x2FFF0000u);
         }
 
         SDL.SDL_SyncWindow(Handle);
