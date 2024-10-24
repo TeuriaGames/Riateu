@@ -40,14 +40,6 @@ public class GraphicsDevice : IDisposable
             }
         }
         DebugMode = settings.DebugMode;
-
-        Logger.Info($"""
-        {'\n'}
-        Riateu v0.10.0
-        Device Driver: {driver}
-        SDL Version: 3.1.3 Pre-release
-        """);
-
     }
 
     public void SetSwapchainParameters(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 
@@ -99,7 +91,6 @@ public class GraphicsDevice : IDisposable
     {
         if (window.Claimed) 
         {
-            // FIXME unclaim
             SDL.SDL_ReleaseWindowFromGPUDevice(Handle, window.Handle);
             window.Claimed = false;
             window.SwapchainTarget.Handle = IntPtr.Zero;

@@ -53,7 +53,8 @@ public class Texture : GraphicsResource
 
     public uint Download(in Span<byte> destination) 
     {
-        uint size = Native.SDL_CalculateGPUTextureFormatSize((SDL.SDL_GPUTextureFormat)Format, Width, Height, LayerCountOrDepth);
+        // uint size = Native.SDL_CalculateGPUTextureFormatSize((SDL.SDL_GPUTextureFormat)Format, Width, Height, LayerCountOrDepth);
+        uint size = Width * Height * 4;
 
 #if DEBUG
         if (size > destination.Length) 
