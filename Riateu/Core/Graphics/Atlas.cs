@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Collections.Concurrent;
 using System.Linq;
+using System;
 
 namespace Riateu.Graphics;
 
@@ -12,7 +13,7 @@ namespace Riateu.Graphics;
 /// A class that contains all of the quads from a packed texture that can be retrieved
 /// by a name.
 /// </summary>
-public class Atlas : IAssets
+public class Atlas : IAssets, IDisposable
 {
     /// <summary>
     /// A base texture of an atlas.
@@ -206,6 +207,11 @@ public class Atlas : IAssets
     public TextureQuad Get(string name) 
     {
         return textures[name];
+    }
+
+    public void Dispose()
+    { 
+        BaseTexture.Dispose();
     }
 
     public static implicit operator Texture(Atlas atlas) => atlas.BaseTexture;

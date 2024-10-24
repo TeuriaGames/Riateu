@@ -2,9 +2,11 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SDL3;
 
 namespace Riateu;
 
@@ -44,6 +46,29 @@ public static class Logger
 
         if (level == LogLevel.Error || level == LogLevel.Assert)
             Debugger.Break();
+    }
+
+    internal static void InitSDLLog() 
+    {
+        SDL.SDL_SetLogPriority((int) SDL.SDL_LogCategory.SDL_LOG_CATEGORY_GPU, SDL.SDL_LogPriority.SDL_LOG_PRIORITY_INFO);
+        unsafe {
+            SDL.SDL_SetLogOutputFunction(SDLLog, IntPtr.Zero);
+        }
+    }
+    internal static unsafe void SDLLog(IntPtr userdata, int category, SDL3.SDL.SDL_LogPriority priority, byte* message) 
+    {
+        switch (priority) 
+        {
+        case SDL.SDL_LogPriority.SDL_LOG_PRIORITY_INFO:
+            Info(Marshal.PtrToStringUTF8((IntPtr)message));
+            break;
+        case SDL.SDL_LogPriority.SDL_LOG_PRIORITY_WARN:
+            Warn(Marshal.PtrToStringUTF8((IntPtr)message));
+            break;
+        case SDL.SDL_LogPriority.SDL_LOG_PRIORITY_ERROR:
+            Error(Marshal.PtrToStringUTF8((IntPtr)message));
+            break;
+        }
     }
 
     public static void Print(string messageToPrint) 

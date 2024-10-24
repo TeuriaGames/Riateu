@@ -43,6 +43,7 @@ public abstract class GameApp
     public string AssetPath = "Assets";
     private GameLoop scene;
 
+    public bool DisableAssetServer { get; set; }
     public AssetStorage Assets;
 
     public Window MainWindow { get; internal set; }
@@ -56,6 +57,7 @@ public abstract class GameApp
     private TimeSpan lastTime;
     private TimeSpan accumulator;
     private Stopwatch timer = new Stopwatch();
+    private AssetServer server;
 
     public bool Exiting { get; private set;}
 
@@ -97,6 +99,7 @@ public abstract class GameApp
                 _ => throw new Exception("Not Supported")
             };
         }
+        Logger.InitSDLLog();
 
         MainWindow = Window.CreateWindow(settings, backendFlags);
         GraphicsDevice = new GraphicsDevice(graphicsSettings, backendName);
@@ -118,11 +121,23 @@ public abstract class GameApp
         Height = (int)settings.Height;
 
         GameContext.Init(GraphicsDevice, MainWindow);
+#if DEBUG
+        if (!DisableAssetServer) 
+        {
+            server = new AssetServer(AssetPath);
+            server.SetWatchMethod(LoadContent);
+        }
+        else 
+        {
+            server = new AssetServer();
+        }
+        Assets = new AssetStorage(GraphicsDevice, AudioDevice, server, AssetPath);
+#else
         Assets = new AssetStorage(GraphicsDevice, AudioDevice, AssetPath);
-        ResourceUploader uploader = new ResourceUploader(GraphicsDevice);
-        Assets.StartContext(uploader);
+#endif
+        Assets.StartContext();
         LoadContent(Assets);
-        Assets.EndContext(true);
+        Assets.EndContext();
         Scene = Initialize();
     }
 
@@ -195,6 +210,9 @@ public abstract class GameApp
 
         SDL.SDL_Quit();
         Logger.Info("Game Exited...");
+#if DEBUG
+        server.Dispose();
+#endif
     }
 
     public void Tick() 
@@ -240,6 +258,9 @@ public abstract class GameApp
         }
 
         InternalRender();
+#if DEBUG
+        server.Update(Assets);
+#endif
     }
 
     public void Quit() 

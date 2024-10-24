@@ -4,6 +4,11 @@ using Riateu.Graphics;
 
 namespace Riateu.Content;
 
+/// <summary>
+/// An asset utility used to pack rectangles in very efficient manner. Useful for creating <see cref="Riateu.Graphics.Atlas"/> 
+/// and <see cref="Riateu.Graphics.SpriteFont"/>.
+/// </summary>
+/// <typeparam name="T">A type for the item's data</typeparam>
 public class Packer<T> 
 {
     private struct Node(int x, int y, int w, int h) 
@@ -16,6 +21,9 @@ public class Packer<T>
         public int[] Splits = new int[2];
     }
 
+    /// <summary>
+    /// A struct used to contain the data, and the width and the height of a rectangle.
+    /// </summary>
     public struct Item(T data, int width, int height)
     {
         public T Data = data;
@@ -30,9 +38,18 @@ public class Packer<T>
         }
     }
 
+    /// <summary>
+    /// A struct that have been outputs after packing.
+    /// </summary>
     public struct PackedItem(Rectangle rect, T data)
     {
+        /// <summary>
+        /// A rectangle with its position offset by a packer.
+        /// </summary>
         public Rectangle Rect = rect;
+        /// <summary>
+        /// A data of the item.
+        /// </summary>
         public T Data = data;
     }
 
@@ -42,20 +59,42 @@ public class Packer<T>
     private int currentRootIndex = 0;
     private Node root;
 
+    /// <summary>
+    /// The maximum area size before it bails out.
+    /// </summary>
     public int MaxSize { get; set; }
+    /// <summary>
+    /// Resize the area if it can't fit by power of two.
+    /// </summary>
     public bool UsePowerOfTwo { get; set; }
 
-    public Packer(int maxSize = 2048, bool usePowerOfTwo = true) 
+    /// <summary>
+    /// Construct a <see cref="Riateu.Content.Packer{T}"/>.
+    /// </summary>
+    /// <param name="maxSize">A maximum area size before it bails out</param>
+    /// <param name="usePowerOfTwo">Sets this to true if the size has to be extends by power of two</param>
+    public Packer(int maxSize = 4096, bool usePowerOfTwo = true) 
     {
         MaxSize = maxSize;
         UsePowerOfTwo = usePowerOfTwo;
     }
 
+    /// <summary>
+    /// Adds an <see cref="Riateu.Content.Packer{T}.Item"/> to pack.
+    /// </summary>
+    /// <param name="item">An <see cref="Riateu.Content.Packer{T}.Item"/> to add</param>
     public void Add(Item item) 
     {
         items.Add(item);
     }
 
+    /// <summary>
+    /// Pack all of the items and outputs all the results of a packed item. 
+    /// This will also resets the <see cref="Riateu.Content.Packer{T}"/> state to be reused once again.
+    /// </summary>
+    /// <param name="packedItems">An output list of <see cref="Riateu.Content.Packer{T}.PackedItem"/></param>
+    /// <param name="size">An output size</param>
+    /// <returns>Returns true if succeed packing</returns>
     public bool Pack(out List<PackedItem> packedItems, out Point size) 
     {
         packedItems = new List<PackedItem>();
@@ -139,6 +178,7 @@ public class Packer<T>
 
         // clean things up
 
+        nodeCount = 0;
         currentRootIndex = 0;
         nodes.Clear();
         items.Clear();

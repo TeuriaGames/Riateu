@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Riateu.Audios;
@@ -33,40 +32,136 @@ public class Ref<T>
     }
 }
 
-public record struct AtlasItem(string Name, Image Image);
+internal class AssetServer : IDisposable
+{
+    public enum ReactiveType { File, Folder }
+    private HashSet<string> reactiveFiles = new HashSet<string>();
+    private HashSet<string> reactiveFolders = new HashSet<string>();
+    private List<IDisposable> trackedResources = new List<IDisposable>();
+    private FileSystemWatcher watcher;
+    private bool dirty;
+    private Action<AssetStorage> actionReload;
+    private object someLock = new object();
+
+    public AssetServer() {}
+    
+    public AssetServer(string assetPath) 
+    {
+        watcher = new FileSystemWatcher(assetPath);
+        watcher.EnableRaisingEvents = true;
+        watcher.IncludeSubdirectories = true;
+        watcher.Changed += OnFileChanged;
+    }
+
+    public void TrackResource(IDisposable resource) 
+    {
+        trackedResources.Add(resource);
+    }
+
+    public void AddReactivePath(string path, ReactiveType type) 
+    {
+        switch (type) 
+        {
+        case ReactiveType.File:
+            reactiveFiles.Add(path);
+            break;
+        case ReactiveType.Folder:
+            reactiveFolders.Add(path);
+            break;
+        }
+    }
+
+    public void Reset() 
+    {
+        reactiveFiles.Clear();
+        reactiveFolders.Clear();
+    }
+
+    public void SetWatchMethod(Action<AssetStorage> storageAction) 
+    {
+        actionReload = storageAction;
+    }
+
+    public void Update(AssetStorage storage) 
+    {
+        lock (someLock) 
+        {
+            if (dirty) 
+            {
+                foreach (var res in trackedResources) 
+                {
+                    res.Dispose();
+                }
+                trackedResources.Clear();
+                storage.StartContext();
+                actionReload?.Invoke(storage);
+                storage.EndContext();
+                dirty = false;
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        watcher.Dispose();
+        Logger.Info("Asset Server finished.");
+    }
+
+    private void OnFileChanged(object sender, FileSystemEventArgs e)
+    {
+        lock (someLock)
+        {
+            if (reactiveFiles.Contains(e.FullPath))
+            {
+                Logger.Info($"Asset Changes: '{e.FullPath}' reloading content.");
+                dirty = true;
+                return;
+            }
+
+            foreach (var folder in reactiveFolders)
+            {
+                if (e.FullPath.Contains(folder))
+                {
+                    Logger.Info($"Asset Changes: '{folder}' reloading content.");
+                    dirty = true;
+                    return;
+                }
+            }
+        }
+    }
+}
 
 public class AssetStorage
 {
-    private enum WatchType { Texture, PackerAtlas, Atlas }
-    private Dictionary<string, IAssets> assetsCache = new Dictionary<string, IAssets>();
     private string assetPath;
     private ResourceUploader uploader;
     private Packer<AtlasItem> packer;
     private AudioDevice audioDevice;
     private GraphicsDevice graphicsDevice;
-
 #if DEBUG
-    private Dictionary<WatchType, List<string>> watchlist = new ();
-    private Dictionary<string, Action<string>> reactChanges = new ();
-    private List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
+    private AssetServer server;
 #endif
 
-    public AssetStorage(GraphicsDevice graphicsDevice, AudioDevice audioDevice, string path) 
+    internal AssetStorage(GraphicsDevice graphicsDevice, AudioDevice audioDevice, string path) 
     {
         assetPath = path;
         packer = new Packer<AtlasItem>(8192);
         this.audioDevice = audioDevice;
         this.graphicsDevice = graphicsDevice;
-#if DEBUG
-        watchlist.Add(WatchType.Texture, new List<string>());
-        watchlist.Add(WatchType.PackerAtlas, new List<string>());
-        watchlist.Add(WatchType.Atlas, new List<string>());
-#endif
     }
 
-    public void StartContext(ResourceUploader uploader) 
+#if DEBUG
+    internal AssetStorage(GraphicsDevice graphicsDevice, AudioDevice audioDevice, AssetServer server, string path) 
+        : this(graphicsDevice, audioDevice, path)
     {
-        this.uploader = uploader;
+        this.server = server;
+    }
+#endif
+
+    public void StartContext() 
+    {
+        uploader = new ResourceUploader(graphicsDevice);
+        server.Reset();
     }
 
     /// <summary>
@@ -118,20 +213,10 @@ public class AssetStorage
         if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
         {
             Ref<Atlas> atlas = new Ref<Atlas>(Atlas.LoadFromPacker(uploader, items, size));
-            AddToWatchlist(basePath, WatchType.PackerAtlas, path => {
-                packer = new Packer<AtlasItem>(8192);
-                if (path.EndsWith(Path.DirectorySeparatorChar)) 
-                {
-                    path = path.Substring(0, path.Length - 1);
-                }
-
-                Crawl(path);
-
-                if (packer.Pack(out List<Packer<AtlasItem>.PackedItem> items, out Point size)) 
-                {
-                    atlas.Data = Atlas.LoadFromPacker(uploader, items, size);
-                }
-            });
+#if DEBUG
+            server.TrackResource(atlas.Data.BaseTexture);
+            server.AddReactivePath(basePath, AssetServer.ReactiveType.Folder);
+#endif
             return atlas;
         }
 
@@ -175,173 +260,88 @@ public class AssetStorage
 
     public Ref<Texture> LoadTexture(string path) 
     {
-        if (assetsCache.TryGetValue(path, out IAssets asset)) 
-        {
-            return (Ref<Texture>)asset;
-        }
-        AddToWatchlist(path, WatchType.Texture, path => new Ref<Texture>(uploader.CreateTexture2DFromCompressed(path)));
-        return new Ref<Texture>(uploader.CreateTexture2DFromCompressed(path));
+        Ref<Texture> texture = new Ref<Texture>(uploader.CreateTexture2DFromCompressed(path));
+#if DEBUG
+        server.TrackResource(texture.Data);
+        server.AddReactivePath(path, AssetServer.ReactiveType.File);
+#endif
+        return texture;
     }
 
-    public AudioStreamOGG LoadAudioStream(string path, AudioFormat format) 
+    public AudioStream LoadAudioStream(string path, AudioFormat format) 
     {
-        switch (format) 
+        AudioStream stream = format switch 
         {
-        case AudioFormat.OGG:
-            return new AudioStreamOGG(audioDevice, path);
-        case AudioFormat.WAV:
-            throw new NotImplementedException("WAV format has not been implemented yet");
-        default:
-            throw new InvalidOperationException("Unknown format is passed.");
-        }
+            AudioFormat.OGG => new AudioStreamOGG(audioDevice, path),
+            AudioFormat.WAV => throw new NotImplementedException("WAV format has not been implemented yet"),
+            _ => throw new InvalidOperationException("Unknown format is passed.")
+        };
+
+#if DEBUG
+        server.TrackResource(stream);
+        server.AddReactivePath(path, AssetServer.ReactiveType.File);
+#endif
+
+        return stream;
     }
 
     public AudioTrack LoadAudioTrack(string path, AudioFormat format) 
     {
-        switch (format) 
+        AudioTrack track = format switch 
         {
-        case AudioFormat.OGG:
-            return AudioTrackOGG.CreateOGG(audioDevice, path);
-        case AudioFormat.WAV:
-            return AudioTrackWAV.CreateWAV(audioDevice, path);
-        default:
-            throw new InvalidOperationException("Unknown format is passed.");
-        }
+            AudioFormat.OGG => AudioTrackOGG.CreateOGG(audioDevice, path),
+            AudioFormat.WAV => AudioTrackWAV.CreateWAV(audioDevice, path),
+            _  => throw new InvalidOperationException("Unknown format is passed.")
+        };
+#if DEBUG
+        server.TrackResource(track);
+        server.AddReactivePath(path, AssetServer.ReactiveType.File);
+#endif
+        return track;
     }
 
     public Ref<Atlas> LoadAtlas(string path, Texture texture, bool ninePatchEnabled = false, JsonType fileType = JsonType.Json) 
     {
-        if (assetsCache.TryGetValue(path, out IAssets asset)) 
-        {
-            return (Ref<Atlas>)asset;
-        }
         Ref<Atlas> atlas = new Ref<Atlas>(Atlas.LoadFromFile(path, texture, fileType, ninePatchEnabled));
-        AddToWatchlist(path, WatchType.Atlas, path => new Ref<Atlas>(
-            Atlas.LoadFromFile(path, texture, fileType, ninePatchEnabled))
-        );
+#if DEBUG
+        server.TrackResource(atlas.Data.BaseTexture);
+        server.AddReactivePath(path, AssetServer.ReactiveType.File);
+#endif
         return atlas;
     }
 
     public SpriteFont LoadFont(string path, float size) 
     {
-        if (assetsCache.TryGetValue(path, out IAssets asset)) 
-        {
-            return (SpriteFont)asset;
-        }
-
         SpriteFont spriteFont = new SpriteFont(uploader, path, size, SpriteFont.DefaultCharset);
-        assetsCache.Add(path, spriteFont);
+#if DEBUG
+        server.TrackResource(spriteFont.Texture);
+        server.AddReactivePath(path, AssetServer.ReactiveType.File);
+#endif
         return spriteFont;
     }
 
     public SpriteFont LoadFont(string path, float size, ReadOnlySpan<int> charset) 
     {
-        if (assetsCache.TryGetValue(path, out IAssets asset)) 
-        {
-            return (SpriteFont)asset;
-        }
-
         SpriteFont spriteFont = new SpriteFont(uploader, path, size, charset);
-        assetsCache.Add(path, spriteFont);
+#if DEBUG
+        server.TrackResource(spriteFont.Texture);
+        server.AddReactivePath(path, AssetServer.ReactiveType.File);
+#endif
         return spriteFont;
     }
 
     public AnimationStorage LoadAnimations(string path, Atlas atlas, JsonType fileType = JsonType.Json) 
     {
-        if (assetsCache.TryGetValue(path, out IAssets asset)) 
-        {
-            return (AnimationStorage)asset;
-        }
-
         AnimationStorage storage = AnimationStorage.Create(path, atlas, fileType);
-        assetsCache.Add(path, storage);
+#if DEBUG
+        server.AddReactivePath(path, AssetServer.ReactiveType.File);
+#endif
         return storage;
     }
 
-    public void EndContext(bool initWatchers) 
+    public void EndContext() 
     {
         uploader.Upload();
         uploader.Dispose();
-        if (initWatchers) 
-        {
-            InitWatchers(WatchType.Texture);
-            InitWatchers(WatchType.Atlas);
-            InitWatchers(WatchType.PackerAtlas);
-        }
-    }
-
-    [Conditional("DEBUG")]
-    private void InitWatchers(WatchType type) 
-    {
-#if DEBUG
-        var paths = watchlist[type];
-
-        foreach (var path in paths) 
-        {
-            var watcher = new FileSystemWatcher(path);
-            watcher.EnableRaisingEvents = true;
-            watcher.IncludeSubdirectories = type == WatchType.PackerAtlas;
-            if (type == WatchType.PackerAtlas) 
-            {
-                watcher.Changed += (s, a) => {
-                    var ext = Path.GetExtension(a.FullPath);
-                    if (ext is not ".png" and not ".qoi" and not ".gif") 
-                    {
-                        return;
-                    }
-                    if (reactChanges.TryGetValue(path, out var val)) 
-                    {
-                        StartContext(new ResourceUploader(graphicsDevice));
-                        try 
-                        {
-                            val(path);
-                        }
-                        catch (Exception e) 
-                        {
-                            Console.WriteLine(e.ToString());
-                        }
-                        EndContext(false);
-                    }
-                };
-            }
-            else 
-            {
-                watcher.Changed += (s, a) => {
-                    var parenDir = Path.GetDirectoryName(a.FullPath);
-                    if (reactChanges.TryGetValue(parenDir, out var val)) 
-                    {
-                        StartContext(new ResourceUploader(graphicsDevice));
-                        val(a.FullPath);
-                        EndContext(false);
-                    }
-                };
-            }
-
-            watchers.Add(watcher);
-        }
-
-#endif
-    }
-
-    [Conditional("DEBUG")]
-    private void AddToWatchlist(string path, WatchType type, Action<string> action) 
-    {
-#if DEBUG
-        string dirName;
-        if (type == WatchType.PackerAtlas) 
-        {
-            dirName = path;
-        }
-        else 
-        {
-            dirName = Path.GetDirectoryName(path);
-        }
-        var list = watchlist[type];
-        if (!list.Contains(dirName)) 
-        {
-            watchlist[type].Add(dirName);
-        }
-        reactChanges.Add(path, action);
-#endif
     }
 }
