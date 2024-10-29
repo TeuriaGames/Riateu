@@ -14,7 +14,6 @@ public static class Logger
 {
     public enum LogLevel { Debug, Warning, Error, Assert, Info }
     private static readonly StringBuilder writeLog = new StringBuilder();
-    private static bool colored = true;
     public static LogLevel Verbosity = LogLevel.Info;
     private static void LogInternal(LogLevel level, string message, string cfp, int cln) 
     {
@@ -34,11 +33,7 @@ public static class Logger
 
 #if DEBUG
         {    
-            Console.WriteLine(
-                colored 
-                ? $"\u001b[37m[{DateTime.Now.ToString("HH:mm:ss")}]{logName} {callSite} {message}" 
-                : $"[{DateTime.Now.ToString("HH:mm:ss")}]{logName} {callSite} {message}"
-            );
+            Console.WriteLine($"\u001b[37m[{DateTime.Now.ToString("HH:mm:ss")}]{logName} {callSite} {message}");
         }
 #endif
 
@@ -118,8 +113,10 @@ public static class Logger
         [CallerLineNumber] int callerLineNumber = 0
     ) 
     {
-        if (!condition)
+        if (!condition) 
+        {
             LogInternal(LogLevel.Assert, message, callerFilePath, callerLineNumber);
+        }
     }
 
     public static void Warn(
