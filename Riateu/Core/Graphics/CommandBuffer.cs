@@ -370,6 +370,43 @@ public class CommandBuffer : IGraphicsPool
         return computePass;
     }
 
+    public unsafe ComputePass BeginComputePass(StorageBufferReadWriteBinding readWriteBinding, StorageBufferReadWriteBinding readWriteBinding2) 
+    {
+#if DEBUG
+        AssertNotSubmitted();
+        AssertNoAnyPassActive();
+        computePassActive = true;
+#endif
+        Span<SDL.SDL_GPUStorageBufferReadWriteBinding> storages = stackalloc SDL.SDL_GPUStorageBufferReadWriteBinding[2];
+        storages[0] = readWriteBinding.ToSDLGpu();
+        storages[1] = readWriteBinding2.ToSDLGpu();
+
+        IntPtr computePassPtr = SDL.SDL_BeginGPUComputePass(Handle, new Span<SDL.SDL_GPUStorageTextureReadWriteBinding>(), 0, storages, 2);
+
+        ComputePass computePass = PassPool<ComputePass>.Obtain(computePassPtr);
+        return computePass;
+    }
+
+    public unsafe ComputePass BeginComputePass(Span<StorageBufferReadWriteBinding> readWriteBinding) 
+    {
+#if DEBUG
+        AssertNotSubmitted();
+        AssertNoAnyPassActive();
+        computePassActive = true;
+#endif
+        uint numBindings = (uint)readWriteBinding.Length;
+        Span<SDL.SDL_GPUStorageBufferReadWriteBinding> storages = stackalloc SDL.SDL_GPUStorageBufferReadWriteBinding[(int)numBindings];
+        for (int i = 0; i < numBindings; i++) 
+        {
+            storages[i] = readWriteBinding[i].ToSDLGpu();
+        }
+
+        IntPtr computePassPtr = SDL.SDL_BeginGPUComputePass(Handle, new Span<SDL.SDL_GPUStorageTextureReadWriteBinding>(), 0, storages, numBindings);
+
+        ComputePass computePass = PassPool<ComputePass>.Obtain(computePassPtr);
+        return computePass;
+    }
+
     public unsafe ComputePass BeginComputePass(in StorageTextureReadWriteBinding readWriteBinding) 
     {
 #if DEBUG
