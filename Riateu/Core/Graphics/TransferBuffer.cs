@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SDL3;
 
@@ -8,10 +9,8 @@ namespace Riateu.Graphics;
 public class TransferBuffer : GraphicsResource
 {
     public uint Size { get; }
+    private IntPtr mappedPointer;
 
-#if DEBUG
-    public bool IsMapped { get; private set; }
-#endif
 
     public TransferBuffer(GraphicsDevice device, TransferBufferUsage usage, uint size) : base(device)
     {
@@ -29,42 +28,46 @@ public class TransferBuffer : GraphicsResource
         return new TransferBuffer(device, usage, size * (uint)sizeof(T));
     }
 
-    public unsafe byte* UnsafeMap(bool cycle) 
+    public void Map(bool cycle) 
     {
-#if DEBUG
-        AssertNotMapped();
-        IsMapped = true;
-#endif
-        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
-        return data;
+        if (mappedPointer != IntPtr.Zero) 
+        {
+            return;
+        }
+        mappedPointer = (IntPtr)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
     }
 
-    public unsafe Span<byte> Map(bool cycle) 
+    public unsafe Span<byte> Map(bool cycle, uint offset = 0) 
     {
 #if DEBUG
         AssertNotMapped();
-        IsMapped = true;
 #endif
-        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
-        return new Span<byte>(data, (int)Size);
+        Map(cycle);
+        return new Span<byte>((void*)(mappedPointer + offset), (int)(Size - offset));
     }
 
-    public unsafe Span<T> Map<T>(bool cycle) 
+    public unsafe Span<T> Map<T>(bool cycle, uint offset = 0) 
+    where T : unmanaged
     {
 #if DEBUG
         AssertNotMapped();
-        IsMapped = true;
 #endif
-        var data = (byte*)SDL.SDL_MapGPUTransferBuffer(Device.Handle, Handle, cycle);
-        return new Span<T>(data, (int)Size);
+        Map(cycle);
+        return new Span<T>((void*)(mappedPointer + offset), (int)(Size - offset) / Unsafe.SizeOf<T>());
+    }
+
+    public unsafe Span<T> MappedTouch<T>(uint offset = 0) 
+    {
+#if DEBUG
+        AssertMapped();
+#endif
+        return new Span<T>((void*)(mappedPointer + offset), (int)(Size - offset) / Unsafe.SizeOf<T>());
     }
 
     public void Unmap() 
     {
-#if DEBUG
-        IsMapped = false;
-#endif
         SDL.SDL_UnmapGPUTransferBuffer(Device.Handle, Handle);
+        mappedPointer = IntPtr.Zero;
     }
 
     public unsafe uint SetTransferData<T>(Span<T> source, uint bufferOffsetInBytes, bool cycle) 
@@ -124,9 +127,17 @@ public class TransferBuffer : GraphicsResource
     }
 
 #if DEBUG
+    private void AssertMapped() 
+    {
+        if (mappedPointer == IntPtr.Zero) 
+        {
+            throw new Exception("Transfer buffer has not mapped yet.");
+        }
+    }
+
     private void AssertNotMapped() 
     {
-        if (IsMapped) 
+        if (mappedPointer != IntPtr.Zero) 
         {
             throw new Exception("Transfer buffer is still mapping.");
         }

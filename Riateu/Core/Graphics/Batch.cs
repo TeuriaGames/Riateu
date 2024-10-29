@@ -16,7 +16,6 @@ public class Batch : System.IDisposable
     private const uint MaxTextures = 4096;
     private const uint InitialMaxQueues = 4;
     private GraphicsDevice device;
-    private unsafe BatchData* datas;
 
     private bool rendered;
     private bool flushed;
@@ -27,6 +26,10 @@ public class Batch : System.IDisposable
     private StructuredBuffer<BatchData> computeBuffer;
     private TransferBuffer transferComputeBuffer;
     private BatchQueue[] queues = new BatchQueue[InitialMaxQueues];
+
+    public StructuredBuffer<PositionTextureColorVertex> VertexBuffer => vertexBuffer;
+    public StructuredBuffer<uint> IndexBuffer => indexBuffer;
+    public StructuredBuffer<BatchData> ComputeBuffer => computeBuffer;
 
 #if DEBUG
     private bool DEBUG_begin;
@@ -72,22 +75,21 @@ public class Batch : System.IDisposable
         Matrix = view * projection;
     }
 
-    private static unsafe StructuredBuffer<uint> GenerateIndexArray(GraphicsDevice device, uint maxIndices)
+    private static StructuredBuffer<uint> GenerateIndexArray(GraphicsDevice device, uint maxIndices)
     {
         using TransferBuffer transferBuffer = TransferBuffer.Create<uint>(device, TransferBufferUsage.Upload, maxIndices);
         StructuredBuffer<uint> indexBuffer = new StructuredBuffer<uint>(device, BufferUsageFlags.Index, maxIndices);
 
-        var mapPtr = transferBuffer.UnsafeMap(false);
-        uint* indexPtr = (uint*)mapPtr;
+        Span<uint> indexPtr = transferBuffer.Map<uint>(false);
 
         for (uint i = 0, j = 0; i < maxIndices; i += 6, j += 4)
         {
-            indexPtr[i] = j;
-            indexPtr[i + 1] = j + 1;
-            indexPtr[i + 2] = j + 2;
-            indexPtr[i + 3] = j + 2;
-            indexPtr[i + 4] = j + 1;
-            indexPtr[i + 5] = j + 3;
+            indexPtr[(int)i] = j;
+            indexPtr[(int)i + 1] = j + 1;
+            indexPtr[(int)i + 2] = j + 2;
+            indexPtr[(int)i + 3] = j + 2;
+            indexPtr[(int)i + 4] = j + 1;
+            indexPtr[(int)i + 5] = j + 3;
         }
         transferBuffer.Unmap();
 
@@ -166,11 +168,7 @@ public class Batch : System.IDisposable
             Offset = vertexIndex,
             Matrix = transform
         };
-
-        unsafe {
-            var data = transferComputeBuffer.UnsafeMap(true);
-            datas = (BatchData*)data;
-        }
+        transferComputeBuffer.Map(true);
     }
 
     /// <summary>
@@ -290,10 +288,7 @@ public class Batch : System.IDisposable
         computeBuffer.Dispose();
         computeBuffer = new StructuredBuffer<BatchData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
         currentMaxTexture = maxTextures;
-        unsafe {
-            var data = transferComputeBuffer.UnsafeMap(true);
-            datas = (BatchData*)data;
-        }
+        transferComputeBuffer.Map(true);
     }
 
     /// <summary>
@@ -416,7 +411,8 @@ public class Batch : System.IDisposable
         {
             ResizeBuffer();
         }
-        datas[vertexIndex] = new BatchData 
+        var datas = transferComputeBuffer.MappedTouch<BatchData>();
+        datas[(int)vertexIndex] = new BatchData 
         {
             Position = position,
             Scale = scale,
@@ -470,9 +466,7 @@ public class Batch : System.IDisposable
             _ => throw new NotImplementedException()
         };
 
-        unsafe {
-            font.Draw(datas, ref vertexIndex, text, position, justify, color, scale, layerDepth);
-        }
+        font.Draw(transferComputeBuffer.MappedTouch<BatchData>(), ref vertexIndex, text, position, justify, color, scale, layerDepth);
     }
 
 #if DEBUG
@@ -518,7 +512,7 @@ public class Batch : System.IDisposable
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 96)]
-    internal struct BatchData 
+    public struct BatchData 
     {
         [FieldOffset(0)]
         public Vector2 Position;

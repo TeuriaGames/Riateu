@@ -195,7 +195,7 @@ public unsafe class ResourceUploader : GraphicsResource
 				bufferTransferBuffer = new TransferBuffer(Device, TransferBufferUsage.Upload, bufferDataSize);
 			}
 
-			var span = bufferTransferBuffer.Map(true);
+			var span = bufferTransferBuffer.Map(true, 0);
 			fixed (byte *ptr = span) 
 			{
 				NativeMemory.Copy(bufferData, ptr, bufferDataSize);
@@ -212,7 +212,7 @@ public unsafe class ResourceUploader : GraphicsResource
 				textureTransferBuffer = new TransferBuffer(Device, TransferBufferUsage.Upload, textureDataSize);
 			}
 
-			var span = textureTransferBuffer.Map(true);
+			var span = textureTransferBuffer.Map(true, 0);
 			fixed (byte *ptr = span) 
 			{
 				NativeMemory.Copy(textureData, ptr, textureDataSize);

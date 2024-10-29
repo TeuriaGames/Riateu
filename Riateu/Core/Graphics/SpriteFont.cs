@@ -264,7 +264,7 @@ public class SpriteFont : IAssets
         throw new Exception($"A character: '{(char)c}' is not available");
     }
 
-    internal unsafe void Draw(Batch.BatchData* computeData, ref uint vertexIndex, ReadOnlySpan<char> text, Vector2 position, Vector2 justify, Color color, Vector2 scale, float layerDepth = 1f)
+    internal void Draw(Span<Batch.BatchData> computeData, ref uint vertexIndex, ReadOnlySpan<char> text, Vector2 position, Vector2 justify, Color color, Vector2 scale, float layerDepth = 1f)
     {
         if (text.IsEmpty)
             return;
@@ -299,7 +299,7 @@ public class SpriteFont : IAssets
 
             lastCodePoint = ch;
 
-            computeData[vertexIndex] = new Batch.BatchData 
+            computeData[(int)vertexIndex] = new Batch.BatchData 
             {
                 Position = pos,
                 Scale = scale,

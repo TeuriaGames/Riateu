@@ -43,14 +43,14 @@ public class ImGuiRenderer
         io.DisplayFramebufferScale = System.Numerics.Vector2.One;
         imGuiShader = Resources.GetShader(device, Resources.ImGuiShader, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Vertex,
-            ShaderFormat = GameContext.BackendShaderFormat,
+            ShaderFormat = GraphicsDevice.BackendShaderFormat,
             UniformBufferCount = 1
         });
         imGuiSampler = new Sampler(device, SamplerCreateInfo.PointClamp);
 
         var fragmentShader = Resources.GetShader(device, Resources.Texture, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Fragment,
-            ShaderFormat = GameContext.BackendShaderFormat,
+            ShaderFormat = GraphicsDevice.BackendShaderFormat,
             SamplerCount = 1
         });
 
@@ -213,7 +213,7 @@ public class ImGuiRenderer
         int indexSize = 0;
         int indexOffset = drawDataPtr.TotalVtxCount * sizeof(Position2DTextureColorVertex);
 
-        var vertexIndexData = transferBuffer.Map(true);
+        var vertexIndexData = transferBuffer.Map(true, 0);
         fixed (byte *ptr = vertexIndexData) 
         {
             for (var n = 0; n < drawDataPtr.CmdListsCount; n += 1)
