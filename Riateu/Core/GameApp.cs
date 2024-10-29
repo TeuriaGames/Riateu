@@ -57,7 +57,9 @@ public abstract class GameApp
     private TimeSpan lastTime;
     private TimeSpan accumulator;
     private Stopwatch timer = new Stopwatch();
+#if DEBUG
     private AssetServer server;
+#endif
 
     public bool Exiting { get; private set;}
 
@@ -302,25 +304,26 @@ public abstract class GameApp
         }
     }
 
-    private unsafe void HandleTextInput(SDL.SDL_Event evt) 
+    private unsafe void HandleTextInput(SDL.SDL_Event evt)
     {
         byte *textPtr = evt.text.text;
         int count = 0;
-        while (*textPtr != 0) 
+        while (*textPtr != 0)
         {
             textPtr++;
             count++;
         }
 
-        if (count > 0) 
+        if (count <= 0)
         {
-            char *charPtr = stackalloc char[count];
-            int chars = Encoding.UTF8.GetChars((byte*)evt.text.text, count, charPtr, count);
+            return;
+        }
+        char *charPtr = stackalloc char[count];
+        int chars = Encoding.UTF8.GetChars((byte*)evt.text.text, count, charPtr, count);
 
-            for (int i = 0; i < chars; i++) 
-            {
-                Input.Keyboard.WriteCharacter(charPtr[i]);
-            }
+        for (int i = 0; i < chars; i++)
+        {
+            Input.Keyboard.WriteCharacter(charPtr[i]);
         }
     }
 }

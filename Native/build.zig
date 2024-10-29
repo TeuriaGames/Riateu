@@ -24,6 +24,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .strip = true,
     });
+    const options = b.addOptions();
 
     const sourceFiles = &[_][]const u8{"./lib/src/zig_includes.c"};
     const sourceFlags = &[_][]const u8{ "-g", "-O3" };
@@ -34,16 +35,20 @@ pub fn build(b: *std.Build) void {
     if (target.result.isMinGW()) {
         lib.addObjectFile(b.path("../runtimes/x64/SDL3.dll"));
         lib.addObjectFile(b.path("../runtimes/x64/spirv-cross-c-shared.dll"));
+        lib.addObjectFile(b.path("../runtimes/x64/SDL3_gpu_shadercross.dll"));
         addInstallPath(b, lib, "../../runtimes/x64");
+        options.addOption(bool, "has_shadercross", true);
     } else if (target.result.isDarwin()) {
         lib.addObjectFile(b.path("../runtimes/osx/libSDL2-2.0.0.dylib"));
         addInstallPath(b, lib, "../../runtimes/osx");
+        options.addOption(bool, "has_shadercross", false);
     } else {
         lib.addObjectFile(b.path("../runtimes/lib64/libSDL3.so"));
         addInstallPath(b, lib, "../../runtimes/lib64");
+        options.addOption(bool, "has_shadercross", false);
     }
-
     lib.linkLibC();
+    lib.root_module.addOptions("build_options", options);
 
     // This declares intent for the library to be installed into the standard
     // location when the user invokes the "install" step (the default step when

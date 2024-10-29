@@ -10,8 +10,13 @@ public class GraphicsDevice : IDisposable
     public IntPtr Handle { get; internal set; }
     private bool IsDisposed;
 
-    public string Driver { get; private set; }
+    public static string Backend { get; private set; }
     public bool DebugMode { get; private set; }
+
+    /// <summary>
+    /// A globally set shader format. Can be changed if you had a different backend format.
+    /// </summary>
+    public static ShaderFormat BackendShaderFormat => (ShaderFormat)Native.Riateu_GetShaderFormat();
 
     private CommandBuffer deviceCmdBuffer;
 
@@ -28,11 +33,11 @@ public class GraphicsDevice : IDisposable
             return;
         }
 
-        string driver = SDL.SDL_GetGPUDeviceDriver(Handle);
+        string backend = SDL.SDL_GetGPUDeviceDriver(Handle);
 
-        Driver = driver;
+        Backend = backend;
 
-        if (driver != "vulkan") 
+        if (backend != "vulkan") 
         {
             if (Native.Riateu_InitShaderCross() != 0) 
             {
@@ -220,7 +225,7 @@ public class GraphicsDevice : IDisposable
             IsDisposed = true;
 
 
-            if (Driver != "vulkan") 
+            if (Backend != "vulkan") 
             {
                 Native.Riateu_DeinitShaderCross();
             }

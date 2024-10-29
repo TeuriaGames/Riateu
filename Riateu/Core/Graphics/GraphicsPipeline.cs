@@ -65,14 +65,7 @@ public class GraphicsPipeline : GraphicsResource
             },
         };
 
-        if (device.Driver == "vulkan") 
-        {
-            Handle = SDL.SDL_CreateGPUGraphicsPipeline(Device.Handle, gpuGraphicsPipelineCreateInfo);
-        }
-        else 
-        {
-            Handle = Native.Riateu_CompileSPIRVGraphics(Device.Handle, gpuGraphicsPipelineCreateInfo);
-        }
+        Handle = SDL.SDL_CreateGPUGraphicsPipeline(Device.Handle, gpuGraphicsPipelineCreateInfo);
 
 
         if (Handle == IntPtr.Zero) 

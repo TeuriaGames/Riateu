@@ -82,7 +82,7 @@ public class ComputePipeline : GraphicsResource
 
 		IntPtr computePipelineHandle;
 
-        if (device.Driver == "vulkan") 
+        if (GraphicsDevice.Backend == "vulkan") 
         {
 			computePipelineHandle = SDL.SDL_CreateGPUComputePipeline(
 				device.Handle,

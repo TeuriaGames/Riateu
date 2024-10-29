@@ -35,7 +35,7 @@ public static class GameContext
         using var msdf = new MemoryStream(Resources.MSDF);
         MSDFShader = new Shader(device, msdf, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Fragment,
-            ShaderFormat = BackendShaderFormat,
+            ShaderFormat = GraphicsDevice.BackendShaderFormat,
             UniformBufferCount = 1,
             SamplerCount = 1
         });
@@ -44,7 +44,7 @@ public static class GameContext
         using var ms1 = new MemoryStream(positionTextureColor);
         Shader vertexPSC = new Shader(device, ms1, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Vertex,
-            ShaderFormat = BackendShaderFormat,
+            ShaderFormat = GraphicsDevice.BackendShaderFormat,
             UniformBufferCount = 1
         });
 
@@ -52,7 +52,7 @@ public static class GameContext
         using var ms2 = new MemoryStream(textureFragment);
         Shader fragmentPSC = new Shader(device, ms2, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Fragment,
-            ShaderFormat = BackendShaderFormat,
+            ShaderFormat = GraphicsDevice.BackendShaderFormat,
             SamplerCount = 1
         });
 
@@ -86,7 +86,7 @@ public static class GameContext
         using var comp1 = new MemoryStream(spriteBatchShader);
         SpriteBatchPipeline = new ComputePipeline(device, comp1, "main", new ComputePipelineCreateInfo 
         {
-            ShaderFormat = BackendShaderFormat,
+            ShaderFormat = GraphicsDevice.BackendShaderFormat,
             ReadWriteStorageBufferCount = 1,
             ReadOnlyStorageBufferCount = 1,
             ThreadCountX = 64,
@@ -94,9 +94,4 @@ public static class GameContext
             ThreadCountZ = 1
         });
     }
-
-    /// <summary>
-    /// A globally set shader format. Can be changed if you had a different backend format.
-    /// </summary>
-    public static ShaderFormat BackendShaderFormat = ShaderFormat.SPIRV;
 }

@@ -62,7 +62,9 @@ public class AssetStorage
     internal void StartContext() 
     {
         uploader = new ResourceUploader(graphicsDevice);
+#if DEBUG
         server.Reset();
+#endif
     }
 
     /// <summary>
@@ -80,7 +82,7 @@ public class AssetStorage
                 Crawl(directory);
             }
 
-            var files = Directory.GetFiles(path).Where(x => x.EndsWith("png") || x.EndsWith("gif"));
+            var files = Directory.GetFiles(path).Where(x => x.EndsWith("png") || x.EndsWith("gif") || x.EndsWith("qoi"));
             foreach (var file in files) 
             {
                 string name = Path.Join(path, Path.GetFileNameWithoutExtension(file)).Replace('\\', '/')
@@ -138,25 +140,35 @@ public class AssetStorage
         return null;
     }
 
-    public Shader LoadSPIRVVertexShader(string path, uint uniformBufferCount = 0) 
+    public Shader LoadSPIRVVertexShader(string path, uint uniformBufferCount = 0, ShaderStorage storage = default) 
     {
         return new Shader(graphicsDevice, path, "main", new ShaderCreateInfo() 
         {
-            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderFormat = GraphicsDevice.BackendShaderFormat,
             ShaderStage = ShaderStage.Vertex,
-            UniformBufferCount = uniformBufferCount
+            UniformBufferCount = uniformBufferCount,
+            StorageBufferCount = storage.StorageBufferCount,
+            StorageTextureCount = storage.StorageTextureCount
         });
     }
 
-    public Shader LoadSPIRVFragmentShader(string path, uint samplerCount, uint uniformBufferCount = 0) 
+    public Shader LoadSPIRVFragmentShader(string path, uint samplerCount, uint uniformBufferCount = 0, ShaderStorage storage = default) 
     {
         return new Shader(graphicsDevice, path, "main", new ShaderCreateInfo() 
         {
-            ShaderFormat = ShaderFormat.SPIRV,
+            ShaderFormat = GraphicsDevice.BackendShaderFormat,
             ShaderStage = ShaderStage.Fragment,
             SamplerCount = samplerCount,
-            UniformBufferCount = uniformBufferCount
+            UniformBufferCount = uniformBufferCount,
+            StorageBufferCount = storage.StorageBufferCount,
+            StorageTextureCount = storage.StorageTextureCount
         });
+    }
+
+    public ComputePipeline LoadSPIRVComputeShader(string path, ComputePipelineCreateInfo info) 
+    {
+        ComputePipeline pipeline = new ComputePipeline(graphicsDevice, path, "main", info);
+        return pipeline;
     }
 
     public Ref<Texture> LoadTexture(string path) 
