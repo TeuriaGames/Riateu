@@ -20,6 +20,21 @@ public class RenderPass : IPassPool
         SDL.SDL_BindGPUVertexBuffers(Handle, bindingSlot, [gpuBufferBinding], 1);
     }
 
+    public unsafe void BindStorageVertexBuffer(in RawBuffer bufferBinding, uint bindingSlot = 0) 
+    {
+        SDL.SDL_BindGPUVertexStorageBuffers(Handle, bindingSlot, [bufferBinding.Handle], 1);
+    }
+
+    public unsafe void BindStorageVertexBuffers(Span<RawBuffer> bufferBindings, uint bindingSlot = 0) 
+    {
+        Span<IntPtr> ptrs = stackalloc IntPtr[bufferBindings.Length];
+        for (int i = 0; i < bufferBindings.Length; i++) 
+        {
+            ptrs[i] = bufferBindings[i].Handle;
+        }
+        SDL.SDL_BindGPUFragmentStorageBuffers(Handle, bindingSlot, ptrs, (uint)bufferBindings.Length);
+    }
+
     public unsafe void BindIndexBuffer(in BufferBinding bufferBinding, IndexElementSize elementSize) 
     {
         SDL.SDL_GPUBufferBinding gpuBufferBinding = bufferBinding.ToSDLGpu();
@@ -45,6 +60,21 @@ public class RenderPass : IPassPool
         bindings[0] = textureSampler;
 
         SDL.SDL_BindGPUVertexSamplers(Handle, slot, bindings, 1);
+    }
+
+    public unsafe void BindStorageFragmentBuffer(in RawBuffer bufferBinding, uint bindingSlot = 0) 
+    {
+        SDL.SDL_BindGPUFragmentStorageBuffers(Handle, bindingSlot, [bufferBinding.Handle], 1);
+    }
+
+    public unsafe void BindStorageFragmentBuffers(Span<RawBuffer> bufferBindings, uint bindingSlot = 0) 
+    {
+        Span<IntPtr> ptrs = stackalloc IntPtr[bufferBindings.Length];
+        for (int i = 0; i < bufferBindings.Length; i++) 
+        {
+            ptrs[i] = bufferBindings[i].Handle;
+        }
+        SDL.SDL_BindGPUFragmentStorageBuffers(Handle, bindingSlot, ptrs, (uint)bufferBindings.Length);
     }
 
     public unsafe void BindFragmentSampler(in TextureSamplerBinding textureSamplerBinding, uint slot = 0) 

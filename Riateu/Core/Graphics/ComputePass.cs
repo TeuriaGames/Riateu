@@ -28,6 +28,30 @@ public class ComputePass : IPassPool
         SDL.SDL_BindGPUComputeStorageBuffers(Handle, slot, bufferStorages, 1);
     }
 
+    public unsafe void BindStorageTextures(Span<Texture> textures, uint slot = 0) 
+    {
+        int len = textures.Length;
+        Span<nint> textureStorages = stackalloc nint[len];
+        for (int i = 0; i < len; i++) 
+        {
+            textureStorages[i] = textures[i].Handle;
+        }
+
+        SDL.SDL_BindGPUComputeStorageTextures(Handle, slot, textureStorages, (uint)len);
+    }
+
+    public unsafe void BindStorageBuffers(Span<RawBuffer> buffers, uint slot = 0) 
+    {
+        int len = buffers.Length;
+        Span<nint> bufferStorages = stackalloc nint[len];
+        for (int i = 0; i < len; i++) 
+        {
+            bufferStorages[i] = buffers[i].Handle;
+        }
+
+        SDL.SDL_BindGPUComputeStorageBuffers(Handle, slot, bufferStorages, (uint)len);
+    }
+
     public void Dispatch(uint groupCountX, uint groupCountY, uint groupCountZ) 
     {
         SDL.SDL_DispatchGPUCompute(Handle, groupCountX, groupCountY, groupCountZ);
