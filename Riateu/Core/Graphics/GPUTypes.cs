@@ -322,9 +322,9 @@ public enum BackendFlags
 {
     Invalid = 0x0,
     Vulkan = 0x1,
-    D3D11 = 0x2,
+    DirectX = 0x2,
     Metal = 0x4,
-    All = Vulkan | D3D11 | Metal
+    All = Vulkan | DirectX | Metal
 }
 
 public enum TextureType
@@ -722,9 +722,10 @@ public struct GraphicsPipelineAttachmentInfo
     }
 }
 
-public struct ColorAttachmentBlendState 
+public struct ColorTargetBlendState
 {
     public bool BlendEnable;
+    public bool ColorWriteMaskEnable;
     public BlendOp AlphaBlendOp;
     public BlendOp ColorBlendOp;
     public ColorComponentFlags ColorWriteMask;
@@ -733,7 +734,7 @@ public struct ColorAttachmentBlendState
     public BlendFactor SourceAlphaBlendFactor;
     public BlendFactor SourceColorBlendFactor;
 
-	public static readonly ColorAttachmentBlendState Additive = new ColorAttachmentBlendState
+	public static readonly ColorTargetBlendState Additive = new ColorTargetBlendState
 	{
 		BlendEnable = true,
 		AlphaBlendOp = BlendOp.Add,
@@ -745,7 +746,7 @@ public struct ColorAttachmentBlendState
 		DestinationAlphaBlendFactor = BlendFactor.One
 	};
 
-	public static readonly ColorAttachmentBlendState AlphaBlend = new ColorAttachmentBlendState
+	public static readonly ColorTargetBlendState AlphaBlend = new ColorTargetBlendState
 	{
 		BlendEnable = true,
 		AlphaBlendOp = BlendOp.Add,
@@ -757,7 +758,7 @@ public struct ColorAttachmentBlendState
 		DestinationAlphaBlendFactor = BlendFactor.OneMinusSourceAlpha
 	};
 
-	public static readonly ColorAttachmentBlendState NonPremultiplied = new ColorAttachmentBlendState
+	public static readonly ColorTargetBlendState NonPremultiplied = new ColorTargetBlendState
 	{
 		BlendEnable = true,
 		AlphaBlendOp = BlendOp.Add,
@@ -769,7 +770,7 @@ public struct ColorAttachmentBlendState
 		DestinationAlphaBlendFactor = BlendFactor.OneMinusSourceAlpha
 	};
 
-	public static readonly ColorAttachmentBlendState Opaque = new ColorAttachmentBlendState
+	public static readonly ColorTargetBlendState Opaque = new ColorTargetBlendState
 	{
 		BlendEnable = true,
 		AlphaBlendOp = BlendOp.Add,
@@ -781,23 +782,37 @@ public struct ColorAttachmentBlendState
 		DestinationAlphaBlendFactor = BlendFactor.Zero
 	};
 
-	public static readonly ColorAttachmentBlendState None = new ColorAttachmentBlendState
+	public static readonly ColorTargetBlendState None = new ColorTargetBlendState
 	{
 		BlendEnable = false,
 		ColorWriteMask = ColorComponentFlags.RGBA
 	};
 
-	public static readonly ColorAttachmentBlendState Disable = new ColorAttachmentBlendState
+	public static readonly ColorTargetBlendState Disable = new ColorTargetBlendState
 	{
 		BlendEnable = false,
 		ColorWriteMask = ColorComponentFlags.None
 	};
 
-	public SDL.SDL_GPUColorTargetBlendState ToSDLGpu()
+    public ColorTargetBlendState()
+    {
+        BlendEnable = true;
+        ColorWriteMaskEnable = true;
+        AlphaBlendOp = BlendOp.Add;
+        ColorBlendOp = BlendOp.Add;
+        ColorWriteMask = ColorComponentFlags.RGBA;
+        DestinationAlphaBlendFactor = BlendFactor.Zero;
+        DestinationColorBlendFactor = BlendFactor.Zero;
+        SourceAlphaBlendFactor = BlendFactor.One;
+        SourceColorBlendFactor = BlendFactor.One;
+    }
+
+    public SDL.SDL_GPUColorTargetBlendState ToSDLGpu()
 	{
 		return new SDL.SDL_GPUColorTargetBlendState
 		{
 			enable_blend = BlendEnable,
+            enable_color_write_mask = ColorWriteMaskEnable,
 			alpha_blend_op = (SDL.SDL_GPUBlendOp) AlphaBlendOp,
 			color_blend_op = (SDL.SDL_GPUBlendOp) ColorBlendOp,
 			color_write_mask = (SDL.SDL_GPUColorComponentFlags) ColorWriteMask,
@@ -810,10 +825,10 @@ public struct ColorAttachmentBlendState
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct ColorAttachmentDescription(TextureFormat format, ColorAttachmentBlendState blendState) 
+public struct ColorAttachmentDescription(TextureFormat format, ColorTargetBlendState blendState) 
 {
     public TextureFormat Format = format;
-    public ColorAttachmentBlendState BlendState = blendState;
+    public ColorTargetBlendState BlendState = blendState;
 }
 
 public struct RasterizerState 

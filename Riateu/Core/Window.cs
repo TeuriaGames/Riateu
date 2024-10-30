@@ -77,7 +77,7 @@ public class Window : IDisposable
     {
         SDL.SDL_WindowFlags flags = SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN;
 
-        if (backendFlags != BackendFlags.D3D11) 
+        if (backendFlags != BackendFlags.DirectX) 
         {
             flags |= backendFlags switch 
             {

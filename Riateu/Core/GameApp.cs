@@ -69,13 +69,11 @@ public abstract class GameApp
     {
         Instance = this;
         string backendName = null;
-        // Prefer Vulkan for now on
         BackendFlags backendFlags = BackendFlags.Vulkan;
-#if VULKAN_FOR_NOW
         if (Environment.OSVersion.Platform == PlatformID.Win32NT) 
         {
-            backendFlags = BackendFlags.Vulkan;
-            backendName = "direct3d12";
+            backendFlags = BackendFlags.DirectX;
+            backendName = "direct3d11";
         }
         else if (Environment.OSVersion.Platform == PlatformID.Unix) 
         {
@@ -87,20 +85,7 @@ public abstract class GameApp
             backendFlags = BackendFlags.Metal;
             backendName = "metal";
         }
-#endif
 
-
-        SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN;
-
-        if (backendFlags != BackendFlags.D3D11) 
-        {
-            windowFlags |= backendFlags switch 
-            {
-                BackendFlags.Vulkan => SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN,
-                BackendFlags.Metal => SDL.SDL_WindowFlags.SDL_WINDOW_METAL,
-                _ => throw new Exception("Not Supported")
-            };
-        }
         Logger.InitSDLLog();
 
         MainWindow = Window.CreateWindow(settings, backendFlags);

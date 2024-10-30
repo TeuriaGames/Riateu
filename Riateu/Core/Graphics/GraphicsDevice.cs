@@ -24,7 +24,7 @@ public class GraphicsDevice : IDisposable
 
     public GraphicsDevice(GraphicsSettings settings, string backendName = null) 
     {
-        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXIL), settings.DebugMode, backendName);
+        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXBC), settings.DebugMode, backendName);
 
         if (Handle == IntPtr.Zero) 
         {
