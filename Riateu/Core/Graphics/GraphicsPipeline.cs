@@ -81,6 +81,11 @@ public class GraphicsPipeline : GraphicsResource
         SampleCount = info.MultisampleState.MultisampleCount;
     }
 
+    public static GraphicsPipelineBuilder CreateBuilder(Shader vertexShader, Shader fragmentShader) 
+    {
+        return new GraphicsPipelineBuilder(vertexShader, fragmentShader);
+    }
+
     protected override void Dispose(bool disposing)
     {
     }

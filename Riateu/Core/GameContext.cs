@@ -56,10 +56,10 @@ public static class GameContext
             SamplerCount = 1
         });
 
-        DefaultMaterial = Material.CreateBuilder(vertexPSC, fragmentPSC)
+        DefaultMaterial = new Material(device, GraphicsPipeline.CreateBuilder(vertexPSC, fragmentPSC)
             .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(
                 new ColorAttachmentDescription(mainWindow.SwapchainFormat,
-                ColorAttachmentBlendState.AlphaBlend)
+                ColorTargetBlendState.AlphaBlend)
             ))
             .SetDepthStenctilState(DepthStencilState.DepthReadWrite)
             .SetMultisampleState(MultisampleState.None)
@@ -67,12 +67,13 @@ public static class GameContext
             .SetRasterizerState(RasterizerState.CCW_CullNone)
 
             .AddVertexInputState<PositionTextureColorVertex>()
-            .Build(device);
+            .Build(device)
+        );
 
-        DepthMaterial = Material.CreateBuilder(vertexPSC, fragmentPSC)
+        DepthMaterial = new Material(device, GraphicsPipeline.CreateBuilder(vertexPSC, fragmentPSC)
             .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(
                 TextureFormat.D24_UNORM,
-                new ColorAttachmentDescription(mainWindow.SwapchainFormat, ColorAttachmentBlendState.AlphaBlend)
+                new ColorAttachmentDescription(mainWindow.SwapchainFormat, ColorTargetBlendState.AlphaBlend)
             ))
             .SetDepthStenctilState(DepthStencilState.DepthReadWrite)
             .SetMultisampleState(MultisampleState.None)
@@ -80,7 +81,8 @@ public static class GameContext
             .SetRasterizerState(RasterizerState.CCW_CullNone)
 
             .AddVertexInputState<PositionTextureColorVertex>()
-            .Build(device);
+            .Build(device)
+        );
 
         var spriteBatchShader = Resources.SpriteBatchShader;
         using var comp1 = new MemoryStream(spriteBatchShader);

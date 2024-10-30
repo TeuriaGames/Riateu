@@ -17,14 +17,9 @@ public class Material
 
 
     public virtual void BindUniforms(UniformBinder uniformBinder) {}
-
-    public static MaterialBuilder CreateBuilder(Shader vertexShader, Shader fragmentShader) 
-    {
-        return new MaterialBuilder(vertexShader, fragmentShader);
-    }
 }
 
-public struct MaterialBuilder 
+public struct GraphicsPipelineBuilder 
 {
     private Shader vertexShader;
     private Shader fragmentShader;
@@ -39,14 +34,14 @@ public struct MaterialBuilder
     private GraphicsPipelineAttachmentInfo attachmentInfo;
     private BlendConstants blendConstants;
 
-    public MaterialBuilder(Shader vertexShader, Shader fragmentShader) 
+    public GraphicsPipelineBuilder(Shader vertexShader, Shader fragmentShader) 
     {
         this.vertexShader = vertexShader;
         this.fragmentShader = fragmentShader;
         inputStates = new WeakList<(VertexBufferDescription, VertexAttribute[])>();
     }
 
-    public MaterialBuilder SetBlendConstants(int r, int g, int b, int a) 
+    public GraphicsPipelineBuilder SetBlendConstants(int r, int g, int b, int a) 
     {
         return SetBlendConstants(new BlendConstants() 
         {
@@ -57,43 +52,43 @@ public struct MaterialBuilder
         });
     }
 
-    public MaterialBuilder SetBlendConstants(BlendConstants blendConstants) 
+    public GraphicsPipelineBuilder SetBlendConstants(BlendConstants blendConstants) 
     {
         this.blendConstants = blendConstants;
         return this;
     }
 
-    public MaterialBuilder SetAttachmentInfo(GraphicsPipelineAttachmentInfo attachmentInfo) 
+    public GraphicsPipelineBuilder SetAttachmentInfo(GraphicsPipelineAttachmentInfo attachmentInfo) 
     {
         this.attachmentInfo = attachmentInfo;
         return this;
     }
 
-    public MaterialBuilder SetDepthStenctilState(DepthStencilState depthStencilState) 
+    public GraphicsPipelineBuilder SetDepthStenctilState(DepthStencilState depthStencilState) 
     {
         this.depthStencilState = depthStencilState;
         return this;
     }
 
-    public MaterialBuilder SetMultisampleState(MultisampleState multiSampleState) 
+    public GraphicsPipelineBuilder SetMultisampleState(MultisampleState multiSampleState) 
     {
         this.multiSampleState = multiSampleState;
         return this;
     }
 
-    public MaterialBuilder SetRasterizerState(RasterizerState rasterizerState) 
+    public GraphicsPipelineBuilder SetRasterizerState(RasterizerState rasterizerState) 
     {
         this.rasterizerState = rasterizerState;
         return this;
     }
 
-    public MaterialBuilder SetPrimitiveType(PrimitiveType primitiveType) 
+    public GraphicsPipelineBuilder SetPrimitiveType(PrimitiveType primitiveType) 
     {
         this.primitiveType = primitiveType;
         return this;
     }
 
-    public MaterialBuilder AddVertexInputState<T>(VertexInputRate inputRate = VertexInputRate.Vertex, uint stepRate = 1) 
+    public GraphicsPipelineBuilder AddVertexInputState<T>(VertexInputRate inputRate = VertexInputRate.Vertex, uint stepRate = 1) 
     where T : unmanaged, IVertexFormat
     {
         VertexAttribute[] attributes = T.Attributes(inputTotalIDs);
@@ -103,7 +98,7 @@ public struct MaterialBuilder
         return this;
     }
 
-    public Material Build(GraphicsDevice device) 
+    public GraphicsPipeline Build(GraphicsDevice device) 
     {
         VertexBufferDescription[] bindings = new VertexBufferDescription[inputTotalIDs];
         VertexAttribute[] attributes = new VertexAttribute[attribStrides];
@@ -123,7 +118,7 @@ public struct MaterialBuilder
 
         VertexInputState vertexInputState = new VertexInputState(bindings, attributes);
 
-        return new Material(device, new GraphicsPipeline(device, new GraphicsPipelineCreateInfo 
+        return new GraphicsPipeline(device, new GraphicsPipelineCreateInfo 
         {
             AttachmentInfo = attachmentInfo,
             DepthStencilState = depthStencilState,
@@ -134,7 +129,7 @@ public struct MaterialBuilder
             FragmentShader = fragmentShader,
             VertexInputState = vertexInputState,
             BlendConstants = blendConstants
-        }));
+        });
     }
 }
 

@@ -61,7 +61,7 @@ public class ImGuiRenderer
                 AttachmentInfo = new GraphicsPipelineAttachmentInfo(
                     new ColorAttachmentDescription(
                         window.SwapchainFormat,
-                        ColorAttachmentBlendState.NonPremultiplied
+                        ColorTargetBlendState.NonPremultiplied
                     )
                 ),
                 DepthStencilState = DepthStencilState.Disable,
