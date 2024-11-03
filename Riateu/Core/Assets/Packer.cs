@@ -11,14 +11,45 @@ namespace Riateu.Content;
 /// <typeparam name="T">A type for the item's data</typeparam>
 public class Packer<T> 
 {
+    private struct Score(Rectangle rect, int width, int height)
+    {
+        public int S1 = (rect.Width * rect.Height) - width * height;
+        public int S2 = Math.Min(rect.Width - width, rect.Height - height);
+        public static Score Worst => new Score { S1 = int.MaxValue, S2 = int.MaxValue };
+
+        public bool IsBetterThan(in Score score) 
+        {
+            return S1 < score.S1 || (S1 == score.S1 && S2 < score.S2);
+        }
+    }
     private struct Node(int x, int y, int w, int h) 
     {
-        public int X = x;
-        public int Y = y;
-        public int W = w;
-        public int H = h;
+        public Rectangle Rect = new Rectangle(x, y, w, h);
         public bool IsSplit;
-        public int[] Splits = new int[2];
+        public int Left;
+        public int Right;
+        public int Top;
+        public int Bottom;
+
+        public int X => Rect.X;
+        public int Y => Rect.Y;
+        public int W => Rect.Width;
+        public int H => Rect.Height;
+
+        public int this[int index] 
+        {
+            get 
+            {
+                return index switch 
+                {
+                    0 => Left,
+                    1 => Right,
+                    2 => Top,
+                    3 => Bottom,
+                    _ => throw new IndexOutOfRangeException()
+                };
+            }
+        }
     }
 
     /// <summary>
@@ -55,28 +86,19 @@ public class Packer<T>
 
     private List<Item> items = new List<Item>();
     private List<Node> nodes = new List<Node>();
-    private int nodeCount = 0;
-    private int currentRootIndex = 0;
-    private Node root;
 
     /// <summary>
     /// The maximum area size before it bails out.
     /// </summary>
     public int MaxSize { get; set; }
-    /// <summary>
-    /// Resize the area if it can't fit by power of two.
-    /// </summary>
-    public bool UsePowerOfTwo { get; set; }
 
     /// <summary>
     /// Construct a <see cref="Riateu.Content.Packer{T}"/>.
     /// </summary>
     /// <param name="maxSize">A maximum area size before it bails out</param>
-    /// <param name="usePowerOfTwo">Sets this to true if the size has to be extends by power of two</param>
-    public Packer(int maxSize = 4096, bool usePowerOfTwo = true) 
+    public Packer(int maxSize = 4096) 
     {
         MaxSize = maxSize;
-        UsePowerOfTwo = usePowerOfTwo;
     }
 
     /// <summary>
@@ -100,7 +122,7 @@ public class Packer<T>
         packedItems = new List<PackedItem>();
         if (items.Count == 0) 
         {
-            size = new Point(0, 0);
+            size = Point.Zero;
             return false;
         }
 
@@ -108,7 +130,7 @@ public class Packer<T>
         {
             Item item = items[0];
             packedItems.Add(new PackedItem(new Rectangle(0, 0, item.Width, item.Height), item.Data));
-            root = new Node(0, 0, item.Width, item.Height);
+            nodes.Add(new Node(0, 0, item.Width, item.Height));
             goto DONE;
         }
 
@@ -119,141 +141,191 @@ public class Packer<T>
             return a < b ? 1 : a > b ? -1 : 0;
         });
 
-
-        root = new Node(0, 0, items[0].Width, items[0].Height);
-        AddNode(root);
-
+        int sum = 0;
         for (int i = 0; i < items.Count; i++) 
         {
-            Item item = items[i];
+            var item = items[i];
+            sum += item.Width * item.Height;
+        }
 
-            int nodeID = FindNode(currentRootIndex, item.Width, item.Height);
+        var pageSize = 2;
+        while (pageSize * pageSize * 2 < sum) 
+        {
+            pageSize *= 2;
+        }
 
-            if (nodeID != -1) 
+        Span<Point> sizes = [
+            new (pageSize, pageSize), 
+            new (pageSize * 2, pageSize), 
+            new (pageSize, pageSize * 2)];
+
+        while (pageSize <= MaxSize) 
+        {
+            for (int tries = 0; tries < sizes.Length; tries++)
             {
-                Node n = nodes[nodeID];
-                SplitNode(ref n, item.Width, item.Height);
-                nodes[nodeID] = n;
-                Rectangle packedRect = new Rectangle(n.X, n.Y, item.Width, item.Height);
-                packedItems.Add(new PackedItem(packedRect, item.Data));
-            }
-            else 
-            {
-                int growID = GrowNode(item.Width, item.Height);
-                if (growID == -1) 
+                var pointSize = sizes[tries];
+                if (pointSize.X > MaxSize
+                    || pointSize.Y > MaxSize
+                    || pointSize.X * pointSize.Y < sum)
                 {
-                    Logger.Warn($"Max Size exceeded: {MaxSize}. Failing out everything you pack.");
-                    // It won't fit anymore, and so we decided to break it out and fail all the attempts.
-                    size = new Point(0, 0);
-                    return false;
+                    continue;
                 }
-                Node n = nodes[growID];
-                SplitNode(ref n, item.Width, item.Height);
-                nodes[growID] = n;
-                Rectangle packedRect = new Rectangle(n.X, n.Y, item.Width, item.Height);
-                packedItems.Add(new PackedItem(packedRect, item.Data));
+                nodes.Add(new Node(0, 0, pointSize.X, pointSize.Y));
+
+                for (int i = 0; i < items.Count; i++)
+                {
+                    Item item = items[i];
+
+                    var nodeID = FindNode(0, item.Width, item.Height, out Score score);
+
+                    if (nodeID == -1)
+                    {
+                        // A catastrophic Failure happen
+                        size = Point.Zero;
+                        return false;
+                    }
+
+                    var node = nodes[nodeID];
+
+                    Rectangle rect = new Rectangle(node.X, node.Y, item.Width, item.Height);
+                    SplitNode(0, rect);
+
+                    packedItems.Add(new PackedItem(rect, item.Data));
+                }
+
+                goto DONE;
             }
         }
+
+        Logger.Error($"Max Size limit has reached: {pageSize}/{MaxSize}");
+        size = new Point(pageSize, pageSize);
+        return false;
 
         DONE:
+        var root = nodes[0];
 
-        int pageWidth = 2, pageHeight = 2;
-
-        if (UsePowerOfTwo) 
-        {
-            while (pageWidth < root.W)
-                pageWidth *= 2;
-
-            while (pageHeight < root.H)
-                pageHeight *= 2;
-        }
-        else 
-        {
-            pageWidth = root.W;
-            pageHeight = root.H;
-        }
-
+        var pageWidth = root.W;
+        var pageHeight = root.H;
         
         size = new Point(pageWidth, pageHeight);
 
         // clean things up
 
-        nodeCount = 0;
-        currentRootIndex = 0;
         nodes.Clear();
         items.Clear();
 
         return true;
     }
 
-    private int AddNode(Node node) 
+    private bool HasRect(int nodeID, Rectangle rect)
     {
-        nodes.Add(node);
-        return nodeCount++;
-    }
-
-    private void SplitNode(ref Node node, int w, int h) 
-    {
-        node.IsSplit = true;
-        node.Splits[0] = AddNode(new Node(node.X, node.Y + h, node.W, node.H - h));
-        node.Splits[1] = AddNode(new Node(node.X + w, node.Y, node.W - w, node.H));
-    }
-
-    private int FindNode(int nodeID, int w, int h) 
-    {
-        Node node = nodes[nodeID];
-        if (node.IsSplit) 
+        var node = nodes[nodeID];
+        if (!node.Rect.Contains(rect))
         {
-            for (int i = 0; i < 2; i++) 
+            return false;
+        }
+        if (!node.IsSplit)
+        {
+            return true;
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            int id = node[i];
+            if (id > 0 && HasRect(id, rect))
             {
-                int splitID = node.Splits[i];
-                int foundID = FindNode(splitID, w, h);
-                if (foundID != -1) 
-                {
-                    return foundID;
-                }
+                return true;
             }
         }
-        else if ((w <= node.W) && (h <= node.H)) 
-        {
-            return nodeID;
-        }
-        return -1;
+        return false;
     }
 
-    private int GrowNode(int width, int height) 
+    private void SplitNode(int nodeID, in Rectangle rect)
     {
-        var canGrowDown = (width <= root.W) && (root.H + height < MaxSize);
-        var canGrowRight = (height <= root.H) && (root.W + width < MaxSize);
+        var node = nodes[nodeID];
 
-        var shouldGrowRight = canGrowRight && (root.H >= (root.W + width));
-        var shouldGrowDown = canGrowDown && (root.W >= (root.H + height));
-
-        if (!canGrowDown && !canGrowRight) 
+        if (!node.Rect.Intersects(rect))
         {
+            return;
+        }
+        if (node.IsSplit)
+        {
+            for (int i = 0; i < 4; i++) 
+            {
+                int id = node[i];
+                if (id > 0) 
+                {
+                    SplitNode(id, in rect);
+                }
+            }
+            return;
+        }
+
+        node.IsSplit = true;
+        nodes[nodeID] = node;
+        Rectangle newRect;
+        if (rect.X > node.X && !HasRect(0, newRect = new Rectangle(node.X, node.Y, rect.X - node.X, node.H)))
+        {
+            node.Left = nodes.Count;
+            AddNewNode(newRect);
+        }
+        if (rect.Right < node.Rect.Right && !HasRect(0, newRect = new Rectangle(rect.Right, node.Y, node.Rect.Right - rect.Right, node.H)))
+        {
+            node.Right = nodes.Count;
+            AddNewNode(newRect);
+        }
+        if (rect.Y > node.Y && !HasRect(0, newRect = new Rectangle(node.X, node.Y, node.W, rect.Y - node.Y)))
+        {
+            node.Top = nodes.Count;
+            AddNewNode(newRect);
+        }
+        if (rect.Bottom < node.Rect.Bottom && !HasRect(0, newRect = new Rectangle(node.X, rect.Bottom, node.W, node.Rect.Bottom - rect.Bottom)))
+        {
+            node.Bottom = nodes.Count;
+            AddNewNode(newRect);
+        }
+        nodes[nodeID] = node;
+
+
+        void AddNewNode(in Rectangle rect)
+        {
+            nodes.Add(new Node(rect.X, rect.Y, rect.Width, rect.Height));
+        }
+    }
+
+    private int FindNode(int nodeID, int w, int h, out Score score)
+    {
+        Node node = nodes[nodeID];
+
+        if (w > node.W || h > node.H)
+        {
+            score = Score.Worst;
             return -1;
         }
 
-        Node oldRoot = root;
-        if (shouldGrowRight || (!shouldGrowDown && canGrowRight)) 
+        if (!node.IsSplit)
         {
-            var next = AddNode(oldRoot);
-            root = new Node(0, 0, oldRoot.W + width, oldRoot.H);
-            root.IsSplit = true;
-            root.Splits[0] = currentRootIndex;
-            currentRootIndex = next;
-            nodes[next] = root;
-            return root.Splits[1] = AddNode(new Node(oldRoot.W, 0, width, oldRoot.H));
+            score = new Score(node.Rect, w, h);
+            return nodeID;
         }
-        else 
+
+        int contestingNode = -1;
+        Score contestingScore = Score.Worst;
+        for (int i = 0; i < 4; i++)
         {
-            var next = AddNode(oldRoot);
-            root = new Node(0, 0, oldRoot.W, oldRoot.H + height);
-            root.IsSplit = true;
-            root.Splits[1] = currentRootIndex;
-            currentRootIndex = next;
-            nodes[next] = root;
-            return root.Splits[0] = AddNode(new Node(0, oldRoot.H, oldRoot.W, height));
+            var n = node[i];
+            if (n <= 0)
+            {
+                continue;
+            }
+            var otherN = FindNode(n, w, h, out Score otherScore);
+            if (otherScore.IsBetterThan(contestingScore))
+            {
+                contestingScore = otherScore;
+                contestingNode = otherN;
+            }
         }
+
+        score = contestingScore;
+        return contestingNode;
     }
 }
