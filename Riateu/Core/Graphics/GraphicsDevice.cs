@@ -132,7 +132,7 @@ public class GraphicsDevice : IDisposable
         SDL.SDL_WaitForGPUIdle(Handle);
     }
 
-    public unsafe void WaitForFence(Fence fence) 
+    public void WaitForFence(Fence fence) 
     {
         IntPtr fencePtr = fence.Handle;
         Span<nint> fences = stackalloc nint[1];
@@ -140,7 +140,7 @@ public class GraphicsDevice : IDisposable
         SDL.SDL_WaitForGPUFences(Handle, true, fences, 1);
     }
 
-    public unsafe void WaitForFences(ReadOnlySpan<Fence> fences, bool waitAll) 
+    public void WaitForFences(ReadOnlySpan<Fence> fences, bool waitAll) 
     {
         Span<nint> fencePtrs = stackalloc IntPtr[fences.Length];
 
