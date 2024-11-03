@@ -1,6 +1,9 @@
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+using Riateu.Graphics;
 
 namespace Riateu;
 
@@ -9,7 +12,12 @@ namespace Riateu;
 /// </summary>
 public static class RiateuExtensions
 {
-    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Point AsPoint(this Vector128<int> vector) 
+    {
+        ref byte address = ref Unsafe.As<Vector128<int>, byte>(ref vector);
+        return Unsafe.ReadUnaligned<Point>(ref address);        
+    }
 }
 
 public static class StreamUtils 
