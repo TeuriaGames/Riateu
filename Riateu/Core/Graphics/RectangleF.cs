@@ -72,20 +72,36 @@ public struct RectangleF : IEquatable<RectangleF>
             point.Y < Bottom;
     }
 
+    public bool Contains(Rectangle other) 
+    {
+        return other.Left >= Left &&
+            other.Top >= Top &&
+            other.Right <= Right &&
+            other.Bottom <= Bottom;
+    }
+
+    public bool Contains(RectangleF other) 
+    {
+        return other.Left >= Left &&
+            other.Top >= Top &&
+            other.Right <= Right &&
+            other.Bottom <= Bottom;
+    }
+
     public bool Intersects(Rectangle other) 
     {
-        return other.Left < Right &&
-            Left < other.Right &&
-            other.Top < Bottom &&
-            Top < other.Bottom;
+        return other.Left > Left &&
+            other.Top > Top &&
+            other.Right < Right &&
+            other.Bottom < Bottom;
     }
 
     public bool Intersects(RectangleF other) 
     {
-        return other.Left < Right &&
-            Left < other.Right &&
-            other.Top < Bottom &&
-            Top < other.Bottom;
+        return other.Left > Left &&
+            other.Top > Top &&
+            other.Right < Right &&
+            other.Bottom < Bottom;
     }
 
     public RectangleF Overlap(in RectangleF other) 
