@@ -90,18 +90,18 @@ public struct RectangleF : IEquatable<RectangleF>
 
     public bool Intersects(Rectangle other) 
     {
-        return other.Left > Left &&
-            other.Top > Top &&
-            other.Right < Right &&
-            other.Bottom < Bottom;
+        return other.Left < Right &&
+            Left < other.Right &&
+            other.Top < Bottom &&
+            Top < other.Bottom;
     }
 
     public bool Intersects(RectangleF other) 
     {
-        return other.Left > Left &&
-            other.Top > Top &&
-            other.Right < Right &&
-            other.Bottom < Bottom;
+        return other.Left < Right &&
+            Left < other.Right &&
+            other.Top < Bottom &&
+            Top < other.Bottom;
     }
 
     public RectangleF Overlap(in RectangleF other) 
