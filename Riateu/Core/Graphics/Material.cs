@@ -43,13 +43,7 @@ public struct GraphicsPipelineBuilder
 
     public GraphicsPipelineBuilder SetBlendConstants(int r, int g, int b, int a) 
     {
-        return SetBlendConstants(new BlendConstants() 
-        {
-            R = r,
-            G = g,
-            B = b,
-            A = a
-        });
+        return SetBlendConstants(new BlendConstants(r, g, b, a));
     }
 
     public GraphicsPipelineBuilder SetBlendConstants(BlendConstants blendConstants) 
