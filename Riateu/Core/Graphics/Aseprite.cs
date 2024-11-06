@@ -4,11 +4,9 @@ using Riateu.Content;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Riateu.Graphics;
 
-[Experimental("RIE001")]
 public class Aseprite : IAssets
 {
     public enum Format : uint
@@ -86,6 +84,14 @@ public class Aseprite : IAssets
         CompressedTilemap = 3
     }
 
+    public enum LoopDirection : byte
+    {
+        Forward,
+        Reverse,
+        PingPong,
+        PingPongReverse
+    }
+
     public class Layer 
     {
         public LayerFlags Flags;
@@ -112,9 +118,22 @@ public class Aseprite : IAssets
         public List<Cel> Cels = new List<Cel>();
     }
 
+    public class Tag 
+    {
+        public string Name;
+        public int From;
+        public int To;
+        public LoopDirection Loop;
+        public ushort TimesRepeat;
+    }
+
 
     private List<Layer> layers = new List<Layer>();
     public Frame[] Frames;
+    public Tag[] Tags = Array.Empty<Tag>();
+    public Color[] Palletes = Array.Empty<Color>();
+    public int Width;
+    public int Height;
 
     public Aseprite(string loadPath) 
     {
@@ -129,8 +148,9 @@ public class Aseprite : IAssets
 
     private void Load(Stream stream) 
     {
-        BinaryReader reader = new BinaryReader(stream);
+        using BinaryReader reader = new BinaryReader(stream);
 
+#pragma warning disable CS8321
         byte   BYTE()       => reader.ReadByte();
         ushort WORD()       => reader.ReadUInt16();
         short  SHORT()      => reader.ReadInt16();
@@ -143,10 +163,12 @@ public class Aseprite : IAssets
         long   LONG64()     => reader.ReadInt64();
         byte[] BYTES(int n) => reader.ReadBytes(n);
         string STRING()     => reader.ReadString();
-        Point  POINT()      => new Point(LONG(), LONG());
+        Point  POINT()      => new Point(SHORT(), SHORT());
         Point  SIZE()       => new Point(LONG(), LONG());
         Rect   RECT()       => new Rectangle(POINT(), SIZE());
-        void   SKIP(int n)  => BYTES(n);
+        void   SKIP(int n)  => reader.BaseStream.Seek(n, SeekOrigin.Current);
+        void   SEEK(long n) => reader.BaseStream.Seek(n, SeekOrigin.Begin);
+#pragma warning restore CS8321
 
 
         uint fileSize = DWORD();
@@ -157,8 +179,8 @@ public class Aseprite : IAssets
         }
 
         uint frames = WORD();
-        uint width = WORD();
-        uint height = WORD();
+        Width = WORD();
+        Height = WORD();
         Format colorDepth = (Format)WORD();
         DWORD(); // flags
         WORD(); // Speed
@@ -177,10 +199,12 @@ public class Aseprite : IAssets
 
         this.Frames = new Frame[(int)frames];
 
-        byte[] pixelBuffer = new byte[width * height * ((int)colorDepth / 8)];
+        byte[] pixelBuffer = new byte[Width * Height * ((int)colorDepth / 8)];
 
         for (int i = 0; i < frames; i++) 
         {
+            var frame = new Frame();
+            Frames[i] = frame;
             DWORD(); // bytes in this frame
             ushort frameMagic = WORD();
             if (frameMagic != 0xF1FA) 
@@ -227,12 +251,25 @@ public class Aseprite : IAssets
                 }
                 case ChunkType.CelChunk: {
                     ushort layerIndex = WORD();
+                    var layer = layers[layerIndex];
+                    var celPos = POINT();
+                    var celOpacity = BYTE();
+                    CelType celType = (CelType)WORD();
+                    var celZIndex = SHORT();
+
+                    if (celType == CelType.CompressedTilemap) 
+                    {
+                        SEEK((int)chunkEndData);
+                        continue;
+                    }
+
                     Cel cel = new Cel();
-                    cel.Layer = layers[layerIndex];
-                    cel.CelPos = POINT();
-                    cel.Opacity = BYTE();
-                    CelType celType = cel.CelType = (CelType)WORD();
-                    cel.ZIndex = SHORT();
+                    frame.Cels.Add(cel);
+                    cel.Layer = layer;
+                    cel.CelPos = celPos;
+                    cel.Opacity = celOpacity;
+                    cel.CelType = celType;
+                    cel.ZIndex = celZIndex;
 
                     SKIP(5);
 
@@ -244,14 +281,10 @@ public class Aseprite : IAssets
                         {
                             cel.Pixels = tcel.Pixels;
                         }
-                        SKIP((int)chunkEndData);
+                        SEEK(chunkEndData);
                         continue;
                     }
-                    else if (celType == CelType.CompressedTilemap) 
-                    {
-                        SKIP((int)chunkEndData);
-                        continue;
-                    }
+
 
                     ushort imgWidth = WORD();
                     ushort imgHeight = WORD();
@@ -296,13 +329,122 @@ public class Aseprite : IAssets
                     cel.Pixels = new Image(pixels, imgWidth, imgHeight);
                     break;
                 }
-                case ChunkType.PaletteChunk: {
+                case ChunkType.TagsChunk: {
+                    var numTags = WORD();
+                    if (numTags > Tags.Length) 
+                    {
+                        Array.Resize(ref Tags, numTags);
+                    }
+                    SKIP(8);
+                    for (int j = 0; j < numTags; j++) 
+                    {
+                        var from = WORD();
+                        var to = WORD();
+                        LoopDirection dir = (LoopDirection)BYTE();
+                        var repeat = WORD();
+                        SKIP(6);
+                        SKIP(3);
+                        SKIP(1);
+                        var tagName = STRING();
+                        Tag tag = new Tag() 
+                        {
+                            Name = tagName,
+                            From = from,
+                            To = to,
+                            TimesRepeat = repeat,
+                            Loop = dir
+                        };
+                        Tags[j] = tag;
+                    }
                     break;
                 }
+                case ChunkType.PaletteChunk: 
+                    var len = (int)DWORD();
+                    var first = (int)DWORD();
+                    var last = (int)DWORD();
+                    SKIP(8);
+                    
+                    if (len > Palletes.Length) 
+                    {
+                        Array.Resize(ref Palletes, len);
+                    }
+
+                    for (int p = first; p <= last; p++) 
+                    {
+                        var flags = WORD();
+                        Palletes[p] = new Color(BYTE(), BYTE(), BYTE(), BYTE());
+                        if ((flags & p) != 0) 
+                        {
+                            STRING();
+                        }
+                    }
+                    break;
+                
                 }
 
-                SKIP((int)chunkEndData);
+                SEEK(chunkEndData);
             }
         }
+    }
+
+    public Image RenderFrame(int index) 
+    {
+        var image = new Image(Width, Height);
+
+        foreach (var layer in layers) 
+        {
+            if (!layer.Flags.HasFlag(LayerFlags.Visible))
+            {
+                continue;
+            }
+
+            if (Frames[index].Cels.Find(cel => cel.Layer == layer) is not Cel cel)
+            {
+                continue;
+            }
+            
+            if (cel.Pixels is not Image img) 
+            {
+                continue;
+            }
+
+            image.CopyFrom(img, 0, 0);
+        }
+        return image;
+    }
+
+    public Image[] RenderFrames(int from, int to) 
+    {
+        var length = to - from + 1;
+        var images = new Image[length];
+        for (int i = 0; i < length; i++) 
+        {
+            images[i] = new Image(Width, Height);
+        }
+
+        foreach (var layer in layers) 
+        {
+            if (!layer.Flags.HasFlag(LayerFlags.Visible))
+            {
+                continue;
+            }
+
+            for (int i = 0; i < length; i++) 
+            {
+                if (Frames[from + i].Cels.Find(cel => cel.Layer == layer) is not Cel cel)
+                {
+                    continue;
+                }
+                
+                if (cel.Pixels is not Image img) 
+                {
+                    continue;
+                }
+
+                images[i].CopyFrom(img, 0, 0);
+            }
+
+        }
+        return images;
     }
 }

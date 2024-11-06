@@ -72,7 +72,7 @@ public class AssetStorage
     /// </summary>
     /// <param name="basePath">A target folder to look for</param>
     /// <returns>An <see cref="Riateu.Graphics.Atlas"/></returns>
-    public Ref<Atlas> CreateAtlas(string basePath) 
+    public Ref<Atlas> CreateAtlas(string basePath, bool supportAseprite = false) 
     {
         void Crawl(string path) 
         {
@@ -82,7 +82,11 @@ public class AssetStorage
                 Crawl(directory);
             }
 
-            var files = Directory.GetFiles(path).Where(x => x.EndsWith("png") || x.EndsWith("gif") || x.EndsWith("qoi"));
+            var files = Directory.GetFiles(path).Where(
+                x => x.EndsWith("png") || 
+                x.EndsWith("gif") || 
+                x.EndsWith("qoi") ||
+                (supportAseprite && x.EndsWith("aseprite")));
             foreach (var file in files) 
             {
                 string name = Path.Join(path, Path.GetFileNameWithoutExtension(file)).Replace('\\', '/')
@@ -98,12 +102,30 @@ public class AssetStorage
                             new AtlasItem($"{name}/{i}", image), image.Width, image.Height));
                     }
                 }
+                else if (Path.GetExtension(file) == ".aseprite") 
+                {
+                    Aseprite aseprite = new Aseprite(file);
+                    if (aseprite.Frames.Length > 1) 
+                    {
+                        Span<Image> images = aseprite.RenderFrames(0, aseprite.Frames.Length - 1);
+                        for (int i = 0; i < images.Length; i++) 
+                        {
+                            Image image = images[i];
+                            packer.Add(new Packer<AtlasItem>.Item(
+                                new AtlasItem($"{name}/{i}", image), image.Width, image.Height));
+                        }
+                    }
+                    else 
+                    {
+                        Image image = aseprite.RenderFrame(0);
+                        packer.Add(new Packer<AtlasItem>.Item(new AtlasItem(name, image), image.Width, image.Height));
+                    }
+                }
                 else 
                 {
                     Image image = new Image(file);
                     packer.Add(new Packer<AtlasItem>.Item(new AtlasItem(name, image), image.Width, image.Height));
                 }
-
             }
         }
         if (basePath.EndsWith(Path.DirectorySeparatorChar)) 
