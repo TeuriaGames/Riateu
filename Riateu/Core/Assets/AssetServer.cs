@@ -19,6 +19,11 @@ internal class AssetServer : IDisposable
     
     public AssetServer(string assetPath) 
     {
+        if (!Directory.Exists(assetPath)) 
+        {
+            Logger.Warn("AssetServer failed to watch directory, couldn't found 'Assets' folder in the root directory.");
+            return;
+        }
         watcher = new FileSystemWatcher(assetPath);
         watcher.EnableRaisingEvents = true;
         watcher.IncludeSubdirectories = true;
@@ -75,7 +80,7 @@ internal class AssetServer : IDisposable
 
     public void Dispose()
     {
-        watcher.Dispose();
+        watcher?.Dispose();
         Logger.Info("Asset Server finished.");
     }
 
