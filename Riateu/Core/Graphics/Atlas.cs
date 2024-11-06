@@ -82,20 +82,16 @@ public class Atlas : IAssets, IDisposable
     {
         var atlas = new Atlas();
         Image image = new Image(size.X, size.Y);
-        ConcurrentDictionary<string, TextureQuad> concurrentTextures = new ConcurrentDictionary<string, TextureQuad>();
 
-        new Workload((i, id) => {
+        for (int i = 0; i < items.Count; i++) 
+        {
             Packer<AtlasItem>.PackedItem item = items[i];
             item.Data.Image.Premultiply();
             image.CopyFrom(item.Data.Image, item.Rect.X, item.Rect.Y);
-            concurrentTextures.GetOrAdd(item.Data.Name, new TextureQuad(
+            atlas.textures.Add(item.Data.Name, new TextureQuad(
                 size, new Rectangle(item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height)));
             item.Data.Image.Dispose();
-            return true;
-        }, items.Count).Finish(4);
-
-        // ConcurrentDictionary is pretty slow that we had to fallback to Dictionary
-        atlas.textures = concurrentTextures.ToDictionary<string, TextureQuad>();
+        }
 
         Texture texture = uploader.CreateTexture2D(image.Pixels, (uint)image.Width, (uint)image.Height);
         atlas.BaseTexture = texture;

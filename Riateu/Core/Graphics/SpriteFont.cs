@@ -122,9 +122,9 @@ public class SpriteFont : IAssets
         if (packer.Pack(out List<Packer<FontItem>.PackedItem> packedItems, out Point size)) 
         {
             using Image image = new Image(size.X, size.Y);
-            ConcurrentDictionary<int, SpriteFontCharacter> concurrentAvailableCharacters = new ConcurrentDictionary<int, SpriteFontCharacter>();
 
-            new Workload((i, id) => {
+            for (int i = 0; i < packedItems.Count; i++)
+            {
                 Packer<FontItem>.PackedItem item = packedItems[i]; 
                 Color[] color = new Color[item.Rect.Width * item.Rect.Height];
 
@@ -133,19 +133,14 @@ public class SpriteFont : IAssets
                     image.CopyFrom(color, item.Rect.X, item.Rect.Y, item.Rect.Width, item.Rect.Height);
                 }
 
-                concurrentAvailableCharacters.GetOrAdd(item.Data.Index, new SpriteFontCharacter(
+                availableCharacters[item.Data.Index] = new SpriteFontCharacter(
                     item.Data.Character.Width, item.Data.Character.Height, item.Data.Character.Advance,
                     item.Data.Character.OffsetX, item.Data.Character.OffsetY, new TextureQuad(
                         size, item.Rect
                     ),
                     item.Data.Character.Visible
-                ));
-                
-                return true;
-            }, packedItems.Count).Finish(4);
-
-            // ConcurrentDictionary is pretty slow that we had to fallback to Dictionary
-            availableCharacters = concurrentAvailableCharacters.ToDictionary<int, SpriteFontCharacter>();
+                );
+            }
 
             return uploader.CreateTexture2D<Color>(image.Pixels, (uint)image.Width, (uint)image.Height);
         }
