@@ -946,9 +946,9 @@ public struct MultisampleState(SampleCount sampleCount, uint sampleMask, bool en
     }
 }
 
-public struct BlendConstants 
+public struct BlendConstants(float r, float g, float b, float a)
 {
-    public float R, G, B, A;
+    public float R = r, G = g, B = b, A = a;
 }
 
 public struct VertexAttribute(uint bufferSlot, uint location, VertexElementFormat format, uint offset)
