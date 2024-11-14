@@ -129,11 +129,14 @@ public class Aseprite : IAssets
 
 
     private List<Layer> layers = new List<Layer>();
-    public Frame[] Frames;
-    public Tag[] Tags = Array.Empty<Tag>();
-    public Color[] Palletes = Array.Empty<Color>();
-    public int Width;
-    public int Height;
+    private Tag[] tags = Array.Empty<Tag>();
+    private Color[] palletes = Array.Empty<Color>();
+    public Tag[] Tags => tags;
+    public Color[] Palletes => palletes;
+    public IReadOnlyList<Layer> Layers => layers;
+    public Frame[] Frames { get; private set; }
+    public int Width { get; private set; }
+    public int Height { get; private set; }
 
     public Aseprite(string loadPath) 
     {
@@ -331,9 +334,9 @@ public class Aseprite : IAssets
                 }
                 case ChunkType.TagsChunk: {
                     var numTags = WORD();
-                    if (numTags > Tags.Length) 
+                    if (numTags > tags.Length) 
                     {
-                        Array.Resize(ref Tags, numTags);
+                        Array.Resize(ref tags, numTags);
                     }
                     SKIP(8);
                     for (int j = 0; j < numTags; j++) 
@@ -354,7 +357,7 @@ public class Aseprite : IAssets
                             TimesRepeat = repeat,
                             Loop = dir
                         };
-                        Tags[j] = tag;
+                        tags[j] = tag;
                     }
                     break;
                 }
@@ -364,15 +367,15 @@ public class Aseprite : IAssets
                     var last = (int)DWORD();
                     SKIP(8);
                     
-                    if (len > Palletes.Length) 
+                    if (len > palletes.Length) 
                     {
-                        Array.Resize(ref Palletes, len);
+                        Array.Resize(ref palletes, len);
                     }
 
                     for (int p = first; p <= last; p++) 
                     {
                         var flags = WORD();
-                        Palletes[p] = new Color(BYTE(), BYTE(), BYTE(), BYTE());
+                        palletes[p] = new Color(BYTE(), BYTE(), BYTE(), BYTE());
                         if ((flags & p) != 0) 
                         {
                             STRING();
