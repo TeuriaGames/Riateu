@@ -69,9 +69,9 @@ public class AABB : Shape
             var absoluteBounds = shape.AbsoluteBoundingBox;
             return absoluteBounds.Intersects(GetAbsoluteBounds(position));
         case CollisionGrid grid:
-            return grid.Collide(position, AbsoluteBoundingBox);
+            return grid.Collide(position, GetAbsoluteBounds(position));
         case Circle circle:
-            return circle.Collide(position, AbsoluteBoundingBox);
+            return circle.Collide(position, GetAbsoluteBounds(position));
         default:
             return Unsupported(shape);
         }
