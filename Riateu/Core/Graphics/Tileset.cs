@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using TeuJson;
 using TeuJson.Attributes;
 
@@ -109,6 +110,12 @@ public class Tileset
             return rule.Tiles;
         }
         return Array.Empty<TextureQuad>();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public TextureQuad GetTile(int tile) 
+    {
+        return spritesheet[tile];
     }
 
     /// <summary>
