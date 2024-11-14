@@ -16,6 +16,15 @@ public class Tileset
     private Spritesheet spritesheet;
     private Dictionary<byte, Ruleset> rules = new();
 
+    public Texture TilesetTexture => tilesetTexture;
+    public Spritesheet Spritesheet => spritesheet;
+    public Dictionary<byte, Ruleset> Rulesets => rules;
+
+    public int Width => (int)tilesetTexture.Width;
+    public int Height => (int)tilesetTexture.Height;
+    public int TileWidth { get; }
+    public int TileHeight { get; }
+
     /// <summary>
     /// An initialization for this class.
     /// </summary>
@@ -29,6 +38,8 @@ public class Tileset
         int tileWidth,
         int tileHeight) 
     {
+        TileWidth = tileWidth;
+        TileHeight = tileHeight;
         tilesetTexture = tileset;
         spritesheet = new Spritesheet(tileset, atlasTexture, tileWidth, tileHeight);
     }
