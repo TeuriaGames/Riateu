@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 namespace Riateu.Audios;
 
@@ -24,7 +25,7 @@ public abstract class SourceVoice : BaseVoice
     public Format Format { get; }
     protected bool Initiated;
 
-    protected readonly object StateLock = new object();
+    protected readonly Lock StateLock = new Lock();
 
     internal unsafe SourceVoice(VoiceMaker maker, AudioDevice device, in Format format) 
         : base(device, format.Channels, device.DeviceDetails.OutputFormat.Format.nChannels)

@@ -25,7 +25,7 @@ public class AudioDevice : IDisposable
 
     public bool IsRunning { get; private set; }
 
-    internal readonly object ThreadLock = new object();
+    internal readonly Lock ThreadLock = new Lock();
 
     public VoiceMaker VoiceMaker { get; }
 

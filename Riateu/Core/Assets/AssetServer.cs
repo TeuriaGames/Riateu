@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace Riateu.Content;
 
 internal class AssetServer : IDisposable
 {
     public enum ReactiveType { File, Folder }
+    private readonly Lock updateLock = new Lock();
     private HashSet<string> reactiveFiles = new HashSet<string>();
     private HashSet<string> reactiveFolders = new HashSet<string>();
     private List<IDisposable> trackedResources = new List<IDisposable>();
     private FileSystemWatcher watcher;
     private bool dirty;
     private Action<AssetStorage> actionReload;
-    private object someLock = new object();
 
     public AssetServer() {}
     
@@ -61,7 +62,7 @@ internal class AssetServer : IDisposable
 
     public void Update(AssetStorage storage) 
     {
-        lock (someLock) 
+        lock (updateLock) 
         {
             if (dirty) 
             {
@@ -86,7 +87,7 @@ internal class AssetServer : IDisposable
 
     private void OnFileChanged(object sender, FileSystemEventArgs e)
     {
-        lock (someLock)
+        lock (updateLock)
         {
             if (reactiveFiles.Contains(e.FullPath))
             {
