@@ -346,10 +346,10 @@ public class ImGuiRenderer
     private unsafe void UpdateMonitors()
     {
         ImGuiPlatformIOPtr platformIO = ImGui.GetPlatformIO();
-        Marshal.FreeHGlobal(platformIO.NativePtr->Monitors.Data);
+        NativeMemory.Free(platformIO.NativePtr->Monitors.Data.ToPointer());
         SDL.SDL_GetDisplays(out int numMonitors);
-        IntPtr data = Marshal.AllocHGlobal(Unsafe.SizeOf<ImGuiPlatformMonitor>() * numMonitors);
-        platformIO.NativePtr->Monitors = new ImVector(numMonitors, numMonitors, data);
+        void *data = NativeMemory.Alloc((nuint)(Unsafe.SizeOf<ImGuiPlatformMonitor>() * numMonitors));
+        platformIO.NativePtr->Monitors = new ImVector(numMonitors, numMonitors, (IntPtr)data);
         for (int i = 1; i <= numMonitors; i++)
         {
             SDL.SDL_GetDisplayUsableBounds((uint)i, out SDL.SDL_Rect r);
