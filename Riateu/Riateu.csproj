@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="TeuJson" Version="2.2.1" />
     <PackageReference Include="TeuJson.Generator" Version="2.2.1" />
-    <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
+    <PackageReference Include="ImGui.NET" Version="1.91.6.1" />
   </ItemGroup>
 
   <ItemGroup>
