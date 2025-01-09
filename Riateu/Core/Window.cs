@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Channels;
 using Riateu.Graphics;
 using SDL3;
 
@@ -7,8 +8,13 @@ namespace Riateu;
 
 public class Window : IDisposable
 {
-    public string Title { get; private set; }
+    public string Title 
+    { 
+        get => title;
+        set => SDL.SDL_SetWindowTitle(Handle, value);
+    }
     public IntPtr Handle { get; internal set; }
+    private string title;
 
     public uint Width { get; private set; }
     public uint Height { get; private set; }
@@ -27,15 +33,18 @@ public class Window : IDisposable
 
     public bool Claimed { get; internal set; }
     public static int TotalWindowCount => windows.Count;
+
+    public event Action Moved;
+    public event Action Closed;
     private bool IsDisposed;
 
     private static Dictionary<uint, Window> windows = new Dictionary<uint, Window>();
-    private static uint totalWindows;
-    private static Stack<uint> freedWindowID = new Stack<uint>();
 
-    public Action<uint, uint> OnSizeChange = delegate {};
+    public static IReadOnlyDictionary<uint, Window> Windows => windows;
 
-    public Window(WindowSettings settings, SDL.SDL_WindowFlags flags, uint id) 
+    public Action<uint, uint> Resized = delegate {};
+
+    public Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 
     {
         if (settings.WindowMode == WindowMode.Fullscreen) 
         {
@@ -55,12 +64,13 @@ public class Window : IDisposable
         this.windowMode = settings.WindowMode;
 
         var modeID = SDL.SDL_GetPrimaryDisplay();
+        title = settings.Title;
 
         unsafe {
             SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(modeID);
 
             Handle = SDL.SDL_CreateWindow(
-                settings.Title,
+                title,
                 settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
                 settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
                 flags
@@ -70,7 +80,24 @@ public class Window : IDisposable
 
         Width = (uint)width;
         Height = (uint)height;
-        this.id = id;
+        this.id = SDL.SDL_GetWindowID(Handle);
+    }
+
+    public static Window CreateWindow(WindowSettings settings, SDL.SDL_WindowFlags flags, BackendFlags backendFlags) 
+    {
+        if (backendFlags != BackendFlags.DirectX) 
+        {
+            flags |= backendFlags switch 
+            {
+                BackendFlags.Vulkan => SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN,
+                BackendFlags.Metal => SDL.SDL_WindowFlags.SDL_WINDOW_METAL,
+                _ => throw new Exception("Not Supported")
+            };
+        }
+
+        Window window = new Window(settings, flags);
+        windows.Add(window.id, window);
+        return window;
     }
 
     public static Window CreateWindow(WindowSettings settings, BackendFlags backendFlags) 
@@ -87,19 +114,16 @@ public class Window : IDisposable
             };
         }
 
-        Window window;
-        if (freedWindowID.TryPop(out uint freedID)) 
-        {
-            window = new Window(settings, flags, freedID);
-            windows.Add(window.id, window);
-        }
-        else 
-        {
-            window = new Window(settings, flags, totalWindows);
-            windows.Add(window.id, window);
-            totalWindows += 1;            
-        }
+        Window window = new Window(settings, flags);
+        windows.Add(window.id, window);
         return window;
+    }
+
+    public void SetWindowSizeRelative(uint width, uint height) 
+    {
+        SDL.SDL_SetWindowSize(Handle, (int)width, (int)height);
+        Width = width;
+        Height = height;
     }
 
     public void SetWindowSize(uint width, uint height) 
@@ -134,18 +158,24 @@ public class Window : IDisposable
         SDL.SDL_ShowWindow(Handle);
     }
 
+    public void Move() 
+    {
+        Moved?.Invoke();
+    }
+
     internal void HandleSizeChanged(uint width, uint height) 
     {
         Width = width;
         Height = height;
 
-        OnSizeChange?.Invoke(width, height);
+        Resized?.Invoke(width, height);
     }
 
     protected virtual void Dispose(bool disposing)
     {
         if (!IsDisposed)
         {
+            Closed?.Invoke();
             SDL.SDL_DestroyWindow(Handle);
             IsDisposed = true;
         }

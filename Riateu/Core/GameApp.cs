@@ -86,6 +86,11 @@ public abstract class GameApp
             backendName = "metal";
         }
 
+        if (!SDL.SDL_Init(SDL.SDL_InitFlags.SDL_INIT_TIMER | SDL.SDL_InitFlags.SDL_INIT_GAMEPAD)) 
+        {
+            Logger.Error("Failed to initialize SDL");
+            return;
+        }
         Logger.InitSDLLog();
 
         MainWindow = Window.CreateWindow(settings, backendFlags);
@@ -275,15 +280,23 @@ public abstract class GameApp
                 InputDevice.Mouse.WheelRawX += (int)e.wheel.x;
                 InputDevice.Mouse.WheelRawY += (int)e.wheel.y;
                 break;
-            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
-                MainWindow.HandleSizeChanged((uint)e.window.data1, (uint)e.window.data2);
-                break;
-            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-                GraphicsDevice.UnclaimWindow(MainWindow);
-                MainWindow.Dispose();
-                break;
             case (uint)SDL.SDL_EventType.SDL_EVENT_TEXT_INPUT:
                 HandleTextInput(e);
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
+                Window.Windows[e.window.windowID].HandleSizeChanged((uint)e.window.data1, (uint)e.window.data2);
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_MOVED:
+                Window.Windows[e.window.windowID].Move();
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                var window = Window.Windows[e.window.windowID];
+                if (window == MainWindow) 
+                {
+                    Exiting = true;
+                }
+                GraphicsDevice.UnclaimWindow(window);
+                window.Dispose();
                 break;
             }
         }
