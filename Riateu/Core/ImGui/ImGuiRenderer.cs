@@ -64,6 +64,7 @@ public class ImGuiRenderer
     {
         ImGuiWindow window = (ImGuiWindow)GCHandle.FromIntPtr(vp.PlatformUserData).Target;
         window.Window.Show();
+        SDL.SDL_SetWindowPosition(window.Window.Handle, (int)vp.Pos.X, (int)vp.Pos.Y);
     }
 
     private unsafe void GetWindowPos(ImGuiViewportPtr vp, Vector2* outPos)
