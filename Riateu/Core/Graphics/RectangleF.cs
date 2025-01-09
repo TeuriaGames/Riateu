@@ -24,6 +24,8 @@ public struct RectangleF : IEquatable<RectangleF>
 
     public Vector2 Center => new Vector2(X + (Width / 2), Y + (Height / 2));
 
+    public static RectangleF Zero => new RectangleF(0, 0, 0, 0);
+
     public RectangleF(float x, float y, float width, float height) 
     {
         X = x;

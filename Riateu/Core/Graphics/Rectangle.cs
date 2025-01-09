@@ -23,6 +23,8 @@ public struct Rectangle : IEquatable<Rectangle>
 
     public Point Center => new Point(X + (Width / 2), Y + (Height / 2));
 
+    public static Rectangle Zero => new Rectangle(0, 0, 0, 0);
+
     public Rectangle(int x, int y, int width, int height) 
     {
         X = x;
