@@ -1,3 +1,6 @@
+using System;
+using SDL3;
+
 namespace Riateu.Inputs;
 
 public class KeyboardButton(Keyboard keyboard, KeyCode code) : InputButton
@@ -5,8 +8,8 @@ public class KeyboardButton(Keyboard keyboard, KeyCode code) : InputButton
     public Keyboard BaseInput = keyboard;
     public KeyCode KeyCode = code;
 
-    protected override unsafe bool Check()
+    internal unsafe void Update(IntPtr states) 
     {
-        return (((byte*)BaseInput.State)[(int)KeyCode]) != 0;
+        InputState.Update((((byte*)states)[(int)KeyCode]) != 0);
     }
 }

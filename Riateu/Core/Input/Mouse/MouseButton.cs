@@ -8,8 +8,8 @@ public class MouseButton(Mouse mouse, MouseButtonCode buttonCode, SDL.SDL_MouseB
     public MouseButtonCode ButtonCode = buttonCode;
     public SDL.SDL_MouseButtonFlags Mask = mask;
 
-    protected override bool Check()
+    internal void Update() 
     {
-        return (BaseInput.ButtonMask & Mask) != 0;
+        InputState.Update((BaseInput.ButtonMask & Mask) != 0);
     }
 }

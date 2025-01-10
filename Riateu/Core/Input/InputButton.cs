@@ -10,11 +10,4 @@ public abstract class InputButton
     public bool Released => InputState.Released;
     public bool Idle => InputState.Idle;
     public bool IsUp => InputState.IsUp;
-
-    internal void Update() 
-    {
-        InputState.Update(Check());
-    }
-
-    protected abstract bool Check();
 }

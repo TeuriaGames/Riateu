@@ -13,7 +13,6 @@ public class Keyboard
 
     public static Action<char> TextInput = delegate { };
 
-    public IntPtr State { get; private set; }
     public KeyCode[] KeyCodes { get; private set; }
     public KeyboardButton[] Buttons { get; private set; }
 
@@ -29,7 +28,8 @@ public class Keyboard
 
     public Keyboard() 
     {
-        SDL.SDL_GetKeyboardState(out int numKeys);
+        int numKeys = 0;
+        SDL.SDL_GetKeyboardState(out numKeys);
 
         KeyCodes = Enum.GetValues<KeyCode>();
         Buttons = new KeyboardButton[numKeys];
@@ -43,11 +43,11 @@ public class Keyboard
     {
         AnyPressed = false;
 
-        State = SDL.SDL_GetKeyboardState(out int numKeys);
+        var states = SDL.SDL_GetKeyboardState(out int numKeys);
         foreach (KeyCode keyCode in KeyCodes) 
         {
             KeyboardButton button = Buttons[(int)keyCode];
-            button.Update();
+            button.Update(states);
 
             if (button.Pressed) 
             {

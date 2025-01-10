@@ -82,8 +82,12 @@ public class Mouse
     {
         AnyPressed = false;
 
-        ButtonMask = SDL.SDL_GetMouseState(out float x, out float y);
-        SDL.SDL_GetRelativeMouseState(out float deltaX, out float deltaY);
+        float x = 0;
+        float y = 0;
+        float deltaX = 0;
+        float deltaY = 0;
+        ButtonMask = SDL.SDL_GetMouseState(out x, out y);
+        SDL.SDL_GetRelativeMouseState(out deltaX, out deltaY);
 
         X = (int)x;
         Y = (int)y;
