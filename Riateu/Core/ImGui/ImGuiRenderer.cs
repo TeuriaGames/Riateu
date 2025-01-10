@@ -30,7 +30,6 @@ public class ImGuiRenderer
     private TransferBuffer transferBuffer;
     private Window window;
     private ImGuiWindow imguiWindow;
-    private bool frameBegun;
 
     private readonly Platform_CreateWindow pCreateWindow;
     private readonly Platform_DestroyWindow pDestroyWindow;
@@ -70,7 +69,9 @@ public class ImGuiRenderer
     private unsafe void GetWindowPos(ImGuiViewportPtr vp, Vector2* outPos)
     {
         ImGuiWindow window = (ImGuiWindow)GCHandle.FromIntPtr(vp.PlatformUserData).Target;
-        SDL.SDL_GetWindowPosition(window.Window.Handle, out int x, out int y);
+        int x = 0; 
+        int y = 0;
+        SDL.SDL_GetWindowPosition(window.Window.Handle, out x, out y);
         *outPos = new Vector2(x, y);
     }
 
@@ -248,12 +249,6 @@ public class ImGuiRenderer
             BufferUsageFlags.Index,
             indexCount
         );
-
-        SetPerFrameImGuiData(Time.Delta);
-        UpdateMonitors();
-
-        ImGui.NewFrame();
-        frameBegun = true;
     }
 
     private void HandleSizeChanged(uint width, uint height)
@@ -269,13 +264,10 @@ public class ImGuiRenderer
     /// <param name="imGuiCallback">A callback used for rendering</param>
     public unsafe void Update(InputDevice inputs, Action imGuiCallback)
     {
-        if (frameBegun) 
-        {
-            ImGui.Render();
-            ImGui.UpdatePlatformWindows();
-        }
         var io = ImGui.GetIO();
-        var buttons = (uint)SDL.SDL_GetGlobalMouseState(out float x, out float y);
+        float x = 0;
+        float y = 0;
+        var buttons = (uint)SDL.SDL_GetGlobalMouseState(out x, out y);
 
         io.MousePos = new System.Numerics.Vector2(x, y);
         io.MouseDown[0] = (buttons & 0b0001) != 0;
@@ -322,7 +314,6 @@ public class ImGuiRenderer
         SetPerFrameImGuiData(Time.Delta);
         UpdateMonitors();
 
-        frameBegun = true;
         ImGui.NewFrame();
         imGuiCallback();
     }
@@ -336,7 +327,9 @@ public class ImGuiRenderer
         io.DisplayFramebufferScale = Vector2.One;
         io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
 
-        SDL.SDL_GetWindowPosition(window.Handle, out int x, out int y);
+        int x = 0;
+        int y = 0;
+        SDL.SDL_GetWindowPosition(window.Handle, out x, out y);
 
         ImGui.GetPlatformIO().Viewports[0].Pos = new Vector2(x, y);
         ImGui.GetPlatformIO().Viewports[0].Size = new Vector2(window.Width, window.Height);
@@ -347,12 +340,14 @@ public class ImGuiRenderer
     {
         ImGuiPlatformIOPtr platformIO = ImGui.GetPlatformIO();
         NativeMemory.Free(platformIO.NativePtr->Monitors.Data.ToPointer());
-        SDL.SDL_GetDisplays(out int numMonitors);
+        int numMonitors = 0;
+        SDL.SDL_GetDisplays(out numMonitors);
         void *data = NativeMemory.Alloc((nuint)(Unsafe.SizeOf<ImGuiPlatformMonitor>() * numMonitors));
         platformIO.NativePtr->Monitors = new ImVector(numMonitors, numMonitors, (IntPtr)data);
         for (int i = 1; i <= numMonitors; i++)
         {
-            SDL.SDL_GetDisplayUsableBounds((uint)i, out SDL.SDL_Rect r);
+            SDL.SDL_Rect r = default;
+            SDL.SDL_GetDisplayUsableBounds((uint)i, out r);
             ImGuiPlatformMonitorPtr monitor = platformIO.Monitors[i - 1];
             monitor.DpiScale = 1f;
             monitor.MainPos = new Vector2(r.x, r.y);
@@ -438,11 +433,6 @@ public class ImGuiRenderer
 
     public void Render(RenderPass renderPass)
     {
-        if (!frameBegun) 
-        {
-            return;
-        }
-        frameBegun = false;
         ImGui.Render();
 
         var io = ImGui.GetIO();
@@ -451,6 +441,11 @@ public class ImGuiRenderer
         UpdateImGuiBuffers(drawDataPtr);
         CommandBuffer buffer = device.DeviceCommandBuffer();
         RenderCommandLists(buffer, renderPass, drawDataPtr);
+        
+        if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) == 0) 
+        {
+            return;
+        }
 
         ImGui.UpdatePlatformWindows();
         var platformIO = ImGui.GetPlatformIO();
@@ -458,13 +453,14 @@ public class ImGuiRenderer
         {
             var viewportPtr = platformIO.Viewports[i];
             ImGuiWindow window = (ImGuiWindow)GCHandle.FromIntPtr(viewportPtr.PlatformUserData).Target;
-            UpdateImGuiBuffers(viewportPtr.DrawData);
-            var cmdBuffer = window.Device.AcquireCommandBuffer();
             if (!window.Window.Claimed) 
             {
-                window.Device.Submit(cmdBuffer);
                 continue;
             }
+
+            UpdateImGuiBuffers(viewportPtr.DrawData);
+            var cmdBuffer = window.Device.AcquireCommandBuffer();
+
             var swapchainTarget = cmdBuffer.AcquireSwapchainTarget(window.Window);
 
             if (swapchainTarget != null) 
