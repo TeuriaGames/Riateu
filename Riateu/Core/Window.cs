@@ -42,9 +42,9 @@ public class Window : IDisposable
 
     public static IReadOnlyDictionary<uint, Window> Windows => windows;
 
-    public Action<uint, uint> Resized = delegate {};
+    public event Action<uint, uint> Resized = delegate {};
 
-    public Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 
+    private unsafe Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 
     {
         if (settings.WindowMode == WindowMode.Fullscreen) 
         {
@@ -63,23 +63,39 @@ public class Window : IDisposable
 
         this.windowMode = settings.WindowMode;
 
-        var modeID = SDL.SDL_GetPrimaryDisplay();
         title = settings.Title;
 
-        unsafe {
+        if (settings.WindowMode == WindowMode.Windowed) 
+        {
+            Handle = SDL.SDL_CreateWindow(
+                title,
+                (int)settings.Width,
+                (int)settings.Height,
+                flags
+            );
+
+            Width = settings.Width;
+            Height = settings.Height;
+        }
+        else 
+        {
+            var modeID = SDL.SDL_GetPrimaryDisplay();
             SDL.SDL_DisplayMode *modePtr = (SDL.SDL_DisplayMode*)SDL.SDL_GetCurrentDisplayMode(modeID);
 
             Handle = SDL.SDL_CreateWindow(
                 title,
-                settings.WindowMode == WindowMode.Windowed ? (int)settings.Width : modePtr->w,
-                settings.WindowMode == WindowMode.Windowed ? (int)settings.Height : modePtr->h,
+                modePtr->w,
+                modePtr->h,
                 flags
             );
-        }
-        SDL.SDL_GetWindowSize(Handle, out int width, out int height);
+            int width = 0;
+            int height = 0;
+            SDL.SDL_GetWindowSize(Handle, out width, out height);
 
-        Width = (uint)width;
-        Height = (uint)height;
+            Width = (uint)width;
+            Height = (uint)height;
+        }
+
         this.id = SDL.SDL_GetWindowID(Handle);
     }
 
@@ -175,6 +191,7 @@ public class Window : IDisposable
     {
         if (!IsDisposed)
         {
+            windows.Remove(id);
             Closed?.Invoke();
             SDL.SDL_DestroyWindow(Handle);
             IsDisposed = true;
