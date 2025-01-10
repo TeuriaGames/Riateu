@@ -269,7 +269,8 @@ public abstract class GameApp
 
     private void PollEvents() 
     {
-        while (SDL.SDL_PollEvent(out var e)) 
+        SDL.SDL_Event e = default;
+        while (SDL.SDL_PollEvent(out e)) 
         {
             switch (e.type) 
             {

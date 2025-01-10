@@ -32,13 +32,16 @@ public class CommandBuffer : IGraphicsPool
         }
         acquiredSwapChainTarget = true;
 #endif
-        var success = SDL.SDL_AcquireGPUSwapchainTexture(Handle, window.Handle, out nint texPtr, out uint w, out uint h);
+        nint texPtr = nint.Zero;
+        uint w = 0;
+        uint h = 0;
+        var success = SDL.SDL_AcquireGPUSwapchainTexture(Handle, window.Handle, out texPtr, out w, out h);
 
         if (!success || texPtr == IntPtr.Zero) 
         {
             return null;
         }
-
+        
         window.SwapchainTarget.Handle = texPtr;
         window.SwapchainTarget.Width = w;
         window.SwapchainTarget.Height = h;
