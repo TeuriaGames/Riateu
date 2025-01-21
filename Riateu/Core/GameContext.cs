@@ -61,7 +61,7 @@ public static class GameContext
             ))
             .SetDepthStenctilState(DepthStencilState.DepthReadWrite)
             .SetMultisampleState(MultisampleState.None)
-            .SetPrimitiveType(PrimitiveType.TriangleList)
+            .SetPrimitiveType(PrimitiveType.TriangleStrip)
             .SetRasterizerState(RasterizerState.CCW_CullNone)
 
             .Build(device)

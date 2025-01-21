@@ -33,15 +33,14 @@ static const float2 vertices[4] = {
     { 0.0f, 1.0f },
     { 1.0f, 1.0f },
 };
-static const uint indices[6] = { 0, 1, 2, 2, 1, 3 };
 
 [shader("vertex")]
-VertexOutput main(uint id: SV_VertexID) 
+VertexOutput main(uint id: SV_VertexID, uint instanceID: SV_InstanceID) 
 {
-    uint spriteIndex = id / 6;
-    SpriteBatchData sprite = BatchDataBuffer[spriteIndex];
+    uint spriteIndex = id / 4;
+    SpriteBatchData sprite = BatchDataBuffer[instanceID];
 
-    uint vert = indices[id - spriteIndex * 6];
+    uint vert = id - spriteIndex * 4;
 
     float c = cos(sprite.Rotation);
     float s = sin(sprite.Rotation);
