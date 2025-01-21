@@ -296,14 +296,12 @@ public class SpriteFont : IAssets
 
             computeData[(int)vertexIndex] = new Batch.BatchData 
             {
-                Position = pos,
-                Scale = scale,
+                Position = new Vector3(pos, layerDepth),
+                Scale = new Vector2(c.Quad.Source.Width, c.Quad.Source.Height) * scale,
                 Origin = Vector2.Zero,
-                UV = new UV(c.Quad.UV[0], c.Quad.UV[1], c.Quad.UV[2], c.Quad.UV[3]),
-                Dimension = new Vector2(c.Quad.Source.Width, c.Quad.Source.Height),
+                UV = c.Quad.UV,
                 Rotation = 0,
                 Color = color.ToVector4(),
-                Depth = layerDepth
             };
 
             offset.X += c.Advance;

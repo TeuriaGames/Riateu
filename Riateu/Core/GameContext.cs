@@ -17,17 +17,14 @@ public static class GameContext
     /// <summary>
     /// The default material for basic rendering.
     /// </summary>
-    public static Material DefaultMaterial;
+    public static Material BatchMaterial;
     /// <summary>
     /// A rendering material that uses R8G8B8A8 format.
     /// </summary>
     public static Material DepthMaterial;
 
+    public static Shader SpriteBatchShader;
     public static Shader MSDFShader;
-    /// <summary>
-    /// A compute pipeline used for <see cref="Riateu.Graphics.Batch"/> to work.
-    /// </summary>
-    public static ComputePipeline SpriteBatchPipeline;
 
     internal static void Init(GraphicsDevice device, Window mainWindow)
     {
@@ -40,12 +37,13 @@ public static class GameContext
             SamplerCount = 1
         });
 
-        var positionTextureColor = Resources.PositionTextureColor;
-        using var ms1 = new MemoryStream(positionTextureColor);
-        Shader vertexPSC = new Shader(device, ms1, "main", new ShaderCreateInfo {
+        var spriteBatchShader = Resources.SpriteBatchShader;
+        using var ms1 = new MemoryStream(spriteBatchShader);
+        SpriteBatchShader = new Shader(device, ms1, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Vertex,
             ShaderFormat = GraphicsDevice.BackendShaderFormat,
-            UniformBufferCount = 1
+            UniformBufferCount = 1,
+            StorageBufferCount = 1
         });
 
         var textureFragment = Resources.Texture;
@@ -56,7 +54,7 @@ public static class GameContext
             SamplerCount = 1
         });
 
-        DefaultMaterial = new Material(device, GraphicsPipeline.CreateBuilder(vertexPSC, fragmentPSC)
+        BatchMaterial = new Material(device, GraphicsPipeline.CreateBuilder(SpriteBatchShader, fragmentPSC)
             .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(
                 new ColorAttachmentDescription(mainWindow.SwapchainFormat,
                 ColorTargetBlendState.AlphaBlend)
@@ -66,11 +64,10 @@ public static class GameContext
             .SetPrimitiveType(PrimitiveType.TriangleList)
             .SetRasterizerState(RasterizerState.CCW_CullNone)
 
-            .AddVertexInputState<PositionTextureColorVertex>()
             .Build(device)
         );
 
-        DepthMaterial = new Material(device, GraphicsPipeline.CreateBuilder(vertexPSC, fragmentPSC)
+        DepthMaterial = new Material(device, GraphicsPipeline.CreateBuilder(SpriteBatchShader, fragmentPSC)
             .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(
                 TextureFormat.D24_UNORM,
                 new ColorAttachmentDescription(mainWindow.SwapchainFormat, ColorTargetBlendState.AlphaBlend)
@@ -80,20 +77,7 @@ public static class GameContext
             .SetPrimitiveType(PrimitiveType.TriangleList)
             .SetRasterizerState(RasterizerState.CCW_CullNone)
 
-            .AddVertexInputState<PositionTextureColorVertex>()
             .Build(device)
         );
-
-        var spriteBatchShader = Resources.SpriteBatchShader;
-        using var comp1 = new MemoryStream(spriteBatchShader);
-        SpriteBatchPipeline = new ComputePipeline(device, comp1, "main", new ComputePipelineCreateInfo 
-        {
-            ShaderFormat = GraphicsDevice.BackendShaderFormat,
-            ReadWriteStorageBufferCount = 1,
-            ReadOnlyStorageBufferCount = 1,
-            ThreadCountX = 64,
-            ThreadCountY = 1,
-            ThreadCountZ = 1
-        });
     }
 }

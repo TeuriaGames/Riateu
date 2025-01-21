@@ -167,7 +167,7 @@ public abstract class GameApp
         RenderTarget backbuffer = cmdBuf.AcquireSwapchainTarget(MainWindow);
         if (backbuffer != null) 
         {
-            scene.Render(backbuffer);
+            scene.Render(cmdBuf, backbuffer);
         }
 
         Time.Draw();

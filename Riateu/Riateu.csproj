@@ -50,11 +50,8 @@
     <EmbeddedResource Include="Core\Misc\Compiled\ImGuiShader.vert.spv">
       <LogicalName>Riateu.Misc.ImGuiShader.vert.spv</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core\Misc\Compiled\InstancedShader.vert.spv">
-      <LogicalName>Riateu.Misc.InstancedShader.vert.spv</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core\Misc\Compiled\Spritebatch.comp.spv">
-      <LogicalName>Riateu.Misc.Spritebatch.comp.spv</LogicalName>
+    <EmbeddedResource Include="Core\Misc\Compiled\Spritebatch.vert.spv">
+      <LogicalName>Riateu.Misc.Spritebatch.vert.spv</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="Core\Misc\Compiled\MSDFFont.frag.spv">
       <LogicalName>Riateu.Misc.MSDFFont.frag.spv</LogicalName>

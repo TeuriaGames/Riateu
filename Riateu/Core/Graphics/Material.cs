@@ -94,23 +94,32 @@ public struct GraphicsPipelineBuilder
 
     public GraphicsPipeline Build(GraphicsDevice device) 
     {
-        VertexBufferDescription[] bindings = new VertexBufferDescription[inputTotalIDs];
-        VertexAttribute[] attributes = new VertexAttribute[attribStrides];
-
-        int i = 0;
-        int stride = 0;
-        foreach (var el in inputStates) 
+        VertexInputState vertexInputState;
+        if (inputTotalIDs > 0)
         {
-            bindings[i] = el.Item1;
-            ReadOnlySpan<VertexAttribute> attribs = el.Item2.AsSpan();
-            for (int j = 0; j < attribs.Length; j++) 
+            VertexBufferDescription[] bindings = new VertexBufferDescription[inputTotalIDs];
+            VertexAttribute[] attributes = new VertexAttribute[attribStrides];
+
+            int i = 0;
+            int stride = 0;
+            foreach (var el in inputStates) 
             {
-                attributes[stride++] = attribs[j];
+                bindings[i] = el.Item1;
+                ReadOnlySpan<VertexAttribute> attribs = el.Item2.AsSpan();
+                for (int j = 0; j < attribs.Length; j++) 
+                {
+                    attributes[stride++] = attribs[j];
+                }
+                i++;
             }
-            i++;
+
+            vertexInputState = new VertexInputState(bindings, attributes);
+        }
+        else 
+        {
+            vertexInputState = VertexInputState.Empty;
         }
 
-        VertexInputState vertexInputState = new VertexInputState(bindings, attributes);
 
         return new GraphicsPipeline(device, new GraphicsPipelineCreateInfo 
         {

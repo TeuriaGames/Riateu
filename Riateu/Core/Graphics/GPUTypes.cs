@@ -1199,10 +1199,25 @@ public struct DepthStencilState
     }
 }
 
-public struct BufferBinding(RawBuffer buffer, uint offset)
+public struct BufferBinding
 {
-    public RawBuffer Buffer = buffer;
-    public uint Offset = offset;
+    public RawBuffer Buffer;
+    public uint Offset;
+
+    public BufferBinding(RawBuffer buffer, uint offset) 
+    {
+        Buffer = buffer;
+        Offset = offset;
+    }
+
+    public static BufferBinding FromStructured<T>(StructuredBuffer<T> structuredBuffer, uint offset) 
+    where T : unmanaged
+    {
+        BufferBinding binding = new BufferBinding();
+        binding.Buffer = structuredBuffer;
+        binding.Offset = offset;
+        return binding;
+    }
 
     public SDL.SDL_GPUBufferBinding ToSDLGpu() 
     {

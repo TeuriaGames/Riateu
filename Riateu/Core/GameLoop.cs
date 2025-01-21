@@ -43,6 +43,7 @@ public abstract class GameLoop
     /// <summary>
     /// A method that called during the draw loop. Do your draw calls here.
     /// </summary>
+    /// <param name="commandBuffer">A commandBuffer for sending draw commands to the GPU</param>/// 
     /// <param name="swapchainTarget">A swapchainTarget target to be used for drawing inside of a window</param>
-    public abstract void Render(RenderTarget swapchainTarget);
+    public abstract void Render(CommandBuffer commandBuffer, RenderTarget swapchainTarget);
 }

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Riateu.Graphics;
 
 /// <summary>
-/// A vertex type to be used for the <see cref="GameContext.DefaultMaterial"/>. It can also
+/// A vertex type to be used for the <see cref="GameContext.BatchMaterial"/>. It can also
 /// be used elsewhere.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 48)]

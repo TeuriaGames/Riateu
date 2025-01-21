@@ -25,7 +25,7 @@ public static class Resources
         {
             if (spriteBatchShader == null)
             {
-                spriteBatchShader = GetShaderByte("Spritebatch.comp");
+                spriteBatchShader = GetShaderByte("Spritebatch.vert");
             }
             return spriteBatchShader;
         }

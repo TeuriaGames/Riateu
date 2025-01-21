@@ -21,15 +21,11 @@ public class Batch : System.IDisposable
     private bool flushed;
     private uint onQueue;
 
-    private StructuredBuffer<PositionTextureColorVertex> vertexBuffer;
-    private StructuredBuffer<uint> indexBuffer;
-    private StructuredBuffer<BatchData> computeBuffer;
-    private TransferBuffer transferComputeBuffer;
+    private StructuredBuffer<BatchData> batchBuffer;
+    private TransferBuffer transferBatchBuffer;
     private BatchQueue[] queues = new BatchQueue[InitialMaxQueues];
 
-    public StructuredBuffer<PositionTextureColorVertex> VertexBuffer => vertexBuffer;
-    public StructuredBuffer<uint> IndexBuffer => indexBuffer;
-    public StructuredBuffer<BatchData> ComputeBuffer => computeBuffer;
+    public StructuredBuffer<BatchData> BatchBuffer => batchBuffer;
 
 #if DEBUG
     private bool DEBUG_begin;
@@ -58,17 +54,9 @@ public class Batch : System.IDisposable
     {
         this.device = device;
 
-        vertexBuffer = new StructuredBuffer<PositionTextureColorVertex>(device, 
-            BufferUsageFlags.Vertex 
-            | BufferUsageFlags.ComputeStorageRead
-            | BufferUsageFlags.ComputeStorageWrite, MaxTextures * 4);
-        vertexBuffer.Name = "BatchVertexBuffer";
-        indexBuffer = GenerateIndexArray(device, MaxTextures * 6);
-        indexBuffer.Name = "BatchIndexBuffer";
-
-        transferComputeBuffer = TransferBuffer.Create<BatchData>(device, TransferBufferUsage.Upload, MaxTextures);
-        computeBuffer = new StructuredBuffer<BatchData>(device, BufferUsageFlags.ComputeStorageRead | BufferUsageFlags.Vertex, MaxTextures);
-        computeBuffer.Name = "BatchComputeBuffer";
+        transferBatchBuffer = TransferBuffer.Create<BatchData>(device, TransferBufferUsage.Upload, MaxTextures);
+        batchBuffer = new StructuredBuffer<BatchData>(device, BufferUsageFlags.ComputeStorageRead | BufferUsageFlags.Vertex, MaxTextures);
+        batchBuffer.Name = "BatchComputeBuffer";
 
         var view = Matrix4x4.CreateTranslation(0, 0, 0);
         var projection = Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
@@ -109,7 +97,7 @@ public class Batch : System.IDisposable
     /// <param name="sampler">A sampler to used for the texture</param>
     public void Begin(Texture texture, Sampler sampler)
     {
-        Begin(texture, sampler, GameContext.DefaultMaterial, Matrix);
+        Begin(texture, sampler, GameContext.BatchMaterial, Matrix);
     }
 
     /// <summary>
@@ -120,7 +108,7 @@ public class Batch : System.IDisposable
     /// <param name="transform">A transformation matrix</param>
     public void Begin(Texture texture, Sampler sampler, Matrix4x4 transform)
     {
-        Begin(texture, sampler, GameContext.DefaultMaterial, transform);
+        Begin(texture, sampler, GameContext.BatchMaterial, transform);
     }
 
     /// <summary>
@@ -168,7 +156,7 @@ public class Batch : System.IDisposable
             Offset = vertexIndex,
             Matrix = transform
         };
-        transferComputeBuffer.Map(true);
+        transferBatchBuffer.Map(true);
     }
 
     /// <summary>
@@ -181,7 +169,7 @@ public class Batch : System.IDisposable
         DEBUG_begin = false;
 
 #endif
-        transferComputeBuffer.Unmap();
+        transferBatchBuffer.Unmap();
 
         if (vertexIndex == 0)
         {
@@ -189,9 +177,21 @@ public class Batch : System.IDisposable
         }
 
         var offset = queues[onQueue].Offset;
-        queues[onQueue].Count = vertexIndex - offset;
+        var count = vertexIndex - offset;
+        queues[onQueue].Count = count;
 
         onQueue++;
+    }
+
+    public void Flush(CommandBuffer commandBuffer) 
+    {
+#if DEBUG
+        AssertBegin();
+        DEBUG_isFlushed = true;
+#endif
+        CopyPass copyPass = commandBuffer.BeginCopyPass();
+        copyPass.UploadToBuffer(transferBatchBuffer, batchBuffer, true);
+        commandBuffer.EndCopyPass(copyPass);
     }
 
     /// <inheritdoc/>
@@ -200,42 +200,12 @@ public class Batch : System.IDisposable
         device.DeviceCommandBuffer().PushVertexUniformData(matrix, 0);
     }
 
-    public void Flush() 
-    {
-#if DEBUG
-        if (DEBUG_isFlushed) 
-        {
-            Logger.Warn("The state has been flushed, yet has been flushed again. Avoid doing this everytime as it cost performance.");
-        }
-        DEBUG_isFlushed = true;
-#endif
-        flushed = true;
-        CommandBuffer cmdBuf = device.AcquireCommandBuffer();
-
-        CopyPass copyPass = cmdBuf.BeginCopyPass();
-        copyPass.UploadToBuffer(transferComputeBuffer, computeBuffer, true);
-
-        cmdBuf.EndCopyPass(copyPass);
-
-        ComputePass computePass = cmdBuf.BeginComputePass(new StorageBufferReadWriteBinding 
-        {
-            Buffer = vertexBuffer,
-            Cycle = true
-        });
-        uint workgroupSize = (vertexIndex + 64 - 1) / 64;
-        computePass.BindComputePipeline(GameContext.SpriteBatchPipeline);
-        computePass.BindStorageBuffer(computeBuffer);
-        computePass.Dispatch(workgroupSize, 1, 1);
-
-        cmdBuf.EndComputePass(computePass);
-        device.Submit(cmdBuf);
-    }
-
     /// <inheritdoc/>
     public void Render(RenderPass renderPass)
     {
 #if DEBUG
         AssertRender();
+        AssertIsFlushed();
         DEBUG_isFlushed = false;
         DEBUG_begin = false;
 #endif
@@ -245,10 +215,6 @@ public class Batch : System.IDisposable
         {
             return;
         }
-        if (!flushed) 
-        {
-            Flush();
-        }
 
         ref var start = ref MemoryMarshal.GetArrayDataReference(queues);
         ref var end = ref Unsafe.Add(ref start, onQueue);
@@ -257,11 +223,10 @@ public class Batch : System.IDisposable
         {
             BindUniformMatrix(start.Matrix);
             renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
-            renderPass.BindVertexBuffer(vertexBuffer);
-            renderPass.BindIndexBuffer(indexBuffer, IndexElementSize.ThirtyTwoBit);
+            renderPass.BindStorageVertexBuffer(batchBuffer);
             renderPass.BindFragmentSampler(start.Binding);
             start.Material.BindUniforms(new UniformBinder());
-            renderPass.DrawIndexedPrimitives(start.Count * 6u, 1, 0u, (int)(start.Offset * 4u), 0u);
+            renderPass.DrawPrimitives(start.Count * 6u, 1, start.Offset * 6);
 
             start = ref Unsafe.Add(ref start, 1);
         }
@@ -269,26 +234,16 @@ public class Batch : System.IDisposable
 
     internal void ResizeBuffer()
     {
-        transferComputeBuffer.Unmap();
+        transferBatchBuffer.Unmap();
         uint maxTextures = (uint)(currentMaxTexture += 2048);
 
-        indexBuffer.Dispose();
-        indexBuffer = GenerateIndexArray(device, (uint)(maxTextures * 6));
+        transferBatchBuffer.Dispose();
+        transferBatchBuffer = TransferBuffer.Create<BatchData>(device, TransferBufferUsage.Upload, maxTextures);
 
-        vertexBuffer.Dispose();
-        vertexBuffer = new StructuredBuffer<PositionTextureColorVertex>(
-            device, 
-            BufferUsageFlags.Vertex 
-            | BufferUsageFlags.ComputeStorageRead 
-            | BufferUsageFlags.ComputeStorageWrite, maxTextures * 4);
-
-        transferComputeBuffer.Dispose();
-        transferComputeBuffer = TransferBuffer.Create<BatchData>(device, TransferBufferUsage.Upload, maxTextures);
-
-        computeBuffer.Dispose();
-        computeBuffer = new StructuredBuffer<BatchData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
+        batchBuffer.Dispose();
+        batchBuffer = new StructuredBuffer<BatchData>(device, BufferUsageFlags.ComputeStorageRead, maxTextures);
         currentMaxTexture = maxTextures;
-        transferComputeBuffer.Map(true);
+        transferBatchBuffer.Map(true);
     }
 
     /// <summary>
@@ -301,8 +256,8 @@ public class Batch : System.IDisposable
         {
             if (disposing)
             {
-                vertexBuffer.Dispose();
-                indexBuffer.Dispose();
+                batchBuffer.Dispose();
+                transferBatchBuffer.Dispose();
             }
 
             IsDisposed = true;
@@ -411,16 +366,14 @@ public class Batch : System.IDisposable
         {
             ResizeBuffer();
         }
-        var datas = transferComputeBuffer.MappedTouch<BatchData>();
+        var datas = transferBatchBuffer.MappedTouch<BatchData>();
         datas[(int)vertexIndex] = new BatchData 
         {
-            Position = position,
-            Scale = scale,
-            Origin = origin,
+            Position = new Vector3(position, layerDepth),
+            Scale = new Vector2(quad.Source.Width, quad.Source.Height) * scale,
+            Origin = origin * scale,
             UV = quad.UV,
-            Dimension = new Vector2(quad.Source.Width, quad.Source.Height),
             Rotation = rotation,
-            Depth = layerDepth,
             Color = color.ToVector4(),
         };
 
@@ -466,7 +419,7 @@ public class Batch : System.IDisposable
             _ => throw new NotImplementedException()
         };
 
-        font.Draw(transferComputeBuffer.MappedTouch<BatchData>(), ref vertexIndex, text, position, justify, color, scale, layerDepth);
+        font.Draw(transferBatchBuffer.MappedTouch<BatchData>(), ref vertexIndex, text, position, justify, color, scale, layerDepth);
     }
 
 #if DEBUG
@@ -511,25 +464,21 @@ public class Batch : System.IDisposable
         public Matrix4x4 Matrix;
     }
 
-    [StructLayout(LayoutKind.Explicit, Size = 96)]
+    [StructLayout(LayoutKind.Explicit, Size = 80)]
     public struct BatchData 
     {
         [FieldOffset(0)]
-        public Vector2 Position;
-        [FieldOffset(8)]
-        public Vector2 Scale;
-        [FieldOffset(16)]
-        public Vector2 Origin;
-        [FieldOffset(24)]
         public UV UV;
-        [FieldOffset(56)]
-        public Vector2 Dimension;
-        [FieldOffset(64)]
+        [FieldOffset(32)]
+        public Vector3 Position;
+        [FieldOffset(44)]
         public float Rotation;
-        [FieldOffset(68)]
-        public float Depth;
-        [FieldOffset(80)]
+        [FieldOffset(48)]
         public Vector4 Color;
+        [FieldOffset(64)]
+        public Vector2 Scale;
+        [FieldOffset(72)]
+        public Vector2 Origin;
     }
 }
 
