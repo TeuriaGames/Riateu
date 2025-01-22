@@ -372,7 +372,7 @@ public class Batch : System.IDisposable
             Position = new Vector3(position, layerDepth),
             Scale = new Vector2(quad.Source.Width, quad.Source.Height) * scale,
             Origin = origin * scale,
-            UV = quad.UV,
+            UV = new Vector4(quad.UV.TopLeft.X, quad.UV.TopLeft.Y, quad.UV.BottomRight.X, quad.UV.BottomRight.Y),
             Rotation = rotation,
             Color = color.ToVector4(),
         };
@@ -464,20 +464,20 @@ public class Batch : System.IDisposable
         public Matrix4x4 Matrix;
     }
 
-    [StructLayout(LayoutKind.Explicit, Size = 80)]
+    [StructLayout(LayoutKind.Explicit, Size = 64)]
     public struct BatchData 
     {
         [FieldOffset(0)]
-        public UV UV;
-        [FieldOffset(32)]
+        public Vector4 UV;
+        [FieldOffset(16)]
         public Vector3 Position;
-        [FieldOffset(44)]
+        [FieldOffset(28)]
         public float Rotation;
-        [FieldOffset(48)]
+        [FieldOffset(32)]
         public Vector4 Color;
-        [FieldOffset(64)]
+        [FieldOffset(48)]
         public Vector2 Scale;
-        [FieldOffset(72)]
+        [FieldOffset(56)]
         public Vector2 Origin;
     }
 }

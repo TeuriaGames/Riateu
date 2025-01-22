@@ -1,9 +1,4 @@
-struct VertexInput 
-{
-    float4 Position : POSITION0;
-    float2 TexCoord : TEXCOORD1;
-    float4 Color : COLOR2;
-};
+import common.structs;
 
 struct VertexOutput
 {
@@ -19,7 +14,7 @@ cbuffer UniformBlock : register(b0, space1)
 };
 
 [shader("vertex")]
-VertexOutput main(VertexInput input) 
+VertexOutput main(PositionTextureColor input) 
 {
     VertexOutput output;
     output.Position = mul(ViewProjectionMatrix, input.Position);

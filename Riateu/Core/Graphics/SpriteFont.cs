@@ -299,7 +299,7 @@ public class SpriteFont : IAssets
                 Position = new Vector3(pos, layerDepth),
                 Scale = new Vector2(c.Quad.Source.Width, c.Quad.Source.Height) * scale,
                 Origin = Vector2.Zero,
-                UV = c.Quad.UV,
+                UV = new Vector4(c.Quad.UV.TopLeft.X, c.Quad.UV.TopLeft.Y, c.Quad.UV.BottomRight.X, c.Quad.UV.BottomRight.Y),
                 Rotation = 0,
                 Color = color.ToVector4(),
             };

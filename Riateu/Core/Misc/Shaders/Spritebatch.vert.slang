@@ -1,14 +1,14 @@
 struct SpriteBatchData 
 {
-    float2 UV[4]; // 32
+    float2 UV[2]; 
 
     float3 Position;
-    float Rotation; // 48
+    float Rotation;
 
-    float4 Color; // 64
+    float4 Color; 
 
     float2 Scale;
-    float2 Origin; // 80
+    float2 Origin;
 };
 
 struct VertexOutput 
@@ -27,11 +27,11 @@ cbuffer UniformBlock : register(b0, space1)
     float4x4 ViewProjectionMatrix : packoffset(c0);
 };
 
-static const float2 vertices[4] = {
-    { 0.0f, 0.0f },
-    { 1.0f, 0.0f },
-    { 0.0f, 1.0f },
-    { 1.0f, 1.0f },
+static const uint2 vertices[4] = {
+    { 0, 0 },
+    { 1, 0 },
+    { 0, 1 },
+    { 1, 1 },
 };
 
 [shader("vertex")]
@@ -45,7 +45,8 @@ VertexOutput main(uint id: SV_VertexID, uint instanceID: SV_InstanceID)
     float c = cos(sprite.Rotation);
     float s = sin(sprite.Rotation);
 
-    float2 coord = vertices[vert] * sprite.Scale;
+    uint2 vertIndex = vertices[vert];
+    float2 coord = vertIndex * sprite.Scale;
 
     float2x2 rotation = { c, s, -s, c };
     coord -= sprite.Origin;
@@ -55,7 +56,7 @@ VertexOutput main(uint id: SV_VertexID, uint instanceID: SV_InstanceID)
 
     VertexOutput output;
     output.Position = mul(ViewProjectionMatrix, float4(coordDepth, 1.0f));
-    output.TexCoord = sprite.UV[vert % 4];
+    output.TexCoord = float2(sprite.UV[vertIndex.x].x, sprite.UV[vertIndex.y].y);
     output.Color = sprite.Color;
 
     return output;

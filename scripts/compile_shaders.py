@@ -6,6 +6,8 @@ os.chdir("../Riateu/Core/Misc")
 
 shaders = []
 for (dirpath, dirnames, filenames) in os.walk("Shaders"):
+    if dirpath == "Shaders/common":
+        continue
     shaders = filenames
 
 for shader in shaders:
