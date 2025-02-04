@@ -17,8 +17,6 @@ for shader in shaders:
 
     print("Compiling " + shader_file)
 
-    vk_out = "Compiled/Vulkan/" + filename + ".spv"
-    dx_out = "Compiled/DX12/" + filename + ".dxil"
+    vk_out = "Compiled/" + filename + ".spv"
     if file_extension == ".slang":
         subprocess.call(["slangc", shader_file, "-emit-spirv-via-glsl", "-O3", "-o", vk_out, "-entry", "main"])
-        subprocess.call(["slangc", shader_file, "-profile", "sm_6_3", "-O3", "-o", dx_out, "-entry", "main"])

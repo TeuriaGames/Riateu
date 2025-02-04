@@ -41,21 +41,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Core\Misc\Compiled\PositionTextureColor.vert.spv">
+    <EmbeddedResource Include="Core\Misc\Compiled\Vulkan\PositionTextureColor.vert.spv">
       <LogicalName>Riateu.Misc.PositionTextureColor.vert.spv</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core\Misc\Compiled\Texture.frag.spv">
+    <EmbeddedResource Include="Core\Misc\Compiled\Vulkan\Texture.frag.spv">
       <LogicalName>Riateu.Misc.Texture.frag.spv</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core\Misc\Compiled\ImGuiShader.vert.spv">
+    <EmbeddedResource Include="Core\Misc\Compiled\Vulkan\ImGuiShader.vert.spv">
       <LogicalName>Riateu.Misc.ImGuiShader.vert.spv</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core\Misc\Compiled\Spritebatch.vert.spv">
+    <EmbeddedResource Include="Core\Misc\Compiled\Vulkan\Spritebatch.vert.spv">
       <LogicalName>Riateu.Misc.Spritebatch.vert.spv</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core\Misc\Compiled\MSDFFont.frag.spv">
+    <!-- <EmbeddedResource Include="Core\Misc\Compiled\Vulkan\MSDFFont.frag.spv">
       <LogicalName>Riateu.Misc.MSDFFont.frag.spv</LogicalName>
+    </EmbeddedResource> -->
+
+    <EmbeddedResource Include="Core\Misc\Compiled\DX12\PositionTextureColor.vert.dxil">
+      <LogicalName>Riateu.Misc.PositionTextureColor.vert.dxil</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Compiled\DX12\Texture.frag.dxil">
+      <LogicalName>Riateu.Misc.Texture.frag.dxil</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Compiled\DX12\ImGuiShader.vert.dxil">
+      <LogicalName>Riateu.Misc.ImGuiShader.vert.dxil</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Misc\Compiled\DX12\Spritebatch.vert.dxil">
+      <LogicalName>Riateu.Misc.Spritebatch.vert.dxil</LogicalName>
+    </EmbeddedResource>
+    <!-- <EmbeddedResource Include="Core\Misc\Compiled\DX12\MSDFFont.frag.dxil">
+      <LogicalName>Riateu.Misc.MSDFFont.frag.dxil</LogicalName>
+    </EmbeddedResource> -->
   </ItemGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">

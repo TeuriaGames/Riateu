@@ -80,23 +80,11 @@ public class Shader : GraphicsResource
                 num_uniform_buffers = info.UniformBufferCount
             };
 
-            IntPtr shaderPtr;
-
-            if (GraphicsDevice.Backend == "vulkan") 
-            {
-                shaderPtr = SDL.SDL_CreateGPUShader(
-                    device.Handle,
-                    gpuShaderCreateInfo
-                );
-            }
-            else 
-            {
-                shaderPtr = Native.Riateu_CompileSPIRVGraphics(
-                    device.Handle,
-                    gpuShaderCreateInfo
-                );
-            }
-
+            IntPtr shaderPtr = SDL.SDL_CreateGPUShader(
+                device.Handle,
+                gpuShaderCreateInfo
+            );
+            
 
             if (shaderPtr == IntPtr.Zero) 
             {

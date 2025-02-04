@@ -16,7 +16,10 @@ public class GraphicsDevice : IDisposable
     /// <summary>
     /// A globally set shader format. Can be changed if you had a different backend format.
     /// </summary>
-    public static ShaderFormat BackendShaderFormat => (ShaderFormat)Native.Riateu_GetShaderFormat();
+    public static ShaderFormat BackendShaderFormat => Backend switch {
+        "direct3d12" => ShaderFormat.DXIL,
+        _ => ShaderFormat.SPIRV
+    };
 
     private CommandBuffer deviceCmdBuffer;
 
@@ -24,26 +27,17 @@ public class GraphicsDevice : IDisposable
 
     public GraphicsDevice(GraphicsSettings settings, string backendName = null) 
     {
-        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXBC), settings.DebugMode, backendName);
+        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXIL), false, backendName);
 
         if (Handle == IntPtr.Zero) 
         {
             Logger.Info("Graphics Device failed to create!");
-            Logger.Error(SDL.SDL_GetError());
-            return;
+            throw new Exception(SDL.SDL_GetError());
         }
 
         string backend = SDL.SDL_GetGPUDeviceDriver(Handle);
 
         Backend = backend;
-
-        if (backend != "vulkan") 
-        {
-            if (Native.Riateu_InitShaderCross() != 0) 
-            {
-                Logger.Error("Shader Cross failed to initialize in non-Vulkan platform");
-            }
-        }
         DebugMode = settings.DebugMode;
     }
 
@@ -51,7 +45,7 @@ public class GraphicsDevice : IDisposable
     {
         if (!window.Claimed) 
         {
-            throw new Exception("Cannto change the swapchain parameters when window has not been claimed yet.");
+            throw new Exception("Cannot change the swapchain parameters when window has not been claimed yet.");
         }
 
         SDL.SDL_SetGPUSwapchainParameters(
@@ -223,12 +217,6 @@ public class GraphicsDevice : IDisposable
             resources.Clear();
             SDL.SDL_DestroyGPUDevice(Handle);
             IsDisposed = true;
-
-
-            if (Backend != "vulkan") 
-            {
-                Native.Riateu_DeinitShaderCross();
-            }
         }
     }
 

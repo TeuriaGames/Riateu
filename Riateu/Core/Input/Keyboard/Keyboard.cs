@@ -5,7 +5,7 @@ using SDL3;
 
 namespace Riateu.Inputs;
 
-public class Keyboard 
+public sealed class Keyboard 
 {
     public bool AnyPressed { get; private set; }
     public KeyboardButton AnyPressedButton { get; private set; }

@@ -36,6 +36,7 @@ public class Window : IDisposable
 
     public event Action Moved;
     public event Action Closed;
+    private event HitTestDelegate OnHitTest;
     private bool IsDisposed;
 
     private static Dictionary<uint, Window> windows = new Dictionary<uint, Window>();
@@ -59,6 +60,11 @@ public class Window : IDisposable
         if (settings.Flags.StartMaximized) 
         {
             flags |= SDL.SDL_WindowFlags.SDL_WINDOW_MAXIMIZED;
+        }
+
+        if (settings.Flags.Borderless)
+        {
+            flags |= SDL.SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
         }
 
         this.windowMode = settings.WindowMode;
@@ -96,7 +102,20 @@ public class Window : IDisposable
             Height = (uint)height;
         }
 
+        if (settings.OnHitTest != null)
+        {
+            SDL.SDL_SetWindowHitTest(Handle, HitTestCallback, IntPtr.Zero);
+            OnHitTest += settings.OnHitTest;
+        }
+
+
         this.id = SDL.SDL_GetWindowID(Handle);
+    }
+
+    private unsafe SDL.SDL_HitTestResult HitTestCallback(nint win, SDL.SDL_Point* area, nint data)
+    {
+        Point a = new Point((int)area->x, (int)area->y);
+        return (SDL.SDL_HitTestResult)OnHitTest(this, a);
     }
 
     public static Window CreateWindow(WindowSettings settings, SDL.SDL_WindowFlags flags, BackendFlags backendFlags) 
@@ -213,12 +232,28 @@ public class Window : IDisposable
     }
 }
 
-public record struct WindowSettings(string Title, uint Width, uint Height, WindowMode WindowMode = WindowMode.Windowed, Flags Flags = default);
+public delegate HitTestResult HitTestDelegate(Window window, Point area);
 
-public record struct Flags(bool Resizable = false, bool StartMaximized = false);
+public record struct WindowSettings(string Title, uint Width, uint Height, WindowMode WindowMode = WindowMode.Windowed, Flags Flags = default, HitTestDelegate OnHitTest = null);
+
+public record struct Flags(bool Resizable = false, bool StartMaximized = false, bool Borderless = false);
 
 public enum WindowMode 
 {
     Windowed,
     Fullscreen,
+}
+
+public enum HitTestResult
+{
+    Normal = 0,
+    Draggable = 1,
+    TopLeft = 2,
+    Top = 3,
+    TopRight = 4,
+    Right = 5,
+    BottomRight = 6,
+    Bottom = 7,
+    BottomLeft = 8,
+    Left = 9,
 }

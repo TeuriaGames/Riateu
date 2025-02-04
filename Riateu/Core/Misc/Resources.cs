@@ -86,11 +86,20 @@ public static class Resources
     private static byte[] GetShaderByte(string name)
     {
         Stream stream = typeof(Resources).Assembly.GetManifestResourceStream(
-            $"Riateu.Misc.{name}.spv"
+            $"Riateu.Misc.{name}.{GetBackendExtension()}"
         );
         using var ms = new MemoryStream();
         stream.CopyTo(ms);
         return ms.ToArray();
+    }
+
+    public static string GetBackendExtension() 
+    {
+        return GraphicsDevice.Backend switch 
+        {
+            "d3d12" => "dxil",
+            _ => "spv"
+        };
     }
 
     public static Shader GetShader(GraphicsDevice device, byte[] shader, string entryPoint, ShaderCreateInfo info)

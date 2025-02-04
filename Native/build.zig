@@ -34,18 +34,13 @@ pub fn build(b: *std.Build) void {
     lib.addIncludePath(b.path("lib/SDL3/include"));
     if (target.result.isMinGW()) {
         lib.addObjectFile(b.path("../runtimes/x64/SDL3.dll"));
-        lib.addObjectFile(b.path("../runtimes/x64/spirv-cross-c-shared.dll"));
-        lib.addObjectFile(b.path("../runtimes/x64/SDL3_gpu_shadercross.dll"));
         addInstallPath(b, lib, "../../runtimes/x64");
-        options.addOption(bool, "has_shadercross", true);
     } else if (target.result.isDarwin()) {
         lib.addObjectFile(b.path("../runtimes/osx/libSDL2-2.0.0.dylib"));
         addInstallPath(b, lib, "../../runtimes/osx");
-        options.addOption(bool, "has_shadercross", false);
     } else {
         lib.addObjectFile(b.path("../runtimes/lib64/libSDL3.so"));
         addInstallPath(b, lib, "../../runtimes/lib64");
-        options.addOption(bool, "has_shadercross", false);
     }
     lib.linkLibC();
     lib.root_module.addOptions("build_options", options);
@@ -65,7 +60,7 @@ pub fn build(b: *std.Build) void {
 
     lib_unit_tests.addIncludePath(b.path("lib/include"));
     lib_unit_tests.addCSourceFiles(.{ .files = sourceFiles, .flags = sourceFlags });
-    lib_unit_tests.linkSystemLibrary("SDL2");
+    lib_unit_tests.linkSystemLibrary("SDL3");
     lib_unit_tests.linkLibC();
 
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);

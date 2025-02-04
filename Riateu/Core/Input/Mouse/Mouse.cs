@@ -4,7 +4,7 @@ using SDL3;
 
 namespace Riateu.Inputs;
 
-public class Mouse 
+public sealed class Mouse 
 {
     public bool AnyPressed { get; private set; }
     public MouseButton AnyPressedButton { get; private set; }

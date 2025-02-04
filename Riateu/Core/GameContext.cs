@@ -29,13 +29,13 @@ public static class GameContext
     internal static void Init(GraphicsDevice device, Window mainWindow)
     {
         GraphicsDevice = device;
-        using var msdf = new MemoryStream(Resources.MSDF);
-        MSDFShader = new Shader(device, msdf, "main", new ShaderCreateInfo {
-            ShaderStage = ShaderStage.Fragment,
-            ShaderFormat = GraphicsDevice.BackendShaderFormat,
-            UniformBufferCount = 1,
-            SamplerCount = 1
-        });
+        // using var msdf = new MemoryStream(Resources.MSDF);
+        // MSDFShader = new Shader(device, msdf, "main", new ShaderCreateInfo {
+        //     ShaderStage = ShaderStage.Fragment,
+        //     ShaderFormat = GraphicsDevice.BackendShaderFormat,
+        //     UniformBufferCount = 1,
+        //     SamplerCount = 1
+        // });
 
         var spriteBatchShader = Resources.SpriteBatchShader;
         using var ms1 = new MemoryStream(spriteBatchShader);

@@ -68,12 +68,12 @@ public abstract class GameApp
     public GameApp(WindowSettings settings, GraphicsSettings graphicsSettings)
     {
         Instance = this;
-        string backendName = null;
-        BackendFlags backendFlags = BackendFlags.Vulkan;
+        string backendName = "direct3d12";
+        BackendFlags backendFlags = BackendFlags.DirectX;
         if (Environment.OSVersion.Platform == PlatformID.Win32NT) 
         {
             backendFlags = BackendFlags.DirectX;
-            backendName = "direct3d11";
+            backendName = "direct3d12";
         }
         else if (Environment.OSVersion.Platform == PlatformID.Unix) 
         {
@@ -86,7 +86,7 @@ public abstract class GameApp
             backendName = "metal";
         }
 
-        if (!SDL.SDL_Init(SDL.SDL_InitFlags.SDL_INIT_TIMER | SDL.SDL_InitFlags.SDL_INIT_GAMEPAD)) 
+        if (!SDL.SDL_Init(SDL.SDL_InitFlags.SDL_INIT_TIMER | SDL.SDL_InitFlags.SDL_INIT_GAMEPAD | SDL.SDL_InitFlags.SDL_INIT_VIDEO)) 
         {
             Logger.Error("Failed to initialize SDL");
             return;
@@ -98,7 +98,7 @@ public abstract class GameApp
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
         {
-            throw new Exception("Cannot claim this window.");
+            throw new Exception($"Cannot claim this window. {SDL.SDL_GetError()}");
         }
 
         Logger.Info("Successfully claimed a window.");
@@ -289,6 +289,16 @@ public abstract class GameApp
                 break;
             case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_MOVED:
                 Window.Windows[e.window.windowID].Move();
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_GAMEPAD_ADDED:
+                var index = e.gdevice.which;
+                if (SDL.SDL_IsGamepad(index))
+                {
+                    InputDevice.AddGamepad(index);
+                }
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_GAMEPAD_REMOVED:
+                InputDevice.RemoveGamepad(e.gdevice.which);
                 break;
             case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
                 var window = Window.Windows[e.window.windowID];
