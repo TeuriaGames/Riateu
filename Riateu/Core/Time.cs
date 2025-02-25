@@ -30,7 +30,7 @@ public static class Time
     private static int fpsCounter;
     private static Stopwatch sw = Stopwatch.StartNew();
 
-    public static void Draw() 
+    public static void UpdateCounter() 
     {
         fpsCounter++;
         var elapsed = sw.Elapsed.TotalSeconds;

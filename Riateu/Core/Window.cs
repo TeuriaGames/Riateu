@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Channels;
 using Riateu.Graphics;
 using SDL3;
@@ -44,6 +45,7 @@ public class Window : IDisposable
     public static IReadOnlyDictionary<uint, Window> Windows => windows;
 
     public event Action<uint, uint> Resized = delegate {};
+	private unsafe SDL.SDL_HitTest HitTestDelagate;
 
     private unsafe Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 
     {
@@ -104,7 +106,8 @@ public class Window : IDisposable
 
         if (settings.OnHitTest != null)
         {
-            SDL.SDL_SetWindowHitTest(Handle, HitTestCallback, IntPtr.Zero);
+            HitTestDelagate = HitTestCallback;
+            SDL.SDL_SetWindowHitTest(Handle, HitTestDelagate, IntPtr.Zero);
             OnHitTest += settings.OnHitTest;
         }
 

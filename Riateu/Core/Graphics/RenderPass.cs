@@ -6,6 +6,7 @@ namespace Riateu.Graphics;
 public class RenderPass : IPassPool
 {
     public IntPtr Handle { get; internal set; }
+    public CommandBuffer CommandBuffer { get; internal set; }
 
 
     public void BindGraphicsPipeline(GraphicsPipeline pipeline) 
@@ -123,5 +124,6 @@ public class RenderPass : IPassPool
     public void Reset()
     {
         Handle = IntPtr.Zero;
+        CommandBuffer = null;
     }
 }

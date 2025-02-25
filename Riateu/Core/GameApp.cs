@@ -25,23 +25,7 @@ public abstract class GameApp
     /// </summary>
     public int Height { get; private set; }
 
-    private GameLoop nextScene;
-
-    /// <summary>
-    /// A current scene that is running. Note that if you change this, the scene won't
-    /// actually changed yet until next frame started.
-    /// </summary>
-    public GameLoop Scene
-    {
-        get => scene;
-        set
-        {
-            nextScene = value;
-        }
-    }
-
     public string AssetPath = "Assets";
-    private GameLoop scene;
 
     public bool DisableAssetServer { get; set; }
     public AssetStorage Assets;
@@ -130,7 +114,8 @@ public abstract class GameApp
         Assets.StartContext();
         LoadContent(Assets);
         Assets.EndContext();
-        Scene = Initialize();
+
+        Initialize();
     }
 
     /// <summary>
@@ -147,32 +132,10 @@ public abstract class GameApp
     /// A method to also initialize your other resources, and to set your scene.
     /// </summary>
     /// <returns>A <see cref="Riateu.Scene"/> or <see cref="Riateu.GameLoop"/></returns>
-    public abstract GameLoop Initialize();
+    public abstract void Initialize();
 
-    private void InternalUpdate(float delta) 
-    {
-        if (scene == null || (scene != nextScene))
-        {
-            scene?.End();
-            scene = nextScene;
-            scene.Begin();
-        }
-
-        scene.Update(Time.Delta);
-    }
-    private void InternalRender() 
-    {
-        CommandBuffer cmdBuf = GraphicsDevice.AcquireCommandBuffer();
-        GraphicsDevice.DeviceClaimCommandBuffer(cmdBuf);
-        RenderTarget backbuffer = cmdBuf.AcquireSwapchainTarget(MainWindow);
-        if (backbuffer != null) 
-        {
-            scene.Render(cmdBuf, backbuffer);
-        }
-
-        Time.Draw();
-        GraphicsDevice.Submit(cmdBuf);
-    }
+    public abstract void Update(float delta);
+    public abstract void Render();
 
     public void Run() 
     {
@@ -241,7 +204,7 @@ public abstract class GameApp
             Time.Frame++;
             AdvanceDeltaTime(FixedStepTarget);
             InputDevice.Update();
-            InternalUpdate(Time.Delta);
+            Update(Time.Delta);
             AudioDevice.Reset();
             if (Exiting) 
             {
@@ -249,7 +212,8 @@ public abstract class GameApp
             }
         }
 
-        InternalRender();
+        Render();
+        Time.UpdateCounter();
 #if DEBUG
         server.Update(Assets);
 #endif

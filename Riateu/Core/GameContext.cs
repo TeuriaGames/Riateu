@@ -69,12 +69,13 @@ public static class GameContext
 
         DepthMaterial = new Material(device, GraphicsPipeline.CreateBuilder(SpriteBatchShader, fragmentPSC)
             .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(
-                TextureFormat.D24_UNORM,
-                new ColorAttachmentDescription(mainWindow.SwapchainFormat, ColorTargetBlendState.AlphaBlend)
+                Graphics.GraphicsDevice.SupportedDepthFormat,
+                new ColorAttachmentDescription(mainWindow.SwapchainFormat, 
+                ColorTargetBlendState.AlphaBlend)
             ))
             .SetDepthStenctilState(DepthStencilState.DepthReadWrite)
             .SetMultisampleState(MultisampleState.None)
-            .SetPrimitiveType(PrimitiveType.TriangleList)
+            .SetPrimitiveType(PrimitiveType.TriangleStrip)
             .SetRasterizerState(RasterizerState.CCW_CullNone)
 
             .Build(device)

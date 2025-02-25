@@ -81,6 +81,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 1, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -103,6 +104,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 2, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -129,6 +131,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 3, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -159,6 +162,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 4, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -186,6 +190,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, (uint)length, Unsafe.NullRef<SDL.SDL_GPUDepthStencilTargetInfo>());
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -215,6 +220,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, (uint)length, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -235,6 +241,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 1, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -259,6 +266,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 2, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -286,6 +294,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 3, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 
@@ -318,6 +327,7 @@ public class CommandBuffer : IGraphicsPool
 
         IntPtr pass = SDL.SDL_BeginGPURenderPass(Handle, infos, 3, dsa);
         RenderPass renderPass = PassPool<RenderPass>.Obtain(pass);
+        renderPass.CommandBuffer = this;
         return renderPass;
     }
 

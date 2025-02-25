@@ -431,7 +431,7 @@ public class ImGuiRenderer
         device.Submit(commandBuffer);
     }
 
-    public void Render(RenderPass renderPass)
+    public void Render(CommandBuffer buffer, RenderPass renderPass)
     {
         ImGui.Render();
 
@@ -439,7 +439,6 @@ public class ImGuiRenderer
         var drawDataPtr = ImGui.GetDrawData();
 
         UpdateImGuiBuffers(drawDataPtr);
-        CommandBuffer buffer = device.DeviceCommandBuffer();
         RenderCommandLists(buffer, renderPass, drawDataPtr);
         
         if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) == 0) 

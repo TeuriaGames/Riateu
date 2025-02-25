@@ -11,6 +11,8 @@ public class GraphicsDevice : IDisposable
     private bool IsDisposed;
 
     public static string Backend { get; private set; }
+    public static TextureFormat SupportedDepthFormat { get; private set; }
+    public static TextureFormat SupportedDepthStencilFormat { get; private set; }
     public bool DebugMode { get; private set; }
 
     /// <summary>
@@ -39,6 +41,33 @@ public class GraphicsDevice : IDisposable
 
         Backend = backend;
         DebugMode = settings.DebugMode;
+        if (SDL.SDL_GPUTextureSupportsFormat(
+            Handle, 
+            SDL.SDL_GPUTextureFormat.SDL_GPU_TEXTUREFORMAT_D24_UNORM,
+            SDL.SDL_GPUTextureType.SDL_GPU_TEXTURETYPE_2D,
+            SDL.SDL_GPUTextureUsageFlags.SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET
+        ))
+        {
+            SupportedDepthFormat = TextureFormat.D24_UNORM;
+        }
+        else 
+        {
+            SupportedDepthFormat = TextureFormat.D32_FLOAT;
+        }
+
+        if (SDL.SDL_GPUTextureSupportsFormat(
+            Handle, 
+            SDL.SDL_GPUTextureFormat.SDL_GPU_TEXTUREFORMAT_D24_UNORM_S8_UINT,
+            SDL.SDL_GPUTextureType.SDL_GPU_TEXTURETYPE_2D,
+            SDL.SDL_GPUTextureUsageFlags.SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET
+        ))
+        {
+            SupportedDepthStencilFormat = TextureFormat.D24_UNORM_S8_UINT;
+        }
+        else 
+        {
+            SupportedDepthStencilFormat = TextureFormat.D32_FLOAT_S8_UINT;
+        }
     }
 
     public void SetSwapchainParameters(Window window, SwapchainComposition swapchainComposition, PresentMode presentMode) 

@@ -18,7 +18,6 @@ public class Batch : System.IDisposable
     private GraphicsDevice device;
 
     private bool rendered;
-    private bool flushed;
     private uint onQueue;
 
     private StructuredBuffer<BatchData> batchBuffer;
@@ -140,7 +139,6 @@ public class Batch : System.IDisposable
             vertexIndex = 0;
             onQueue = 0;
             rendered = false;
-            flushed = false;
         }
 
         if (queues.Length == onQueue) 
@@ -195,12 +193,6 @@ public class Batch : System.IDisposable
     }
 
     /// <inheritdoc/>
-    private void BindUniformMatrix(in Matrix4x4 matrix)
-    {
-        device.DeviceCommandBuffer().PushVertexUniformData(matrix, 0);
-    }
-
-    /// <inheritdoc/>
     public void Render(RenderPass renderPass)
     {
 #if DEBUG
@@ -221,7 +213,7 @@ public class Batch : System.IDisposable
 
         while (Unsafe.IsAddressLessThan(ref start, ref end)) 
         {
-            BindUniformMatrix(start.Matrix);
+            renderPass.CommandBuffer.PushVertexUniformData(start.Matrix, 0);
             renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
             renderPass.BindStorageVertexBuffer(batchBuffer);
             renderPass.BindFragmentSampler(start.Binding);
