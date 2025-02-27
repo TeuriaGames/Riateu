@@ -219,6 +219,13 @@ public abstract class GameApp
 #endif
     }
 
+    public void ReloadContent()
+    {
+        Assets.StartContext();
+        LoadContent(Assets);
+        Assets.EndContext();
+    }
+
     public void Quit() 
     {
         Exiting = true;
