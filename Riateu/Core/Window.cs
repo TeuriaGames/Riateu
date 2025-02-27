@@ -37,6 +37,7 @@ public class Window : IDisposable
 
     public event Action Moved;
     public event Action Closed;
+    public event Action<uint, uint> Resized = delegate {};
     private event HitTestDelegate OnHitTest;
     private bool IsDisposed;
 
@@ -44,7 +45,6 @@ public class Window : IDisposable
 
     public static IReadOnlyDictionary<uint, Window> Windows => windows;
 
-    public event Action<uint, uint> Resized = delegate {};
 	private unsafe SDL.SDL_HitTest HitTestDelagate;
 
     private unsafe Window(WindowSettings settings, SDL.SDL_WindowFlags flags) 

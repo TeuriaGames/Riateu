@@ -534,6 +534,11 @@ public class ImGuiRenderer
     {
         DeinitMultiViewport();
         ImGui.DestroyContext();
+        imGuiPipeline.Dispose();
+        imGuiVertexBuffer.Dispose();
+        imGuiIndexBuffer.Dispose();
+        imGuiSampler.Dispose();
+        transferBuffer.Dispose();
     }
 
     private unsafe void BuildFontAtlas()
