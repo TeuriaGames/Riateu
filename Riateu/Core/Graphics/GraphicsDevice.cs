@@ -29,11 +29,10 @@ public class GraphicsDevice : IDisposable
 
     public GraphicsDevice(GraphicsSettings settings, string backendName = null) 
     {
-        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXIL), false, backendName);
+        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXIL), false, null);
 
         if (Handle == IntPtr.Zero) 
         {
-            Logger.Info("Graphics Device failed to create!");
             throw new Exception(SDL.SDL_GetError());
         }
 
