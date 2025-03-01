@@ -136,17 +136,18 @@ public struct GraphicsPipelineBuilder
     }
 }
 
-public struct UniformBinder()
+public struct UniformBinder(CommandBuffer commandBuffer)
 {
+    private CommandBuffer commandBuffer = commandBuffer;
     public void BindVertex<T>(GraphicsDevice device, T uniform, uint slot) 
     where T : unmanaged
     {
-        device.DeviceCommandBuffer().PushVertexUniformData<T>(uniform, slot);
+        commandBuffer.PushVertexUniformData<T>(uniform, slot);
     }
 
     public void BindFragment<T>(GraphicsDevice device, T uniform, uint slot) 
     where T : unmanaged
     {
-        device.DeviceCommandBuffer().PushFragmentUniformData<T>(uniform, slot);
+        commandBuffer.PushFragmentUniformData<T>(uniform, slot);
     }
 }

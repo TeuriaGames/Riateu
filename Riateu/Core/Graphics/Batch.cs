@@ -217,7 +217,7 @@ public class Batch : System.IDisposable
             renderPass.BindGraphicsPipeline(start.Material.ShaderPipeline);
             renderPass.BindStorageVertexBuffer(batchBuffer);
             renderPass.BindFragmentSampler(start.Binding);
-            start.Material.BindUniforms(new UniformBinder());
+            start.Material.BindUniforms(new UniformBinder(renderPass.CommandBuffer));
             renderPass.DrawPrimitives(4, start.Count, 0, start.Offset);
 
             start = ref Unsafe.Add(ref start, 1);
