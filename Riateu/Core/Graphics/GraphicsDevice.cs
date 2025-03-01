@@ -29,7 +29,7 @@ public class GraphicsDevice : IDisposable
 
     public GraphicsDevice(GraphicsSettings settings, string backendName = null) 
     {
-        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXIL), false, null);
+        Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXIL), settings.DebugMode, null);
 
         if (Handle == IntPtr.Zero) 
         {
