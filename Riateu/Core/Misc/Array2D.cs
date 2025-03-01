@@ -161,6 +161,13 @@ public ref struct StackArray2D<T>
         array = new T[numRows * numColumns];
     }
 
+    public StackArray2D(int numRows, int numColumns, Span<T> initialArray)
+    {
+        this.numRows = numRows;
+        this.numColumns = numColumns;
+        array = initialArray;
+    }
+
     public void Fill(T value) 
     {
         array.Fill(value);
