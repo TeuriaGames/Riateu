@@ -931,7 +931,7 @@ public struct MultisampleState(SampleCount sampleCount, uint sampleMask, bool en
     public static readonly MultisampleState None = new MultisampleState() 
     {
         MultisampleCount = SampleCount.One,
-        SampleMask = uint.MaxValue,
+        SampleMask = 0,
         MaskEnable = false
     };
 
@@ -977,7 +977,7 @@ public struct VertexBufferDescription
     public VertexInputRate InputRate;
     public uint StepRate;
 
-    public unsafe static VertexBufferDescription Create<T>(uint slot, VertexInputRate inputRate = VertexInputRate.Vertex, uint stepRate = 1) 
+    public unsafe static VertexBufferDescription Create<T>(uint slot, VertexInputRate inputRate = VertexInputRate.Vertex, uint stepRate = 0) 
     where T : unmanaged
     {
         return new VertexBufferDescription 
