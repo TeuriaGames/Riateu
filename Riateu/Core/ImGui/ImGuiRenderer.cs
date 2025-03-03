@@ -21,7 +21,6 @@ public class ImGuiRenderer
     private Dictionary<nint, Texture> PtrMap = new();
     private GraphicsPipeline imGuiPipeline;
     private Shader imGuiShader;
-    private Sampler imGuiSampler;
     private GraphicsDevice device;
     private uint vertexCount = 1;
     private uint indexCount = 1;
@@ -151,7 +150,6 @@ public class ImGuiRenderer
             ShaderFormat = GraphicsDevice.BackendShaderFormat,
             UniformBufferCount = 1
         });
-        imGuiSampler = new Sampler(device, SamplerCreateInfo.PointClamp);
 
         var fragmentShader = Resources.GetShader(device, Resources.Texture, "main", new ShaderCreateInfo {
             ShaderStage = ShaderStage.Fragment,
@@ -509,7 +507,7 @@ public class ImGuiRenderer
                 int y = drawCmd.ClipRect.Y - pos.Y < 0 ? 0 : (int)(drawCmd.ClipRect.Y - pos.Y);
 
                 renderPass.BindFragmentSampler(
-                    new TextureSamplerBinding(GetPointer(drawCmd.TextureId), imGuiSampler)
+                    new TextureSamplerBinding(GetPointer(drawCmd.TextureId), DrawSampler.PointClamp)
                 );
                 renderPass.SetScissor(new Rectangle(x, y, (int)width, (int)height));
 
@@ -537,14 +535,11 @@ public class ImGuiRenderer
         imGuiPipeline.Dispose();
         imGuiVertexBuffer.Dispose();
         imGuiIndexBuffer.Dispose();
-        imGuiSampler.Dispose();
         transferBuffer.Dispose();
     }
 
     private unsafe void BuildFontAtlas()
     {
-        var cmdBuf = device.AcquireCommandBuffer();
-
         var io = ImGui.GetIO();
 
         io.Fonts.GetTexDataAsRGBA32(
