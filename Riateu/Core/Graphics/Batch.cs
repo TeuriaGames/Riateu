@@ -62,33 +62,6 @@ public class Batch : System.IDisposable
         Matrix = view * projection;
     }
 
-    private static StructuredBuffer<uint> GenerateIndexArray(GraphicsDevice device, uint maxIndices)
-    {
-        using TransferBuffer transferBuffer = TransferBuffer.Create<uint>(device, TransferBufferUsage.Upload, maxIndices);
-        StructuredBuffer<uint> indexBuffer = new StructuredBuffer<uint>(device, BufferUsageFlags.Index, maxIndices);
-
-        Span<uint> indexPtr = transferBuffer.Map<uint>(false);
-
-        for (uint i = 0, j = 0; i < maxIndices; i += 6, j += 4)
-        {
-            indexPtr[(int)i] = j;
-            indexPtr[(int)i + 1] = j + 1;
-            indexPtr[(int)i + 2] = j + 2;
-            indexPtr[(int)i + 3] = j + 2;
-            indexPtr[(int)i + 4] = j + 1;
-            indexPtr[(int)i + 5] = j + 3;
-        }
-        transferBuffer.Unmap();
-
-        CommandBuffer commandBuffer = device.AcquireCommandBuffer();
-        CopyPass copyPass = commandBuffer.BeginCopyPass();
-        copyPass.UploadToBuffer(transferBuffer, indexBuffer, false);
-        commandBuffer.EndCopyPass(copyPass);
-        device.Submit(commandBuffer);
-
-        return indexBuffer;
-    }
-
     /// <summary>
     /// Starts a new batch.
     /// </summary>
