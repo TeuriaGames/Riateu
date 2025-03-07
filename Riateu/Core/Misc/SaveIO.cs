@@ -52,8 +52,10 @@ public static class SaveIO
             isAtomic = true;
         }
 
-        using var fs = File.Create(atomicSave);
-        fs.Write(chunks);
+        using (var fs = File.Create(atomicSave))
+        {
+            fs.Write(chunks);
+        }
 
         if (isAtomic) 
         {
