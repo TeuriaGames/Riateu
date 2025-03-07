@@ -43,6 +43,7 @@ public class Window : IDisposable
 
     private static Dictionary<uint, Window> windows = new Dictionary<uint, Window>();
 
+    public static Window CurrentFocus { get; internal set; }
     public static IReadOnlyDictionary<uint, Window> Windows => windows;
 
 	private unsafe SDL.SDL_HitTest HitTestDelagate;

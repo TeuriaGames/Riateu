@@ -28,6 +28,7 @@ public class ImGuiRenderer
     private StructuredBuffer<ushort> imGuiIndexBuffer;
     private TransferBuffer transferBuffer;
     private Window window;
+    private IntPtr focusedWindowHandle;
     private ImGuiWindow imguiWindow;
 
     private readonly Platform_CreateWindow pCreateWindow;
@@ -44,7 +45,7 @@ public class ImGuiRenderer
 
     private void CreateWindow(ImGuiViewportPtr viewportPtr)
     {
-        ImGuiWindow window = new ImGuiWindow(device, viewportPtr);
+        ImGuiWindow window = new ImGuiWindow(device, this.window, viewportPtr);
     }
 
     private void DestroyWindow(ImGuiViewportPtr viewportPtr)
@@ -96,6 +97,7 @@ public class ImGuiRenderer
     {
         ImGuiWindow window = (ImGuiWindow)GCHandle.FromIntPtr(vp.PlatformUserData).Target;
         SDL.SDL_RaiseWindow(window.Window.Handle);
+        focusedWindowHandle = window.Window.Handle;
     }
 
     private byte GetWindowFocus(ImGuiViewportPtr vp)
@@ -139,6 +141,7 @@ public class ImGuiRenderer
         windowHeight = height;
         this.window = window;
         this.device = device;
+        focusedWindowHandle = window.Handle;
         IntPtr context = ImGui.CreateContext();
         ImGui.SetCurrentContext(context);
 
@@ -190,6 +193,7 @@ public class ImGuiRenderer
 
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
+        io.ConfigViewportsNoTaskBarIcon = true;
 
         var platformIO = ImGui.GetPlatformIO();
         ImGuiViewportPtr ptr = platformIO.Viewports[0];
@@ -229,6 +233,7 @@ public class ImGuiRenderer
         io.BackendFlags |= ImGuiBackendFlags.HasSetMousePos;
         io.BackendFlags |= ImGuiBackendFlags.PlatformHasViewports;
         io.BackendFlags |= ImGuiBackendFlags.RendererHasViewports;
+        io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
         ImGui.SetCurrentContext(context);
         io.Fonts.AddFontDefault();
@@ -265,7 +270,16 @@ public class ImGuiRenderer
         var io = ImGui.GetIO();
         float x = 0;
         float y = 0;
-        var buttons = (uint)SDL.SDL_GetGlobalMouseState(out x, out y);
+        uint buttons;
+
+        if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0) 
+        {
+            buttons = (uint)SDL.SDL_GetGlobalMouseState(out x, out y);
+        }
+        else 
+        {
+            buttons = (uint)SDL.SDL_GetMouseState(out x, out y);
+        }
 
         io.MousePos = new System.Numerics.Vector2(x, y);
         io.MouseDown[0] = (buttons & 0b0001) != 0;
@@ -300,13 +314,16 @@ public class ImGuiRenderer
         io.AddKeyEvent(ImGuiKey.ModAlt, inputs.Keyboard.IsDown(KeyCode.LeftAlt) || inputs.Keyboard.IsDown(KeyCode.RightAlt));
         io.AddKeyEvent(ImGuiKey.ModSuper, inputs.Keyboard.IsDown(KeyCode.LeftMeta) || inputs.Keyboard.IsDown(KeyCode.RightMeta));
 
-        if (io.WantCaptureKeyboard) 
+        if (Window.CurrentFocus != null)
         {
-            SDL.SDL_StartTextInput(window.Handle);
-        } 
-        else 
-        {
-            SDL.SDL_StopTextInput(window.Handle);
+            if (io.WantCaptureKeyboard) 
+            {
+                SDL.SDL_StartTextInput(Window.CurrentFocus.Handle);
+            } 
+            else 
+            {
+                SDL.SDL_StopTextInput(Window.CurrentFocus.Handle);
+            }
         }
 
         SetPerFrameImGuiData(Time.Delta);
@@ -462,7 +479,7 @@ public class ImGuiRenderer
 
             if (swapchainTarget != null) 
             {
-                var viewportRenderPass = cmdBuffer.BeginRenderPass(new ColorTargetInfo(swapchainTarget, Color.Black, true));
+                var viewportRenderPass = cmdBuffer.BeginRenderPass(new ColorTargetInfo(swapchainTarget, Color.Transparent, true));
                 RenderCommandLists(cmdBuffer, viewportRenderPass, viewportPtr.DrawData);
                 cmdBuffer.EndRenderPass(viewportRenderPass);
             }
@@ -515,7 +532,7 @@ public class ImGuiRenderer
                     drawCmd.ElemCount,
                     1,
                     indexOffset + drawCmd.IdxOffset,
-                    vertexOffset,
+                    vertexOffset + (int)drawCmd.VtxOffset,
                     0u
                 );
             }
@@ -605,7 +622,7 @@ public class ImGuiRenderer
         return texture;
     }
 
-    public void DeinitMultiViewport() 
+    private void DeinitMultiViewport() 
     {
         ImGui.DestroyPlatformWindows();
     }

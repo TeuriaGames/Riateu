@@ -17,7 +17,7 @@ public class ImGuiWindow : IDisposable
     public GraphicsDevice Device => device;
     public Window Window => window;
 
-    public ImGuiWindow(GraphicsDevice device, ImGuiViewportPtr viewportPtr) 
+    public ImGuiWindow(GraphicsDevice device, Window parent, ImGuiViewportPtr viewportPtr) 
     {
         handle = GCHandle.Alloc(this);
         this.viewportPtr = viewportPtr;
@@ -43,14 +43,15 @@ public class ImGuiWindow : IDisposable
 
         window = Window.CreateWindow(new WindowSettings(
             "No Title Yet", (uint)viewportPtr.Size.X, (uint)viewportPtr.Size.Y, WindowMode.Windowed), 
-            flags, BackendFlags.Vulkan);
+            flags, BackendFlags.DirectX); // not really DirectX :p
 
         window.Resized += (_, _) => viewportPtr.PlatformRequestResize = true;
         window.Moved += () => viewportPtr.PlatformRequestMove = true;
         window.Closed += () => viewportPtr.PlatformRequestClose = true;
 
         viewportPtr.PlatformUserData = (IntPtr)handle;
-        device.ClaimWindow(window, SwapchainComposition.SDR, PresentMode.Immediate);
+        device.ClaimWindow(window, SwapchainComposition.SDR, PresentMode.Mailbox);
+        SDL.SDL_SetWindowParent(window.Handle, parent.Handle);
     }
 
     public ImGuiWindow(GraphicsDevice device, ImGuiViewportPtr viewportPtr, Window window) 

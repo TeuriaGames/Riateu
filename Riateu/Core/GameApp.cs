@@ -248,6 +248,15 @@ public abstract class GameApp
             case (uint)SDL.SDL_EventType.SDL_EVENT_QUIT:
                 Exiting = true;
                 break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_FOCUS_GAINED:
+                Window.CurrentFocus = Window.Windows[e.window.windowID];
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_FOCUS_LOST:
+                if (Window.CurrentFocus == Window.Windows[e.window.windowID])
+                {
+                    Window.CurrentFocus = null;
+                }
+                break;
             case (uint)SDL.SDL_EventType.SDL_EVENT_MOUSE_WHEEL:
                 InputDevice.Mouse.WheelRawX += (int)e.wheel.x;
                 InputDevice.Mouse.WheelRawY += (int)e.wheel.y;
