@@ -193,6 +193,7 @@ public class ImGuiRenderer
 
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
+        io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
         io.ConfigViewportsNoTaskBarIcon = true;
 
         var platformIO = ImGui.GetPlatformIO();
