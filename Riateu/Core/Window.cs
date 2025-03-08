@@ -122,36 +122,16 @@ public class Window : IDisposable
         return (SDL.SDL_HitTestResult)OnHitTest(this, a);
     }
 
-    public static Window CreateWindow(WindowSettings settings, SDL.SDL_WindowFlags flags, BackendFlags backendFlags) 
+    public static Window CreateWindow(WindowSettings settings, SDL.SDL_WindowFlags flags) 
     {
-        if (backendFlags != BackendFlags.DirectX) 
-        {
-            flags |= backendFlags switch 
-            {
-                BackendFlags.Vulkan => SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN,
-                BackendFlags.Metal => SDL.SDL_WindowFlags.SDL_WINDOW_METAL,
-                _ => throw new Exception("Not Supported")
-            };
-        }
-
         Window window = new Window(settings, flags);
         windows.Add(window.id, window);
         return window;
     }
 
-    public static Window CreateWindow(WindowSettings settings, BackendFlags backendFlags) 
+    public static Window CreateWindow(WindowSettings settings) 
     {
         SDL.SDL_WindowFlags flags = SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN;
-
-        if (backendFlags != BackendFlags.DirectX) 
-        {
-            flags |= backendFlags switch 
-            {
-                BackendFlags.Vulkan => SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN,
-                BackendFlags.Metal => SDL.SDL_WindowFlags.SDL_WINDOW_METAL,
-                _ => throw new Exception("Not Supported")
-            };
-        }
 
         Window window = new Window(settings, flags);
         windows.Add(window.id, window);

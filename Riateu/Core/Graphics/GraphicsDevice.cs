@@ -27,7 +27,7 @@ public class GraphicsDevice : IDisposable
 
     private HashSet<GCHandle> resources = new HashSet<GCHandle>();
 
-    public GraphicsDevice(GraphicsSettings settings, string backendName = null) 
+    public GraphicsDevice(GraphicsSettings settings) 
     {
         Handle = SDL.SDL_CreateGPUDevice((SDL.SDL_GPUShaderFormat)(ShaderFormat.SPIRV | ShaderFormat.DXIL), settings.DebugMode, null);
 

@@ -42,8 +42,7 @@ public class ImGuiWindow : IDisposable
         }
 
         window = Window.CreateWindow(new WindowSettings(
-            "No Title Yet", (uint)viewportPtr.Size.X, (uint)viewportPtr.Size.Y, WindowMode.Windowed), 
-            flags, BackendFlags.DirectX); // not really DirectX :p
+            "No Title Yet", (uint)viewportPtr.Size.X, (uint)viewportPtr.Size.Y, WindowMode.Windowed), flags); 
 
         window.Resized += (_, _) => viewportPtr.PlatformRequestResize = true;
         window.Moved += () => viewportPtr.PlatformRequestMove = true;

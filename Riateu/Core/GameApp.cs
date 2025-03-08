@@ -52,23 +52,6 @@ public abstract class GameApp
     public GameApp(WindowSettings settings, GraphicsSettings graphicsSettings)
     {
         Instance = this;
-        string backendName = "direct3d12";
-        BackendFlags backendFlags = BackendFlags.DirectX;
-        if (Environment.OSVersion.Platform == PlatformID.Win32NT) 
-        {
-            backendFlags = BackendFlags.DirectX;
-            backendName = "direct3d12";
-        }
-        else if (Environment.OSVersion.Platform == PlatformID.Unix) 
-        {
-            backendFlags = BackendFlags.Vulkan;
-            backendName = "vulkan";
-        }
-        else 
-        {
-            backendFlags = BackendFlags.Metal;
-            backendName = "metal";
-        }
 
         if (!SDL.SDL_Init(SDL.SDL_InitFlags.SDL_INIT_TIMER | SDL.SDL_InitFlags.SDL_INIT_GAMEPAD | SDL.SDL_InitFlags.SDL_INIT_VIDEO)) 
         {
@@ -77,8 +60,8 @@ public abstract class GameApp
         }
         Logger.InitSDLLog();
 
-        MainWindow = Window.CreateWindow(settings, backendFlags);
-        GraphicsDevice = new GraphicsDevice(graphicsSettings, backendName);
+        MainWindow = Window.CreateWindow(settings);
+        GraphicsDevice = new GraphicsDevice(graphicsSettings);
 
         if (!GraphicsDevice.ClaimWindow(MainWindow, graphicsSettings.SwapchainComposition, graphicsSettings.PresentMode))
         {

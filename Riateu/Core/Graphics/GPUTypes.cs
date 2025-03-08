@@ -317,16 +317,6 @@ public enum SwapchainComposition
     HDR10_ST2084
 }
 
-[Flags]
-public enum BackendFlags
-{
-    Invalid = 0x0,
-    Vulkan = 0x1,
-    DirectX = 0x2,
-    Metal = 0x4,
-    All = Vulkan | DirectX | Metal
-}
-
 public enum TextureType
 {
     Texture2D = 0,
