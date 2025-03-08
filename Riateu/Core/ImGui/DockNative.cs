@@ -16,6 +16,9 @@ public static class DockNative
     public static extern uint igDockBuilderRemoveNode(uint node_id);
 
     [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr igDockBuilderGetNode(uint node_id = 0);
+
+    [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
     public static extern uint igDockBuilderSetNodePos(uint node_id, System.Numerics.Vector2 pos);
 
     [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
