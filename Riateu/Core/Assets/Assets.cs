@@ -39,6 +39,7 @@ public class AssetStorage
     private Packer<AtlasItem> packer;
     private AudioDevice audioDevice;
     private GraphicsDevice graphicsDevice;
+    public GraphicsDevice GraphicsDevice => graphicsDevice;
 #if DEBUG
     private AssetServer server;
 #endif

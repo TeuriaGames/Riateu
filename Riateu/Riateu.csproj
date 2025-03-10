@@ -21,20 +21,20 @@
 
   <ItemGroup>
     <Content Include="../runtimes/x64/**/*.*">
-      <Link>%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Windows'))">PreserveNewest</CopyToOutputDirectory>
+      <Link>runtimes/win-x64/native/%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>
       <PackagePath>runtimes/win-x64/native</PackagePath>
     </Content>
     <Content Include="../runtimes/osx/**/*.*">
-      <Link>%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('OSX'))">PreserveNewest</CopyToOutputDirectory>
+      <Link>runtimes/macos-x64/native/%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>
       <PackagePath>runtimes/osx-x64/native</PackagePath>
     </Content>
     <Content Include="../runtimes/lib64/**/*.*">
-      <Link>%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Linux'))" >PreserveNewest</CopyToOutputDirectory>
+      <Link>runtimes/linux-x64/native/%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>
       <PackagePath>runtimes/linux-x64/native</PackagePath>
     </Content>

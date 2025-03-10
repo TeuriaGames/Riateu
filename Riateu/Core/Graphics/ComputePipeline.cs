@@ -47,6 +47,25 @@ public class ComputePipeline : GraphicsResource
 		UniformBufferCount = computePipelineCreateInfo.UniformBufferCount;
 	}
 
+	public unsafe ComputePipeline(
+		GraphicsDevice device,
+		Span<byte> byteCode,
+		string entryPointName,
+		in ComputePipelineCreateInfo computePipelineCreateInfo
+	) : base(device)
+	{
+		fixed (byte *ptr = byteCode)
+		{
+			Handle = CreateFromBytecode(device, ptr, byteCode.Length, entryPointName, computePipelineCreateInfo);
+		}
+
+		ReadOnlyStorageTextureCount = computePipelineCreateInfo.ReadOnlyStorageTextureCount;
+		ReadOnlyStorageBufferCount = computePipelineCreateInfo.ReadOnlyStorageBufferCount;
+		ReadWriteStorageTextureCount = computePipelineCreateInfo.ReadWriteStorageTextureCount;
+		ReadWriteStorageBufferCount = computePipelineCreateInfo.ReadWriteStorageBufferCount;
+		UniformBufferCount = computePipelineCreateInfo.UniformBufferCount;
+	}
+
 	private static unsafe nint CreateFromStream(
 		GraphicsDevice device,
 		Stream stream,
@@ -54,9 +73,26 @@ public class ComputePipeline : GraphicsResource
 		in ComputePipelineCreateInfo computePipelineCreateInfo
 	) {
 		var bytecodeBuffer = (byte*) NativeMemory.Alloc((nuint) stream.Length);
-		var bytecodeSpan = new Span<byte>(bytecodeBuffer, (int) stream.Length);
-		stream.ReadExactly(bytecodeSpan);
+		try 
+		{
+			var bytecodeSpan = new Span<byte>(bytecodeBuffer, (int) stream.Length);
+			stream.ReadExactly(bytecodeSpan);
+			return CreateFromBytecode(device, bytecodeBuffer, stream.Length, entryPointName, computePipelineCreateInfo);
+		}
+		finally 
+		{
+			NativeMemory.Free(bytecodeBuffer);
+		}
+	}
 
+	private static unsafe nint CreateFromBytecode(
+		GraphicsDevice device,
+		byte *bytecodeBuffer,
+		long length,
+		string entryPointName,
+		in ComputePipelineCreateInfo computePipelineCreateInfo
+	)
+	{
 		var entryPointLength = Encoding.UTF8.GetByteCount(entryPointName) + 1;
 		var entryPointBuffer = (byte*)NativeMemory.Alloc((nuint) entryPointLength);
 		var buffer = new Span<byte>(entryPointBuffer, entryPointLength);
@@ -66,7 +102,7 @@ public class ComputePipeline : GraphicsResource
 		SDL.SDL_GPUComputePipelineCreateInfo gpuPipelineCreateInfo = new SDL.SDL_GPUComputePipelineCreateInfo 
 		{
             code = bytecodeBuffer,
-            code_size = (nuint) stream.Length,
+            code_size = (nuint) length,
             entrypoint = (byte*)entryPointBuffer,
             format = (SDL.SDL_GPUShaderFormat) computePipelineCreateInfo.ShaderFormat,
             num_readonly_storage_textures = computePipelineCreateInfo.ReadOnlyStorageTextureCount,
@@ -92,7 +128,6 @@ public class ComputePipeline : GraphicsResource
 		}
 
 		NativeMemory.Free(entryPointBuffer);
-		NativeMemory.Free(bytecodeBuffer);
 		return computePipelineHandle;
 	}
 
