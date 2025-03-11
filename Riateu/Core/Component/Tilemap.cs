@@ -19,9 +19,9 @@ public class Tilemap : Component
     /// A size of a grid in tiles.
     /// </summary>
     public int GridSize => gridSize;
-
     public int Rows => rows;
     public int Columns => columns;
+    public Array2D<TextureQuad?> Tiles => tiles;
 
 
     /// <summary>
@@ -97,6 +97,11 @@ public class Tilemap : Component
     public void Clear()
     {
         tiles.Fill(null);
+    }
+
+    public TextureQuad? GetTile(Point tileIdx)
+    {
+        return tiles[tileIdx.X, tileIdx.Y];
     }
 
     /// <inheritdoc/>
