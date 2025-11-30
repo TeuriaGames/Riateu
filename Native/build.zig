@@ -26,21 +26,25 @@ pub fn build(b: *std.Build) void {
     });
     const options = b.addOptions();
 
+    const sdl_dep = b.dependency("sdl", .{});
+
     const sourceFiles = &[_][]const u8{"./lib/src/zig_includes.c"};
     const sourceFlags = &[_][]const u8{ "-g", "-O3" };
 
     lib.addCSourceFiles(.{ .files = sourceFiles, .flags = sourceFlags });
+
     lib.addIncludePath(b.path("lib/include"));
-    lib.addIncludePath(b.path("lib/SDL3/include"));
+    lib.addIncludePath(sdl_dep.path("lib/SDL3/include"));
+
     if (target.result.isMinGW()) {
-        lib.addObjectFile(b.path("../runtimes/x64/SDL3.dll"));
-        addInstallPath(b, lib, "../../runtimes/x64");
-    } else if (target.result.isDarwin()) {
-        lib.addObjectFile(b.path("../runtimes/osx/libSDL2-2.0.0.dylib"));
-        addInstallPath(b, lib, "../../runtimes/osx");
+        lib.addObjectFile(b.path("../runtimes/win-x64/SDL3.dll"));
+        addInstallPath(b, lib, "../../runtimes/win-x64");
+    } else if (target.result.isDarwinLibC()) {
+        lib.addObjectFile(b.path("../runtimes/osx-x64/libSDL3.dylib"));
+        addInstallPath(b, lib, "../../runtimes/osx-x64");
     } else {
-        lib.addObjectFile(b.path("../runtimes/lib64/libSDL3.so"));
-        addInstallPath(b, lib, "../../runtimes/lib64");
+        lib.addObjectFile(b.path("../runtimes/linux-x64/libSDL3.so"));
+        addInstallPath(b, lib, "../../runtimes/linux-x64");
     }
     lib.linkLibC();
     lib.root_module.addOptions("build_options", options);

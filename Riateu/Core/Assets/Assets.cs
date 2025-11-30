@@ -88,10 +88,11 @@ public class AssetStorage
                 x.EndsWith("gif") || 
                 x.EndsWith("qoi") ||
                 (supportAseprite && x.EndsWith("aseprite")));
+
             foreach (var file in files) 
             {
-                string name = Path.Join(path, Path.GetFileNameWithoutExtension(file)).Replace('\\', '/')
-                    .Substring(basePath.Length + 1);
+                string name = Path.Join(path, Path.GetFileNameWithoutExtension(file))
+                    .Replace('\\', '/')[(basePath.Length + 1)..];
 
                 if (Path.GetExtension(file) == ".gif") 
                 {
@@ -131,7 +132,7 @@ public class AssetStorage
         }
         if (basePath.EndsWith(Path.DirectorySeparatorChar)) 
         {
-            basePath = basePath.Substring(0, basePath.Length - 1);
+            basePath = basePath[..^1];
         }
 
         Crawl(basePath);

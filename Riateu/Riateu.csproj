@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591;CS1573;CS1572</NoWarn>
@@ -20,19 +20,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="../runtimes/x64/**/*.*">
+    <Content Include="../runtimes/win-x64/**/*.*">
       <Link>runtimes/win-x64/native/%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>
       <PackagePath>runtimes/win-x64/native</PackagePath>
     </Content>
-    <Content Include="../runtimes/osx/**/*.*">
-      <Link>runtimes/macos-x64/native/%(Filename)%(Extension)</Link>
+    <Content Include="../runtimes/osx-x64/**/*.*">
+      <Link>runtimes/osx-x64/native/%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>
       <PackagePath>runtimes/osx-x64/native</PackagePath>
     </Content>
-    <Content Include="../runtimes/lib64/**/*.*">
+    <Content Include="../runtimes/linux-x64/**/*.*">
       <Link>runtimes/linux-x64/native/%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>

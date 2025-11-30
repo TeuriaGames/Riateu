@@ -51,6 +51,16 @@ public class Camera(int width, int height)
         dirty = false;
     }
 
+    public void Translate(Vector2 vector)
+    {
+        Position += vector;
+    }
+
+    public void Resize(Vector2 size)
+    {
+        Viewport = new Viewport(size.X, size.Y);
+    }
+
     public Vector2 ScreenToViewport(Vector2 position) 
     {
         int windowWidth = GameApp.Instance.Width;

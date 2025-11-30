@@ -19,6 +19,10 @@ public static class GameContext
     /// </summary>
     public static Material BatchMaterial;
     /// <summary>
+    /// The R8G8B8A8 material for basic rendering.
+    /// </summary>
+    public static Material RGBBatchMaterial;
+    /// <summary>
     /// A rendering material that uses R8G8B8A8 format.
     /// </summary>
     public static Material DepthMaterial;
@@ -53,6 +57,19 @@ public static class GameContext
             ShaderFormat = GraphicsDevice.BackendShaderFormat,
             SamplerCount = 1
         });
+
+        RGBBatchMaterial = new Material(device, GraphicsPipeline.CreateBuilder(SpriteBatchShader, fragmentPSC)
+            .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(
+                new ColorAttachmentDescription(TextureFormat.R8G8B8A8_UNORM,
+                ColorTargetBlendState.AlphaBlend)
+            ))
+            .SetDepthStenctilState(DepthStencilState.DepthReadWrite)
+            .SetMultisampleState(MultisampleState.None)
+            .SetPrimitiveType(PrimitiveType.TriangleStrip)
+            .SetRasterizerState(RasterizerState.CCW_CullNone)
+
+            .Build(device)
+        );
 
         BatchMaterial = new Material(device, GraphicsPipeline.CreateBuilder(SpriteBatchShader, fragmentPSC)
             .SetAttachmentInfo(new GraphicsPipelineAttachmentInfo(

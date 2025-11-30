@@ -81,7 +81,7 @@ public struct Color : IEquatable<Color>
 
     public override readonly int GetHashCode() => (int)RGBA;
 
-    public override readonly string ToString() => ($"({R}, {G}, {B}, {A})");
+    public override readonly string ToString() => $"({R}, {G}, {B}, {A})";
 
     public SDL.SDL_FColor ToSDLGpu() 
     {

@@ -154,13 +154,14 @@ public class Packer<T>
             pageSize *= 2;
         }
 
-        Span<Point> sizes = [
-            new (pageSize, pageSize), 
-            new (pageSize * 2, pageSize), 
-            new (pageSize, pageSize * 2)];
-
         while (pageSize <= MaxSize) 
         {
+            Span<Point> sizes = [
+                new Point(pageSize, pageSize), 
+                new Point(pageSize * 2, pageSize), 
+                new Point(pageSize, pageSize * 2)
+            ];
+
             for (int tries = 0; tries < sizes.Length; tries++)
             {
                 var pointSize = sizes[tries];
@@ -170,8 +171,10 @@ public class Packer<T>
                 {
                     continue;
                 }
+                nodes.Clear();
                 nodes.Add(new Node(0, 0, pointSize.X, pointSize.Y));
 
+                bool requiredRetry = false;
                 for (int i = 0; i < items.Count; i++)
                 {
                     Item item = items[i];
@@ -180,9 +183,9 @@ public class Packer<T>
 
                     if (nodeID == -1)
                     {
-                        // A catastrophic Failure happen
                         size = Point.Zero;
-                        return false;
+                        requiredRetry = true;
+                        break;
                     }
 
                     var node = nodes[nodeID];
@@ -192,9 +195,13 @@ public class Packer<T>
 
                     packedItems.Add(new PackedItem(rect, item.Data));
                 }
-
-                goto DONE;
+                if (!requiredRetry) 
+                {
+                    goto DONE;
+                }
             }
+
+            pageSize *= 2;
         }
 
         Logger.Error($"Max Size limit has reached: {pageSize}/{MaxSize}");
