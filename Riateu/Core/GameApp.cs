@@ -38,6 +38,56 @@ public abstract class GameApp
     public TimeSpan FixedStepTarget = TimeSpan.FromSeconds(1.0f/60.0f);
     public TimeSpan FixedStepMaxElapsed = TimeSpan.FromSeconds(5.0f/60.0f);
 
+    /// <summary>
+    /// Run only when something happens, for tools and editors: the loop sleeps until input, a
+    /// window event, <see cref="Wake"/> or the deadline from <see cref="NextUpdateIn"/>, then calls
+    /// <see cref="Update"/> once with the real elapsed time, and <see cref="Render"/> only when
+    /// <see cref="ShouldRender"/> says so (or the window was resized or uncovered). Nothing is drawn
+    /// and no CPU is used while idle; the screen keeps the last frame. Ticks are still at most
+    /// <see cref="FixedStepTarget"/> apart. Off (the default): the fixed-step game loop.
+    /// </summary>
+    public bool RenderOnDemand { get; set; }
+
+    /// <summary>
+    /// With <see cref="RenderOnDemand"/>: the longest the loop sleeps without input, as a safety
+    /// net for state that changes without calling <see cref="Wake"/>. Infinite by default (in
+    /// debug builds with the asset server, half a second, so asset changes are still picked up).
+    /// </summary>
+    public TimeSpan MaxIdleWait = Timeout.InfiniteTimeSpan;
+
+    /// <summary>
+    /// With <see cref="RenderOnDemand"/>: the largest delta <see cref="Update"/> gets. Ticks are
+    /// irregular, so the delta is the real time since the last one (timers stay right), capped
+    /// for the first tick after a long sleep.
+    /// </summary>
+    public TimeSpan OnDemandMaxDelta = TimeSpan.FromSeconds(1);
+
+    /// <summary>
+    /// With <see cref="RenderOnDemand"/>: how long the app can sleep before it needs the next
+    /// <see cref="Update"/> without input (a blinking caret, a timer, an animation: zero).
+    /// Default: until input.
+    /// </summary>
+    protected virtual TimeSpan NextUpdateIn() => Timeout.InfiniteTimeSpan;
+
+    /// <summary>With <see cref="RenderOnDemand"/>: whether this tick's state needs drawing (after <see cref="Update"/>). Default: always.</summary>
+    protected virtual bool ShouldRender() => true;
+
+    /// <summary>
+    /// Wake the loop now (any thread), e.g. when background work finished or game state changed
+    /// outside input. Only matters with <see cref="RenderOnDemand"/>; cheap to call often.
+    /// </summary>
+    public void Wake()
+    {
+        if (Interlocked.Exchange(ref wakePending, 1) == 1) return; // already on its way
+        SDL.SDL_Event e = default;
+        e.type = wakeEventType;
+        SDL.SDL_PushEvent(ref e);
+    }
+
+    private int wakePending;
+    private uint wakeEventType;
+    private bool renderRequested = true; // the first frame always draws
+
     private TimeSpan lastTime;
     private TimeSpan accumulator;
     private Stopwatch timer = new Stopwatch();
@@ -78,11 +128,14 @@ public abstract class GameApp
 
         Width = (int)settings.Width;
         Height = (int)settings.Height;
+        wakeEventType = SDL.SDL_RegisterEvents(1);
+        if (wakeEventType == 0) wakeEventType = (uint)SDL.SDL_EventType.SDL_EVENT_USER;
 
         GameContext.Init(GraphicsDevice, MainWindow);
 #if DEBUG
         if (!DisableAssetServer) 
         {
+            MaxIdleWait = TimeSpan.FromSeconds(0.5); // the asset server polls on ticks
             server = new AssetServer(AssetPath);
             server.SetWatchMethod(LoadContent);
         }
@@ -155,6 +208,11 @@ public abstract class GameApp
 
     public void Tick() 
     {
+        if (RenderOnDemand)
+        {
+            TickOnDemand();
+            return;
+        }
         TimeSpan currentTime = timer.Elapsed;
         TimeSpan deltaTime = currentTime - lastTime;
         lastTime = currentTime;
@@ -202,6 +260,44 @@ public abstract class GameApp
 #endif
     }
 
+    /// <summary>One tick of <see cref="RenderOnDemand"/>: sleep until something happens, update once, render if needed.</summary>
+    private void TickOnDemand()
+    {
+        TimeSpan since = timer.Elapsed - lastTime;
+        if (since < FixedStepTarget) Thread.Sleep(FixedStepTarget - since);
+
+        TimeSpan wait = renderRequested ? TimeSpan.Zero : NextUpdateIn();
+        if (MaxIdleWait != Timeout.InfiniteTimeSpan && (wait == Timeout.InfiniteTimeSpan || wait > MaxIdleWait)) wait = MaxIdleWait;
+        if (wait != TimeSpan.Zero)
+        {
+            int ms = wait == Timeout.InfiniteTimeSpan || wait.TotalMilliseconds >= int.MaxValue ? -1 : Math.Max(1, (int)Math.Ceiling(wait.TotalMilliseconds));
+            if (SDL.SDL_WaitEventTimeout(out SDL.SDL_Event first, ms)) HandleEvent(first);
+        }
+        Volatile.Write(ref wakePending, 0);
+        PollEvents();
+
+        TimeSpan now = timer.Elapsed;
+        TimeSpan delta = now - lastTime;
+        lastTime = now;
+        if (delta > OnDemandMaxDelta) delta = OnDemandMaxDelta; // after a long sleep, not a huge step
+        Time.Frame++;
+        AdvanceDeltaTime(delta);
+        InputDevice.Update();
+        Update(Time.Delta);
+        AudioDevice.Reset();
+        if (Exiting) return;
+
+        if (renderRequested | ShouldRender())
+        {
+            renderRequested = false;
+            Render();
+        }
+        Time.UpdateCounter();
+#if DEBUG
+        server.Update(Assets);
+#endif
+    }
+
     public void ReloadContent()
     {
         Assets.StartContext();
@@ -224,7 +320,12 @@ public abstract class GameApp
     private void PollEvents() 
     {
         SDL.SDL_Event e = default;
-        while (SDL.SDL_PollEvent(out e)) 
+        while (SDL.SDL_PollEvent(out e)) HandleEvent(e);
+    }
+
+    private void HandleEvent(in SDL.SDL_Event e)
+    {
+        if (e.type == wakeEventType) return;
         {
             switch (e.type) 
             {
@@ -249,6 +350,14 @@ public abstract class GameApp
                 break;
             case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
                 Window.Windows[e.window.windowID].HandleSizeChanged((uint)e.window.data1, (uint)e.window.data2);
+                renderRequested = true;
+                break;
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_EXPOSED:
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_SHOWN:
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_RESTORED:
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+            case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+                renderRequested = true;
                 break;
             case (uint)SDL.SDL_EventType.SDL_EVENT_WINDOW_MOVED:
                 Window.Windows[e.window.windowID].Move();
