@@ -59,8 +59,8 @@ public struct Color : IEquatable<Color>
     public Color(float r, float g, float b, float a) 
     {
         R = (byte)(r * 255f);
-        G = (byte)(b * 255f);
-        B = (byte)(g * 255f);
+        G = (byte)(g * 255f);
+        B = (byte)(b * 255f);
         A = (byte)(a * 255f);
     }
 
