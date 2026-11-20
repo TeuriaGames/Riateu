@@ -387,11 +387,13 @@ public struct ColorTargetInfo(Texture texture, Color clearColor, bool cycle, Loa
     public LoadOp LoadOp = loadOp;
     public StoreOp StoreOp = storeOp;
     public bool Cycle = cycle; 
+    public uint Layer;
 
     public SDL.SDL_GPUColorTargetInfo ToSDLGpu() 
     {
         return new SDL.SDL_GPUColorTargetInfo() 
         {
+            layer_or_depth_plane = Layer,
             texture = Texture.Handle,
             clear_color = ClearColor.ToSDLGpu(),
             load_op = (SDL.SDL_GPULoadOp)LoadOp,
