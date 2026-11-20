@@ -1,4 +1,4 @@
-namespace Riateu;
+namespace Riateu.Inputs;
 
 public enum GamepadAxisButtonCode
 {
@@ -9,5 +9,7 @@ public enum GamepadAxisButtonCode
     RightX_Left,
     RightX_Right,
     RightY_Up,
-    RightY_Down
+    RightY_Down,
+    LeftTrigger,
+    RightTrigger
 }

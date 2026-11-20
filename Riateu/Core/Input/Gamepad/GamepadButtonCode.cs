@@ -1,4 +1,4 @@
-namespace Riateu;
+namespace Riateu.Inputs;
 
 public enum GamepadButtonCode
 {
@@ -16,5 +16,11 @@ public enum GamepadButtonCode
     DpadUp,
     DpadDown,
     DpadLeft,
-    DpadRight
+    DpadRight,
+    Misc1,
+    RightPaddle1,
+    LeftPaddle1,
+    RightPaddle2,
+    LeftPaddle2,
+    Touchpad
 }

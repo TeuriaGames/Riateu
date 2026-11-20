@@ -4,15 +4,15 @@ using SDL3;
 
 namespace Riateu.Inputs;
 
-public class InputDevice 
+public class InputDevice
 {
-    public delegate void OnGamepadConnected(uint slot);
-    public delegate void OnGamepadDisconnected(uint slot);
+    public delegate void OnGamepadConnected(int slot);
+    public delegate void OnGamepadDisconnected(int slot);
 
     public event OnGamepadConnected GamepadConnected;
     public event OnGamepadDisconnected GamepadDisconnected;
 
-    public int MaxGamepad { get; private set; } = 4;
+    public int MaxGamepad => gamepads.Length;
     public Keyboard Keyboard { get; private set; }
     public Mouse Mouse { get; private set; }
     public Gamepad[] Gamepads => gamepads;
@@ -22,86 +22,125 @@ public class InputDevice
 
     private Gamepad[] gamepads;
 
-    public InputDevice() 
+    public InputDevice()
     {
         BindableInputs = new List<BindableInput>();
         Keyboard = new Keyboard();
         Mouse = new Mouse();
         gamepads = new Gamepad[4];
+        for (int i = 0; i < gamepads.Length; i++)
+        {
+            gamepads[i] = new Gamepad(i);
+        }
 
         Logger.Info("Input Device Created successfully!");
     }
 
-    public void Update() 
+    public void Update()
     {
-        if (Disabled) 
+        if (Disabled)
         {
             return;
         }
         Keyboard.Update();
         Mouse.Update();
+        foreach (Gamepad gamepad in gamepads)
+        {
+            gamepad.Update();
+        }
 
-        foreach (BindableInput input in BindableInputs) 
+        foreach (BindableInput input in BindableInputs)
         {
             input.UpdateInternal();
         }
     }
 
-    internal bool IsGamepadConnected(uint index) 
+    public Gamepad Gamepad(int slot) => gamepads[slot];
+
+    public bool IsGamepadConnected(int slot) =>
+        slot >= 0 && slot < gamepads.Length && gamepads[slot].Connected;
+
+    internal void AddGamepad(uint instanceID)
     {
-        if (index < 0 || index >= MaxGamepad) 
+        int free = -1;
+        for (int i = 0; i < gamepads.Length; i++)
         {
-            return false;
+            if (gamepads[i].Connected && gamepads[i].InstanceID == instanceID)
+            {
+                return;
+            }
+            if (free < 0 && !gamepads[i].Connected)
+            {
+                free = i;
+            }
         }
 
-        return !gamepads[index].NotConnected;
+        if (free < 0)
+        {
+            Logger.Warn("No free gamepad slot available.");
+            return;
+        }
+
+        IntPtr handle = SDL.SDL_OpenGamepad(instanceID);
+        if (handle == IntPtr.Zero)
+        {
+            Logger.Error($"Failed opening gamepad: {SDL.SDL_GetError()}");
+            return;
+        }
+
+        gamepads[free].Open(handle, instanceID);
+        Logger.Info($"Gamepad {free} is connected: {gamepads[free].Name}");
+        GamepadConnected?.Invoke(free);
     }
 
-    internal void AddGamepad(uint index) 
+    internal void RemoveGamepad(uint instanceID)
     {
-        for (uint i = 0; i < MaxGamepad; i += 1) 
+        for (int i = 0; i < gamepads.Length; i++)
         {
-            if (IsGamepadConnected(i))
+            var gamepad = gamepads[i];
+            if (!gamepad.Connected || gamepad.InstanceID != instanceID)
             {
                 continue;
             }
-
-            var res = SDL.SDL_OpenGamepad(index);
-
-            if (res == IntPtr.Zero)
-            {
-                Logger.Error("Error, failed opening gamepad!");
-                Logger.Error(SDL.SDL_GetError());
-                continue;
-            }
-            
-            gamepads[i].Open(res);
-            Logger.Info($"Gamepad {i} is connected!");
-            GamepadConnected?.Invoke(i);
+            SDL.SDL_CloseGamepad(gamepad.Handle);
+            gamepad.Close();
+            Logger.Info($"Gamepad {i} is disconnected!");
+            GamepadDisconnected?.Invoke(i);
+            return;
         }
     }
 
-    internal void RemoveGamepad(uint index) 
+    public void SetGamepadCount(int count)
     {
-        for (uint i = 0; i < MaxGamepad; i+= 1)
+        for (int i = count; i < gamepads.Length; i++)
         {
-            if (index == gamepads[i].InstanceID) 
+            if (gamepads[i].Connected)
             {
                 SDL.SDL_CloseGamepad(gamepads[i].Handle);
-                Logger.Info($"Gamepad {i} is disconnected!");
                 gamepads[i].Close();
-                GamepadDisconnected?.Invoke(index);
+                GamepadDisconnected?.Invoke(i);
             }
         }
-    }
 
+        int old = gamepads.Length;
+        Array.Resize(ref gamepads, count);
+        for (int i = old; i < count; i++)
+        {
+            gamepads[i] = new Gamepad(i);
+        }
 
-    internal void FindController() 
-    {
-    }
-
-    public void SetGamepadCount(int count) 
-    {
-        Array.Resize<Gamepad>(ref gamepads, count);
+        IntPtr ids = SDL.SDL_GetGamepads(out int connected);
+        if (ids == IntPtr.Zero)
+        {
+            return;
+        }
+        unsafe
+        {
+            for (int i = 0; i < connected; i++)
+            {
+                AddGamepad(((uint*)ids)[i]);
+            }
+        }
+        SDL.SDL_free(ids);
     }
 }
