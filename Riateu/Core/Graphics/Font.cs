@@ -26,6 +26,7 @@ public class Font : IDisposable
 
     protected IntPtr fontPtr;
     private IntPtr dataPtr;
+    private int dataLength;
     private bool disposedValue;
     private Dictionary<int, int> cachedCodePoints = new Dictionary<int, int>();
 
@@ -58,6 +59,7 @@ public class Font : IDisposable
     private unsafe void Load(Stream stream) 
     {
         dataPtr = stream.AllocToPointer(out int length, out Span<byte> b);
+        dataLength = length;
         fixed (byte *ptr = b) 
         {
             fontPtr = Native.Riateu_LoadFont(ptr);
@@ -150,6 +152,37 @@ public class Font : IDisposable
             Visible = visible == 1
         };
     }
+
+    /// <summary>
+    /// Get a <see cref="Riateu.Graphics.Font.Character"/> by glyph index instead of codepoint, for
+    /// glyphs a text shaper picked (ligatures, contextual forms) that no single codepoint maps to.
+    /// </summary>
+    /// <param name="glyphIndex">A glyph index in this font</param>
+    /// <param name="size">A size of the character</param>
+    /// <returns>A <see cref="Riateu.Graphics.Font.Character"/></returns>
+    public Character GetCharacterByGlyph(int glyphIndex, float size)
+    {
+        float scale = GetScale(size);
+        Native.Riateu_GetFontCharacter(fontPtr, glyphIndex, scale,
+            out int width, out int height, out float advance, out float offsetX, out float offsetY, out int visible);
+        return new Character()
+        {
+            GlyphIndex = glyphIndex,
+            Scale = scale,
+            Size = size,
+            Width = width,
+            Height = height,
+            Advance = advance,
+            OffsetX = offsetX,
+            OffsetY = offsetY + size,
+            Visible = visible == 1
+        };
+    }
+
+    /// <summary>
+    /// The font file's bytes (.ttf/.otf), e.g. for a text shaper. Valid while the font isn't disposed.
+    /// </summary>
+    public unsafe ReadOnlySpan<byte> Data => new ReadOnlySpan<byte>((void*)dataPtr, dataLength);
 
     /// <summary>
     /// Find a character glyph from a character.
